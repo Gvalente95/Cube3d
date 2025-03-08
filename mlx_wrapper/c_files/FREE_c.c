@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 16:26:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/01/16 04:33:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/06 23:49:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,12 @@ int	free_gst(t_md *md)
 	if (!md->gst.buttons)
 		return (0);
 	count = 0;
-	//count += free_buttons(md);
 	i = -1;
 	while (++i < gamestate_count - 1)
 	{
 		free(md->gst.menu_titles[i]);
 		count++;
 	}
-	count += free_ents(&md->star_icon);
 	free(md->cwd);
 	return (count);
 }

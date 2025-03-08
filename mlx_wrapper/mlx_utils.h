@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/05 14:18:16 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/08 13:07:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "headers/game.h"
 
 # include "libft/libft.h"
+# include "../lists/lists.h"
 # include "mlx/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -27,25 +28,6 @@
 # include <unistd.h>
 # include <time.h>
 # include <fcntl.h>
-
-# define TXT_COL				-1
-# define BUTTON_BGRND_COL		BLACK
-
-# define PART_BASE_SIZE			35
-
-# define SCRN_W 1400
-# define SCRN_H 800
-
-# define CELL_SIZE 60
-# define EPSILON 0.00001f
-
-# define B_Y 50
-# define B_X 100
-# define TXT_SCALE	20
-# define READ_BUFFER_SIZE 	50
-
-# define PRT_PNGS_LEN		6
-# define PRT_AMOUNT			500
 
 typedef struct s_input
 {
@@ -69,6 +51,28 @@ typedef struct s_image_data
 	int		*scl_d;
 }	t_image;
 
+typedef struct s_mmap
+{
+	void		*img;
+	t_vec2		size;
+	int			icon_scale;
+	int			active;
+}	t_mmap;
+
+# define RAYS_AMOUNT	600
+# define RAY_DEPTH		600
+# define FOV			60
+
+typedef struct s_ray
+{
+	t_vec3f	start;
+	t_vec3f	direction;
+	float	distance;
+	float	angle;
+	float	median;
+	int		index;
+}	t_ray;
+
 typedef struct s_md
 {
 	t_gs		gst;
@@ -76,10 +80,13 @@ typedef struct s_md
 	t_timer		timer;
 	t_prt		**particles;
 	t_map		map;
+	t_mmap		mmap;
+	t_ray		rays[RAYS_AMOUNT];
 	void		*sky;
 	void		*floor;
 	void		*mlx;
 	void		*win;
+	void		*center;
 	void		*cursor;
 	void		*cursor_detect;
 	void		*cursor_grab;
@@ -88,31 +95,20 @@ typedef struct s_md
 	void		**env_images;
 	void		**prt_img;
 	void		**wall_txtr;
-	void		*minimap;
-	t_ent		*hpbar;
-	t_ent		*key;
-	t_ent		*pickaxe;
-	t_ent		*bgrnd;
+	t_dblist	*entities;
 	t_ent		**images;
-	t_ent		**star_icon;
-	t_ent		**bg_env;
 	t_ent		plr;
-	t_ent		*exit;
 	t_ent		*selected;
-	t_ent		**all_images;
-	t_vec2		mmap_size;
-	int			mmap_ic_size;
-	int			show_minimap;
-	t_vec3		mouse_pos;
-	t_vec3		mouse_prv_pos;
-	t_vec3		mouse_world_pos;
 	t_vec2		win_size;
+	t_vec3f		mouse_pos;
+	t_vec3f		mouse_prv_pos;
+	t_vec3f		mouse_world_pos;
 	t_vec2		mouse_grid_pos;
-	t_vec3f		cam_offset;
+	t_vec3f		cam_ofst;
 	t_vec2		prt_base_size;
-	pid_t		spike_sound;
 	pid_t		bgrnd_au;
 	pid_t		bgrnd_mus;
+	int			ray_mode;
 	int			debug_mode;
 	int			key_prs[512];
 	int			key_clicked;
@@ -230,10 +226,8 @@ int		is_audio_playing(pid_t pid);
 //		COLORS.c
 int		get_trgb(unsigned char t, unsigned char r, \
 	unsigned char g, unsigned char b);
-unsigned char	get_t(int trgb);
-unsigned char	get_r(int trgb);
-unsigned char	get_g(int trgb);
-unsigned char	get_b(int trgb);
 t_vec3	get_grid_posf(t_md *md, t_vec3f pos);
+
+int	str_to_color(const char *line);
 
 #endif

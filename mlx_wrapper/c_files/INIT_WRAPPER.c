@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 12:17:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 13:53:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,12 @@ int	init_md(t_md *md)
 {
 	memset(md->key_prs, 0, 512);
 	md->mlx = mlx_init();
-	md->bgrnd = NULL;
-	md->key = NULL;
-	md->exit = NULL;
 	md->images = NULL;
 	md->win = NULL;
-	md->all_images = NULL;
 	md->env_images = NULL;
 	md->bgrnd_img = NULL;
 	md->particles = NULL;
-	md->star_icon = NULL;
 	md->wall_txtr = NULL;
-	md->hpbar = NULL;
 	md->index = 0;
 	md->is_typing = 0;
 	md->mouse_pressed = 0;
@@ -35,10 +29,10 @@ int	init_md(t_md *md)
 	md->key_clicked = -1;
 	md->images_len = 0;
 	md->win_size = get_v2(0, 0);
-	md->cam_offset = get_v3f(0, 0, 0);
+	md->cam_ofst = get_v3f(0, 0, 0);
 	md->coins_left = 0;
 	md->jump_timer = 0;
-	return (md->coin_au_timer = 0, md->t_len = CELL_SIZE, 1);
+	return (md->coin_au_timer = 0, md->t_len = 60, 1);
 }
 
 void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)

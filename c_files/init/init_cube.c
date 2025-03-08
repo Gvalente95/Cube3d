@@ -6,12 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 14:18:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 16:12:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
 
 static void	init_cursor(t_md *md)
 {
@@ -37,56 +36,50 @@ static void	init_cursor(t_md *md)
 	mlx_hook(md->win, 6, 0, mouse_motion_handler, md);
 }
 
-void	init_player(t_md *md)
+static void	init_minimap(t_md *md)
 {
-	md->cam_offset = get_v3f(0, 0, 0);
-	md->plr.base_pos = get_v3f(0, 0, 0);
-	md->plr.start_pos = get_v3f(0, 0, 0);
-	md->plr.pos = get_v3f(0, 0, 0);
-	md->plr.rot = get_v3f(0, 0, 0);
-	md->plr.mov = get_v3f(0, 0, 0);
+	t_dblist	*node;
+	t_ent		*e;
+	t_vec2		pos;
+	int			ic_len;
+
+	md->mmap.active = 0;
+	ic_len = md->win_size.x / 100;
+	md->mmap.size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
+	md->mmap.img = mlx_new_image(md->mlx, md->mmap.size.x, md->mmap.size.y);
+	set_img_color(md->mmap.img, md->mmap.size, COLOR_BLUE, 0.5);
+	node = md->entities;
+	while (node)
+	{
+		e = (t_ent *)node->content;
+		pos = get_v2(e->coord_pos.x, e->coord_pos.y);
+		color_img(md->mmap.img, md->mmap.size, str_to_color("255,50,50"), \
+			get_v4(ic_len * e->coord_pos.x + 1, \
+			ic_len * pos.y + 1, \
+			ic_len * pos.x + ic_len - 1, \
+			ic_len * pos.y + ic_len - 1));
+		node = node->next;
+	}
+	md->mmap.icon_scale = ic_len;
 }
 
-void	init_minimap(t_md *md)
+static void	init_center_pointer(t_md *md)
 {
-	int		i;
 	t_vec2	pos;
-	t_vec2	mm_size;
-	int		icon_len;
 
-	icon_len = md->win_size.x / 100;
-	mm_size = get_v2(md->map.size.x * icon_len, md->map.size.y * icon_len);
-	md->minimap = mlx_new_image(md->mlx, mm_size.x, mm_size.y);
-	pos = get_v2(0, 0);
-	i = -1;
-	while (md->map.buffer[++i])
-	{
-		if (md->map.buffer[i] == '1')
-			color_img(md->minimap, mm_size, convert_line_to_color("255,50,50"),
-			get_v4(icon_len * pos.x + 1, \
-			icon_len * pos.y + 1, \
-			icon_len * pos.x + icon_len - 1, \
-			icon_len * pos.y + icon_len - 1));
-		if (md->map.buffer[i] == '\n')
-		{
-			pos.x = 0;
-			pos.y++;
-		}
-		else
-			pos.x++;
-	}
-	md->mmap_size = get_v2(mm_size.x, mm_size.y);
-	md->mmap_ic_size = icon_len;
+	md->center = add_img("mlx_png/center.png", &pos.x, &pos.y, md);
+	md->center = scale_abs_img(md, md->center, &pos, get_v2(20, 20));
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
+	init_wrapper(md, get_v2(RAYS_AMOUNT, RAYS_AMOUNT), "Cube3d", 5);
+	md->ray_mode = 1;
 	md->debug_mode = start_debug;
 	init_map(md, file_arg);
-	init_map_data(md);
-	init_player(md);
+	init_entities(md);
 	init_cursor(md);
-	md->show_minimap = 0;
+	init_center_pointer(md);
 	init_minimap(md);
 	if (md->debug_mode)
 		show_init_information(md);

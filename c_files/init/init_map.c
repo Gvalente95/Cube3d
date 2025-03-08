@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 10:32:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 01:21:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ static t_vec2	get_map_size(char *map)
 		{
 			size.y++;
 			if (cur_width - 1 > size.x)
-				size.x = cur_width - 1;
+				size.x = cur_width;
 			cur_width = 0;
 		}
 		else
 			cur_width++;
 	}
-	if (cur_width - 1 > size.x)
-		size.x = cur_width - 1;
+	if (cur_width > size.x)
+		size.x = cur_width;
 	size.y++;
 	return (size);
 }
@@ -77,6 +77,7 @@ int	init_map(t_md *md, char *file_name)
 	if (!md->map.buffer)
 		free_and_quit(md, "map data not found", md->map.buffer);
 	md->map.len = ft_strlen(md->map.buffer);
+	init_map_data(md);
 	md->map.size = get_map_size(md->map.buffer);
 	return (1);
 }

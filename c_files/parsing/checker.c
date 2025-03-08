@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 10:13:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 01:03:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,17 @@ char	*extract_line(const char *str)
 		line[j] = str[j];
 	line[i] = '\0';
 	return (line);
+}
+
+int	only_contains(char *str, char *to_contain)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (!char_in_str(str[i], to_contain))
+			return (0);
+	}
+	return (1);
 }

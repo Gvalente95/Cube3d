@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 11:45:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 14:48:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define VECTORS_H
 
 # include "../mlx_utils.h"
+
+# define EPSILON 0.00001f
 
 typedef struct s_Vector2
 {
@@ -59,7 +61,7 @@ int		print_vec3(t_vec3 a, const char *label);
 t_vec3f	get_v3f(float x, float y, float z);
 t_vec3f	v3_to_v3f(t_vec3 vec);
 int		print_vec3f(t_vec3f a, const char *label);
-int		cmp_vec3f(t_vec3f a, t_vec3f b);
+int		cmp_vec3f(t_vec3f a, t_vec3f b, float margin);
 
 //		VECTOR_4.c
 t_vec4	get_v4(int r, int g, int b, int a);

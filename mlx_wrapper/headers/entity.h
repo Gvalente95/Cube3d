@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 11:40:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 14:09:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define ENTITY_H
 
 # include "../mlx_utils.h"
+
+# define PRT_AMOUNT		500
+# define PART_BASE_SIZE	35
 
 typedef enum e_dir
 {
@@ -101,6 +104,7 @@ typedef struct s_entity
 	t_vec3f			start_pos;
 	t_vec3f			prv_pos;
 	t_vec3f			base_pos;
+	t_vec3			coord_pos;
 	t_vec3f			pos;
 	t_vec2			size;
 	t_vec2			foll_ofs;
@@ -109,7 +113,6 @@ typedef struct s_entity
 	t_prt_type		prt_type;
 	void			*frame;
 	void			*frame_x;
-	void			**anim_frames;
 	void			***anim;
 	void			***anim_x;
 	int				audio;
@@ -127,6 +130,7 @@ typedef struct s_entity
 	int				jet_sky_timer;
 	int				frame_index;
 	int				in_screen;
+	float			angle;
 }	t_ent;
 
 #endif

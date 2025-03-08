@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:21:44 by gvalente          #+#    #+#             */
-/*   Updated: 2025/01/15 22:46:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 13:37:55 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,3 @@ void	*flip_image_x(t_md *md, void *img, t_vec2 size)
 	}
 	return (mlx_destroy_image(md->mlx, img), img = flipped_img, flipped_img);
 }
-
-int	render_img(t_md *md, void *img, t_vec3 pos, t_vec2 offset)
-{
-	if (!img)
-		return (0);
-	if (pos.x + offset.x + md->t_len >= 0 && \
-		pos.x + offset.x - md->t_len <= SCRN_W && \
-		pos.y + offset.y + md->t_len + 60 >= 0 && \
-		pos.y + offset.y - md->t_len <= SCRN_H)
-	{
-		mlx_put_image_to_window(md->mlx, md->win, \
-			img, pos.x + offset.x, pos.y + offset.y);
-		return (1);
-	}
-	else
-		return (0);
-}
-

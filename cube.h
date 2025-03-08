@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 14:29:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 17:21:06 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,16 @@
 # define CURSOR_GRAB_PATH "mlx_png/cursor/hand_closed.png"
 # define FONT_SPRITE_PATH "mlx_png/font/"
 
-# define PLRSPD 3.5f
-# define ACCSPD 0.2f
-# define DEBUG_SCALE 10
+# define PLRSPD 12.0f
+# define ACCSPD 0.6f
+# define DEBUG_SCALE 12
 
 //		update
 int		update_and_render(t_md *md);
 
 //		render
 void	render(t_md *md);
+int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 
 //		free
 int		safe_free(void *item);
@@ -42,6 +43,7 @@ const char *attr);
 int		init_cube(t_md *md, char *file_arg, int start_debug);
 int		init_map(t_md *md, char *file_name);
 void	init_map_data(t_md *md);
+int		init_entities(t_md *md);
 
 //		strcmp_tools
 int		same_str(const char *a, const char *b);
@@ -57,13 +59,14 @@ char	*md_strdup(t_md *d, const char	*s1);
 void	*md_malloc(t_md *d, ssize_t size);
 void	*md_realloc(t_md *d, void *ptr, size_t new_size);
 char	*md_strndup(t_md *d, const char	*s1, ssize_t n);
+int		only_contains(char *str, char *to_contain);
 
-int		convert_line_to_color(const char *line);
 char	*extract_line(const char *str);
 
 //		debug.c
 void	show_init_information(t_md *md);
 void	show_update_information(t_md *md);
+void	show_rays(t_md *md);
 
 //		text.c
 void	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...);
@@ -75,5 +78,14 @@ float	minf(float a, float b);
 float	maxf(float a, float b);
 t_vec3f	normalize_vec3f(t_vec3f vec, float min, float max);
 void	color_img(void *frame, t_vec2 size, int col, t_vec4 d);
+
+int		update_player(t_md *md);
+int		move_ent(t_ent *e);
+
+void	set_collisions(t_md *md, t_ent *e);
+
+//		rays.c
+void	render_ray(t_md *md, t_ray *ray, int color);
+void	render_rays(t_md *md, t_vec3f start_pos);
 
 #endif

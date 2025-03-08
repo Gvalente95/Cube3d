@@ -1,8 +1,9 @@
 SRC_UTILS	= \
-c_files/init/init_map.c c_files/init/init_cube.c c_files/tools/free.c c_files/update/update.c \
+c_files/init/init_map.c c_files/init/init_map_data.c c_files/init/init_cube.c c_files/tools/debug.c c_files/tools/free.c \
+c_files/tools/math_tools.c c_files/tools/text.c c_files/tools/image_tools.c c_files/update/update_plr.c \
+c_files/update/update.c c_files/update/movement.c c_files/update/collisions.c c_files/render/render.c \
 c_files/parsing/checker.c c_files/parsing/string_tools.c c_files/parsing/floodfill.c c_files/parsing/strcmp_tools.c \
-c_files/render/render.c c_files/init/init_map_data.c c_files/tools/debug.c c_files/tools/text.c \
-c_files/tools/math_tools.c c_files/tools/image_tools.c
+c_files/init/init_entities.c c_files/raycasting/rays.c
 
 SRC			= main.c
 GAME_NAME	= cube

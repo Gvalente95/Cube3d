@@ -6,63 +6,39 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 14:27:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 16:16:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-int	convert_line_to_color(const char *line)
+int	is_in_screen(t_md *md, t_vec3 pos, t_vec2 size)
 {
-	t_vec4		rgba;
-	const char	*values;
-	char		**splits;
+	return (pos.x > -size.x && pos.x < md->win_size.x + \
+		size.x && pos.y > -size.y && pos.y < md->win_size.y + size.y);
+}
 
-	if (!line || ft_strlen(line) <= 3)
-		return (convert_line_to_color("255,255,255"));
-	values = line;
-	while (values && !ft_isdigit(*values))
-		values++;
-	if (!*values)
-		return (-1);
-	splits = ft_split(values, ',');
-	if (!splits)
-		return (-1);
-	rgba.r = ft_atoi(splits[0]);
-	if (splits[1])
-		rgba.g = ft_atoi(splits[1]);
-	if (splits[1] && splits[2])
-		rgba.b = ft_atoi(splits[2]);
-	free_void_array((void **)splits, -1);
-	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
+void	render_ent(t_md *md, t_ent *e)
+{
+	t_vec3		pos;
+
+	pos = get_v3(e->pos.x - md->cam_ofst.x, e->pos.y - md->cam_ofst.y, 0);
+	e->in_screen = is_in_screen(md, pos, e->size);
+	if (e->in_screen)
+		mlx_put_image_to_window(md->mlx, md->win, e->frame, pos.x, pos.y);
 }
 
 void	render_entities(t_md *md)
 {
-	t_vec2	pos;
-	t_vec2	rnd_pos;
-	int		i;
+	t_dblist	*node;
+	t_ent		*e;
 
-	pos = get_v2(0, 0);
-	i = -1;
-	while (md->map.buffer[++i])
+	node = md->entities;
+	while (node)
 	{
-		if (md->map.buffer[i] == '1')
-		{
-			rnd_pos = get_v2((pos.x * 250) - md->cam_offset.x, \
-			(pos.y * 250) - md->cam_offset.y);
-			if (rnd_pos.x > -250 && rnd_pos.x < md->win_size.x + 250 && rnd_pos.y > -250 && rnd_pos.y < md->win_size.y + 250)
-			{
-				mlx_put_image_to_window(md->mlx, md->win, md->wall_txtr[0], rnd_pos.x, rnd_pos.y);
-			}
-		}
-		else if (md->map.buffer[i] == '\n')
-		{
-			pos.x = 0;
-			pos.y++;
-		}
-		else
-			pos.x++;
+		e = (t_ent *)node->content;
+		render_ent(md, e);
+		node = node->next;
 	}
 }
 
@@ -72,13 +48,13 @@ void	render_minimap(t_md *md)
 	t_vec2	centr;
 	void	*plr;
 
-	centr = get_v2(md->win_size.x - md->mmap_size.x, 0);
-	mlx_put_image_to_window(md->mlx, md->win, md->minimap, centr.x, centr.y);
+	centr = get_v2(md->win_size.x - md->mmap.size.x, 0);
+	mlx_put_image_to_window(md->mlx, md->win, md->mmap.img, centr.x, centr.y);
 	plr_p = get_v2(centr.x, centr.y);
-	plr_p.x += md->plr.pos.x / 10;
-	plr_p.y += md->plr.pos.y / 10;
-	plr = mlx_new_image(md->mlx, md->mmap_ic_size, md->mmap_ic_size);
-	set_img_color(plr, get_v2(md->mmap_ic_size, md->mmap_ic_size), convert_line_to_color("0,255,0"), 1);
+	plr_p.x += (int)md->plr.pos.x / md->mmap.icon_scale;
+	plr_p.y += (int)md->plr.pos.y / md->mmap.icon_scale;
+	plr = mlx_new_image(md->mlx, md->mmap.icon_scale, md->mmap.icon_scale);
+	set_img_color(plr, get_v2(md->mmap.icon_scale, md->mmap.icon_scale), str_to_color("0,255,0"), 1);
 	mlx_put_image_to_window(md->mlx, md->win, plr, plr_p.x, plr_p.y);
 	mlx_destroy_image(md->mlx, plr);
 }
@@ -87,9 +63,19 @@ void	render(t_md *md)
 {
 	mlx_put_image_to_window(md->mlx, md->win, md->sky, 0, -md->win_size.y / 2);
 	mlx_put_image_to_window(md->mlx, md->win, md->floor, 0, md->win_size.y / 2);
-	render_entities(md);
-	if (md->show_minimap)
+	render_rays(md, get_v3f(\
+		md->plr.pos.x + md->plr.size.x / 2, \
+		md->plr.pos.y + md->plr.size.y / 2, \
+		md->plr.pos.z));
+	if (!md->ray_mode)
+	{
+		render_entities(md);
+		render_ent(md, &md->plr);
+	}
+	if (md->mmap.active)
 		render_minimap(md);
+	mlx_put_image_to_window(md->mlx, md->win, md->center, \
+			md->win_size.x / 2 - 10, md->win_size.y / 2 - 10);
 	render_cursor(md, 0);
 	if (md->debug_mode)
 		show_update_information(md);

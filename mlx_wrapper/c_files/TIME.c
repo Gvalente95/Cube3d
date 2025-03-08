@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:55:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/03 22:42:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/06 23:49:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	init_time_data(t_md *md, t_lvl_data *data)
 	md->timer.elapsed_pause = 0;
 	md->timer.level_timer = 0;
 	md->gst.menu_time = 0;
-	md->star_icon[0]->pos.x = 50;
 	md->time = 0;
 }
 

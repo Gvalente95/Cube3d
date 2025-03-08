@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 14:26:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 00:54:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	add_texture_img(t_md *md, char *line, int index)
 	txt_img = add_img(path, &size.x, &size.y, md);
 	if (!txt_img)
 		free_and_quit(md, "no txtr", path);
-	txt_img = scale_abs_img(md, txt_img, &size, get_v2(250, 250));
+	txt_img = scale_abs_img(md, txt_img, &size, get_v2(md->t_len, md->t_len));
 	md->wall_txtr[index] = txt_img;
 	if (md->debug_mode)
 		printf("%s texture[%d] correctly set\n", path, index);
@@ -58,9 +58,9 @@ static int	parse_file_line(char *line, t_md *md)
 	else if (!ft_strncmp(line, "EA ", 3))
 		add_texture_img(md, line, 3);
 	else if (!ft_strncmp(line, "F ", 2))
-		md->floor_color = convert_line_to_color(line + 2);
+		md->floor_color = str_to_color(line + 2);
 	else if (!ft_strncmp(line, "C ", 2))
-		md->sky_color = convert_line_to_color(line + 2);
+		md->sky_color = str_to_color(line + 2);
 	else if (char_in_str('1', line) || char_in_str('0', line))
 		return (0);
 	return (1);

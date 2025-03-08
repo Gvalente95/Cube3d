@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:52:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 13:21:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/06 23:42:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,37 +66,6 @@ void	set_transparency(void *src, void *dest, t_vec2 size, float trnsp)
 	}
 }
 
-void	*split_img_at_x(void *img, t_vec2 img_size, int cutoff, t_dir dir)
-{
-	t_image	q;
-	t_vec2	pos;
-
-	q.src_data = (int *)mlx_get_data_addr(img, &q.bpp, &q.len, &q.endian);
-	pos.y = -1;
-	if (cutoff < 0 || (cutoff > img_size.x && (dir == left || dir == right)) \
-		|| (cutoff > img_size.y && (dir == up || dir == down)))
-		return (img);
-	while (++pos.y < img_size.y)
-	{
-		pos.x = -1;
-		if (dir == right)
-			pos.x = cutoff;
-		if (dir == left)
-			while (++pos.x < cutoff)
-				q.src_data[pos.y * (q.len / 4) + pos.x] = 0xFF000000;
-		else if (dir == right)
-			while (++pos.x < img_size.x)
-				q.src_data[pos.y * (q.len / 4) + pos.x] = 0xFF000000;
-		else if (dir == down && pos.y < cutoff)
-			while (++pos.x < img_size.x)
-				q.src_data[pos.y * (q.len / 4) + pos.x] = 0xFF000000;
-		else if (dir == up && pos.y >= img_size.y - cutoff)
-			while (++pos.x < img_size.x)
-				q.src_data[pos.y * (q.len / 4) + pos.x] = 0xFF000000;
-	}
-	return (img);
-}
-
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size)
 {
 	t_image	img;
@@ -124,4 +93,29 @@ void	*get_image_copy(t_md *md, void *src, t_vec2 src_size)
 		img.pos.y++;
 	}
 	return (img.dest);
+}
+
+int	str_to_color(const char *line)
+{
+	t_vec4		rgba;
+	const char	*values;
+	char		**splits;
+
+	if (!line || ft_strlen(line) <= 3)
+		return (str_to_color("255,255,255"));
+	values = line;
+	while (values && !ft_isdigit(*values))
+		values++;
+	if (!*values)
+		return (-1);
+	splits = ft_split(values, ',');
+	if (!splits)
+		return (-1);
+	rgba.r = ft_atoi(splits[0]);
+	if (splits[1])
+		rgba.g = ft_atoi(splits[1]);
+	if (splits[1] && splits[2])
+		rgba.b = ft_atoi(splits[2]);
+	free_void_array((void **)splits, -1);
+	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
 }

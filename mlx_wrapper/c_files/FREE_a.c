@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/01/16 04:36:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/07 00:08:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ int	free_md(t_md *md, int quit)
 	free_count = 0;
 	free_count += mlx_destroy_image(md->mlx, md->bgrnd_img);
 	free_count += free_ents(&md->images);
-	free_count += free_ents(&md->all_images);
 	if (quit)
 		return (free_md2(md, free_count));
 	else
