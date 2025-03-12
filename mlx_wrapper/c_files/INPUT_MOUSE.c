@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 14:48:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 02:54:58 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,21 @@ int	mouse_motion_handler(int x, int y, void *param)
 	grid_pos = get_grid_posf(md, md->mouse_pos);
 	md->mouse_grid_pos = get_v2((grid_pos.x + md->cam_ofst.x) / md->t_len, \
 		(grid_pos.y + md->cam_ofst.y) / md->t_len);
+	md->mouse_focus = 1;
 	return (0);
 }
 
 int	update_mouse(t_md *md)
 {
+	if (!md->mouse_focus)
+		return (1);
 	if (md->time % 5 == 0)
+	{
+		md->mouse_delta = get_v3f(md->mouse_prv_pos.x - md->mouse_pos.x, \
+			md->mouse_prv_pos.y - md->mouse_pos.y, \
+			md->mouse_prv_pos.z - md->mouse_pos.z);
 		md->mouse_prv_pos = md->mouse_pos;
+	}
 	md->mouse_world_pos = get_v3f(md->mouse_pos.x + \
 		md->cam_ofst.x, md->mouse_pos.y + md->cam_ofst.y, 0);
 	return (cmp_vec3f(md->mouse_prv_pos, md->mouse_pos, EPSILON));

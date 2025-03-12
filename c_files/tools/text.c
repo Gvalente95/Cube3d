@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 13:53:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 18:41:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	render_text(t_md *md, t_vec4 data, const char *format, ...)
 	display_text(md, buff, data);
 }
 
-//	DATA.b = COLOR | DATA.a = SCALE
+//	DATA = (pos.x, pos.y, color, scale)
 void	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...)
 {
 	char	buff[256];

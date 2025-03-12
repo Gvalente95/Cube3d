@@ -6,119 +6,172 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 16:21:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 11:55:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	draw_txt_line(t_md *md, float distance, t_vec3 pos, t_ent *col, t_ray *ray)
+static int	show_ray(t_md *md, t_ray *ray, t_ent *col)
 {
-	int		screen_x;
-	int		draw_start;
-	int		draw_end;
-	float	wall_height;
-	int		texture_x;
-	int		color;
+	t_vec3	ray_2dp;
+	t_vec2	centr;
+	t_vec2	draw_end;
 
-	screen_x = ray->index;
-	draw_start = md->win_size.y / 2 - col->size.y / 2;
-	draw_end = md->win_size.y / 2 + col->size.y / 2;
-	wall_height = (md->win_size.y * md->t_len) / (distance * cos(ray->angle));
-	texture_x = (int)(fmod(pos.x, md->t_len) / md->t_len * col->size.x);
-	for (int y = draw_start; y < draw_end; y++) {
-		int texture_y = (y - (md->win_size.y / 2) + (col->size.y / 2)) * (col->size.y / wall_height);
-		color = mlx_get_color_value(md->mlx, *(int *)(col->frame + (texture_y * col->size.x + texture_x) * sizeof(int)));
-		mlx_pixel_put(md->mlx, md->win, screen_x, y, color);
+	if (md->mmap.active && ray->index == md->win_size.x / 2 && \
+			md->mmap.mray_len < MAX_RAYS - 1)
+		md->mmap.ray_pos[md->mmap.mray_len++] = ray->pos;
+	if (md->ray_mode || !md->show_rays)
+		return (0);
+	centr = get_v2((md->win_size.x / 4 + md->size_2d / 2 - (md->cam_ofst.x / md->t_len * md->size_2d)), md->win_size.y / 4 + md->size_2d / 2 - ((md->cam_ofst.y / md->t_len) * md->size_2d));
+	ray_2dp.x = centr.x + (ray->pos.x / md->t_len) * md->size_2d;
+	ray_2dp.y = centr.y + (ray->pos.y / md->t_len) * md->size_2d;
+	ray_2dp.z = 0;
+	if (!is_in_screen(md, ray_2dp, get_v2(1, 1)))
+		return (0);
+	if (!col)
+		return (mlx_pixel_put(md->mlx, md->win, ray_2dp.x, ray_2dp.y, ray->color));
+	draw_end = get_v2(ray_2dp.x + 3, ray_2dp.y + 3);
+	ray_2dp = get_v3(ray_2dp.x - 3, ray_2dp.y - 3, 0);
+	while (++ray_2dp.y < draw_end.y)
+	{
+		ray_2dp.x = draw_end.x - 6;
+		while (++ray_2dp.x < draw_end.x)
+			mlx_pixel_put(md->mlx, md->win, ray_2dp.x, ray_2dp.y, ray->color);
 	}
+	return (1);
 }
 
-t_ent	*check_in_entities(t_md *md, t_vec3 grid_pos)
+int	is_ray_collision(t_ray *ray, t_ent *a)
 {
-	t_dblist	*node;
-	t_ent		*e;
+	return (ray->pos.x >= a->pos.x + a->mov.x && \
+		ray->pos.x <= a->pos.x + a->mov.x + a->size.x && \
+		ray->pos.y >= a->pos.y + a->mov.y && \
+		ray->pos.y <= a->pos.y + a->mov.y + a->size.y);
+}
+
+void	check_in_ents(t_md *md, t_ray *ray)
+{
+	t_dblst	*node;
+	t_ent	*e;
 
 	node = md->entities;
 	while (node)
 	{
 		e = (t_ent *)node->content;
-		if (e && e->is_active)
+		if (!e || !e->frame || !e->is_active || \
+				e->type == nt_wall || e->type == nt_empty || e->type == nt_plr)
 		{
-			if (cmp_vec3(grid_pos, e->coord_pos))
-				return (e);
+			node = node->next;
+			continue ;
+		}
+		if (is_ray_collision(ray, e))
+		{
+			ray->pos_at_e = ray->pos;
+			ray->found_e = e;
+			ray->hit_vrt_at_e = ray->hit_vrt;
+			break ;
 		}
 		node = node->next;
 	}
+}
+
+t_ent	*check_in_map(t_md *md, t_ray *ray)
+{
+	int		index;
+	t_ent	*e;
+
+	index = (int)(ray->pos.x / md->t_len) + ((md->map.size.x + 1) * (int)(ray->pos.y / md->t_len));
+	if (index >= 0 && index < md->map.len && md->map.buffer[index] == '1')
+	{
+		e = (t_ent *)md->entities[0].content;
+		return (e);
+	}
+	check_in_ents(md, ray);
 	return (NULL);
 }
 
-void	render_ray(t_md *md, t_ray *ray, int color)
+void	render_ray(t_md *md, t_ray *ray)
 {
-	t_vec3	grid_pos;
-	t_vec3f	pos;
 	t_ent	*col;
 	int		i;
+	float	hordist;
+	float	verdist;
 
-	pos = ray->start;
 	i = -1;
 	while (++i < RAY_DEPTH)
 	{
-		pos.x += ray->direction.x;
-		pos.y += ray->direction.y;
-		pos.z += ray->direction.z;
-		grid_pos = get_v3(pos.x / md->t_len, pos.y / md->t_len, 0);
-		col = check_in_entities(md, grid_pos);
-		if (col)
+		ray->pos = get_v3f(ray->pos.x + ray->dir.x, \
+			ray->pos.y + ray->dir.y, \
+			ray->pos.z + ray->dir.z);
+		hordist = fabs(fmod(ray->pos.x, md->t_len));
+		verdist = fabs(fmod(ray->pos.y, md->t_len));
+		if (hordist <= 1.3 || verdist <= 1.3)
+			ray->hit_vrt = verdist > hordist;
+		ray->color = md->rgb[RGB_GREEN + ray->hit_vrt] + \
+			(1000 * (ray->found_e != NULL));
+		col = check_in_map(md, ray);
+		show_ray(md, ray, col);
+		if (col && col->type == nt_wall)
 			break ;
-		if (!md->debug_mode || md->ray_mode)
-			continue ;
-		if (is_in_screen(md, get_v3(pos.x - md->cam_ofst.x, pos.y - md->cam_ofst.y, 0), get_v2(1, 1)))
-			mlx_pixel_put(md->mlx, md->win, pos.x - md->cam_ofst.x, pos.y - md->cam_ofst.y, color);
 	}
+	if (!md->ray_mode)
+		return ;
 	if (col)
+		draw_txt_line(md, i, col, ray);
+	if (!ray->found_e)
+		return ;
+	ray->hit_vrt = ray->hit_vrt_at_e;
+	ray->pos = ray->pos_at_e;
+	draw_txt_line(md, i, ray->found_e, ray);
+}
+
+void	precompute_rays(t_md *md, float *cos_vals, float *sin_vals)
+{
+	float	fov;
+	float	angle_step;
+	float	yaw;
+	int		i;
+	float	ray_yaw;
+
+	yaw = md->plr.rot.x * (M_PI / 180.0f);
+	if (yaw < -M_PI)
+		yaw += 2 * M_PI;
+	else if (yaw >= M_PI)
+		yaw -= 2 * M_PI;
+	fov = FOV * (M_PI / 180.0f);
+	angle_step = fov / (float)(md->win_size.x - 1);
+	i = -1;
+	while (++i < md->win_size.x)
 	{
-		if (md->ray_mode)
-			draw_txt_line(md, i, get_v3(pos.x, pos.y, 0), col, ray);
-		else
-		{
-			for (int y = -5; y < 5; y ++)
-				for (int x = -5; x < 5; x ++)
-					mlx_pixel_put(md->mlx, md->win, x + pos.x - md->cam_ofst.x, y + pos.y - md->cam_ofst.y, str_to_color("255,0,0"));
-		}
+		ray_yaw = yaw - (fov / 2.0f) + (angle_step * i);
+		cos_vals[i] = cosf(ray_yaw);
+		sin_vals[i] = sinf(ray_yaw);
 	}
 }
 
 void	render_rays(t_md *md, t_vec3f start_pos)
 {
+	float	cos_vals[MAX_RAYS];
+	float	sin_vals[MAX_RAYS];
 	int		i;
-	float	fov;
-	float	angle_step;
-	float	ray_yaw;
-	float	yaw;
-	float	pitch;
-	int		color;
 
-	color = str_to_color("0,255,0");
-	yaw = md->plr.rot.x * 0.01f;
-	if (yaw < 0)
-    	yaw += 2 * M_PI;
-	else if (yaw >= 2 * M_PI)
-    	yaw -= 2 * M_PI;
-	pitch = md->plr.rot.y * 0.01f;
-	fov = FOV * (M_PI / 180.0f);
-	angle_step = fov / (float)(RAYS_AMOUNT - 1);
+	precompute_rays(md, cos_vals, sin_vals);
 	i = -1;
-	while (++i < RAYS_AMOUNT)
+	while (++i < md->win_size.x)
 	{
-		ray_yaw = yaw - (fov / 2.0f) + (angle_step * i);
 		md->rays[i].index = i;
+		md->rays[i].hit_vrt = 0;
+		md->rays[i].hit_vrt_at_e = 0;
+		md->rays[i].hit = get_v3f(0, 0, 0);
+		md->rays[i].found_e = NULL;
 		md->rays[i].start = start_pos;
-		md->rays[i].angle = ray_yaw;
-		md->rays[i].direction.x = cosf(pitch) * cosf(ray_yaw);
-		md->rays[i].direction.y = cosf(pitch) * sinf(ray_yaw);
-		md->rays[i].direction.z = sinf(pitch);
+		md->rays[i].pos = start_pos;
+		md->rays[i].side_dst = get_v3f(0, 0, 0);
+		md->rays[i].angle = atan2f(sin_vals[i], cos_vals[i]);
+		md->rays[i].dir = get_v3f(cos_vals[i], sin_vals[i], 0);
 		md->rays[i].distance = 0;
 		md->rays[i].median = 0;
-		render_ray(md, &md->rays[i], color);
+		render_ray(md, &md->rays[i]);
 	}
 }

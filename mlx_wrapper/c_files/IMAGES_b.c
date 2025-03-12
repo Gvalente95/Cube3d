@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:52:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/06 23:42:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 23:15:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,15 @@ int	str_to_color(const char *line)
 		rgba.g = ft_atoi(splits[1]);
 	if (splits[1] && splits[2])
 		rgba.b = ft_atoi(splits[2]);
-	free_void_array((void **)splits, -1);
+	free_void_array((void **)splits);
+	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
+}
+
+
+int	vec4_to_color(int r, int g, int b, int a)
+{
+	t_vec4		rgba;
+
+	rgba = get_v4(r, g, b, a);
 	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
 }

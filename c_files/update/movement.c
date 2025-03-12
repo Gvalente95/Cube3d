@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 13:20:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 03:17:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ int	move_ent(t_ent *e)
 	e->mov = get_v3f(\
 		e->mov.x - decc_mov.x, \
 		e->mov.y - decc_mov.y, \
-		e->mov.z - decc_mov.z);
+		e->mov.z);
 	return (1);
 }

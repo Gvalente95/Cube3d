@@ -6,17 +6,17 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:07:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/02/14 13:27:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 12:25:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lists.h"
 
-t_dblist	*dblst_new(void *content)
+t_dblst	*dblst_new(void *content)
 {
-	t_dblist	*new;
+	t_dblst	*new;
 
-	new = malloc(sizeof(t_dblist));
+	new = malloc(sizeof(t_dblst));
 	if (!new)
 		return (NULL);
 	new->content = content;
@@ -25,9 +25,9 @@ t_dblist	*dblst_new(void *content)
 	return (new);
 }
 
-void	dblst_add_back(t_dblist **lst, t_dblist *new)
+void	dblst_add_back(t_dblst **lst, t_dblst *new)
 {
-	t_dblist	*last;
+	t_dblst	*last;
 
 	if (!lst || !new)
 		return ;
@@ -46,7 +46,7 @@ void	dblst_add_back(t_dblist **lst, t_dblist *new)
 	new->next = NULL;
 }
 
-void	dblst_add_front(t_dblist **lst, t_dblist *new)
+void	dblst_add_front(t_dblst **lst, t_dblst *new)
 {
 	if (!lst || !new)
 		return ;
@@ -61,10 +61,10 @@ void	dblst_add_front(t_dblist **lst, t_dblist *new)
 	*lst = new;
 }
 
-t_dblist	*arr_to_dblst(void **values)
+t_dblst	*arr_to_dblst(void **values)
 {
-	t_dblist	*lst;
-	t_dblist	*new_node;
+	t_dblst	*lst;
+	t_dblst	*new_node;
 	int			i;
 
 	if (!values)

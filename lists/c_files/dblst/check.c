@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:09:46 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/02/19 13:50:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 12:25:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lists.h"
 
-int	dblst_size(t_dblist *lst)
+int	dblst_size(t_dblst *lst)
 {
 	int	len;
 
@@ -25,7 +25,7 @@ int	dblst_size(t_dblist *lst)
 	return (len);
 }
 
-t_dblist	*dblst_first(t_dblist *lst)
+t_dblst	*dblst_first(t_dblst *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -34,7 +34,7 @@ t_dblist	*dblst_first(t_dblist *lst)
 	return (lst);
 }
 
-t_dblist	*dblst_last(t_dblist *lst)
+t_dblst	*dblst_last(t_dblst *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -43,9 +43,9 @@ t_dblist	*dblst_last(t_dblist *lst)
 	return (lst);
 }
 
-t_dblist	*get_dblst_at_key(t_dblist *lst, char *key)
+t_dblst	*get_dblst_at_key(t_dblst *lst, char *key)
 {
-	t_dblist	*start;
+	t_dblst	*start;
 	char		*str;
 	int			j;
 

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 13:53:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 06:10:10 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,29 @@ int	init_md(t_md *md)
 {
 	memset(md->key_prs, 0, 512);
 	md->mlx = mlx_init();
-	md->images = NULL;
+	md->txtr_2d = NULL;
 	md->win = NULL;
-	md->env_images = NULL;
 	md->bgrnd_img = NULL;
 	md->particles = NULL;
 	md->wall_txtr = NULL;
-	md->index = 0;
-	md->is_typing = 0;
 	md->mouse_pressed = 0;
 	md->mouse_clicked = 0;
 	md->key_clicked = -1;
-	md->images_len = 0;
 	md->win_size = get_v2(0, 0);
 	md->cam_ofst = get_v3f(0, 0, 0);
-	md->coins_left = 0;
-	md->jump_timer = 0;
-	return (md->coin_au_timer = 0, md->t_len = 60, 1);
+	md->t_len = 60;
+	return (1);
 }
 
 void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)
 {
 	start_timer(&md->timer.game_start);
+	md->mlx_put = mlx_put_image_to_window;
 	init_md(md);
 	md->win = mlx_new_window(md->mlx, win_size.x, win_size.y, win_name);
 	md->win_size = get_v2(win_size.x, win_size.y);
 	md->t_len = win_size.x / row_amount;
+	md->row_amount = row_amount;
 	mlx_hook(md->win, KEY_PRESS, 0, handle_key_press, md);
 	mlx_hook(md->win, KEY_RELEASE, 0, handle_key_release, md);
 	mlx_hook(md->win, 17, 0, close_window, md);

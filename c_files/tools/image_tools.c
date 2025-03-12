@@ -6,12 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:02:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 13:38:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 15:20:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
+//	d = (start.x, start.y, end.x, end.y)
 void	color_img(void *frame, t_vec2 size, int col, t_vec4 d)
 {
 	t_image	q;
@@ -31,4 +32,10 @@ void	color_img(void *frame, t_vec2 size, int col, t_vec4 d)
 			q.src_data[pixel_index] = col;
 		}
 	}
+}
+
+int	is_in_screen(t_md *md, t_vec3 pos, t_vec2 size)
+{
+	return (pos.x > -size.x && pos.x < md->win_size.x + \
+		size.x && pos.y > -size.y && pos.y < md->win_size.y + size.y);
 }

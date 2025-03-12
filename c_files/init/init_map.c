@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 01:21:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 20:28:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,45 @@ static t_vec2	get_map_size(char *map)
 				size.x = cur_width;
 			cur_width = 0;
 		}
-		else
+		else if (*map != ' ')
 			cur_width++;
 	}
 	if (cur_width > size.x)
 		size.x = cur_width;
 	size.y++;
 	return (size);
+}
+
+char	*redimension_map(char *map_buffer, t_vec2 size)
+{
+	char	*new_buffer;
+	int		len;
+	int		i;
+	int		j;
+	t_vec2	pos;
+
+	len = size.x + 1 * (size.y * (size.x + 1));
+	new_buffer = malloc(len + 1);
+	if (!new_buffer)
+		return (NULL);
+	pos = get_v2(-1, -1);
+	j = 0;
+	i = 0;
+	while (++pos.y < size.y)
+	{
+		pos.x = 0;
+		while (map_buffer[i] && map_buffer[i] != '\n')
+		{
+			new_buffer[j++] = map_buffer[i++];
+			pos.x++;
+		}
+		if (map_buffer[i] == '\n')
+			i++;
+		while (pos.x++ < size.x)
+			new_buffer[j++] = ' ';
+		new_buffer[j++] = '\n';
+	}
+	return (free(map_buffer), new_buffer[j] = '\0', new_buffer);
 }
 
 int	init_map(t_md *md, char *file_name)
@@ -79,5 +111,6 @@ int	init_map(t_md *md, char *file_name)
 	md->map.len = ft_strlen(md->map.buffer);
 	init_map_data(md);
 	md->map.size = get_map_size(md->map.buffer);
+	md->map.buffer = redimension_map(md->map.buffer, md->map.size);
 	return (1);
 }

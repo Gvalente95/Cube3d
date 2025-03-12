@@ -6,17 +6,17 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:13 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/01/28 00:58:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 12:25:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lists.h"
 
-static t_dblist	*get_db_list(t_dblist *lst, void *(*f)(void *), \
+static t_dblst	*get_db_list(t_dblst *lst, void *(*f)(void *), \
 	void (*del)(void *))
 {
-	t_dblist	*new_node;
-	t_dblist	*new_list;
+	t_dblst	*new_node;
+	t_dblst	*new_list;
 	void		*new_content;
 
 	new_list = NULL;
@@ -41,7 +41,7 @@ static t_dblist	*get_db_list(t_dblist *lst, void *(*f)(void *), \
 	return (new_list);
 }
 
-t_dblist	*dblst_map(t_dblist *lst, void *(*f)(void *), \
+t_dblst	*dblst_map(t_dblst *lst, void *(*f)(void *), \
 	void (*del)(void *))
 {
 	if (!lst || !f)
@@ -49,9 +49,9 @@ t_dblist	*dblst_map(t_dblist *lst, void *(*f)(void *), \
 	return (get_db_list(lst, f, del));
 }
 
-void	dblst_iter(t_dblist *lst, void (*f)(void *))
+void	dblst_iter(t_dblst *lst, void (*f)(void *))
 {
-	t_dblist	*start;
+	t_dblst	*start;
 
 	if (!lst || !f)
 		return ;

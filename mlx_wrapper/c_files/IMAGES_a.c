@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/05 13:22:02 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 18:41:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,10 @@ void	render_cursor(t_md *md, int has_hov)
 {
 	if (md->mouse_pressed && has_hov)
 		mlx_put_image_to_window(md->mlx, md->win, \
-md->cursor_grab, md->mouse_pos.x, md->mouse_pos.y);
+md->curs_grb, md->mouse_pos.x, md->mouse_pos.y);
 	else if (has_hov)
 		mlx_put_image_to_window(md->mlx, md->win, \
-md->cursor_detect, md->mouse_pos.x, md->mouse_pos.y);
+md->curs_dtc, md->mouse_pos.x, md->mouse_pos.y);
 	else
 		mlx_put_image_to_window(md->mlx, md->win, \
 md->cursor, md->mouse_pos.x, md->mouse_pos.y);

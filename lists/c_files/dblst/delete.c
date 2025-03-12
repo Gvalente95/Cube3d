@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   delete.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:23:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/02/12 17:37:50 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/11 19:43:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lists.h"
 
-void	dblst_clear(t_dblist **lst, void (*del)(void *))
+void	dblst_clear(t_dblst **lst, void (*del)(void *))
 {
-	t_dblist	*cur;
-	t_dblist	*tmp;
+	t_dblst	*cur;
+	t_dblst	*tmp;
 
 	if (!lst || !*lst)
 		return ;
@@ -30,7 +30,7 @@ void	dblst_clear(t_dblist **lst, void (*del)(void *))
 	*lst = NULL;
 }
 
-void	dblst_delone(t_dblist *lst, void (*del)(void *))
+void	dblst_delone(t_dblst *lst, void (*del)(void *))
 {
 	if (!lst)
 		return ;
@@ -77,7 +77,7 @@ void	print_prefixed_content(void *content)
 	printf("\n");
 }
 
-void	dblst_print_list(t_dblist *lst, int has_prefix)
+void	dblst_print_list(t_dblst *lst, int has_prefix)
 {
 	if (lst)
 	{

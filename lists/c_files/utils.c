@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:22:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/02/17 01:56:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 12:25:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*list_strdup(const char *str)
 	return (copy);
 }
 
-char	**dblst_to_arr(t_dblist *l)
+char	**dblst_to_arr(t_dblst *l)
 {
 	char	**list;
 	int		list_size;

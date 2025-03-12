@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   math_fools.c                                       :+:      :+:    :+:   */
+/*   math_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 11:59:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 12:05:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 04:37:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,13 @@ t_vec3f	normalize_vec3f(t_vec3f vec, float min, float max)
 	normalized.x = minmaxf(vec.y, min, max);
 	normalized.x = minmaxf(vec.z, min, max);
 	return (normalized);
+}
+
+int	ft_sign(float a)
+{
+	if (a > 0)
+		return (1);
+	if (a < 0)
+		return (-1);
+	return (0);
 }

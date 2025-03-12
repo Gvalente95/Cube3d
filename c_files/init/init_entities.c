@@ -6,111 +6,103 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 12:18:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 06:03:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-t_ent	*init_player(t_md *md, char c, t_vec2 pos)
+static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
+{
+	(void)md;
+	if (type == nt_plr)
+	{
+		if (c == 'N')
+			e->rot.x = -90;
+		if (c == 'S')
+			e->rot.x = 90;
+		else if (c == 'W')
+			e->rot.x = -180;
+	}
+	if (e->type == nt_mob || e->type == nt_coin)
+		e->pos.z = e->size.y;
+}
+
+static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 {
 	t_ent	*e;
 
 	e = &md->plr;
-	e->type = player;
-	e->action = IDLE;
+	e->type = nt_plr;
+	e->action = ac_idl;
+	e->map_index = map_index;
 	e->hp = 0;
 	e->is_active = 1;
+	e->jumps = 0;
 	e->in_screen = 1;
-	e->frame = add_img("mlx_png/plr.png", &e->size.x, &e->size.y, md);
-	e->frame = scale_abs_img(md, e->frame, &e->size, get_v2(md->t_len / 2, md->t_len / 2));
+	e->size = md->e_sizes[nt_plr];
 	e->hurt_timer = 0;
 	e->pos = get_v3f((float)(pos.x * md->t_len), (float)(pos.y * md->t_len), 0);
 	e->start_pos = get_v3f(e->pos.x, e->pos.y, e->pos.z);
 	e->coord_pos = get_v3(pos.x, pos.y, 0);
 	e->mov = get_v3f(0, 0, 0);
-	e->prv_pos = get_v3f(e->pos.x, e->pos.y, e->pos.z);
 	e->rot = get_v3f(0, 0, 0);
-	if (c == 'S')
-		e->rot.x = -180;
-	else if (c == 'E')
-		e->rot.x = 90;
-	else if (c == 'W')
-		e->rot.x = -90;
 	e->jumps = 0;
-	e->jump_timer = 0;
 	e->level = 0;
-	e->flip_x = 0;
 	e->audio = 0;
-	return (e);
+	set_type_specifics(md, e, e->type, c);
 }
 
-t_ent	*init_ent(t_md *md, char c, t_vec2 pos)
+static t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)
 {
 	t_ent	*e;
 
-	if (char_in_str(c, "NSEW"))
-		return (init_player(md, c, pos));
 	e = malloc(sizeof(t_ent));
-	e->frame = md->wall_txtr[0];
+	e->type = get_char_index(md->ents_tp_map[0], c);
+	e->map_index = map_index;
 	e->is_active = 1;
 	e->in_screen = 1;
-	e->type = wall;
-	e->action = IDLE;
+	e->frame = NULL;
+	e->action = ac_idl;
 	e->hp = 0;
 	e->hurt_timer = 0;
-	e->size = get_v2(md->t_len, md->t_len);
+	e->size = md->e_sizes[e->type];
 	e->pos = get_v3f((float)(pos.x * md->t_len), (float)(pos.y * md->t_len), 0);
 	e->mov = get_v3f(0, 0, 0);
 	e->coord_pos = get_v3(pos.x, pos.y, 0);
-	e->prv_pos = get_v3f(e->pos.x, e->pos.y, e->pos.z);
 	e->rot = get_v3f(0, 0, 0);
 	e->jumps = 0;
-	e->jump_timer = 0;
+	e->frame_index = 0;
 	e->level = 0;
-	e->flip_x = 0;
 	e->audio = 0;
-	return (e);
+	return (set_type_specifics(md, e, e->type, c), e);
 }
 
-int	init_entities(t_md *md)
+void	init_entities(t_md *md, t_vec2 pos)
 {
 	int			i;
-	int			x;
-	int			y;
-	t_dblist	*ents;
-	t_dblist	*node;
+	t_dblst		*ents;
 	t_ent		*e;
-	t_vec2		crd_pos;
 
 	ents = NULL;
-	x = 0;
-	y = 0;
+	pos = get_v2(0, 0);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
 		if (md->map.buffer[i] == '\n')
 		{
-			y++;
-			x = 0;
+			pos.y++;
+			pos.x = 0;
 			continue ;
 		}
-		if (!char_in_str(md->map.buffer[i], "1NSEW"))
+		if (char_in_str(md->map.buffer[i], "NSEW"))
+			init_player(md, md->map.buffer[i], pos, i);
+		else if (!char_in_str(md->map.buffer[i], " 0\n"))
 		{
-			x++;
-			continue ;
+			e = init_ent(md, md->map.buffer[i], pos, i);
+			dblst_add_back(&ents, dblst_new((void *)e));
 		}
-		crd_pos = get_v2(x, y);
-		e = init_ent(md, md->map.buffer[i], crd_pos);
-		if (e->type == player)
-		{
-			x++;
-			continue ;
-		}
-		node = dblst_new((void *)e);
-		dblst_add_back(&ents, node);
-		x++;
+		pos.x++;
 	}
 	md->entities = dblst_first(ents);
-	return (1);
 }

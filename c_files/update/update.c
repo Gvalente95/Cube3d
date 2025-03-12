@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 16:10:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 05:22:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 void	update_cam_ofst(t_md *md)
 {
 	t_vec3f	dspl;
+	float	wrd_spd;
 
 	dspl = get_v3f(\
 		md->plr.pos.x - md->plr.size.x / 2 - md->win_size.x / 2 + md->t_len / 2, \
 		md->plr.pos.y - md->plr.size.y / 2 - md->win_size.y / 2 + md->t_len / 2, \
 		md->plr.pos.z);
 	md->cam_ofst = dspl;
+	wrd_spd = 20;
+	md->wrd_mv_offst.x += md->plr_wrd_mv.x * wrd_spd;
+	md->wrd_mv_offst.y += md->plr_wrd_mv.y * wrd_spd;
 }
 
 int	update(t_md *md)
@@ -32,26 +36,33 @@ int	update(t_md *md)
 		has_moved = 1;
 	if (has_moved)
 		update_cam_ofst(md);
+	if (update_ents(md))
+		has_moved = 1;
 	return (!md->time || has_moved);
 }
 
 void	update_keys(t_md *md)
 {
-	if (md->key_clicked == R_KEY)
+	if (md->key_clicked == NUM_1_KEY)
 		md->ray_mode = !md->ray_mode;
+	if (md->key_clicked == NUM_2_KEY)
+		md->debug_mode = !md->debug_mode;
+	if (md->key_clicked == NUM_3_KEY)
+		md->show_rays = !md->show_rays;
+	if (md->key_clicked == NUM_4_KEY)
+		md->mouse_hide = !md->mouse_hide;
 	if (md->key_clicked == M_KEY)
 		md->mmap.active = !md->mmap.active;
-	if (md->key_clicked == ESC_KEY)
+	if (md->key_clicked == ESC_KEY || md->key_clicked == Q_KEY)
 		free_and_quit(md, NULL, NULL);
-	if (md->key_clicked == TAB_KEY)
-		md->debug_mode = !md->debug_mode;
 	if (md->mouse_pressed == MOUSE_PRESS)
 	{
 		md->plr.pos.x -= (md->plr.pos.x - md->mouse_world_pos.x) * .06f;
 		md->plr.pos.y -= (md->plr.pos.y - md->mouse_world_pos.y) * .06f;
 	}
 	if (md->mouse_clicked == MOUSE_DPRESS)
-		md->plr.pos = get_v3f(md->mouse_world_pos.x, md->mouse_world_pos.y, md->plr.pos.z);
+		md->plr.pos = get_v3f(md->mouse_world_pos.x, \
+				md->mouse_world_pos.y, md->plr.pos.z);
 }
 
 int	update_and_render(t_md *md)
@@ -59,6 +70,7 @@ int	update_and_render(t_md *md)
 	update_keys(md);
 	if (update(md))
 		render(md);
+	show_fps(md, get_v2(0, md->win_size.y - md->txt_scale * 1.5));
 	md->time++;
 	reset_mlx_values(md);
 	return (0);

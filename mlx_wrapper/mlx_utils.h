@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/08 13:07:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 11:46:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,26 +51,39 @@ typedef struct s_image_data
 	int		*scl_d;
 }	t_image;
 
+# define MAX_RAYS 	10000
+# define ENT_FRAMES_MAX	5
+
 typedef struct s_mmap
 {
-	void		*img;
+	void		*bgrnd;
+	void		*plr_icon;
 	t_vec2		size;
-	int			icon_scale;
+	int			ic_scl;
 	int			active;
+	int			mray_len;
+	t_vec3f		ray_pos[MAX_RAYS];
 }	t_mmap;
-
-# define RAYS_AMOUNT	600
-# define RAY_DEPTH		600
-# define FOV			60
 
 typedef struct s_ray
 {
+	t_vec3f	hit;
 	t_vec3f	start;
-	t_vec3f	direction;
+	t_vec3f	pos;
+	t_vec3f	dir;
 	float	distance;
 	float	angle;
 	float	median;
-	int		index;
+	int		hit_wall_index;  	// 1 si mur vertical, 0 si horizontal
+	int		hit_vrt;  	// 1 si mur vertical, 0 si horizontal
+	t_vec3f	side_dst; 		// Distance jusqu’à la prochaine ligne verticale - horizontale
+	t_vec3f	delta_dst; 	// Distance entre deux lignes verticales - horizontales
+	t_vec2	step_p; 		// Direction du pas en X-Y (-1 ou 1)
+	int		index;			// index du rayon et index de la colonne de pixel qu'on va render
+	int		color;
+	t_ent	*found_e;
+	t_vec3f	pos_at_e;
+	int		hit_vrt_at_e;
 }	t_ray;
 
 typedef struct s_md
@@ -78,63 +91,66 @@ typedef struct s_md
 	t_gs		gst;
 	t_map_d		mp_d;
 	t_timer		timer;
-	t_prt		**particles;
 	t_map		map;
 	t_mmap		mmap;
-	t_ray		rays[RAYS_AMOUNT];
+	t_ray		rays[MAX_RAYS];
+	t_dblst		*entities;
+	t_dblst		*particles;
+	t_ent		plr;
+	t_vec2		win_size;
+	t_vec2		e_sizes[ENT_TYPE_LEN];
+	t_vec2		e_sizes_2d[ENT_TYPE_LEN];
+	t_vec3f		input_mov;
+	t_vec3f		mouse_pos;
+	t_vec3f		mouse_prv_pos;
+	t_vec3f		mouse_delta;
+	t_vec3f		mouse_world_pos;
+	t_vec2		mouse_grid_pos;
+	t_vec3f		cam_ofst;
+	t_vec3f		wrd_mv_offst;
+	t_vec3f		plr_wrd_mv;
+	pid_t		bgrnd_au;
+	pid_t		bgrnd_mus;
+	const char	*ents_tp_map[1];
+	const char	*ents_tp_names[ENT_TYPE_LEN];
+	const char	*ents_act_names[ENT_ACTION_LEN];
+	const char	*dir_labels[4];
 	void		*sky;
 	void		*floor;
 	void		*mlx;
 	void		*win;
 	void		*center;
 	void		*cursor;
-	void		*cursor_detect;
-	void		*cursor_grab;
-	void		*menu_bgrnd;
+	void		*curs_dtc;
+	void		*curs_grb;
 	void		*bgrnd_img;
-	void		**env_images;
 	void		**prt_img;
 	void		**wall_txtr;
-	t_dblist	*entities;
-	t_ent		**images;
-	t_ent		plr;
-	t_ent		*selected;
-	t_vec2		win_size;
-	t_vec3f		mouse_pos;
-	t_vec3f		mouse_prv_pos;
-	t_vec3f		mouse_world_pos;
-	t_vec2		mouse_grid_pos;
-	t_vec3f		cam_ofst;
-	t_vec2		prt_base_size;
-	pid_t		bgrnd_au;
-	pid_t		bgrnd_mus;
+	void		**wall_txtr_2d;
+	void		**txtr_2d;
+	void		****e_frms;
+	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
+	int			rgb[17];
+	int			key_prs[512];
+	int			txt_scale;
+	int			size_2d;
+	int			init_steps;
+	int			mouse_focus;
+	int			show_rays;
 	int			ray_mode;
 	int			debug_mode;
-	int			key_prs[512];
 	int			key_clicked;
 	int			mouse_pressed;
 	int			mouse_clicked;
+	int			mouse_hide;
 	int			time;
-	int			total_coins;
-	int			total_stars;
 	int			death_amount;
-	int			music_index;
-	int			is_typing;
-	int			wall_hug;
-	int			coin_au_timer;
-	int			jump_timer;
-	int			particles_alive;
-	int			index;
-	int			move_counter;
-	int			cur_category;
-	int			has_key;
-	int			coins_left;
-	int			images_len;
-	int			bg_env_len;
+	int			row_amount;
 	int			t_len;
 	int			floor_color;
 	int			sky_color;
-	char		*cwd;
+	int			fps;
+	int			prv_fps;
 }	t_md;
 
 
@@ -150,7 +166,6 @@ char	map_keycode_to_char(int keycode);
 //		TOOLS.c
 int		r_range(int min, int max);
 void	*flip_image_x(t_md *md, void *img, t_vec2 size);
-int		render_img(t_md *md, void *img, t_vec3 pos, t_vec2 offset);
 
 //		INPUT_MOUSE.c
 int		mouse_event_handler(int button, int x, int y, void *param);
@@ -184,7 +199,7 @@ void	stop_timer(t_timer *timer);
 
 //		FREE_b.c
 int		free_void(void *elem);
-int		free_void_array(void **elements, int i);
+int		free_void_array(void **elements);
 int		free_particles(t_md *md, t_prt ***prts);
 int		free_player_animations(t_ent *plr, t_md *md);
 int		free_md2(t_md *md, int free_count);
@@ -192,7 +207,6 @@ int		free_md2(t_md *md, int free_count);
 //		IMAGES_b.c
 void	*set_img_color(void *frame, t_vec2 size, int col, float str);
 void	set_transparency(void *src, void *dest, t_vec2 size, float trnsp);
-void	*split_img_at_x(void *img, t_vec2 img_size, int cutoff, t_dir dir);
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size);
 void	*add_img(char *relative_path, int *width, int *height, t_md *md);
 void	render_cursor(t_md *md, int has_hov);
@@ -207,10 +221,10 @@ void	*scale_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
 void	*scale_abs_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
 
 //		FREE_a.c
-void	free_vec2_array(t_vec2 **array);
-void	free_vec3_array(t_vec3 **array);
-void	free_vec4_array(t_vec4 **array);
-int		free_images(t_md *md, void ***images);
+int		free_vec2_array(t_vec2 **array);
+int		free_vec3_array(t_vec3 **array);
+int		free_vec4_array(t_vec4 **array);
+int		free_images(t_md *md, void ***images, char *label);
 int		free_ent(t_ent **ent);
 int		free_ents(t_ent ***ents);
 int		free_md(t_md *md, int quit);
@@ -227,7 +241,7 @@ int		is_audio_playing(pid_t pid);
 int		get_trgb(unsigned char t, unsigned char r, \
 	unsigned char g, unsigned char b);
 t_vec3	get_grid_posf(t_md *md, t_vec3f pos);
-
-int	str_to_color(const char *line);
+int		str_to_color(const char *line);
+void	update_ent_frame(t_md *md, t_ent *e);
 
 #endif

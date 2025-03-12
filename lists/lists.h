@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:07:59 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/02/17 01:56:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/09 12:25:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_dblink_list
 	void					*content;
 	struct s_dblink_list	*next;
 	struct s_dblink_list	*prev;
-}	t_dblist;
+}	t_dblst;
 
 typedef struct s_dictionary
 {
@@ -39,24 +39,24 @@ typedef struct s_dictionary
 
 //		DB_LIST
 //			check
-int			dblst_size(t_dblist *lst);
+int			dblst_size(t_dblst *lst);
 //			move
-t_dblist	*dblst_first(t_dblist *lst);
-t_dblist	*dblst_last(t_dblist *lst);
+t_dblst	*dblst_first(t_dblst *lst);
+t_dblst	*dblst_last(t_dblst *lst);
 //			delete
-void		dblst_clear(t_dblist **lst, void (*del)(void *));
-void		dblst_delone(t_dblist *lst, void (*del)(void *));
+void		dblst_clear(t_dblst **lst, void (*del)(void *));
+void		dblst_delone(t_dblst *lst, void (*del)(void *));
 //			initlear
-t_dblist	*dblst_new(void *content);
-t_dblist	*arr_to_dblst(void **values);
-void		dblst_add_back(t_dblist **lst, t_dblist *node);
-void		dblst_add_front(t_dblist **lst, t_dblist *node);
+t_dblst	*dblst_new(void *content);
+t_dblst	*arr_to_dblst(void **values);
+void		dblst_add_back(t_dblst **lst, t_dblst *node);
+void		dblst_add_front(t_dblst **lst, t_dblst *node);
 //			use
-t_dblist	*dblst_map(t_dblist *lst, void *(*f)(void *), \
+t_dblst	*dblst_map(t_dblst *lst, void *(*f)(void *), \
 	void (*del)(void *));
-void		dblst_iter(t_dblist *lst, void (*f)(void *));
-t_dblist	*get_dblst_at_key(t_dblist *lst, char *prefix);
-void		dblst_print_list(t_dblist *lst, int has_prefix);
+void		dblst_iter(t_dblst *lst, void (*f)(void *));
+t_dblst	*get_dblst_at_key(t_dblst *lst, char *prefix);
+void		dblst_print_list(t_dblst *lst, int has_prefix);
 
 //		CIRC_LIST
 //		init
@@ -76,6 +76,6 @@ void		clst_iter(t_clst *lst, void (*f)(void *));
 
 //		UTILS
 char		*list_strdup(const char *str);
-char		**dblst_to_arr(t_dblist *l);
+char		**dblst_to_arr(t_dblst *l);
 
 #endif

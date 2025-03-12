@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   collisions.c                                       :+:      :+:    :+:   */
+/*   collisions_old.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 10:27:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/11 10:43:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,25 @@ int	set_collisions_rules(t_ent *emitter, t_ent *receiver)
 	return (1);
 	if (!receiver->is_active || !emitter->is_active || !receiver->hp)
 		return (0);
-	if (!emitter->in_screen && emitter->type != particle)
+	if (!emitter->in_screen && emitter->type != nt_prt)
 		return (0);
 	type = emitter->type;
 	col_type = receiver->type;
-	if (type == particle)
-		return (col_type != portal);
-	if (type == player || type == laser)
-		return (col_type == wall || col_type == mover \
-			|| col_type == door || col_type == mob || col_type == tile);
-	if (type == coin || type == key || type == axe)
+	if (type == nt_prt)
+		return (col_type != nt_portal);
+	if (type == nt_plr || type == nt_bush)
+		return (col_type == nt_wall || col_type == nt_mover \
+			|| col_type == nt_door || col_type == nt_mob || col_type == nt_tile);
+	if (type == nt_coin || type == nt_key || type == nt_axe)
 		return (0);
-	if (type == mob)
-		return (col_type == wall || col_type == mover || col_type == door \
-			|| col_type == tile);
-	if (type == portal)
-		return (col_type == coin);
-	if (type == mover)
-		return (col_type == wall || col_type == door || \
-			col_type == mover || col_type == tile);
+	if (type == nt_mob)
+		return (col_type == nt_wall || col_type == nt_mover || col_type == nt_door \
+			|| col_type == nt_tile);
+	if (type == nt_portal)
+		return (col_type == nt_coin);
+	if (type == nt_mover)
+		return (col_type == nt_wall || col_type == nt_door || \
+			col_type == nt_mover || col_type == nt_tile);
 	return (0);
 }
 
@@ -89,7 +89,7 @@ t_vec3f	get_collisions(t_md *md, t_ent *e, t_vec2 displ)
 	t_vec3f		cols;
 	t_vec3f		new_dspl;
 	t_ent		*col;
-	t_dblist	*node;
+	t_dblst	*node;
 
 	cols = get_v3f(0, 0, 0);
 	e->is_grounded = 0;
@@ -101,9 +101,9 @@ t_vec3f	get_collisions(t_md *md, t_ent *e, t_vec2 displ)
 			continue ;
 		new_dspl = get_collision_displacement(e, col, displ);
 		cols = get_v3f(cols.x + new_dspl.x, cols.y + new_dspl.y, cols.z + new_dspl.z);
-		if (new_dspl.x && e->type == mover && (col->type == mover))
+		if (new_dspl.x && e->type == nt_mover && (col->type == nt_mover))
 			col->mov.x = -col->mov.x;
-		if (new_dspl.y && (col->type == mover))
+		if (new_dspl.y && (col->type == nt_mover))
 			e->mov.y = col->mov.y;
 		node = node->next;
 	}

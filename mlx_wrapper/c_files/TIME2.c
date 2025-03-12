@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:42:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/03 22:42:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 06:09:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,6 @@ double	get_total_time(t_timer *timer)
 void	handle_timers(t_md *md, t_timer *tm)
 {
 	tm->is_game_running = md->gst.state == in_game;
-	if (md->coins_left)
-	{
-		if (md->gst.state == in_game && !tm->is_game_running)
-			resume_timer(tm);
-		else if (tm->is_game_running)
-			stop_timer(tm);
-		tm->level_timer = get_total_time(tm);
-	}
 	(md->gst.state != in_game && (md->gst.menu_time++));
 	(md->gst.state == in_game && (md->gst.menu_time = 0));
 	(md->gst.state == in_game && (md->time++));
