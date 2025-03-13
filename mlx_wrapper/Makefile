@@ -14,7 +14,7 @@ SOURCES = \
 c_files/colors.c c_files/free_b.c c_files/input.c c_files/input_mouse.c c_files/render.c c_files/string_2.c \
 c_files/string_3.c c_files/time2.c c_files/vector_3float.c c_files/free_a.c c_files/images_data.c c_files/time.c \
 c_files/tools.c c_files/string.c c_files/init_wrapper.c c_files/vector_2.c c_files/vector_3.c c_files/vector_4.c \
-c_files/free_c.c c_files/images_b.c c_files/audio.c c_files/entities.c c_files/images_a.c \
+c_files/free.c c_files/images_b.c c_files/audio.c c_files/images_a.c \
 
 OBJ = $(SOURCES:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 21:05:08 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:50:43 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,8 @@ int		free_images(t_md *md, void ***images, char *label);
 int		free_image_data(t_md *md, t_image *img_data);
 int		free_images_data(t_md *md, t_image **images, char *label);
 int		free_md(t_md *md, int quit);
+int		safe_free(void *item);
+int		free_and_quit(t_md *d, const char *msg, const char *attribute);
 
 //		AUDIO.c
 pid_t	play_random_sound(const char *path, int len, const char *format);

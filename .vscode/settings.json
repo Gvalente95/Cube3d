@@ -1,26 +1,5 @@
 {
 	"files.associations": {
-		"cube.h": "c",
-		"mlx_utils.h": "c",
-		"variant": "c",
-		"get_next_line.h": "c",
-		"__hash_table": "c",
-		"__split_buffer": "c",
-		"array": "c",
-		"bitset": "c",
-		"initializer_list": "c",
-		"string": "c",
-		"string_view": "c",
-		"unordered_map": "c",
-		"vector": "c",
-		"entity.h": "c",
-		"libft.h": "c",
-		"stdlib.h": "c",
-		"unistd.h": "c",
-		"keys.h": "c",
-		"keys_lin.h": "c",
-		"math.h": "c",
-		"stdio.h": "c",
-		"keys_lnx.h": "c"
+		"stddef.h": "c"
 	}
 }

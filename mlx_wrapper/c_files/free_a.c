@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FREE_a.c                                           :+:      :+:    :+:   */
+/*   free_a.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 19:33:00 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:36:13 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ int	free_image_data(t_md *md, t_image *img_data)
 	return (res + 1);
 }
 
-
 int	free_images_data(t_md *md, t_image **images, char *label)
 {
 	int	i;
 	int	free_count;
-
 
 	if (!images)
 	{
@@ -69,7 +67,6 @@ int	free_images(t_md *md, void ***images, char *label)
 	*images = NULL;
 	return (free_count + 1);
 }
-
 
 int	free_e_frms(t_md *md)
 {

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 21:05:49 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:26:46 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	setstr(char **str, char *new)
 {
-	safe_free(*str);
+	if (*str)
+		free(str);
 	*str = new;
 }
 

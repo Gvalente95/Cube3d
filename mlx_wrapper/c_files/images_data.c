@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   image_data.c                                       :+:      :+:    :+:   */
+/*   images_data.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 20:23:45 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:28:27 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,6 @@ void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
 	{
 		txtr[i] = md->mlx_make(md->mlx, frms[i], &size.x, &size.y);
 		txtr[i] = scale_img(md, txtr[i], &size, final_size);
-		if (!txtr[i])
-			free_and_quit(md, "img fail in ld_txtrs\n", frms[i]);
 		free(frms[i++]);
 	}
 	free(frms);
@@ -113,17 +111,19 @@ void	*init_img_data(t_md *md, t_image *img_data, t_vec2 img_size, char *path)
 
 void	init_imgs_data(t_md *md, t_vec2 size, t_image **data, char *path)
 {
-	t_vec2	size;
 	char	**frms;
 	int		amount;
 	int		i;
 
 	if (!path)
-		return (NULL);
+		return ;
 	path = ft_megajoin(md->img_dir_path, "/", path, NULL);
 	frms = get_frames(md, path, &amount, ENT_FRAMES_MAX);
 	if (!frms)
-		return (printf("\"%s\" frames NULL\n", path), free(path), NULL);
+	{
+		printf("\"%s\" frames NULL\n", path);
+		return ;
+	}
 	free(path);
 	data = md_malloc(md, sizeof(t_image *) * (amount + 1));
 	i = 0;
