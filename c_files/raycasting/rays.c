@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:55:16 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 02:47:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,8 @@ void	render_rays(t_md *md, t_vec3f start_pos)
 		md->rays[i].index = i;
 		md->rays[i].hit_vrt = 0;
 		md->rays[i].hit_vrt_at_e = 0;
-		md->rays[i].hit = get_v3f(0, 0, 0);
 		md->rays[i].found_e = NULL;
+		md->rays[i].hit = get_v3f(0, 0, 0);// who am i if i am useles??
 		md->rays[i].start = start_pos;
 		md->rays[i].pos = start_pos;
 		md->rays[i].side_dst = get_v3f(0, 0, 0);

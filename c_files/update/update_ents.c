@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_ents.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 06:19:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 23:48:50 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	update_ent_frame(t_md *md, t_ent *e)
 {
 	e->frame_index++;
 	if (!md->e_frms[e->type][e->action][e->frame_index])
-		e->frame_index = 2;
+		e->frame_index = 0;
 	e->frame = md->e_frms[e->type][e->action][e->frame_index];
 }
 

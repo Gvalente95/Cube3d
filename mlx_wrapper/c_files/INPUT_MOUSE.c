@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   INPUT_MOUSE.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/09 02:54:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 23:56:11 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ int	mouse_motion_handler(int x, int y, void *param)
 	grid_pos = get_grid_posf(md, md->mouse_pos);
 	md->mouse_grid_pos = get_v2((grid_pos.x + md->cam_ofst.x) / md->t_len, \
 		(grid_pos.y + md->cam_ofst.y) / md->t_len);
+	if (!md->mouse_focus)
+		printf("mouse set succesfully\n");
 	md->mouse_focus = 1;
 	return (0);
 }
 
 int	update_mouse(t_md *md)
 {
-	if (!md->mouse_focus)
-		return (1);
 	if (md->time % 5 == 0)
 	{
 		md->mouse_delta = get_v3f(md->mouse_prv_pos.x - md->mouse_pos.x, \

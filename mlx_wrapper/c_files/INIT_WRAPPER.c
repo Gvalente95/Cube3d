@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   INIT_WRAPPER.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 06:10:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 01:09:25 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	init_md(t_md *md)
 {
-	memset(md->key_prs, 0, 512);
+	ft_memset(md->key_prs, 0, 512);
 	md->mlx = mlx_init();
 	md->txtr_2d = NULL;
 	md->win = NULL;
@@ -30,16 +30,47 @@ int	init_md(t_md *md)
 	return (1);
 }
 
+void	init_os_params(t_md *md)
+{
+	md->mlx_put = mlx_put_image_to_window;
+	md->mlx_make = mlx_png_file_to_image;
+	md->is_linux = 0;
+	ft_strlcpy(md->img_dir_path, IMG_PATH, 10);
+	if (LIN)
+	{
+		ft_strlcpy(md->base_map_path, "maps/lnx/map.cub", 20);
+		md->mlx_make = mlx_xpm_file_to_image;
+		printf("OS : linux ");
+		md->is_linux = 1;
+	}
+	else
+		ft_strlcpy(md->base_map_path, "maps/mac/map.cub", 20);
+	printf("img path: %s format: %s\n", IMG_PATH, IMG_FORMAT);
+	printf("wrapper LIN = %d\n", LIN);
+	ft_strlcpy(md->img_dir_path, IMG_PATH, 10);
+	ft_strlcpy(md->img_format, IMG_FORMAT, 10);
+	ft_strlcpy(md->img_format, IMG_FORMAT, 10);
+}
+
 void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)
 {
 	start_timer(&md->timer.game_start);
-	md->mlx_put = mlx_put_image_to_window;
+	init_os_params(md);
 	init_md(md);
 	md->win = mlx_new_window(md->mlx, win_size.x, win_size.y, win_name);
 	md->win_size = get_v2(win_size.x, win_size.y);
 	md->t_len = win_size.x / row_amount;
 	md->row_amount = row_amount;
-	mlx_hook(md->win, KEY_PRESS, 0, handle_key_press, md);
-	mlx_hook(md->win, KEY_RELEASE, 0, handle_key_release, md);
-	mlx_hook(md->win, 17, 0, close_window, md);
+	if (md->is_linux)
+	{
+		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
+		mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
+		mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
+	}
+	else
+	{
+		mlx_hook(md->win, 2, 0, handle_key_press, md);
+		mlx_hook(md->win, 3, 0, handle_key_release, md);
+		mlx_hook(md->win, 17, 0, close_window, md);
+	}
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TEXT.c                                             :+:      :+:    :+:   */
+/*   text.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/11 18:41:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 17:00:24 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 {
 	t_ent	l;
 	char	*path;
-	char	*p;
 	char	*txt;
 
+	c = ft_toupper(c);
 	if (c == '.')
 		txt = ft_strdup("dot");
 	else if (c == ':')
@@ -31,12 +31,10 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 		txt[0] = c;
 		txt[1] = '\0';
 	}
-	path = ft_strjoin(FONT_SPRITE_PATH, txt);
-	p = ft_strjoin(path, ".png");
-	free(path);
-	if (access(p, F_OK) == -1)
-		return (free(p), free(txt), 0);
-	l.frame = mlx_png_file_to_image(md->mlx, p, &l.size.x, &l.size.y);
+	path = ft_megajoin(md->img_dir_path, "/utils/font/", txt, md->img_format);
+	if (access(path, F_OK) == -1)
+		return (free(txt), printf("font not found: %s\n", path), free(path), 0);
+	l.frame = md->mlx_make(md->mlx, path, &l.size.x, &l.size.y);
 	if (l.frame)
 	{
 		l.frame = scale_img(md, l.frame, &l.size, get_v2(data.a, data.a));
@@ -44,7 +42,7 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 			set_img_color(l.frame, l.size, data.b, .5);
 		mlx_put_image_to_window(md->mlx, md->win, l.frame, data.r, data.g);
 	}
-	return (free(p), free(txt), mlx_destroy_image(md->mlx, l.frame), l.size.x);
+	return (free(path), free(txt), mlx_destroy_image(md->mlx, l.frame), l.size.x);
 }
 
 static void	display_text(t_md *md, char *text, t_vec4 data)

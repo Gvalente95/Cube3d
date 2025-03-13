@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AUDIO.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/01/15 22:09:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 13:19:59 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

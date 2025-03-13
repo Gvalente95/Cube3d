@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:14:16 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/03 22:35:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 13:21:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include "stdio.h"
 
 # define MAXSIZE 99999
-
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 30
 # endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/12 11:46:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 01:59:34 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,40 @@
 # include "headers/vectors.h"
 # include "headers/entity.h"
 # include "headers/colors.h"
-# include "headers/Keys.h"
 # include "headers/game.h"
 
 # include "libft/libft.h"
 # include "../lists/lists.h"
-# include "mlx/mlx.h"
+# include "mlx_linux/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
 # include <unistd.h>
 # include <time.h>
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <X11/X.h>
+
+# ifdef IS_LINUX
+#  define LIN 1
+#  define IMG_PATH         "xpm"
+#  define IMG_FORMAT       ".xpm"
+#  define CURSOR_SPR_PATH  "xpm/utils/cursor/default.xpm"
+#  define CURS_DTC_PATH    "xpm/utils/cursor/hand_open.xpm"
+#  define CURS_GRB_PATH    "xpm/utils/cursor/hand_closed.xpm"
+#  define FONT_SPRITE_PATH "xpm/utils/font/"
+#  include "headers/Keys_lnx.h"
+# else
+#  define LIN 0
+#  define IMG_PATH         "png"
+#  define IMG_FORMAT       ".png"
+#  define CURSOR_SPR_PATH  "png/utils/cursor/default.png"
+#  define CURS_DTC_PATH    "png/utils/cursor/hand_open.png"
+#  define CURS_GRB_PATH    "png/utils/cursor/hand_closed.png"
+#  define FONT_SPRITE_PATH "png/utils/font/"
+#  include "headers/Keys_mac.h"
+# endif
 
 typedef struct s_input
 {
@@ -115,6 +137,9 @@ typedef struct s_md
 	const char	*ents_tp_names[ENT_TYPE_LEN];
 	const char	*ents_act_names[ENT_ACTION_LEN];
 	const char	*dir_labels[4];
+	char		base_map_path[50];
+	char		img_dir_path[20];
+	char		img_format[20];
 	void		*sky;
 	void		*floor;
 	void		*mlx;
@@ -130,6 +155,8 @@ typedef struct s_md
 	void		**txtr_2d;
 	void		****e_frms;
 	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
+	void		*(*mlx_make)(void *mlx, char *name, int *with, int *height);
+	int			is_linux;
 	int			rgb[17];
 	int			key_prs[512];
 	int			txt_scale;

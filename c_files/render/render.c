@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 05:33:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 01:27:12 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,11 @@ void	render_background(t_md *md)
 	t_vec3f	offs_spd;
 
 	offs_spd = get_v3f(3.0, 3.0, 0);
-
 	if (!md->ray_mode)
 	{
 		md->mlx_put(md->mlx, md->win, md->floor, 0, 0);
-		return;
+		return ;
 	}
-
 	md->mlx_put(md->mlx, md->win, md->sky, 0, 0);
 	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
 	offs.y = fmod((((md->plr.rot.y + 90.0)) / 180.0) * md->win_size.y * offs_spd.y, md->win_size.y * 2);
@@ -125,7 +123,7 @@ void	render(t_md *md)
 		render_entities(md);
 	md->mlx_put(md->mlx, md->win, md->center, \
 	md->win_size.x / 2 - CROSS_SCALE / 2, md->win_size.y / 2 - CROSS_SCALE / 2);
-	if (!md->mouse_hide)
-		render_cursor(md, 0);
+	render_cursor(md, 0);
 	show_update_information(md);
+	usleep(16000);
 }

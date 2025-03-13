@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TIME2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:42:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 06:09:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 13:18:45 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,4 @@ double	get_total_time(t_timer *timer)
 void	handle_timers(t_md *md, t_timer *tm)
 {
 	tm->is_game_running = md->gst.state == in_game;
-	(md->gst.state != in_game && (md->gst.menu_time++));
-	(md->gst.state == in_game && (md->gst.menu_time = 0));
-	(md->gst.state == in_game && (md->time++));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:30:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 02:22:20 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 # include "lists/lists.h"
 # include "gnl/get_next_line.h"
 # include <math.h>
+# include <X11/X.h>
 
-# define RESOLUTION		4
+# define RESOLUTION		10
 //		SCREEN
 # define SCRN_W			600
 # define SCRN_H			400
@@ -33,21 +34,20 @@
 # define GRAVITY .1
 # define SCROLL_SPD .3
 //		CURSOR
-# define CURSOR_SPR_PATH "png/utils/cursor/default.png"
-# define CURS_DTC_PATH "png/utils/cursor/hand_open.png"
-# define CURS_GRB_PATH "png/utils/cursor/hand_closed.png"
-# define FONT_SPRITE_PATH "png/utils/font/"
 
 # define STARS_AMOUNT	200
 # define CROSS_SCALE	10
 
 
-typedef enum	polar_dir
+typedef enum polar_dir
 {
-	NORTH,SOUTH,EAST,WEST
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
 }	t_wrd_dir;
-//		init
 
+//		init
 int		init_cube(t_md *md, char *file_arg, int start_debug);
 void	init_ents_data(t_md *md);
 int		init_map(t_md *md, char *file_name);

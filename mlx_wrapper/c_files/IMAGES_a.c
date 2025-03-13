@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IMAGES_a.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/11 18:41:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 16:48:13 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,9 @@ void	*add_img(char *relative_path, int *width, int *height, t_md *md)
 		ft_printf("Tried to add image with null path\n");
 		return (NULL);
 	}
-	if (!md)
-	{
-		ft_printf("Error: mlx instance is NULL\n");
-		return (NULL);
-	}
-	img = mlx_png_file_to_image(md->mlx, relative_path, width, height);
-	if (!img)
-	{
-		ft_printf("ERROR: Failed to load image at path: %s\n", relative_path);
-		return (NULL);
-	}
+	if (access(relative_path, F_OK) == -1)
+		return (printf("no file for %s\n", relative_path), NULL);
+	img = md->mlx_make(md->mlx, relative_path, width, height);
 	return (img);
 }
 

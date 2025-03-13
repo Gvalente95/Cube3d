@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cube.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:18:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 01:22:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,10 @@
 
 static void	init_cursor(t_md *md)
 {
-	t_vec2	curs_size;
-
-	mlx_mouse_hide();
-	md->cursor = mlx_png_file_to_image(md->mlx, \
-		CURSOR_SPR_PATH, &curs_size.x, &curs_size.y);
-	md->cursor = scale_img(md, md->cursor, &curs_size, get_v2(30, 30));
-	md->curs_dtc = mlx_png_file_to_image(md->mlx, \
-		CURS_DTC_PATH, &curs_size.x, &curs_size.y);
-	md->curs_dtc = scale_img(md, md->curs_dtc, &curs_size, get_v2(30, 30));
-	md->curs_grb = mlx_png_file_to_image(md->mlx, \
-		CURS_GRB_PATH, &curs_size.x, &curs_size.y);
-	md->curs_grb = scale_img(md, md->curs_grb, \
-		&curs_size, get_v2(30, 30));
+	md->center = ld_txtr(md, get_v2(CROSS_SCALE, CROSS_SCALE), "utils/center");
+	md->cursor = ld_txtr(md, get_v2(30, 30), "utils/cursor/default");
+	md->curs_dtc = ld_txtr(md, get_v2(30, 30), "utils/cursor/hand_open");
+	md->curs_grb = ld_txtr(md, get_v2(30, 30), "utils/cursor/hand_closed");
 	md->mouse_pressed = 0;
 	md->mouse_clicked = 0;
 	md->mouse_pos = get_v3f(0, 0, 0);
@@ -36,6 +27,12 @@ static void	init_cursor(t_md *md)
 	md->mouse_delta = get_v3f(0, 0, 0);
 	md->mouse_focus = 0;
 	mlx_mouse_hook(md->win, mouse_event_handler, md);
+	if (md->is_linux)
+	{
+		mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
+		mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
+		return ;
+	}
 	mlx_hook(md->win, 5, 0, mouse_release_handler, md);
 	mlx_hook(md->win, 6, 0, mouse_motion_handler, md);
 }
@@ -70,24 +67,16 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 	}
 }
 
-static void	init_center_pointer(t_md *md)
-{
-	t_vec2	pos;
-
-	md->center = add_img("png/utils/center.png", &pos.x, &pos.y, md);
-	md->center = scale_abs_img(md, md->center, \
-			&pos, get_v2(CROSS_SCALE, CROSS_SCALE));
-}
-
 static void	init_background(t_md *md)
 {
 	int		i;
 	t_vec2	r_pos;
 	int		pow;
 
+	print_vec2(md->win_size, "win_size");
 	md->bgrnd_img = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
-	md->floor = ld_txtr(md, get_v2(md->win_size.x, md->win_size.y), "png/ground.png");
-	md->floor = set_img_color(md->floor, get_v2(md->win_size.x, md->win_size.y), md->floor_color, 0.8);
+	md->floor = ld_txtr(md, get_v2(md->win_size.x, md->win_size.y), "ground");
+	md->floor = set_img_color(md->floor, md->win_size, md->floor_color, 0.8);
 	md->sky = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
 	md->sky = set_img_color(md->sky, md->win_size, md->sky_color, 1);
 	i = -1;
@@ -105,7 +94,7 @@ static void	init_background(t_md *md)
 static void	init_game_params(t_md *md, int start_debug)
 {
 	md->init_steps = 0;
-	md->rgb[RGB_RED] = str_to_color("255,0,0");
+	md->rgb[RGB_RED] =  str_to_color("255,0,0");
 	md->rgb[RGB_GREEN] = str_to_color("0,255,0");
 	md->rgb[RGB_BLUE] = str_to_color("0,0,255");
 	md->rgb[RGB_CYAN] = str_to_color("0,255,255");
@@ -146,7 +135,6 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_labels(md);
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
-	init_center_pointer(md);
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;

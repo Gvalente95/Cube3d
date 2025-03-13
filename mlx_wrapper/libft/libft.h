@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 19:40:03 by gvalente          #+#    #+#             */
-/*   Updated: 2024/11/12 04:48:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/12 13:21:28 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <stdarg.h>
+# include <stdint.h>
 
 # define HEXDIGITS_MAJ "0123456789ABCDEF"
 # define HEXDIGITS_MIN "0123456789abcdef"

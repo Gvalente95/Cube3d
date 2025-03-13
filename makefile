@@ -21,13 +21,23 @@ LIBFT		= $(LIBFT_DIR)libft.a
 
 MLX_WRP_DIR = mlx_wrapper/
 MLX_WRAPPER = $(MLX_WRP_DIR)mlx_wrapper.a
-MLXFLAGS = -L mlx_wrapper/mlx -lmlx -framework OpenGL -framework AppKit -lz
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+	PLATFORM = linux
+	MLXFLAGS = -L mlx_wrapper/mlx_linux -lmlx -lX11 -lXext -lXcursor -lGL -lz -lm
+	CFLAGS += -DIS_LINUX
+else
+	PLATFORM = linux
+	MLXFLAGS = -L mlx_wrapper/mlx -lmlx -framework OpenGL -framework AppKit -lz
+endif
 
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Wall
+CFLAGS		+= -Wall -Wextra -Werror
 
 $(MLX_WRAPPER):
-	make -C $(MLX_WRP_DIR) --no-print-directory
+	make -C $(MLX_WRP_DIR) PLATFORM=$(PLATFORM) --no-print-directory
 
 $(LISTS):
 	make -C $(LISTS_DIR) --no-print-directory
@@ -38,16 +48,16 @@ $(GNL):
 $(LIBFT):
 	make -C $(LIBFT_DIR) --no-print-directory
 
-$(GAME_NAME): $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
+$(GAME_NAME): $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
 	$(CC) $(CFLAGS) $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o $(GAME_NAME)
-	@echo "$(GAME_NAME) Generated"
+	@echo "$(GAME_NAME) Generated on $(UNAME_S)"
 
 leaks: all
 	leaks --atExit -- ./cube square.cub 1 15
 
 all: $(GAME_NAME)
 
-debug: $(GAME_NAME) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
+debug: $(GAME_NAME) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT) $(SRC) $(SRC_UTILS)
 	$(CC) -fsanitize=address -g $(CFLAGS) $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o $(GAME_NAME)
 	@echo "$(GAME_NAME) debug Generated"
 
@@ -76,4 +86,3 @@ fclean: quiet_clean
 re: fclean all
 
 phony: all re bonus clean fclean
-.SILENT:
