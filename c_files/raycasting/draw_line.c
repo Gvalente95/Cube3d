@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 04:31:53 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 05:38:07 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ void	draw_texture_pixels(t_md *md, void *img, t_vec2 size, t_vec2 start_pos, flo
 		offset = ((int)txt_p.y * (dt.len / 4)) + (int)txt_p.x;
 		color = *(dt.src_data + offset);
 		if ((color >> 24) == 0x00)
-			
-			mlx_pixel_put(md->mlx, md->win, start_pos.x, y_pos + start_pos.y - md->plr.pos.z, color);
+			mlx_pixel_put(md->mlx, md->win, start_pos.x, y_pos + start_pos.y - md->plr.pos.y, color);
 	}
 }
 

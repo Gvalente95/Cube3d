@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 01:27:12 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 05:42:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	render_2d_ent(t_md *md, t_ent *e)
 	t_vec2	ent_p;
 	t_vec2	centr;
 
-	centr = get_v2((md->win_size.x / 4 + md->size_2d / 2 - (md->cam_ofst.x / md->t_len * md->size_2d)), md->win_size.y / 4 + md->size_2d / 2 - ((md->cam_ofst.y / md->t_len) * md->size_2d));
+	centr = get_v2((md->win_size.x / 4 + md->size_2d / 2 - \
+		(md->cam_ofst.x / md->t_len * md->size_2d)), \
+		md->win_size.y / 4 + md->size_2d / 2 - \
+		((md->cam_ofst.y / md->t_len) * md->size_2d));
 	ent_p.x = centr.x + (e->pos.x / md->t_len) * md->size_2d;
 	ent_p.y = centr.y + (e->pos.y / md->t_len) * md->size_2d;
 	if (md->txtr_2d[e->type])
@@ -81,6 +84,7 @@ void	render_background(t_md *md)
 	t_vec2	offs;
 	t_vec3f	offs_spd;
 
+	mlx_put_image_to_window(md->mlx, md->win, md->bgrnd_img, 0, 0);
 	offs_spd = get_v3f(3.0, 3.0, 0);
 	if (!md->ray_mode)
 	{
@@ -96,14 +100,10 @@ void	render_background(t_md *md)
 	md->mlx_put(md->mlx, md->win, md->sky, md->win_size.x - offs.x, md->win_size.y - offs.y);
 	if (md->plr.rot.y + md->plr.pos.z <= -45)
 		return ;
-
-
 	offs_spd = get_v3f(5.0, 5.0, 0);
-
 	pitch_offs = compute_perspective_change(md, NULL, 99999);
-	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x - md->wrd_mv_offst.x, md->win_size.x);
-	offs.y = fmod(pitch_offs + md->win_size.y / 2 - md->plr.pos.z, md->win_size.y); // **Inverted direction**
-
+	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
+	offs.y = fmod(pitch_offs + md->win_size.y / 2 - md->plr.pos.z, md->win_size.y);
 	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y + md->win_size.y);
 	md->mlx_put(md->mlx, md->win, md->floor, md->win_size.x - offs.x, offs.y);
 	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y);
@@ -125,5 +125,4 @@ void	render(t_md *md)
 	md->win_size.x / 2 - CROSS_SCALE / 2, md->win_size.y / 2 - CROSS_SCALE / 2);
 	render_cursor(md, 0);
 	show_update_information(md);
-	usleep(16000);
 }

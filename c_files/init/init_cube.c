@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 01:22:04 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 05:25:08 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ static void	init_background(t_md *md)
 	t_vec2	r_pos;
 	int		pow;
 
-	print_vec2(md->win_size, "win_size");
 	md->bgrnd_img = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
 	md->floor = ld_txtr(md, get_v2(md->win_size.x, md->win_size.y), "ground");
 	md->floor = set_img_color(md->floor, md->win_size, md->floor_color, 0.8);

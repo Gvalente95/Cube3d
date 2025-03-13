@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 02:22:20 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 05:41:14 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 # define RESOLUTION		10
 //		SCREEN
-# define SCRN_W			600
-# define SCRN_H			400
+# define SCRN_W			1200
+# define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		5000
 # define FOV			60
@@ -129,5 +129,6 @@ void	draw_pxl(t_md *md, t_ray *ray, float height, t_ent *col, t_vec2 txt_p);
 
 int		vec4_to_color(int r, int g, int b, int a);
 int		ft_sign(float a);
+int		my_put_pixel(void *frame, int x, int y, int col);
 
 #endif

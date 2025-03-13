@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_plr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:17:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 05:40:34 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ int	update_player(t_md *md)
 	if (md->mouse_focus)
 		update_player_rot(md);
 	update_player_mov(md);
+	plr->mov.z = 0;
+	plr->pos.z = 0;
 	set_collisions(md, plr);
 	move_ent(plr);
 	plr->coord_pos = get_v3(\

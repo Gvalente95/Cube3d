@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 01:59:34 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 05:15:51 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,15 @@ typedef struct s_input
 
 typedef struct s_image_data
 {
-	t_vec2	pos;
 	t_vec2	size;
+	t_vec2	pos;
+	char	*data;
 	void	*dest;
 	double	x_ratio;
 	double	y_ratio;
 	int		*src_data;
 	int		*dst_data;
+	int		size_line;
 	int		bpp;
 	int		len;
 	int		bps;
@@ -133,6 +135,7 @@ typedef struct s_md
 	t_vec3f		plr_wrd_mv;
 	pid_t		bgrnd_au;
 	pid_t		bgrnd_mus;
+	t_image		bgrnd_img_data;
 	const char	*ents_tp_map[1];
 	const char	*ents_tp_names[ENT_TYPE_LEN];
 	const char	*ents_act_names[ENT_ACTION_LEN];
