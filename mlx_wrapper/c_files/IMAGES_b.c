@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IMAGES_b.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:52:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/11 23:15:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 17:12:46 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,31 +68,31 @@ void	set_transparency(void *src, void *dest, t_vec2 size, float trnsp)
 
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size)
 {
-	t_image	img;
+	t_image	img_data;
 	t_vec2	src_pos;
 	t_vec2	dst_pos;
 
-	img.dest = mlx_new_image(md->mlx, src_size.x, src_size.y);
-	if (img.dest == NULL)
+	img_data.img = mlx_new_image(md->mlx, src_size.x, src_size.y);
+	if (img_data.img == NULL)
 		return (NULL);
-	img.src_data = (int *)mlx_get_data_addr(src, &img.bpp, &src_pos.x, \
-		&img.endian);
-	img.dst_data = (int *)mlx_get_data_addr(img.dest, &img.bpp, &dst_pos.x, \
-		&img.endian);
-	img.pos.y = 0;
-	while (img.pos.y < src_size.y)
+	img_data.src_data = (int *)mlx_get_data_addr(src, &img_data.bpp, &src_pos.x, \
+		&img_data.endian);
+	img_data.dst_data = (int *)mlx_get_data_addr(img_data.img, &img_data.bpp, &dst_pos.x, \
+		&img_data.endian);
+	img_data.pos.y = 0;
+	while (img_data.pos.y < src_size.y)
 	{
-		img.pos.x = 0;
-		while (img.pos.x < src_size.x)
+		img_data.pos.x = 0;
+		while (img_data.pos.x < src_size.x)
 		{
-			src_pos.y = (img.pos.y * src_pos.x / 4) + img.pos.x;
-			dst_pos.y = (img.pos.y * dst_pos.x / 4) + img.pos.x;
-			img.dst_data[dst_pos.y] = img.src_data[src_pos.y];
-			img.pos.x++;
+			src_pos.y = (img_data.pos.y * src_pos.x / 4) + img_data.pos.x;
+			dst_pos.y = (img_data.pos.y * dst_pos.x / 4) + img_data.pos.x;
+			img_data.dst_data[dst_pos.y] = img_data.src_data[src_pos.y];
+			img_data.pos.x++;
 		}
-		img.pos.y++;
+		img_data.pos.y++;
 	}
-	return (img.dest);
+	return (img_data.img);
 }
 
 int	str_to_color(const char *line)

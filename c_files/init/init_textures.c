@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:09:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 17:12:40 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:00:52 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
 	texture = md->mlx_make(md->mlx, path, &txt_size.x, &txt_size.y);
 	if (!texture)
 		return (printf("\"%s\" unable to make txtr\n", path), free(path), NULL);
-	texture = scale_img(md, texture, &txt_size, final_size);
+	texture = scale_abs_img(md, texture, &txt_size, final_size);
 	if (!texture)
 		return (printf("\"%s\" unable to scale txtr\n", path), free(path), NULL);
 	free(path);

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 05:42:35 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:02:08 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	render_background(t_md *md)
 	offs_spd = get_v3f(5.0, 5.0, 0);
 	pitch_offs = compute_perspective_change(md, NULL, 99999);
 	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
-	offs.y = fmod(pitch_offs + md->win_size.y / 2 - md->plr.pos.z, md->win_size.y);
+	offs.y = fmod(pitch_offs - md->plr.pos.z, md->win_size.y);
 	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y + md->win_size.y);
 	md->mlx_put(md->mlx, md->win, md->floor, md->win_size.x - offs.x, offs.y);
 	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y);

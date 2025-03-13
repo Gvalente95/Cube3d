@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 05:15:51 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:11:34 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_image_data
 	t_vec2	size;
 	t_vec2	pos;
 	char	*data;
-	void	*dest;
+	void	*img;
 	double	x_ratio;
 	double	y_ratio;
 	int		*src_data;
@@ -98,17 +98,23 @@ typedef struct s_ray
 	float	distance;
 	float	angle;
 	float	median;
-	int		hit_wall_index;  	// 1 si mur vertical, 0 si horizontal
-	int		hit_vrt;  	// 1 si mur vertical, 0 si horizontal
-	t_vec3f	side_dst; 		// Distance jusqu’à la prochaine ligne verticale - horizontale
-	t_vec3f	delta_dst; 	// Distance entre deux lignes verticales - horizontales
-	t_vec2	step_p; 		// Direction du pas en X-Y (-1 ou 1)
-	int		index;			// index du rayon et index de la colonne de pixel qu'on va render
+	int		hit_wall_index;
+	int		hit_vrt;
+	t_vec3f	side_dst;
+	t_vec3f	delta_dst;
+	t_vec2	step_p;
+	int		index;
 	int		color;
 	t_ent	*found_e;
 	t_vec3f	pos_at_e;
 	int		hit_vrt_at_e;
 }	t_ray;
+
+typedef struct s_screen
+{
+	t_image		screen_data;
+	void		*screen_buffer;
+}	t_screen;
 
 typedef struct s_md
 {
@@ -135,7 +141,7 @@ typedef struct s_md
 	t_vec3f		plr_wrd_mv;
 	pid_t		bgrnd_au;
 	pid_t		bgrnd_mus;
-	t_image		bgrnd_img_data;
+	void		*bgrnd_img;
 	const char	*ents_tp_map[1];
 	const char	*ents_tp_names[ENT_TYPE_LEN];
 	const char	*ents_act_names[ENT_ACTION_LEN];
@@ -151,7 +157,6 @@ typedef struct s_md
 	void		*cursor;
 	void		*curs_dtc;
 	void		*curs_grb;
-	void		*bgrnd_img;
 	void		**prt_img;
 	void		**wall_txtr;
 	void		**wall_txtr_2d;
