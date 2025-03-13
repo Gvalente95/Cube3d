@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   entity.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:09:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 17:27:37 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct s_entity
 	t_vec3			coord_pos;
 	void			*frame;
 	void			***anim;
+	float			angle;
 	int				map_index;
 	int				is_active;
 	int				level;
@@ -107,7 +108,6 @@ typedef struct s_entity
 	int				jumps;
 	int				frame_index;
 	int				in_screen;
-	float			angle;
 }	t_ent;
 
 typedef struct s_particle

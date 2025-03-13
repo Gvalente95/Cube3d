@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 16:57:41 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 20:26:05 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,32 +69,33 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 
 static void	init_background(t_md *md)
 {
-	int		i;
+	void	*cur_img;
 	t_vec2	r_pos;
+	int		i;
 	int		pow;
 
-	md->bgrnd_img = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
-	//md->floor = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
-	md->floor = ld_txtr(md, md->win_size, "ground");
-	md->floor = set_img_color(md->floor, md->win_size, md->floor_color, 0.8);
-	md->sky = mlx_new_image(md->mlx, md->win_size.x, md->win_size.y);
-	md->sky = set_img_color(md->sky, md->win_size, md->sky_color, 1);
+	init_img_data(md, md->screen->buffer, md->win_size, NULL);
+	cur_img = init_img_data(md, md->screen->floor, md->win_size, "ground");
+	cur_img = set_img_color(cur_img, md->win_size, md->floor_color, 0.8);
+	if (!cur_img)
+		free_and_quit(md, "alloc of floor", NULL);
+	cur_img = init_img_data(md, md->screen->sky, md->win_size, NULL);
+	cur_img = set_img_color(cur_img, md->win_size, md->sky_color, 1);
+	if (!cur_img)
+		free_and_quit(md, "alloc of sky", NULL);
 	i = -1;
 	while (++i < STARS_AMOUNT)
 	{
 		pow = r_range(50, 255);
 		r_pos = get_v2(r_range(0, md->win_size.x), r_range(0, md->win_size.y));
-		color_img(md->sky, md->win_size, vec4_to_color(pow, pow, pow, pow), \
+		color_img(cur_img, md->win_size, vec4_to_color(pow, pow, pow, pow), \
 			get_v4(r_pos.x, r_pos.y, r_pos.x + 1, r_pos.y + 1));
 	}
-	if (!md->floor || !md->sky)
-		free_and_quit(md, "alloc of sky/floor", NULL);
 }
 
 static void	init_game_params(t_md *md, int start_debug)
 {
-	md->init_steps = 0;
-	md->rgb[RGB_RED] =  str_to_color("255,0,0");
+	md->rgb[RGB_RED] = str_to_color("255,0,0");
 	md->rgb[RGB_GREEN] = str_to_color("0,255,0");
 	md->rgb[RGB_BLUE] = str_to_color("0,0,255");
 	md->rgb[RGB_CYAN] = str_to_color("0,255,255");
@@ -111,6 +112,7 @@ static void	init_game_params(t_md *md, int start_debug)
 	md->rgb[RGB_CORAL] = str_to_color("255,128,80");
 	md->rgb[RGB_WHITE] = str_to_color("255,255,255");
 	md->rgb[RGB_BLACK] = str_to_color("0,0,0");
+	md->init_steps = 0;
 	md->txt_scale = 10;
 	md->input_mov = get_v3f(0, 0, 0);
 	md->wrd_mv_offst = get_v3f(0, 0, 0);
@@ -122,6 +124,7 @@ static void	init_game_params(t_md *md, int start_debug)
 	md->plr_wrd_mv = get_v3f(0, 0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
 	md->wrd_mv_offst = get_v3f(0, 0, 0);
+	init_img_data(md, md->screen->buffer, md->win_size, NULL);
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)

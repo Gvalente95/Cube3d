@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dda_ray.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:06:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 01:16:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/13 20:19:25 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	dda_draw_txt_line(t_md *md, t_ray *ray, t_ent *col)
 		txt_p.x = (int)(fmod(ray->pos.y, md->t_len) * col->size.x / md->t_len);
 	else
 		txt_p.x = (int)(fmod(ray->pos.x, md->t_len) * col->size.x / md->t_len);
-	draw_pxl(md, ray, height, col, txt_p);
+	txt_p.y = ray->distance;
+	draw_pixel(md->screen->buffer, txt_p.x, txt_p.y, ray->color);
 }
 
 static void	show_ray(t_md *md, t_vec3f ray_pos, t_ent *col, int color)

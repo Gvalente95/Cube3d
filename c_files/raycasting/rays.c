@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 05:38:58 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 20:18:20 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ static int	show_ray(t_md *md, t_ray *ray, t_ent *col)
 	if (!is_in_screen(md, ray_2dp, get_v2(1, 1)))
 		return (0);
 	if (!col)
-		return (mlx_pixel_put(md->mlx, md->win, ray_2dp.x, ray_2dp.y, ray->color));
+		return (draw_pixel(md->screen->buffer, ray_2dp.x, ray_2dp.y, ray->color));
 	draw_end = get_v2(ray_2dp.x + 3, ray_2dp.y + 3);
 	ray_2dp = get_v3(ray_2dp.x - 3, ray_2dp.y - 3, 0);
 	while (++ray_2dp.y < draw_end.y)
 	{
 		ray_2dp.x = draw_end.x - 6;
 		while (++ray_2dp.x < draw_end.x)
-			mlx_pixel_put(md->mlx, md->win, ray_2dp.x, ray_2dp.y, ray->color);
+			draw_pixel(md->screen->buffer, ray_2dp.x, ray_2dp.y, ray->color);
 	}
 	return (1);
 }

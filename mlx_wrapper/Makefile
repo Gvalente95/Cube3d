@@ -11,10 +11,10 @@ else
 endif
 
 SOURCES = \
-c_files/TOOLS.c c_files/INPUT_MOUSE.c c_files/FREE_c.c c_files/TIME2.c \
-c_files/INPUT.c c_files/TIME.c c_files/FREE_b.c c_files/IMAGES_b.c \
-c_files/INIT_WRAPPER.c c_files/IMAGES_a.c c_files/FREE_a.c c_files/AUDIO.c c_files/COLORS.c \
-c_files/VECTOR_2.c c_files/VECTOR_4.c c_files/VECTOR_3.c c_files/VECTOR_3float.c
+c_files/colors.c c_files/free_b.c c_files/input.c c_files/input_mouse.c c_files/render.c c_files/string_2.c \
+c_files/string_3.c c_files/time2.c c_files/vector_3float.c c_files/free_a.c c_files/images_data.c c_files/time.c \
+c_files/tools.c c_files/string.c c_files/init_wrapper.c c_files/vector_2.c c_files/vector_3.c c_files/vector_4.c \
+c_files/free_c.c c_files/images_b.c c_files/audio.c c_files/entities.c c_files/images_a.c \
 
 OBJ = $(SOURCES:.c=.o)
 

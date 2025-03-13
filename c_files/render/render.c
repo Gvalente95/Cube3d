@@ -6,15 +6,29 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 17:02:08 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 20:09:19 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
+
+void	render_cursor(t_md *md, int has_hov)
+{
+	if (md->mouse_pressed && has_hov)
+		mlx_put_image_to_window(md->mlx, md->win, \
+md->curs_grb, md->mouse_pos.x, md->mouse_pos.y);
+	else if (has_hov)
+		mlx_put_image_to_window(md->mlx, md->win, \
+md->curs_dtc, md->mouse_pos.x, md->mouse_pos.y);
+	else
+		mlx_put_image_to_window(md->mlx, md->win, \
+md->cursor, md->mouse_pos.x, md->mouse_pos.y);
+}
+
 void	render_init_img(t_md *md, void *img, t_vec2 size, char *txt)
 {
-	md->mlx_put(md->mlx, md->win, md->bgrnd_img, 0, 0);
+	md->mlx_put(md->mlx, md->win, md->screen->sky->img, 0, 0);
 	md->mlx_put(md->mlx, md->win, img, \
 		md->win_size.x / 2 - size.x / 2, md->win_size.y - size.y / 2);
 	rnd_abs_txt(md, \
@@ -84,34 +98,35 @@ void	render_background(t_md *md)
 	t_vec2	offs;
 	t_vec3f	offs_spd;
 
-	mlx_put_image_to_window(md->mlx, md->win, md->bgrnd_img, 0, 0);
+
 	offs_spd = get_v3f(3.0, 3.0, 0);
 	if (!md->ray_mode)
 	{
-		md->mlx_put(md->mlx, md->win, md->floor, 0, 0);
+		draw_img(md->screen->floor, md->screen->buffer, 0, 0);
 		return ;
 	}
-	md->mlx_put(md->mlx, md->win, md->sky, 0, 0);
+	draw_img(md->screen->floor, md->screen->sky, 0, 0);
 	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
-	offs.y = fmod((((md->plr.rot.y + 90.0)) / 180.0) * md->win_size.y * offs_spd.y, md->win_size.y * 2);
-	md->mlx_put(md->mlx, md->win, md->sky, -offs.x, -offs.y);
-	md->mlx_put(md->mlx, md->win, md->sky, md->win_size.x - offs.x, -offs.y);
-	md->mlx_put(md->mlx, md->win, md->sky, -offs.x, md->win_size.y - offs.y);
-	md->mlx_put(md->mlx, md->win, md->sky, md->win_size.x - offs.x, md->win_size.y - offs.y);
+	offs.y = fmod((((md->plr.rot.y + 90.0)) / 180.0) * md->win_size.y * offs_spd.y, md->win_size.y * 2);\
+	draw_img(md->screen->floor, md->screen->sky, -offs.x, -offs.y);
+	draw_img(md->screen->floor, md->screen->sky, md->win_size.x - offs.x, -offs.y);
+	draw_img(md->screen->floor, md->screen->sky, -offs.x, md->win_size.y - offs.y);
+	draw_img(md->screen->floor, md->screen->sky, md->win_size.x - offs.x, md->win_size.y - offs.y);
 	if (md->plr.rot.y + md->plr.pos.z <= -45)
 		return ;
 	offs_spd = get_v3f(5.0, 5.0, 0);
 	pitch_offs = compute_perspective_change(md, NULL, 99999);
 	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
 	offs.y = fmod(pitch_offs - md->plr.pos.z, md->win_size.y);
-	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y + md->win_size.y);
-	md->mlx_put(md->mlx, md->win, md->floor, md->win_size.x - offs.x, offs.y);
-	md->mlx_put(md->mlx, md->win, md->floor, -offs.x, offs.y);
-	md->mlx_put(md->mlx, md->win, md->floor, md->win_size.x - offs.x, offs.y + md->win_size.y);
+	draw_img(md->screen->floor, md->screen->floor, -offs.x, offs.y + md->win_size.y);
+	draw_img(md->screen->floor, md->screen->floor, md->win_size.x - offs.x, offs.y);
+	draw_img(md->screen->floor, md->screen->floor, -offs.x, offs.y);
+	draw_img(md->screen->floor, md->screen->floor, md->win_size.x - offs.x, offs.y + md->win_size.y);
 }
 
 void	render(t_md *md)
 {
+	flush_img(md->screen->buffer);
 	render_background(md);
 	render_rays(md, get_v3f(\
 		md->plr.pos.x + md->plr.size.x / 2, \

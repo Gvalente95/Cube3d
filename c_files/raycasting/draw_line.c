@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 05:38:07 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:33:49 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	draw_texture_pixels(t_md *md, void *img, t_vec2 size, t_vec2 start_pos, flo
 	int		y_end;
 	float	step;
 
-	dt.src_data = (int *)mlx_get_data_addr(img, &dt.bpp, &dt.len, &dt.endian);
+	dt.src_data = (int *)mlx_get_data_addr(img, &dt.bpp, &dt.size_line, &dt.endian);
 	y_pos = (md->win_size.y / 2 - height / 2) - 1;
 	step = size.y / height;
 	y_end = (md->win_size.y / 2 + height / 2);
@@ -43,7 +43,7 @@ void	draw_texture_pixels(t_md *md, void *img, t_vec2 size, t_vec2 start_pos, flo
 		txt_p.y = (y_pos - (md->win_size.y / 2 - height / 2)) * step;
 		if (txt_p.y < 0 || txt_p.y >= size.y)
 			continue ;
-		offset = ((int)txt_p.y * (dt.len / 4)) + (int)txt_p.x;
+		offset = ((int)txt_p.y * (dt.size_line / 4)) + (int)txt_p.x;
 		color = *(dt.src_data + offset);
 		if ((color >> 24) == 0x00)
 			mlx_pixel_put(md->mlx, md->win, start_pos.x, y_pos + start_pos.y - md->plr.pos.y, color);
