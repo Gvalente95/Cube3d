@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 01:02:46 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:08:21 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@
 # define NUM_RGTOPT_KEY	262
 
 # define ESC_KEY         27   // ASCII de ESC
-# define LEFT_KEY       'w'
+# define LEFT_KEY       'a'
 # define RIGHT_KEY      'd'
 # define DOWN_KEY       's'
 # define UP_KEY         'w'

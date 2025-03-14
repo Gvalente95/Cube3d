@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 03:00:17 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:06:23 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,4 +175,6 @@ void	render_rays(t_md *md, t_vec3f start_pos)
 		md->rays[i].median = 0;
 		render_ray(md, &md->rays[i]);
 	}
+	if (md->floor_start < 0)
+		md->floor_start = 0;
 }

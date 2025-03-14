@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 03:17:22 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:13:00 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ static void	init_background(t_md *md)
 	int		pow;
 
 	ground_path = ft_strjoin(md->img_dir_path, "/ground.xpm");
-	md->screen.floor = init_img_data(md, md->win_size, ground_path, md->floor_color);
+	md->screen.floor = init_img_data(md, md->win_size, ground_path, -1);
+	set_img_color(md->screen.floor->img, md->win_size, md->floor_color, 0.4);
 	free(ground_path);
 	md->screen.sky = init_img_data(md, md->win_size, NULL, md->sky_color);
 	i = -1;

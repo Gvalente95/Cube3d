@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 05:40:34 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:09:12 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	float	mv_lft;
 
 	mov = get_v3f(0, 0, 0);
-	mv_for = ((md->key_prs[W_KEY] || md->key_prs[UP_KEY]) * spd);
-	mv_back = ((md->key_prs[S_KEY] || md->key_prs[DOWN_KEY]) * spd);
-	mv_rght = ((md->key_prs[D_KEY] || md->key_prs[RIGHT_KEY]) * spd);
-	mv_lft = ((md->key_prs[A_KEY] || md->key_prs[LEFT_KEY]) * spd);
+	mv_for = ((md->key_prs[W_KEY]) * spd);
+	mv_back = ((md->key_prs[S_KEY]) * spd);
+	mv_rght = ((md->key_prs[D_KEY]) * spd);
+	mv_lft = ((md->key_prs[A_KEY]) * spd);
 	mov.x = (mv_for - mv_back) * for_dir.x + (mv_rght - mv_lft) * -rgt_dir.x;
 	mov.y = (mv_for - mv_back) * for_dir.y + (mv_rght - mv_lft) * -rgt_dir.y;
-	if (md->key_clicked == SPACE_KEY && md->plr.pos.z == 0)
+	if (md->key_clicked == SPACE_KEY && md->plr.pos.z >= 0)
 		mov.z -= PLR_JUMPPOW * spd;
 	mov.z -= (md->key_prs[NUM_LFTCMD_KEY] * (spd / 3));
-	md->input_mov = get_v3f(mv_for + mv_back, mv_lft + mv_rght, md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY]);
+	md->input_mov = get_v3f(mv_lft + mv_rght, mv_for + mv_back, md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY]);
 	return (mov);
 }
 
@@ -110,8 +110,6 @@ int	update_player(t_md *md)
 	if (md->mouse_focus)
 		update_player_rot(md);
 	update_player_mov(md);
-	plr->mov.z = 0;
-	plr->pos.z = 0;
 	set_collisions(md, plr);
 	move_ent(plr);
 	plr->coord_pos = get_v3(\
@@ -120,3 +118,6 @@ int	update_player(t_md *md)
 		plr->pos.z / md->t_len);
 	return (1);
 }
+
+
+

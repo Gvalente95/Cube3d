@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 21:32:37 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:10:53 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define SCRN_W			1200
 # define SCRN_H			800
 //		RAYS
-# define RAY_DEPTH		5000
+# define RAY_DEPTH		3000
 # define FOV			60
 //		PLR
 # define PLRSPD 12.0f

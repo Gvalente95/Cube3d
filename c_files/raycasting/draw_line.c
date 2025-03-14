@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 02:59:18 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:19:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	compute_perspective_change(t_md *md, float *height, float ray_dst)
 	float	vertical_offset;
 	float	denom;
 
-	denom = ray_dst + fabs(md->plr.pos.z) + 1.0f;
+	denom = ray_dst + fabs(md->plr.pos.y) + 1.0f;
 	if (denom != 0)
 		prsp_scale = md->win_size.y / denom;
 	else
