@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 19:33:49 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 02:59:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,14 @@ int	determine_texture(t_ray *ray)
 	return ((int)NORTH);
 }
 
-void	draw_texture_pixels(t_md *md, void *img, t_vec2 size, t_vec2 start_pos, float height, t_vec2 txt_p)
+void	draw_texture_pixels(t_md *md, t_image *img, t_vec2 size, t_vec2 start_pos, float height, t_vec2 txt_p)
 {
-	t_image	dt;
 	int		color;
 	int		offset;
 	int		y_pos;
 	int		y_end;
 	float	step;
 
-	dt.src_data = (int *)mlx_get_data_addr(img, &dt.bpp, &dt.size_line, &dt.endian);
 	y_pos = (md->win_size.y / 2 - height / 2) - 1;
 	step = size.y / height;
 	y_end = (md->win_size.y / 2 + height / 2);
@@ -43,11 +41,13 @@ void	draw_texture_pixels(t_md *md, void *img, t_vec2 size, t_vec2 start_pos, flo
 		txt_p.y = (y_pos - (md->win_size.y / 2 - height / 2)) * step;
 		if (txt_p.y < 0 || txt_p.y >= size.y)
 			continue ;
-		offset = ((int)txt_p.y * (dt.size_line / 4)) + (int)txt_p.x;
-		color = *(dt.src_data + offset);
+		offset = ((int)txt_p.y * (img->size_line / 4)) + (int)txt_p.x;
+		color = *(img->src_data + offset);
 		if ((color >> 24) == 0x00)
-			mlx_pixel_put(md->mlx, md->win, start_pos.x, y_pos + start_pos.y - md->plr.pos.y, color);
+			draw_pixel(md->screen.buffer, start_pos.x, y_pos + start_pos.y - md->plr.pos.y, color);
 	}
+	if (y_pos + start_pos.y - md->plr.pos.y < md->floor_start)
+		md->floor_start = y_pos + start_pos.y - md->plr.pos.y;
 }
 
 int	compute_perspective_change(t_md *md, float *height, float ray_dst)
@@ -77,7 +77,7 @@ int	compute_perspective_change(t_md *md, float *height, float ray_dst)
 void	draw_pxl(t_md *md, t_ray *ray, float height, t_ent *col, t_vec2 txt_p)
 {
 	t_vec2		start_pos;
-	void		*img;
+	t_image		*img;
 	float		vrt_offset;
 	t_wrd_dir	dir;
 

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 17:00:24 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 03:14:41 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	display_letter(t_md *md, char c, t_vec4 data)
 {
-	t_ent	l;
+	t_image	*l;
 	char	*path;
 	char	*txt;
 
@@ -32,17 +32,17 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 		txt[1] = '\0';
 	}
 	path = ft_megajoin(md->img_dir_path, "/utils/font/", txt, md->img_format);
+	free(txt);
 	if (access(path, F_OK) == -1)
-		return (free(txt), printf("font not found: %s\n", path), free(path), 0);
-	l.frame = md->mlx_make(md->mlx, path, &l.size.x, &l.size.y);
-	if (l.frame)
+		return (printf("font not found: %s\n", path), free(path), 0);
+	l = init_img_data(md, get_v2(data.a, data.a), path, data.b);
+	free(path);
+	if (l->img)
 	{
-		l.frame = scale_img(md, l.frame, &l.size, get_v2(data.a, data.a));
-		if (data.b != -1)
-			set_img_color(l.frame, l.size, data.b, .5);
-		mlx_put_image_to_window(md->mlx, md->win, l.frame, data.r, data.g);
+		draw_img(l, md->screen.buffer, get_v2(data.r, data.g), -1);
+		free_image_data(md, l);
 	}
-	return (free(path), free(txt), mlx_destroy_image(md->mlx, l.frame), l.size.x);
+	return (data.a);
 }
 
 static void	display_text(t_md *md, char *text, t_vec4 data)

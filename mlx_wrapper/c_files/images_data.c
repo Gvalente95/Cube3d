@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 21:28:27 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 02:24:33 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	**get_frames(t_md *md, char *dir, int *amount, int max)
 	char	*path;
 	char	*num_str;
 
+	if (!dir || !amount)
+		return (NULL);
 	num_str = NULL;
 	frames = md_malloc(md, sizeof(char *) * (max + 1));
 	*amount = 0;
@@ -38,7 +40,7 @@ char	**get_frames(t_md *md, char *dir, int *amount, int max)
 		if (!path)
 			return (free(num_str), free_void_array((void **)frames), NULL);
 	}
-	return (free(num_str), frames[*amount] = NULL, frames);
+	return (free(num_str), free(path), frames[*amount] = NULL, frames);
 }
 
 void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
@@ -46,7 +48,6 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
 	t_vec2	txt_size;
 	void	*texture;
 
-	path = ft_megajoin(md->img_dir_path, "/", path, md->img_format);
 	if (access(path, F_OK) == -1)
 		return (printf("\"%s\" file not found\n", path), free(path), NULL);
 	texture = md->mlx_make(md->mlx, path, &txt_size.x, &txt_size.y);
@@ -55,7 +56,6 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
 	texture = scale_abs_img(md, texture, &txt_size, final_size);
 	if (!texture)
 		return (printf("\"%s\" unable to scale txtr\n", path), free(path), NULL);
-	free(path);
 	return (texture);
 }
 
@@ -63,17 +63,18 @@ void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
 {
 	t_vec2	size;
 	void	**txtr;
+	char	*fulldir;
 	char	**frms;
 	int		amount;
 	int		i;
 
 	if (!dirpath)
 		return (NULL);
-	dirpath = ft_megajoin(md->img_dir_path, "/", dirpath, NULL);
+	fulldir = ft_megajoin(md->img_dir_path, "/", dirpath, NULL);
 	frms = get_frames(md, dirpath, &amount, ENT_FRAMES_MAX);
 	if (!frms)
-		return (printf("\"%s\" frames NULL\n", dirpath), free(dirpath), NULL);
-	free(dirpath);
+		return (printf("\"%s\" frames NULL\n", dirpath), free(fulldir), NULL);
+	free(fulldir);
 	txtr = md_malloc(md, sizeof(void *) * (amount + 1));
 	i = 0;
 	while (frms[i] && i < amount)
@@ -87,51 +88,53 @@ void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
 	return (txtr);
 }
 
-void	*init_img_data(t_md *md, t_image *img_data, t_vec2 img_size, char *path)
+t_image	*init_img_data(t_md *md, t_vec2 img_size, char *path, int color)
 {
-	void	*img;
+	t_image	*img_data;
 
+	img_data = malloc(sizeof(t_image));
+	if (!img_data)
+		return (printf("ERR: alloc for img_data\n"), NULL);
 	if (path)
-		img = ld_txtr(md, img_size, path);
+		img_data->img = ld_txtr(md, img_size, path);
 	else
-		img = mlx_new_image(md->mlx, img_size.x, img_size.y);
-	img_data->img = img;
-	img_data->size = img_size;
+		img_data->img = mlx_new_image(md->mlx, img_size.x, img_size.y);
 	if (!img_data->img)
-	{
-		printf("error while making image\n");
-		return (NULL);
-	}
+		return (printf("ERR: Failed to set image\n"), img_data);
+	img_data->size = get_v2(img_size.x, img_size.y);
 	img_data->addr = mlx_get_data_addr(img_data->img, &img_data->bpp, \
 		&img_data->size_line, &img_data->endian);
+	if (!img_data->addr)
+		return (printf("ERR: Failed to get image data address\n"), img_data);
 	img_data->src_data = (int *)img_data->addr;
+	if (!img_data->src_data)
+		return (printf("ERR: Failed to get src data\n"), img_data);
 	img_data->pos = get_v2(0, 0);
-	return (img_data->img);
+	if (color != -1)
+		flush_img(img_data, color);
+	return (img_data);
 }
 
-void	init_imgs_data(t_md *md, t_vec2 size, t_image **data, char *path)
+t_image	**init_imgs_data(t_md *md, t_vec2 size, char *path)
 {
+	t_image	**img_data;
 	char	**frms;
 	int		amount;
 	int		i;
 
 	if (!path)
-		return ;
-	path = ft_megajoin(md->img_dir_path, "/", path, NULL);
+		return (printf("no path in imgs_data\n"), NULL);
 	frms = get_frames(md, path, &amount, ENT_FRAMES_MAX);
 	if (!frms)
+		return (printf("\"%s\" frames NULL\n", path), NULL);
+	img_data = md_malloc(md, sizeof(t_image *) * (amount + 1));
+	i = -1;
+	while (frms[++i] && i < amount)
 	{
-		printf("\"%s\" frames NULL\n", path);
-		return ;
-	}
-	free(path);
-	data = md_malloc(md, sizeof(t_image *) * (amount + 1));
-	i = 0;
-	while (frms[i] && i < amount)
-	{
-		init_img_data(md, data[i], size, frms[i]);
-		free(frms[i++]);
+		img_data[i] = init_img_data(md, size, frms[i], -1);
+		free(frms[i]);
 	}
 	free(frms);
-	data[amount] = NULL;
+	img_data[amount] = NULL;
+	return (img_data);
 }

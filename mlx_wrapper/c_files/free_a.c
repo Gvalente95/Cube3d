@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 21:36:13 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 02:20:38 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,9 @@ int	free_md(t_md *md, int quit)
 		return (0);
 	free_count = 0;
 	free(md->map.buffer);
-	free_count += free_image_data(md, md->screen->sky);
-	free_count += free_image_data(md, md->screen->floor);
+	free_count += free_image_data(md, md->screen.buffer);
+	free_count += free_image_data(md, md->screen.sky);
+	free_count += free_image_data(md, md->screen.floor);
 	free_count += free_image_data(md, md->center);
 	free_count += free_image_data(md, md->mmap.bgrnd);
 	free_count += free_image_data(md, md->mmap.plr_icon);

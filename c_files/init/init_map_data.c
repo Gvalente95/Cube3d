@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:36:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/14 00:33:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ static char	*extract_line(const char *str)
 
 static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
 {
-	void	*txt_img;
 	char	*path;
 	int		fd;
-	t_vec2	size;
 
 	if (ft_strlen(line) <= 4)
 		free_and_quit(md, "wrong value for txtr", line);
@@ -47,14 +45,8 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
 	if (fd == -1)
 		free_and_quit(md, "file at path not found for txtr", path);
 	close(fd);
-	txt_img = add_img(path, &size.x, &size.y, md);
-	if (!txt_img)
-		free_and_quit(md, "no txtr", path);
-	txt_img = scale_abs_img(md, txt_img, &size, md->e_sizes[nt_wall]);
-	md->wall_txtr[dir] = txt_img;
-	txt_img = add_img(path, &size.x, &size.y, md);
-	txt_img = scale_abs_img(md, txt_img, &size, md->e_sizes_2d[nt_wall]);
-	md->wall_txtr_2d[dir] = txt_img;
+	md->wall_txtr[dir] = init_img_data(md, md->e_sizes[nt_wall], path, -1);
+	md->wall_txtr_2d[dir] = init_img_data(md, md->e_sizes_2d[nt_wall], path, -1);
 	if (md->debug_mode)
 		printf("%s texture[%d] correctly set\n", path, dir);
 }
@@ -101,8 +93,8 @@ static char	*parse_file_data(t_md *md)
 
 void	init_map_data(t_md *md)
 {
-	md->wall_txtr = malloc(sizeof(void *) * 5);
-	md->wall_txtr_2d = malloc(sizeof(void *) * 5);
+	md->wall_txtr = md_malloc(md, sizeof(t_image *) * 5);
+	md->wall_txtr_2d = md_malloc(md, sizeof(t_image *) * 5);
 	md->wall_txtr[4] = NULL;
 	md->wall_txtr_2d[4] = NULL;
 	setstr(&md->map.buffer, parse_file_data(md));

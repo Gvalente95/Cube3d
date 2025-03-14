@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 02:48:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 21:57:58 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 02:11:30 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	free_player_animations(t_ent *plr, t_md *md)
 	while (++i < ENT_ACTION_LEN)
 	{
 		if (plr->anim[i])
-			freed_count += free_images(md, &plr->anim[i], "plr anim");
+			freed_count += free_image_data(md, *plr->anim[i]);
 	}
 	return (freed_count);
 }
@@ -59,12 +59,9 @@ int	free_player_animations(t_ent *plr, t_md *md)
 int	free_md2(t_md *md, int free_count)
 {
 	dblst_clear(&md->entities, free);
-	if (md->cursor)
-	{
-		free_count += free_image_data(md, md->cursor);
-		free_count += free_image_data(md, md->curs_dtc);
-		free_count += free_image_data(md, md->curs_grb);
-	}
+	free_count += free_image_data(md, md->cursor);
+	free_count += free_image_data(md, md->curs_dtc);
+	free_count += free_image_data(md, md->curs_grb);
 	if (md->map.buffer)
 		free(md->map.buffer);
 	ft_printf("Freed: %d elements\n", free_count);

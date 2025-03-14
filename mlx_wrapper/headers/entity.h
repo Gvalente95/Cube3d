@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 17:27:37 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 02:10:40 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 # define PRT_AMOUNT		500
 # define PART_BASE_SIZE	35
+
+typedef struct s_image_data t_image;
 
 typedef enum e_dir
 {
@@ -95,8 +97,8 @@ typedef struct s_entity
 	t_vec3f			pos;
 	t_vec3f			start_pos;
 	t_vec3			coord_pos;
-	void			*frame;
-	void			***anim;
+	t_image			*frame;
+	t_image			***anim;
 	float			angle;
 	int				map_index;
 	int				is_active;

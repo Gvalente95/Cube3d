@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 12:06:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 20:19:25 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 23:04:36 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	dda_draw_txt_line(t_md *md, t_ray *ray, t_ent *col)
 	else
 		txt_p.x = (int)(fmod(ray->pos.x, md->t_len) * col->size.x / md->t_len);
 	txt_p.y = ray->distance;
-	draw_pixel(md->screen->buffer, txt_p.x, txt_p.y, ray->color);
+	draw_pixel(md->screen.buffer, txt_p.x, txt_p.y, ray->color);
 }
 
 static void	show_ray(t_md *md, t_vec3f ray_pos, t_ent *col, int color)
@@ -55,7 +55,7 @@ static void	show_ray(t_md *md, t_vec3f ray_pos, t_ent *col, int color)
 	{
 		draw_pos.x = scrn_pos.x - draw_siz.x / 2;
 		while (draw_pos.x < scrn_pos.x + draw_siz.x / 2)
-			mlx_pixel_put(md->mlx, md->win, draw_pos.x++, draw_pos.y, clr);
+			draw_pixel(md->screen.buffer, draw_pos.x++, draw_pos.y, clr);
 	}
 }
 

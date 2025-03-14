@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   INIT_WRAPPER.c                                     :+:      :+:    :+:   */
+/*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 20:25:45 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/13 22:07:22 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
-
-
 
 int	init_screen(t_md *md, t_vec2 win_size, int row_amount, char *win_name)
 {
@@ -65,10 +63,10 @@ void	init_os_params(t_md *md)
 
 void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)
 {
-	init_screen(md, win_size, row_amount, win_name);
-	start_timer(&md->timer.game_start);
-	init_os_params(md);
 	init_md(md);
+	init_os_params(md);
+	start_timer(&md->timer.game_start);
+	init_screen(md, win_size, row_amount, win_name);
 	if (md->is_linux)
 	{
 		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);

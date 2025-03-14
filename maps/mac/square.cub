@@ -1,7 +1,7 @@
-NO ./png/env/wall/NORTH.png
-SO ./png/env/wall/SOUTH.png
-WE ./png/env/wall/WEST.png
-EA ./png/env/wall/EAST.png
+NO ./png/ent/wall/NORTH.png
+SO ./png/ent/wall/SOUTH.png
+WE ./png/ent/wall/WEST.png
+EA ./png/ent/wall/EAST.png
 F 180,100,130
 C 50,20,155
 11111111

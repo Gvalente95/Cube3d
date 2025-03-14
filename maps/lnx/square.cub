@@ -1,7 +1,7 @@
-NO ./xpm/env/wall/NORTH.xpm
-SO ./xpm/env/wall/SOUTH.xpm
-WE ./xpm/env/wall/WEST.xpm
-EA ./xpm/env/wall/EAST.xpm
+NO ./xpm/ent/wall/NORTH.xpm
+SO ./xpm/ent/wall/SOUTH.xpm
+WE ./xpm/ent/wall/WEST.xpm
+EA ./xpm/ent/wall/EAST.xpm
 F 180,100,130
 C 50,20,155
 11111111

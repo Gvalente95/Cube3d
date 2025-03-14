@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 20:26:05 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 03:17:22 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static void	init_cursor(t_md *md)
 {
-	md->center = ld_txtr(md, get_v2(CROSS_SCALE, CROSS_SCALE), "utils/center");
-	md->cursor = ld_txtr(md, get_v2(30, 30), "utils/cursor/default");
-	md->curs_dtc = ld_txtr(md, get_v2(30, 30), "utils/cursor/hand_open");
-	md->curs_grb = ld_txtr(md, get_v2(30, 30), "utils/cursor/hand_closed");
+	md->center = init_img_data(md, get_v2(CROSS_SCALE, CROSS_SCALE), "xpm/utils/center.xpm", -1);
+	md->cursor = init_img_data(md, get_v2(30, 30), "xpm/utils/cursor/default.xpm", -1);
+	md->curs_dtc = init_img_data(md, get_v2(30, 30), "xpm/utils/cursor/hand_open.xpm", -1);
+	md->curs_grb = init_img_data(md, get_v2(30, 30), "xpm/utils/cursor/hand_closed.xpm", -1);
 	md->mouse_pressed = 0;
 	md->mouse_clicked = 0;
 	md->mouse_pos = get_v3f(0, 0, 0);
@@ -44,14 +44,12 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 	int			color_index;
 	int			background_color;
 
-	mmap->plr_icon = mlx_new_image(md->mlx, ic_len, ic_len);
-	set_img_color(mmap->plr_icon, get_v2(ic_len, ic_len), md->rgb[RGB_GOLD], 1);
 	mmap->mray_len = 0;
 	mmap->active = 0;
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
-	mmap->bgrnd = mlx_new_image(md->mlx, mmap->size.x, mmap->size.y);
 	background_color = md->rgb[get_char_index(md->ents_tp_map[0], '0')];
-	set_img_color(mmap->bgrnd, mmap->size, background_color - 10000, 1);
+	mmap->bgrnd = init_img_data(md, get_v2(mmap->size.x, mmap->size.y), NULL, background_color - 10000);
+	mmap->plr_icon = init_img_data(md, get_v2(ic_len, ic_len), NULL, md->rgb[RGB_GOLD]);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
@@ -59,37 +57,34 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 		if (color_index == -1)
 			continue ;
 		pos = get_v2(i % (md->map.size.x + 1), i / (md->map.size.x + 1));
-		color_img(mmap->bgrnd, mmap->size, md->rgb[color_index], \
-			get_v4(ic_len * pos.x + 1, \
-			ic_len * pos.y + 1, \
-			ic_len * pos.x + ic_len - 1, \
-			ic_len * pos.y + ic_len - 1));
+		draw_pixels(\
+			mmap->bgrnd, \
+			get_v2(ic_len * pos.x + 1, ic_len * pos.y + 1), \
+			get_v2(ic_len * pos.x + ic_len - 1, ic_len * pos.y + ic_len - 1), \
+			md->rgb[color_index]);
 	}
 }
 
 static void	init_background(t_md *md)
 {
-	void	*cur_img;
 	t_vec2	r_pos;
 	int		i;
+	char	*ground_path;
 	int		pow;
 
-	init_img_data(md, md->screen->buffer, md->win_size, NULL);
-	cur_img = init_img_data(md, md->screen->floor, md->win_size, "ground");
-	cur_img = set_img_color(cur_img, md->win_size, md->floor_color, 0.8);
-	if (!cur_img)
-		free_and_quit(md, "alloc of floor", NULL);
-	cur_img = init_img_data(md, md->screen->sky, md->win_size, NULL);
-	cur_img = set_img_color(cur_img, md->win_size, md->sky_color, 1);
-	if (!cur_img)
-		free_and_quit(md, "alloc of sky", NULL);
+	ground_path = ft_strjoin(md->img_dir_path, "/ground.xpm");
+	md->screen.floor = init_img_data(md, md->win_size, ground_path, md->floor_color);
+	free(ground_path);
+	md->screen.sky = init_img_data(md, md->win_size, NULL, md->sky_color);
 	i = -1;
 	while (++i < STARS_AMOUNT)
 	{
 		pow = r_range(50, 255);
 		r_pos = get_v2(r_range(0, md->win_size.x), r_range(0, md->win_size.y));
-		color_img(cur_img, md->win_size, vec4_to_color(pow, pow, pow, pow), \
-			get_v4(r_pos.x, r_pos.y, r_pos.x + 1, r_pos.y + 1));
+		draw_pixels(md->screen.sky, \
+			get_v2(r_pos.x, r_pos.y), \
+			get_v2(r_pos.x + 1, r_pos.y + 1), \
+			vec4_to_color(pow, pow, pow, pow));
 	}
 }
 
@@ -124,18 +119,18 @@ static void	init_game_params(t_md *md, int start_debug)
 	md->plr_wrd_mv = get_v3f(0, 0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
 	md->wrd_mv_offst = get_v3f(0, 0, 0);
-	init_img_data(md, md->screen->buffer, md->win_size, NULL);
+	md->size_2d = 40;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
-	md->size_2d = 40;
+	md->screen.buffer = init_img_data(md, md->win_size, NULL, -1);
 	init_game_params(md, start_debug);
+	init_labels(md);
 	init_ents_data(md);
 	init_map(md, file_arg);
 	md->init_steps++;
 	init_background(md);
-	init_labels(md);
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);

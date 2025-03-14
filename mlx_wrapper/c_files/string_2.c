@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 21:26:46 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 00:22:49 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	setstr(char **str, char *new)
 {
-	if (*str)
-		free(str);
+	safe_free((void *)*str);
 	*str = new;
 }
 
@@ -32,7 +31,7 @@ int	only_contains(char *str, char *to_contain)
 	return (1);
 }
 
-char	*ft_megajoin(char *a, char *b, char *c, char *d)
+char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d)
 {
 	char	*ab;
 	char	*abc;

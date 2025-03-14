@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 21:50:43 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 03:03:44 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ typedef struct s_md
 {
 	void		*mlx;
 	void		*win;
-	t_screen	*screen;
+	t_screen	screen;
 	t_gs		gst;
 	t_map		map;
 	t_mmap		mmap;
@@ -189,6 +189,7 @@ typedef struct s_md
 	int			sky_color;
 	int			fps;
 	int			prv_fps;
+	int			floor_start;
 	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
 	void		*(*mlx_make)(void *mlx, char *name, int *with, int *height);
 }	t_md;
@@ -221,8 +222,9 @@ int		close_window(t_md *md);
 
 //		RENDER.c
 int		draw_pixel(t_image *src, int x, int y, int color);
-int		draw_img(t_image *src, t_image *dst, int x, int y);
-void	flush_img(t_image *src);
+int		draw_pixels(t_image *txtr, t_vec2 start_crd, t_vec2 end_crd, int colr);
+int		draw_img(t_image *from, t_image *onto, t_vec2 pos, int drawover);
+void	flush_img(t_image *src, int color);
 
 //		TIME.c
 double	get_time_in_seconds(void);
@@ -252,8 +254,8 @@ void	render_cursor(t_md *md, int has_hov);
 //		IMG_DATA.c
 void	*ld_txtr(t_md *md, t_vec2 final_size, char *path);
 void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath);
-void	*init_img_data(t_md *md, t_image *img_data, t_vec2 size, char *path);
-void	init_imgs_data(t_md *md, t_vec2 size, t_image **data, char *path);
+t_image	*init_img_data(t_md *md, t_vec2 size, char *path, int color);
+t_image	**init_imgs_data(t_md *md, t_vec2 size, char *path);
 
 //		INIT_WRAPPER.c
 int		init_md(t_md *md);
@@ -305,6 +307,6 @@ void	*md_realloc(t_md *d, void *ptr, size_t new_size);
 char	*md_strndup(t_md *d, const char	*s1, ssize_t n);
 int		only_contains(char *str, char *to_contain);
 int		get_char_index(const char *str, char to_check);
-char	*ft_megajoin(char *a, char *b, char *c, char *d);
+char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d);
 
 #endif

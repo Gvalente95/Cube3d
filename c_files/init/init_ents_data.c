@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 20:21:16 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 01:18:30 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,37 @@ void	store_entities_sizes(t_md *md, t_vec2 base)
 static void	init_entities_textures(t_md *md)
 {
 	char		*path;
+	char		*with_format;
 	int			i;
 
 	i = -1;
 	while (++i < ENT_TYPE_LEN)
 	{
-		path = ft_megajoin("entities/", (char *)md->ents_tp_names[i], "/", NULL);
-		init_imgs_data(md, md->e_sizes[i], md->e_frms[i][0], path);
-		setstr(&path, ft_strjoin(path, "0.png"));
-		init_img_data(md, md->txtr_2d[i], md->e_sizes_2d[i], path);
+		path = ft_megajoin(md->img_dir_path, "/ent/", md->ents_tp_names[i], "/");
+		md->e_frms[i][0] = init_imgs_data(md, md->e_sizes[i], path);
 		free(path);
+		path = ft_megajoin(md->img_dir_path, "/ent/", md->ents_tp_names[i], "/0");
+		with_format = ft_strjoin(path, md->img_format);
+		free(path);
+		md->txtr_2d[i] = init_img_data(md, md->e_sizes_2d[i], with_format, -1);
+		free(with_format);
 	}
-	md->e_frms[ENT_TYPE_LEN] = NULL;
-	md->txtr_2d[ENT_TYPE_LEN] = NULL;
+	md->e_frms[i] = NULL;
 }
 
 int	allocate_entities_textures(t_md *md)
 {
 	int		i;
 
-	md->e_frms = malloc(sizeof(void ***) * (ENT_TYPE_LEN + 1));
-	if (!md->e_frms)
+	md->txtr_2d = malloc(sizeof(t_image *) * (ENT_TYPE_LEN + 1));
+	md->e_frms = malloc(sizeof(t_image ***) * (ENT_TYPE_LEN + 1));
+	if (!md->e_frms || !md->txtr_2d)
 		return (printf("alloc failed for frames"), 0);
+	md->e_frms[ENT_TYPE_LEN] = NULL;
+	md->txtr_2d[ENT_TYPE_LEN] = NULL;
 	i = -1;
 	while (++i < ENT_TYPE_LEN)
-		md->e_frms[i] = md_malloc(md, sizeof(void **) * ENT_ACTION_LEN);
-	md->e_frms[ENT_TYPE_LEN] = NULL;
+		md->e_frms[i] = md_malloc(md, sizeof(t_image ***) * ENT_ACTION_LEN);
 	return (1);
 }
 
