@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 04:13:00 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 06:00:11 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,12 @@ static void	init_game_params(t_md *md, int start_debug)
 	md->mouse_hide = 1;
 	md->plr_wrd_mv = get_v3f(0, 0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
-	md->wrd_mv_offst = get_v3f(0, 0, 0);
 	md->size_2d = 40;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
+	md->arrow_rotation_offst = get_v2(0, 0);
 	md->screen.buffer = init_img_data(md, md->win_size, NULL, -1);
 	init_game_params(md, start_debug);
 	init_labels(md);
@@ -132,6 +132,7 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_map(md, file_arg);
 	md->init_steps++;
 	init_background(md);
+	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);

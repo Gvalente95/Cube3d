@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 04:06:23 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 06:19:48 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,44 +50,24 @@ int	is_ray_collision(t_ray *ray, t_ent *a)
 		ray->pos.y <= a->pos.y + a->mov.y + a->size.y);
 }
 
-void	check_in_ents(t_md *md, t_ray *ray)
-{
-	t_dblst	*node;
-	t_ent	*e;
-
-	node = md->entities;
-	while (node)
-	{
-		e = (t_ent *)node->content;
-		if (!e || !e->frame || !e->is_active || \
-				e->type == nt_wall || e->type == nt_empty || e->type == nt_plr)
-		{
-			node = node->next;
-			continue ;
-		}
-		if (is_ray_collision(ray, e))
-		{
-			ray->pos_at_e = ray->pos;
-			ray->found_e = e;
-			ray->hit_vrt_at_e = ray->hit_vrt;
-			break ;
-		}
-		node = node->next;
-	}
-}
-
 t_ent	*check_in_map(t_md *md, t_ray *ray)
 {
-	int		index;
-	t_ent	*e;
+	int			index;
+	t_ent_type	found_type;
 
 	index = (int)(ray->pos.x / md->t_len) + ((md->map.size.x + 1) * (int)(ray->pos.y / md->t_len));
-	if (index >= 0 && index < md->map.len && md->map.buffer[index] == '1')
-	{
-		e = (t_ent *)md->entities[0].content;
-		return (e);
-	}
-	check_in_ents(md, ray);
+	if (index <= 0 || index > md->map.len)
+		return (NULL);
+	if (!md->mapped_ents[index])
+		return (NULL);
+	found_type = md->mapped_ents[index]->type;
+	if (found_type == nt_wall)
+		return (md->mapped_ents[index]);
+	if (ray->found_e || found_type == nt_plr || found_type == nt_empty)
+		return (NULL);
+	ray->pos_at_e = ray->pos;
+	ray->found_e = md->mapped_ents[index];
+	ray->hit_vrt_at_e = ray->hit_vrt;
 	return (NULL);
 }
 
@@ -118,12 +98,12 @@ void	render_ray(t_md *md, t_ray *ray)
 	if (!md->ray_mode)
 		return ;
 	if (col)
-		draw_txt_line(md, i, col, ray);
+		draw_wall_line(md, i, col, ray);
 	if (!ray->found_e)
 		return ;
 	ray->hit_vrt = ray->hit_vrt_at_e;
 	ray->pos = ray->pos_at_e;
-	draw_txt_line(md, i, ray->found_e, ray);
+	draw_wall_line(md, i, ray->found_e, ray);
 }
 
 void	precompute_rays(t_md *md, float *cos_vals, float *sin_vals)
@@ -165,14 +145,10 @@ void	render_rays(t_md *md, t_vec3f start_pos)
 		md->rays[i].hit_vrt = 0;
 		md->rays[i].hit_vrt_at_e = 0;
 		md->rays[i].found_e = NULL;
-		md->rays[i].hit = get_v3f(0, 0, 0);// who am i if i am useles??
-		md->rays[i].start = start_pos;
 		md->rays[i].pos = start_pos;
-		md->rays[i].side_dst = get_v3f(0, 0, 0);
 		md->rays[i].angle = atan2f(sin_vals[i], cos_vals[i]);
 		md->rays[i].dir = get_v3f(cos_vals[i], sin_vals[i], 0);
 		md->rays[i].distance = 0;
-		md->rays[i].median = 0;
 		render_ray(md, &md->rays[i]);
 	}
 	if (md->floor_start < 0)

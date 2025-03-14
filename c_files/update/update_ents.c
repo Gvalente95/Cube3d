@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/13 22:30:56 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 05:48:33 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	update_ent_movement(t_md *md, t_ent *e)
 {
-	int	has_moved;
+	int		has_moved;
 
 	has_moved = 0;
 	if (!has_moved)
@@ -23,16 +23,15 @@ static void	update_ent_movement(t_md *md, t_ent *e)
 		e->pos.x / md->t_len, \
 		e->pos.y / md->t_len, \
 		e->pos.z / md->t_len);
+	update_map_index(md, e);
 }
 
 void	update_ent_frame(t_md *md, t_ent *e)
 {
-	(void)md;
-	(void)e;
-	// e->frame_index++;
-	// if (!md->e_frms[e->type][e->action][e->frame_index])
-	// 	e->frame_index = 0;
-	// e->frame = md->e_frms[e->type][e->action][e->frame_index];
+	e->frame_index++;
+	if (!md->e_frms[e->type][e->action][e->frame_index])
+		e->frame_index = 0;
+	e->frame = md->e_frms[e->type][e->action][e->frame_index];
 }
 
 static int	update_ent(t_md *md, t_ent *e)

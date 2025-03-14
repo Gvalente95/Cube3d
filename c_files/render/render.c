@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 04:12:08 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:38:30 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	render_minimap(t_md *md, t_mmap *mp)
 
 void	render_background(t_md *md)
 {
-	int		pitch_offs;
+	//int		pitch_offs;
 	t_vec2	offs;
 	t_vec3f	offs_spd;
 	t_image	*sky;
@@ -97,9 +97,9 @@ void	render_background(t_md *md)
 		return ;
 	}
 	offs_spd = get_v3f(5.0, 5.0, 0);
-	pitch_offs = compute_perspective_change(md, NULL, 99999);
-	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
-	offs.y = fmod(pitch_offs - md->plr.pos.z, md->win_size.y);
+	//pitch_offs = compute_perspective_change(md, NULL, 99999);
+	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x - md->wrd_mv_offst.x, md->win_size.x);
+	//offs.y = fmod(pitch_offs - md->plr.pos.z, md->win_size.y - md->wrd_mv_offst.y);
 	draw_img(floor, buff, get_v2(-offs.x, md->floor_start), md->rgb[2]);
 	draw_img(floor, buff, get_v2(md->win_size.x, md->floor_start), md->rgb[2]);
 	draw_img(floor, buff, get_v2(-offs.x, md->floor_start), md->rgb[2]);
@@ -107,8 +107,8 @@ void	render_background(t_md *md)
 	offs.x = fmod((((md->plr.rot.x + 180.0)) / 360.0) * md->win_size.x * offs_spd.x, md->win_size.x);
 	offs.y = fmod((((md->plr.rot.y + 90.0)) / 180.0) * md->win_size.y * offs_spd.y, md->win_size.y * 2);\
 	draw_img(sky, buff, get_v2(-offs.x, -offs.y), md->rgb[2]);
-	draw_img(sky, buff, get_v2(md->win_size.x - offs.x, -offs.y), md->rgb[2]);
 	draw_img(sky, buff, get_v2(-offs.x, md->win_size.y - offs.y), md->rgb[2]);
+	draw_img(sky, buff, get_v2(md->win_size.x - offs.x, -offs.y), md->rgb[2]);
 	draw_img(sky, buff, get_v2(md->win_size.x - offs.x, md->win_size.y - offs.y), md->rgb[2]);
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   INPUT_MOUSE.c                                      :+:      :+:    :+:   */
+/*   input_mouse.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 23:56:11 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 04:43:12 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	mouse_motion_handler(int x, int y, void *param)
 		(grid_pos.y + md->cam_ofst.y) / md->t_len);
 	if (!md->mouse_focus)
 		printf("mouse set succesfully\n");
+	md->arrow_rotation_offst = get_v2(0, 0);
 	md->mouse_focus = 1;
 	return (0);
 }

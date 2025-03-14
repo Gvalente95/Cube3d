@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 02:10:40 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 05:46:36 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct s_entity
 	t_image			*frame;
 	t_image			***anim;
 	float			angle;
+	char			character;
 	int				map_index;
 	int				is_active;
 	int				level;

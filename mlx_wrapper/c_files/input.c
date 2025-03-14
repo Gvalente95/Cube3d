@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   INPUT.c                                            :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 00:48:29 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 05:03:23 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ int	handle_key_press(int keycode, t_md *md)
 
 int	handle_key_release(int keycode, t_md *md)
 {
+	printf("keycode : %d\n", keycode);
 	if (keycode >= 0 && keycode < 512)
 		md->key_prs[keycode] = 0;
 	md->key_clicked = -1;
-	printf("clicked %d\n", keycode);
 	return (0);
 }
 

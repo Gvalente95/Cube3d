@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 02:26:58 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 05:03:11 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,16 @@ int	update(t_md *md)
 
 void	update_keys(t_md *md)
 {
+	if (md->key_prs[LEFT_KEY])
+	{
+		md->arrow_rotation_offst.x++;
+	}
+	if (md->key_prs[RIGHT_KEY])
+		md->arrow_rotation_offst.x--;
+	if (md->key_prs[UP_KEY])
+		md->arrow_rotation_offst.y--;
+	if (md->key_prs[DOWN_KEY])
+		md->arrow_rotation_offst.y++;
 	if (md->key_clicked == NUM_1_KEY)
 		md->ray_mode = !md->ray_mode;
 	if (md->key_clicked == NUM_2_KEY)

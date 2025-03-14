@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_entities.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 06:03:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/14 06:00:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 	e->type = nt_plr;
 	e->action = ac_idl;
 	e->map_index = map_index;
+	e->character = c;
 	e->hp = 0;
 	e->is_active = 1;
 	e->jumps = 0;
@@ -60,6 +61,8 @@ static t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)
 	e = malloc(sizeof(t_ent));
 	e->type = get_char_index(md->ents_tp_map[0], c);
 	e->map_index = map_index;
+	e->character = c;
+	md->mapped_ents[map_index] = e;
 	e->is_active = 1;
 	e->in_screen = 1;
 	e->frame = NULL;

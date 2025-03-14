@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 04:10:53 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 06:21:54 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 # include <math.h>
 # include <X11/X.h>
 
-# define RESOLUTION		10
+# define RESOLUTION		20
 //		SCREEN
-# define SCRN_W			1200
-# define SCRN_H			800
+# define SCRN_W			2400
+# define SCRN_H			1800
 //		RAYS
 # define RAY_DEPTH		3000
 # define FOV			60
@@ -32,7 +32,7 @@
 # define PLR_HEIGHT 20
 # define PLR_JUMPPOW 1
 # define GRAVITY .1
-# define SCROLL_SPD .3
+# define SCROLL_SPD .6
 //		CURSOR
 
 # define STARS_AMOUNT	200
@@ -103,7 +103,7 @@ char	*ftoa(float num, int precision);
 //		rays.c
 void	render_ray(t_md *md, t_ray *ray);
 void	render_rays(t_md *md, t_vec3f start_pos);
-void	draw_txt_line(t_md *md, float dist, t_ent *col, t_ray *ray);
+void	draw_wall_line(t_md *md, float dist, t_ent *col, t_ray *ray);
 void	dda_ray(t_md *md, t_ray *ray, int ray_color);
 t_ent	*check_in_map(t_md *md, t_ray *ray);
 

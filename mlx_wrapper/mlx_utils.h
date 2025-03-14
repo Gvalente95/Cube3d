@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/14 04:10:05 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 06:19:42 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,18 +97,12 @@ typedef struct s_mmap
 
 typedef struct s_ray
 {
-	t_vec3f	hit;
-	t_vec3f	start;
 	t_vec3f	pos;
 	t_vec3f	dir;
 	float	distance;
 	float	angle;
-	float	median;
 	int		hit_wall_index;
 	int		hit_vrt;
-	t_vec3f	side_dst;
-	t_vec3f	delta_dst;
-	t_vec2	step_p;
 	int		index;
 	int		color;
 	t_ent	*found_e;
@@ -127,6 +121,7 @@ typedef struct s_md
 {
 	void		*mlx;
 	void		*win;
+	t_ent		**mapped_ents;
 	t_screen	screen;
 	t_gs		gst;
 	t_map		map;
@@ -146,6 +141,7 @@ typedef struct s_md
 	t_vec3f		mouse_delta;
 	t_vec3f		mouse_world_pos;
 	t_vec2		mouse_grid_pos;
+	t_vec2		arrow_rotation_offst;
 	t_vec3f		cam_ofst;
 	t_vec3f		wrd_mv_offst;
 	t_vec3f		plr_wrd_mv;
@@ -308,5 +304,7 @@ char	*md_strndup(t_md *d, const char	*s1, ssize_t n);
 int		only_contains(char *str, char *to_contain);
 int		get_char_index(const char *str, char to_check);
 char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d);
+
+int		update_map_index(t_md *md, t_ent *e);
 
 #endif
