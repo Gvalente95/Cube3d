@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/14 06:19:42 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 07:07:15 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_ray
 	t_ent	*found_e;
 	t_vec3f	pos_at_e;
 	int		hit_vrt_at_e;
+	float	dist_at_e;
 }	t_ray;
 
 typedef struct s_screen
@@ -306,5 +307,6 @@ int		get_char_index(const char *str, char to_check);
 char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d);
 
 int		update_map_index(t_md *md, t_ent *e);
+void	draw_sprite(t_md *md, float dist, t_ent *wall, t_ray *ray);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 06:19:48 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 07:20:05 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	is_ray_collision(t_ray *ray, t_ent *a)
 		ray->pos.y <= a->pos.y + a->mov.y + a->size.y);
 }
 
-t_ent	*check_in_map(t_md *md, t_ray *ray)
+t_ent	*check_in_map(t_md *md, t_ray *ray, float distance)
 {
 	int			index;
 	t_ent_type	found_type;
@@ -65,9 +65,12 @@ t_ent	*check_in_map(t_md *md, t_ray *ray)
 		return (md->mapped_ents[index]);
 	if (ray->found_e || found_type == nt_plr || found_type == nt_empty)
 		return (NULL);
+	if (!is_ray_collision(ray, md->mapped_ents[index]))
+		return (NULL);
 	ray->pos_at_e = ray->pos;
 	ray->found_e = md->mapped_ents[index];
 	ray->hit_vrt_at_e = ray->hit_vrt;
+	ray->dist_at_e = distance;
 	return (NULL);
 }
 
@@ -88,9 +91,9 @@ void	render_ray(t_md *md, t_ray *ray)
 		verdist = fabs(fmod(ray->pos.y, md->t_len));
 		if (hordist <= 1.3 || verdist <= 1.3)
 			ray->hit_vrt = verdist > hordist;
-		ray->color = md->rgb[RGB_GREEN + ray->hit_vrt] + \
-			(1000 * (ray->found_e != NULL));
-		col = check_in_map(md, ray);
+		// ray->color = md->rgb[RGB_GREEN + ray->hit_vrt] +
+		// 	(1000 * (ray->found_e != NULL));
+		col = check_in_map(md, ray, i);
 		show_ray(md, ray, col);
 		if (col && col->type == nt_wall)
 			break ;
@@ -103,7 +106,7 @@ void	render_ray(t_md *md, t_ray *ray)
 		return ;
 	ray->hit_vrt = ray->hit_vrt_at_e;
 	ray->pos = ray->pos_at_e;
-	draw_wall_line(md, i, ray->found_e, ray);
+	draw_sprite(md, ray->dist_at_e, ray->found_e, ray);
 }
 
 void	precompute_rays(t_md *md, float *cos_vals, float *sin_vals)
@@ -149,6 +152,7 @@ void	render_rays(t_md *md, t_vec3f start_pos)
 		md->rays[i].angle = atan2f(sin_vals[i], cos_vals[i]);
 		md->rays[i].dir = get_v3f(cos_vals[i], sin_vals[i], 0);
 		md->rays[i].distance = 0;
+		md->rays[i].dist_at_e = 0;
 		render_ray(md, &md->rays[i]);
 	}
 	if (md->floor_start < 0)

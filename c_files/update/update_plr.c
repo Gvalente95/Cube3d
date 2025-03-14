@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 06:24:53 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 07:07:25 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ static t_vec3f	set_input_mov(t_md *md)
 	t_vec3f	rgt_dir;
 
 	spd = ACCSPD;
-	if (md->key_prs[SHIFT_KEY] == 1)
+	if (md->key_prs[SHIFT_KEY])
+	{
 		spd *= 2;
+	}
 	for_dir.x = cosf(md->plr.angle);
 	for_dir.y = sinf(md->plr.angle);
 	rgt_dir.x = cosf(md->plr.angle - M_PI_2);
@@ -122,7 +124,6 @@ int	update_map_index(t_md *md, t_ent *e)
 	e->map_index = new_map_index;
 	md->map.buffer[new_map_index] = e->character;
 	md->mapped_ents[e->map_index] = e;
-	printf("NEW INDEX\n");
 	return (1);
 }
 
@@ -148,6 +149,3 @@ int	update_player(t_md *md)
 	update_map_index(md, plr);
 	return (1);
 }
-
-
-

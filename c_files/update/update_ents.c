@@ -6,19 +6,31 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 05:48:33 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:00:44 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
+static t_vec3f	move_toward(t_ent *from, t_ent *to, float speed)
+{
+	t_vec3f	movement_towards;
+	float	angle_towards;
+
+	angle_towards = atan2f(to->pos.y - from->pos.y, to->pos.x - from->pos.x);
+
+	movement_towards.x = cosf(angle_towards) * speed;
+    movement_towards.y = sinf(angle_towards) * speed;
+    movement_towards.z = 0;
+	return (movement_towards);
+}
+
 static void	update_ent_movement(t_md *md, t_ent *e)
 {
-	int		has_moved;
-
-	has_moved = 0;
-	if (!has_moved)
-		return ;
+	return ;
+	e->mov = move_toward(e, &md->plr, 10);
+	//set_collisions(md, e);
+	e->pos = get_v3f(e->pos.x + e->mov.x, e->pos.y + e->mov.y, 0);
 	e->coord_pos = get_v3(\
 		e->pos.x / md->t_len, \
 		e->pos.y / md->t_len, \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vectors.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/07 14:48:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/14 06:51:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_vec3f	get_v3f(float x, float y, float z);
 t_vec3f	v3_to_v3f(t_vec3 vec);
 int		print_vec3f(t_vec3f a, const char *label);
 int		cmp_vec3f(t_vec3f a, t_vec3f b, float margin);
+float	vec3f_diff(t_vec3f a, t_vec3f b);
 
 //		VECTOR_4.c
 t_vec4	get_v4(int r, int g, int b, int a);

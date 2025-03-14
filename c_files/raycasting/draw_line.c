@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 06:17:58 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 07:33:47 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,41 @@ void	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
 	draw_pxl(md, ray, height, wall, txt_p);
 }
 
-// int	validate_ent_line(t_md *md, t_vec2 grid_pos, t_vec2 ray_pos, t_ent *e)
-// {
-	
-// }
+void	draw_sprite(t_md *md, float dist, t_ent *sprite, t_ray *ray)
+{
+	t_vec2	txt_p;
+	float	height;
+	float	angle_to_player;
+	float	relative_angle;
+	//float	sprite_screen_x;
 
-// void draw_entity_line(t_md *md, float dist, t_ent *col, t_ray *ray)
-// {
-	
-// }
+	if (dist < 0.01)
+		dist = 0.01;
+
+	// Compute the height of the sprite based on distance
+	height = (md->win_size.y * sprite->size.y) / dist;
+	if (height > md->win_size.y * 1.5)
+		height = md->win_size.y * 1.5;
+
+	// Compute the angle between the player and the sprite
+	angle_to_player = atan2(sprite->pos.y - md->plr.pos.y, sprite->pos.x - md->plr.pos.x);
+	relative_angle = angle_to_player - md->plr.angle;
+
+	// Normalize angle within [-PI, PI]
+	while (relative_angle > M_PI)
+		relative_angle -= 2 * M_PI;
+	while (relative_angle < -M_PI)
+		relative_angle += 2 * M_PI;
+
+	// Compute screen X position of the sprite
+	//sprite_screen_x = (tan(relative_angle) * md->win_size.x / 2) + (md->win_size.x / 2);
+
+	// Compute texture X coordinate (mapped based on the relative angle)
+	txt_p.x = ((relative_angle + M_PI) / (2 * M_PI)) * sprite->size.x;
+
+	// Set ray distance (for depth sorting if needed)
+	ray->distance = dist;
+
+	// Draw the sprite with the corrected orientation
+	draw_pxl(md, ray, height, sprite, txt_p);
+}

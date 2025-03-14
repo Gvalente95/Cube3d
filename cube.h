@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 06:21:54 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:03:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 # include <math.h>
 # include <X11/X.h>
 
-# define RESOLUTION		20
+# define RESOLUTION		1
 //		SCREEN
-# define SCRN_W			2400
-# define SCRN_H			1800
+# define SCRN_W			600
+# define SCRN_H			300
 //		RAYS
 # define RAY_DEPTH		3000
 # define FOV			60
@@ -37,6 +37,7 @@
 
 # define STARS_AMOUNT	200
 # define CROSS_SCALE	10
+# define ENNEMY_SPEED	.1
 
 
 typedef enum polar_dir
@@ -105,7 +106,7 @@ void	render_ray(t_md *md, t_ray *ray);
 void	render_rays(t_md *md, t_vec3f start_pos);
 void	draw_wall_line(t_md *md, float dist, t_ent *col, t_ray *ray);
 void	dda_ray(t_md *md, t_ray *ray, int ray_color);
-t_ent	*check_in_map(t_md *md, t_ray *ray);
+t_ent	*check_in_map(t_md *md, t_ray *ray, float distance);
 
 int		vec4_to_color(int r, int g, int b, int a);
 
