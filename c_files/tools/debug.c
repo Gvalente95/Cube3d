@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 05:21:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 03:09:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ void	show_init_information(t_md *md)
 	print_vec3(md->plr.coord_pos, "plr coord");
 	printf("map name: %s\nmap content: \n%s\n", md->map.name, md->map.buffer);
 }
+
+void	show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos)
+{
+	rnd_abs_txt(md, \
+		get_v4(pos.x * (md->txt_scale * 1.5), pos.y * (md->txt_scale * 1.5), \
+		COLOR_WHITE, md->txt_scale), \
+		"%s x%d y%d", \
+		label, vec.x, vec.y);
+}
+
 
 void	show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos)
 {
@@ -69,8 +79,8 @@ void	show_update_information(t_md *md)
 		rnd_abs_txt(md, get_v4(0, y++ * (md->txt_scale * 1.5), \
 COLOR_WHITE, md->txt_scale), "angle: %-2f\'", md->plr.angle);
 		show_vec3(md, "crd", md->plr.coord_pos, get_v2(0, y++));
-		show_vec3f(md, "mouse pos", md->mouse_pos, get_v2(0, y++));
-		show_vec3f(md, "mouse wrd", md->mouse_world_pos, get_v2(0, y++));
-		show_vec3(md, "mouse grd", v2_to_v3(md->mouse_grid_pos), get_v2(0, y++));
+		show_vec2(md, "mouse pos", md->mouse_pos, get_v2(0, y++));
+		show_vec2(md, "mouse wrd", md->mouse_world_pos, get_v2(0, y++));
+		show_vec2(md, "mouse grd", md->mouse_grid_pos, get_v2(0, y++));
 	}
 }

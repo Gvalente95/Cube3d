@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   text.c                                             :+:      :+:    :+:   */
+/*   TEXT.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 03:14:41 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 03:07:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 		txt[0] = c;
 		txt[1] = '\0';
 	}
-	path = ft_megajoin(md->img_dir_path, "/utils/font/", txt, md->img_format);
+	path = ft_megajoin(md->image_dir, "/utils/font/", txt, md->img_format);
 	free(txt);
 	if (access(path, F_OK) == -1)
 		return (printf("font not found: %s\n", path), free(path), 0);
@@ -39,7 +39,7 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 	free(path);
 	if (l->img)
 	{
-		draw_img(l, md->screen.buffer, get_v2(data.r, data.g), -1);
+		draw_img(l, md->screen, get_v2(data.r, data.g), -1);
 		free_image_data(md, l);
 	}
 	return (data.a);

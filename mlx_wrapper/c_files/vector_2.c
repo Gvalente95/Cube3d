@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 01:57:35 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/05 11:04:27 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/14 23:28:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
 
-t_vec2	to_2(t_vec3 vec)
+t_vec2	v3_to_v2(t_vec3 vec)
 {
 	return (get_v2(vec.x, vec.y));
 }

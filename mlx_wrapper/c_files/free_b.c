@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_b.c                                           :+:      :+:    :+:   */
+/*   FREE_b.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 02:48:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 02:11:30 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:37:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,19 @@ int	free_player_animations(t_ent *plr, t_md *md)
 
 int	free_md2(t_md *md, int free_count)
 {
+	if (!quit || md->init_steps == 1)
+	{
+		free_count += mlx_destroy_window(md->mlx, md->win) + 1;
+		free_count += free_void(md->mlx);
+		return (free_count);
+	}
 	dblst_clear(&md->entities, free);
+	dblst_clear(&md->particles, free);
 	free_count += free_image_data(md, md->cursor);
 	free_count += free_image_data(md, md->curs_dtc);
 	free_count += free_image_data(md, md->curs_grb);
-	if (md->map.buffer)
-		free(md->map.buffer);
+	free_count += mlx_destroy_window(md->mlx, md->win) + 1;
+	free_count += free_void(md->mlx);
 	ft_printf("Freed: %d elements\n", free_count);
 	return (free_count);
 }

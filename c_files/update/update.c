@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 05:03:11 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 01:04:54 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,25 @@ void	update_cam_ofst(t_md *md)
 	md->wrd_mv_offst.y += md->plr_wrd_mv.y * wrd_spd;
 }
 
-int	update(t_md *md)
+void	update_arrow_rotation(t_md *md)
 {
-	int	has_moved;
+	float	rot_speed;
 
-	has_moved = update_mouse(md);
-	if (update_player(md))
-		has_moved = 1;
-	if (has_moved)
-		update_cam_ofst(md);
-	if (update_ents(md))
-		has_moved = 1;
-	return (!md->time || has_moved);
+	rot_speed = ARROW_ROTATION_SPD + (md->key_prs[SHIFT_KEY] * ARROW_ROTATION_SPD);
+	if (md->key_prs[LEFT_KEY])
+		md->arrow_rotation_offst.x += rot_speed;
+	if (md->key_prs[RIGHT_KEY])
+		md->arrow_rotation_offst.x -= rot_speed;
+	if (md->key_prs[UP_KEY])
+		md->arrow_rotation_offst.y += rot_speed;
+	if (md->key_prs[DOWN_KEY])
+		md->arrow_rotation_offst.y -= rot_speed;
 }
 
-void	update_keys(t_md *md)
+void	update_key_params(t_md *md)
 {
-	if (md->key_prs[LEFT_KEY])
-	{
-		md->arrow_rotation_offst.x++;
-	}
-	if (md->key_prs[RIGHT_KEY])
-		md->arrow_rotation_offst.x--;
-	if (md->key_prs[UP_KEY])
-		md->arrow_rotation_offst.y--;
-	if (md->key_prs[DOWN_KEY])
-		md->arrow_rotation_offst.y++;
+	if (md->mouse_clicked == MOUSE_DPRESS)
+		md->lock_mouse = !md->lock_mouse;
 	if (md->key_clicked == NUM_1_KEY)
 		md->ray_mode = !md->ray_mode;
 	if (md->key_clicked == NUM_2_KEY)
@@ -65,6 +58,14 @@ void	update_keys(t_md *md)
 		md->mmap.active = !md->mmap.active;
 	if (md->key_clicked == ESC_KEY || md->key_clicked == Q_KEY)
 		free_and_quit(md, NULL, NULL);
+}
+
+void	update_keys(t_md *md)
+{
+	update_arrow_rotation(md);
+	update_key_params(md);
+	if (md->ray_mode)
+		return ;
 	if (md->mouse_pressed == MOUSE_PRESS)
 	{
 		md->plr.pos.x -= (md->plr.pos.x - md->mouse_world_pos.x) * .06f;
@@ -77,10 +78,13 @@ void	update_keys(t_md *md)
 
 int	update_and_render(t_md *md)
 {
+	update_particles(md);
 	update_keys(md);
-	if (update(md))
-		render(md);
-	show_fps(md, get_v2(0, md->win_size.y - md->txt_scale * 1.5));
+	update_mouse(md);
+	update_player(md, &md->plr);
+	update_cam_ofst(md);
+	update_ents(md);
+	render(md);
 	md->time++;
 	reset_mlx_values(md);
 	return (0);

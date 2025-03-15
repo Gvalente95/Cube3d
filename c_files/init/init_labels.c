@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 11:47:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 00:03:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,27 @@ void	init_action_labels(t_md *md)
 
 void	init_ents_labels(t_md *md)
 {
-	md->ents_tp_names[nt_plr] = "player";
-	md->ents_tp_names[nt_mob] = "mob";
-	md->ents_tp_names[nt_coin] = "coin";
-	md->ents_tp_names[nt_key] = "key";
-	md->ents_tp_names[nt_door] = "door";
-	md->ents_tp_names[nt_portal] = "portal";
-	md->ents_tp_names[nt_wall] = "wall";
-	md->ents_tp_names[nt_empty] = "empty";
-	md->ents_tp_names[nt_axe] = "axe";
-	md->ents_tp_names[nt_ground] = "ground";
-	md->ents_tp_names[nt_tile] = "tile";
-	md->ents_tp_names[nt_mover] = "mover";
-	md->ents_tp_names[nt_bush] = "laser";
-	md->ents_tp_names[nt_spike] = "spike";
-	md->ents_tp_names[nt_thrower] = "thrower";
-	md->ents_tp_names[nt_trees] = "squash";
-	md->ents_tp_names[nt_star] = "star";
-	md->ents_tp_names[nt_road] = "background";
-	md->ents_tp_names[nt_env] = "env";
-	md->ents_tp_names[nt_prt] = "particule";
-	md->ents_tp_map[0] = "AMCKDP10AGTVSRQSBEP";
+	md->e_typ_names[nt_plr] = "player";
+	md->e_typ_names[nt_mob] = "mob";
+	md->e_typ_names[nt_coin] = "coin";
+	md->e_typ_names[nt_key] = "key";
+	md->e_typ_names[nt_door] = "door";
+	md->e_typ_names[nt_portal] = "portal";
+	md->e_typ_names[nt_wall] = "wall";
+	md->e_typ_names[nt_empty] = "empty";
+	md->e_typ_names[nt_axe] = "axe";
+	md->e_typ_names[nt_ground] = "ground";
+	md->e_typ_names[nt_tile] = "tile";
+	md->e_typ_names[nt_mover] = "mover";
+	md->e_typ_names[nt_bush] = "laser";
+	md->e_typ_names[nt_spike] = "spike";
+	md->e_typ_names[nt_thrower] = "thrower";
+	md->e_typ_names[nt_trees] = "squash";
+	md->e_typ_names[nt_star] = "star";
+	md->e_typ_names[nt_road] = "background";
+	md->e_typ_names[nt_env] = "env";
+	md->e_typ_names[nt_prt] = "particule";
+	md->ents_tp_map[0] = "*MCKDP10AGTVSRQSBEP";
 }
 
 void	init_dir_labels(t_md *md)

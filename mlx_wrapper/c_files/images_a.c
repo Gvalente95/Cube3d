@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IMAGES_a.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 19:54:37 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 03:04:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	set_new_size(t_image *q, t_vec2 *old_size, t_vec2 *new_size)
 	q->y_ratio = (double)old_size->y / new_size->y;
 }
 
-void	*scale_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
+void	*scale_img_keep_ratio(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
 {
 	t_image	m;
 
@@ -53,7 +53,7 @@ void	*scale_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
 	return (img = m.img, *old_size = get_v2(new_size.x, new_size.y), m.img);
 }
 
-void	*scale_abs_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
+void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
 {
 	t_image	q;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_plr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 07:07:25 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 22:38:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	mov.x = (mv_for - mv_back) * for_dir.x + (mv_rght - mv_lft) * -rgt_dir.x;
 	mov.y = (mv_for - mv_back) * for_dir.y + (mv_rght - mv_lft) * -rgt_dir.y;
 	if (md->key_clicked == SPACE_KEY && md->plr.pos.z >= -EPSILON)
-		mov.z -= (int)(PLR_JUMPPOW * spd);
+		mov.z -= (PLR_JUMPPOW * spd);
+	if (md->key_prs[R_KEY] == 1)
+		mov.z = -(PLR_JUMPPOW * spd);
 	md->input_mov = get_v3f(mv_lft + mv_rght, mv_for + mv_back, md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY]);
 	return (mov);
 }
@@ -94,45 +96,48 @@ static int	update_player_mov(t_md *md)
 
 static void	update_player_rot(t_md *md)
 {
-	md->plr.rot.x = fmod(md->mouse_pos.x * SCROLL_SPD, 360.0f);
+	md->plr.rot.x = fmod((md->mouse_pos.x - md->arrow_rotation_offst.x) * SCROLL_SPD, 360.0f);
 	if (md->plr.rot.x < -180.0f)
 		md->plr.rot.x += 360.0f;
 	else if (md->plr.rot.x > 180.0f)
 		md->plr.rot.x -= 360.0f;
 	if (md->ray_mode)
 	{
-		md->plr.rot.y = (md->mouse_pos.y - md->win_size.y / 2) * SCROLL_SPD;
+		md->plr.rot.y = (md->mouse_pos.y - md->win_size.y / 2 - md->arrow_rotation_offst.y) * SCROLL_SPD;
 		md->plr.rot.y = minmaxf(-80, 80, md->plr.rot.y);
 	}
 	md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
+	md->plr.dir.x = cosf(md->plr.angle);
+	md->plr.dir.y = sinf(md->plr.angle);
+	md->plr.dir.z = 0;
 }
 
 int	update_map_index(t_md *md, t_ent *e)
 {
-	int		new_map_index;
-	char	cur_map_char;
+	int		new_index;
+	char	cur_char;
 
-	new_map_index = e->coord_pos.x + ((md->map.size.x + 1) * e->coord_pos.y);
-	if (new_map_index == e->map_index || new_map_index < 0 || new_map_index > md->map.len)
+	new_index = e->coord_pos.x + ((md->map.size.x + 1) * e->coord_pos.y);
+	if (new_index == e->map_index)
 		return (0);
-	cur_map_char = md->map.buffer[e->map_index];
-	if (cur_map_char == '0' || cur_map_char == e->character)
+	if (md->mapped_ents[e->map_index] == e)
+		md->mapped_ents[e->map_index] = NULL;
+	if (new_index < 0 || new_index >= md->map.len)
+		return (0);
+	cur_char = md->map.buffer[e->map_index];
+	if (cur_char == '0' || cur_char == e->character)
 		md->map.buffer[e->map_index] = '0';
-	cur_map_char = md->map.buffer[new_map_index];
-	if (char_in_str(cur_map_char, "\n1"))
+	cur_char = md->map.buffer[new_index];
+	if (char_in_str(cur_char, "\n1"))
 		return (0);
-	e->map_index = new_map_index;
-	md->map.buffer[new_map_index] = e->character;
+	md->map.buffer[new_index] = e->character;
+	e->map_index = new_index;
 	md->mapped_ents[e->map_index] = e;
 	return (1);
 }
 
-int	update_player(t_md *md)
+int	update_player(t_md *md, t_ent *plr)
 {
-	t_ent	*plr;
-
-	plr = &md->plr;
-
 	if (md->mouse_focus)
 		update_player_rot(md);
 	update_player_mov(md);
@@ -141,11 +146,6 @@ int	update_player(t_md *md)
 		md->plr_wrd_mv.x = 0;
 	if (!plr->mov.y)
 		md->plr_wrd_mv.y = 0;
-	move_ent(plr);
-	plr->coord_pos = get_v3(\
-		plr->pos.x / md->t_len, \
-		plr->pos.y / md->t_len, \
-		plr->pos.z / md->t_len);
-	update_map_index(md, plr);
+	move_player(md, plr);
 	return (1);
 }

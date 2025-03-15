@@ -1,7 +1,7 @@
-NO ./png/ent/wall/lb_NORTH.png
-SO ./png/ent/wall/lb_SOUTH.png
-WE ./png/ent/wall/lb_WEST.png
-EA ./png/ent/wall/lb_EAST.png
+NO ./png/ent/wall/NORTH.png
+SO ./png/ent/wall/SOUTH.png
+WE ./png/ent/wall/WEST.png
+EA ./png/ent/wall/EAST.png
 F 180,100,130
 C 50,20,155
 1111111111111111111111111

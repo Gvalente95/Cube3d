@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 00:33:35 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 00:14:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
 	if (fd == -1)
 		free_and_quit(md, "file at path not found for txtr", path);
 	close(fd);
-	md->wall_txtr[dir] = init_img_data(md, md->e_sizes[nt_wall], path, -1);
-	md->wall_txtr_2d[dir] = init_img_data(md, md->e_sizes_2d[nt_wall], path, -1);
+	md->wall_img[dir] = init_img_data(md, md->e_sizes[nt_wall], path, -1);
+	md->wall_img2d[dir] = init_img_data(md, md->e_sizes2d[nt_wall], path, -1);
 	if (md->debug_mode)
 		printf("%s texture[%d] correctly set\n", path, dir);
 }
@@ -93,10 +93,10 @@ static char	*parse_file_data(t_md *md)
 
 void	init_map_data(t_md *md)
 {
-	md->wall_txtr = md_malloc(md, sizeof(t_image *) * 5);
-	md->wall_txtr_2d = md_malloc(md, sizeof(t_image *) * 5);
-	md->wall_txtr[4] = NULL;
-	md->wall_txtr_2d[4] = NULL;
+	md->wall_img = md_malloc(md, sizeof(t_image *) * 5);
+	md->wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
+	md->wall_img[4] = NULL;
+	md->wall_img2d[4] = NULL;
 	setstr(&md->map.buffer, parse_file_data(md));
 	if (!md->map.buffer)
 		free_and_quit(md, "no map found", NULL);

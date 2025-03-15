@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   images_data.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/14 02:24:33 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 03:11:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	**get_frames(t_md *md, char *dir, int *amount, int max)
 	return (free(num_str), free(path), frames[*amount] = NULL, frames);
 }
 
-void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
+void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, int maintain_ratios)
 {
 	t_vec2	txt_size;
 	void	*texture;
@@ -53,13 +53,16 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path)
 	texture = md->mlx_make(md->mlx, path, &txt_size.x, &txt_size.y);
 	if (!texture)
 		return (printf("\"%s\" unable to make txtr\n", path), free(path), NULL);
-	texture = scale_abs_img(md, texture, &txt_size, final_size);
+	if (maintain_ratios)
+		texture = scale_img_keep_ratio(md, texture, &txt_size, final_size);
+	else
+		texture = resize_img(md, texture, &txt_size, final_size);
 	if (!texture)
 		return (printf("\"%s\" unable to scale txtr\n", path), free(path), NULL);
 	return (texture);
 }
 
-void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
+void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath, int maintain_ratios)
 {
 	t_vec2	size;
 	void	**txtr;
@@ -70,7 +73,7 @@ void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
 
 	if (!dirpath)
 		return (NULL);
-	fulldir = ft_megajoin(md->img_dir_path, "/", dirpath, NULL);
+	fulldir = ft_megajoin(md->image_dir, "/", dirpath, NULL);
 	frms = get_frames(md, dirpath, &amount, ENT_FRAMES_MAX);
 	if (!frms)
 		return (printf("\"%s\" frames NULL\n", dirpath), free(fulldir), NULL);
@@ -80,7 +83,10 @@ void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath)
 	while (frms[i] && i < amount)
 	{
 		txtr[i] = md->mlx_make(md->mlx, frms[i], &size.x, &size.y);
-		txtr[i] = scale_img(md, txtr[i], &size, final_size);
+		if (maintain_ratios)
+			txtr[i] = scale_img_keep_ratio(md, txtr[i], &size, final_size);
+		else
+			txtr[i] = resize_img(md, txtr[i], &size, final_size);
 		free(frms[i++]);
 	}
 	free(frms);
@@ -96,7 +102,7 @@ t_image	*init_img_data(t_md *md, t_vec2 img_size, char *path, int color)
 	if (!img_data)
 		return (printf("ERR: alloc for img_data\n"), NULL);
 	if (path)
-		img_data->img = ld_txtr(md, img_size, path);
+		img_data->img = ld_txtr(md, img_size, path, 0);
 	else
 		img_data->img = mlx_new_image(md->mlx, img_size.x, img_size.y);
 	if (!img_data->img)
@@ -111,7 +117,7 @@ t_image	*init_img_data(t_md *md, t_vec2 img_size, char *path, int color)
 		return (printf("ERR: Failed to get src data\n"), img_data);
 	img_data->pos = get_v2(0, 0);
 	if (color != -1)
-		flush_img(img_data, color);
+		flush_img(img_data, color, -1);
 	return (img_data);
 }
 

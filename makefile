@@ -1,10 +1,10 @@
 SRC_UTILS	= \
-c_files/init/init_cube.c c_files/init/init_entities.c c_files/init/init_ents_data.c c_files/init/init_labels.c \
-c_files/init/init_map.c c_files/init/init_map_data.c c_files/render/render.c c_files/tools/debug.c \
-c_files/tools/ftoa.c c_files/tools/image_tools.c c_files/tools/math_tools.c c_files/tools/text.c c_files/update/collisions.c \
-c_files/update/collisions_old.c c_files/update/movement.c c_files/update/update.c c_files/update/update_ents.c \
-c_files/update/update_plr.c c_files/update/update_prts.c c_files/raycasting/draw_line.c \
-c_files/raycasting/rays.c
+c_files/init/init_map.c c_files/init/init_labels.c c_files/init/init_ents_data.c c_files/init/init_map_data.c \
+c_files/init/init_entities.c c_files/init/init_cube.c c_files/raycasting/draw_sprite_column.c c_files/raycasting/draw_wall_column.c \
+c_files/raycasting/rays.c c_files/tools/debug.c c_files/tools/math_tools.c c_files/tools/text.c c_files/tools/image_tools.c \
+c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update.c c_files/update/movement.c c_files/update/update_ents.c \
+c_files/render/render_minimap.c c_files/render/render.c c_files/render/render_background.c c_files/particles/particles.c \
+c_files/collisions/collisions_old.c c_files/collisions/collisions.c c_files/raycasting/ray_visualize.c
 
 SRC			= main.c
 GAME_NAME	= cube
@@ -28,8 +28,8 @@ ifeq ($(UNAME_S),Linux)
 	MLXFLAGS = -L mlx_wrapper/mlx_linux -lmlx -lX11 -lXext -lXcursor -lGL -lz -lm
 	CFLAGS += -DIS_LINUX
 else
-	PLATFORM = linux
-	MLXFLAGS = -L mlx_wrapper/mlx -lmlx -framework OpenGL -framework AppKit -lz
+	PLATFORM = mac
+	MLXFLAGS = -L mlx_wrapper/mlx_mac -lmlx -framework OpenGL -framework AppKit -lz
 endif
 
 CC			= gcc

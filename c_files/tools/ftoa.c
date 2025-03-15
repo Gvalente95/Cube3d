@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 00:10:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/09 00:45:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 02:40:09 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,26 @@ char	*frac_ftoa(char *int_part_str, char *result, int dec_len, int precision)
 	return (result);
 }
 
+char	*get_int_part_str(int *dec_len, float num)
+{
+	int		scaled_num;
+
+	scaled_num = num;
+	*dec_len = 0;
+	while (scaled_num != (int)scaled_num)
+	{
+		(*dec_len)++;
+		scaled_num *= 10;
+	}
+	return (ft_itoa(scaled_num));
+}
+
 char	*ftoa(float num, int precision)
 {
 	int		is_negative;
 	char	*int_part_str;
 	int		len;
 	char	*result;
-	float	scaled_num;
 	int		dec_len;
 
 	is_negative = 0;
@@ -48,14 +61,7 @@ char	*ftoa(float num, int precision)
 		is_negative = 1;
 		num = -num;
 	}
-	scaled_num = num;
-	dec_len = 0;
-	while (scaled_num != (int)scaled_num)
-	{
-		dec_len++;
-		scaled_num *= 10;
-	}
-	int_part_str = ft_itoa(scaled_num);
+	int_part_str = get_int_part_str(&dec_len, num);
 	len = 0;
 	while (int_part_str[len])
 		len++;

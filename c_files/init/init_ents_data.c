@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_ents_data.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 05:41:53 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 00:14:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	store_entities_sizes(t_md *md, t_vec2 base)
 	md->e_sizes[nt_prt] = base;
 	i = -1;
 	while (++i < ENT_TYPE_LEN)
-		md->e_sizes_2d[i] = get_v2(md->size_2d, md->size_2d);
+		md->e_sizes2d[i] = get_v2(md->size_2d, md->size_2d);
 }
 
 static void	init_entities_textures(t_md *md)
@@ -50,13 +50,13 @@ static void	init_entities_textures(t_md *md)
 	i = -1;
 	while (++i < ENT_TYPE_LEN)
 	{
-		path = ft_megajoin(md->img_dir_path, "/ent/", md->ents_tp_names[i], "/");
+		path = ft_megajoin(md->image_dir, "/ent/", md->e_typ_names[i], "/");
 		md->e_frms[i][0] = init_imgs_data(md, md->e_sizes[i], path);
 		free(path);
-		path = ft_megajoin(md->img_dir_path, "/ent/", md->ents_tp_names[i], "/0");
+		path = ft_megajoin(md->image_dir, "/ent/", md->e_typ_names[i], "/0");
 		with_format = ft_strjoin(path, md->img_format);
 		free(path);
-		md->txtr_2d[i] = init_img_data(md, md->e_sizes_2d[i], with_format, -1);
+		md->txtr_2d[i] = init_img_data(md, md->e_sizes2d[i], with_format, -1);
 		free(with_format);
 	}
 	md->e_frms[i] = NULL;

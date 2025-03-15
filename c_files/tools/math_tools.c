@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 11:59:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/12 04:37:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 00:26:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,27 @@
 float	maxf(float a, float b)
 {
 	if (a > b)
-		return (1);
+		return (a);
 	return (b);
 }
 
 float	minf(float a, float b)
 {
-	if (a > b)
-		return (b);
-	return (a);
+	if (a < b)
+		return (a);
+	return (b);
 }
 
 float	minmaxf(float min, float max, float value)
+{
+	if (value < min)
+		return (min);
+	if (value > max)
+		return (max);
+	return (value);
+}
+
+int	minmax(int min, int max, int value)
 {
 	if (value < min)
 		return (min);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   entity.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 05:46:36 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:53:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct s_entity t_ent;
 typedef struct s_entity
 {
 	t_ent			*col_hit;
+	t_ent			*emitter;
 	t_ent_type		type;
 	t_ent_action	action;
 	t_vec2			size;
@@ -111,6 +112,7 @@ typedef struct s_entity
 	int				jumps;
 	int				frame_index;
 	int				in_screen;
+	int				row_draw_index;
 }	t_ent;
 
 typedef struct s_particle

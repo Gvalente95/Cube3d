@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_a.c                                           :+:      :+:    :+:   */
+/*   FREE_a.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 02:20:38 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 02:29:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,20 +94,17 @@ int	free_md(t_md *md, int quit)
 	if (!md->init_steps)
 		return (0);
 	free_count = 0;
-	free(md->map.buffer);
-	free_count += free_image_data(md, md->screen.buffer);
-	free_count += free_image_data(md, md->screen.sky);
-	free_count += free_image_data(md, md->screen.floor);
+	if (md->map.buffer)
+		free(md->map.buffer);
+	free_count += free_image_data(md, md->screen);
+	free_count += free_image_data(md, md->hud.sky);
+	free_count += free_image_data(md, md->hud.floor);
 	free_count += free_image_data(md, md->center);
 	free_count += free_image_data(md, md->mmap.bgrnd);
 	free_count += free_image_data(md, md->mmap.plr_icon);
 	free_count += free_images_data(md, md->txtr_2d, "txtr_2d");
-	free_count += free_images_data(md, md->wall_txtr, "wall_txtr");
-	free_count += free_images_data(md, md->wall_txtr_2d, "wall_txtr_2d");
+	free_count += free_images_data(md, md->wall_img, "wall_img");
+	free_count += free_images_data(md, md->wall_img2d, "wall_img2d");
 	free_count += free_e_frms(md);
-	free_count += mlx_destroy_window(md->mlx, md->win) + 1;
-	free_count += free_void(md->mlx);
-	if (!quit || md->init_steps == 1)
-		return (free_count);
 	return (free_md2(md, free_count));
 }

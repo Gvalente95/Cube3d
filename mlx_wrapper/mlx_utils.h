@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/14 07:07:15 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 03:04:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 
 # include "libft/libft.h"
 # include "../lists/lists.h"
-# include "mlx_linux/mlx.h"
+//# include "mlx_linux/mlx.h"
+# include "mlx_mac/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
@@ -29,7 +30,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <X11/X.h>
+//# include <X11/X.h>
 
 # include <signal.h>
 # include <stdio.h>
@@ -93,37 +94,44 @@ typedef struct s_mmap
 	int			ic_scl;
 	int			active;
 	int			mray_len;
+	int			background_color;
 }	t_mmap;
 
 typedef struct s_ray
 {
+	t_ent	*hit;
+	t_ent	*wall_hit;
 	t_vec3f	pos;
+	t_vec3f	pos_at_e;
 	t_vec3f	dir;
 	float	distance;
+	float	dist_at_e;
+	int		hit_vrt_at_e;
 	float	angle;
-	int		hit_wall_index;
-	int		hit_vrt;
+	int		vertical_hit;
 	int		index;
 	int		color;
-	t_ent	*found_e;
-	t_vec3f	pos_at_e;
-	int		hit_vrt_at_e;
-	float	dist_at_e;
 }	t_ray;
 
-typedef struct s_screen
+typedef struct s_hud
 {
-	t_image		*buffer;
 	t_image		*sky;
 	t_image		*floor;
-}	t_screen;
+	t_image		*gun[2];
+	t_image		*hp_bar;
+}	t_hud;
 
 typedef struct s_md
 {
 	void		*mlx;
 	void		*win;
+	t_image		*screen;
 	t_ent		**mapped_ents;
-	t_screen	screen;
+	t_hud		hud;
+	t_image		*center;
+	t_image		*cursor;
+	t_image		*curs_dtc;
+	t_image		*curs_grb;
 	t_gs		gst;
 	t_map		map;
 	t_mmap		mmap;
@@ -135,12 +143,13 @@ typedef struct s_md
 	t_ent		plr;
 	t_vec2		win_size;
 	t_vec2		e_sizes[ENT_TYPE_LEN];
-	t_vec2		e_sizes_2d[ENT_TYPE_LEN];
+	t_vec2		e_sizes2d[ENT_TYPE_LEN];
 	t_vec3f		input_mov;
-	t_vec3f		mouse_pos;
-	t_vec3f		mouse_prv_pos;
-	t_vec3f		mouse_delta;
-	t_vec3f		mouse_world_pos;
+	t_vec2		mouse_pos;
+	t_vec2		mouse_real;
+	t_vec2		prev_mouse;
+	t_vec2		mouse_delta;
+	t_vec2		mouse_world_pos;
 	t_vec2		mouse_grid_pos;
 	t_vec2		arrow_rotation_offst;
 	t_vec3f		cam_ofst;
@@ -148,22 +157,19 @@ typedef struct s_md
 	t_vec3f		plr_wrd_mv;
 	pid_t		bgrnd_au;
 	pid_t		bgrnd_mus;
-	t_image		*center;
-	t_image		*cursor;
-	t_image		*curs_dtc;
-	t_image		*curs_grb;
 	t_image		**prt_img;
-	t_image		**wall_txtr;
-	t_image		**wall_txtr_2d;
+	t_image		**wall_img;
+	t_image		**wall_img2d;
 	t_image		**txtr_2d;
 	t_image		****e_frms;
 	const char	*ents_tp_map[1];
-	const char	*ents_tp_names[ENT_TYPE_LEN];
+	const char	*e_typ_names[ENT_TYPE_LEN];
 	const char	*ents_act_names[ENT_ACTION_LEN];
 	const char	*dir_labels[4];
 	char		base_map_path[50];
-	char		img_dir_path[20];
+	char		image_dir[20];
 	char		img_format[20];
+	int			ray_depth;
 	int			is_linux;
 	int			rgb[17];
 	int			key_prs[512];
@@ -187,6 +193,8 @@ typedef struct s_md
 	int			fps;
 	int			prv_fps;
 	int			floor_start;
+	int			lock_mouse;
+	int			particles_alive;
 	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
 	void		*(*mlx_make)(void *mlx, char *name, int *with, int *height);
 }	t_md;
@@ -218,10 +226,11 @@ void	reset_mlx_values(t_md *md);
 int		close_window(t_md *md);
 
 //		RENDER.c
-int		draw_pixel(t_image *src, int x, int y, int color);
+int		draw_pixel(t_image *src, t_vec2 pos, int color, float transp);
 int		draw_pixels(t_image *txtr, t_vec2 start_crd, t_vec2 end_crd, int colr);
 int		draw_img(t_image *from, t_image *onto, t_vec2 pos, int drawover);
-void	flush_img(t_image *src, int color);
+void	flush_img(t_image *src, int color, float transp);
+void	draw_transp_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp);
 
 //		TIME.c
 double	get_time_in_seconds(void);
@@ -239,18 +248,16 @@ int		free_md2(t_md *md, int free_count);
 
 //		IMAGES_a.c
 void	set_new_size(t_image *q, t_vec2 *old_size, t_vec2 *new_size);
-void	*scale_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
-void	*scale_abs_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
+void	*scale_img_keep_ratio(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
+void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
 void	set_img_data_color(t_image *img_data, t_vec2 size, int col, float str);
 //		IMAGES_b.c
-void	*set_img_color(void *frame, t_vec2 size, int col, float str);
-void	set_transparency(void *src, void *dest, t_vec2 size, float trnsp);
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size);
 void	*add_img(char *relative_path, int *width, int *height, t_md *md);
 void	render_cursor(t_md *md, int has_hov);
 //		IMG_DATA.c
-void	*ld_txtr(t_md *md, t_vec2 final_size, char *path);
-void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath);
+void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, int maintain_ratios);
+void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath, int maintain_ratios);
 t_image	*init_img_data(t_md *md, t_vec2 size, char *path, int color);
 t_image	**init_imgs_data(t_md *md, t_vec2 size, char *path);
 
@@ -307,6 +314,14 @@ int		get_char_index(const char *str, char to_check);
 char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d);
 
 int		update_map_index(t_md *md, t_ent *e);
-void	draw_sprite(t_md *md, float dist, t_ent *wall, t_ray *ray);
+void	draw_sprite(t_md *md, float dist, t_ray *ray);
+int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
+
+//		PARTICLES
+void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir);
+void	update_particles(t_md *md);
+int		blend_color(int color_a, int color_b, float factor);
+
+t_dblst	*del_ent(t_md *md, t_dblst *node, t_ent *e);
 
 #endif
