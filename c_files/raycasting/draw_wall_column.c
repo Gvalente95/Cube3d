@@ -6,23 +6,23 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 01:43:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 14:20:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-int	determine_texture(t_ray *ray)
+t_wrd_dir	determine_texture(t_ray *ray)
 {
 	if (ray->vertical_hit)
 	{
 		if (ray->dir.x > 0)
-			return ((int)EAST);
-		return ((int)WEST);
+			return (EAST);
+		return (WEST);
 	}
 	else if (ray->dir.y > 0)
-		return ((int)SOUTH);
-	return ((int)NORTH);
+		return (SOUTH);
+	return (NORTH);
 }
 
 void	project_particle(t_md *md, t_image *img, t_vec2	pos)
@@ -30,21 +30,18 @@ void	project_particle(t_md *md, t_image *img, t_vec2	pos)
 	t_vec2	r_size;
 	t_vec2	start_draw;
 
-	r_size = get_v2(r_range(5, 30), r_range(5, 30));
+	r_size = get_v2(10, 10);
 	start_draw = get_v2((int)pos.x - r_size.x / 2, (int)pos.y - r_size.y / 2);
 	draw_sphere(img, start_draw, r_size, md->rgb[RGB_BLACK]);
 }
 
-int	draw_wall_column(t_md *md, t_image *img, t_vec2 win_pos, t_vec3f img_coords)
+int	draw_wall_column(t_md *md, t_image *img, t_vec2 win_p, t_vec3f img_coords)
 {
 	t_vec2	y;
-	int		pixel;
-	int		img_offset;
+	t_vec2	pxl;
 	int		img_y;
-	int		vertical_end;
 	float	step;
 
-	vertical_end = md->win_size.y;
 	y.x = (md->win_size.y / 2 - img_coords.y / 2) - 1;
 	step = img->size.y / img_coords.y;
 	y.y = (md->win_size.y / 2 + img_coords.y / 2);
@@ -53,17 +50,16 @@ int	draw_wall_column(t_md *md, t_image *img, t_vec2 win_pos, t_vec3f img_coords)
 		img_y = (y.x - (md->win_size.y / 2 - img_coords.y / 2)) * step;
 		if (img_y < 0 || img_y >= img->size.y)
 			continue ;
-		img_offset = ((int)img_y * (img->size_line / 4)) + (int)img_coords.x;
-		pixel = *(img->src_data + img_offset);
-		if ((pixel >> 24) != 0x00)
+		pxl.x = ((int)img_y * (img->size_line / 4)) + (int)img_coords.x;
+		pxl.y = *(img->src_data + pxl.x);
+		if ((pxl.y >> 24) != 0x00)
 			continue ;
-		vertical_end = y.x + win_pos.y - md->plr.pos.z;
-		draw_pixel(md->screen, \
-			get_v2(win_pos.x, y.x + win_pos.y - md->plr.pos.z), pixel, -1);
-		if (md->plr.shot && win_pos.x == md->win_size.x / 2 && y.x + win_pos.y - md->plr.pos.z == md->win_size.y / 2)
+		draw_pixel(md->screen, get_v2(win_p.x, y.x + win_p.y - md->plr.pos.z), pxl.y, -1);
+		if (md->plr.shot && win_p.x == md->win_size.x / 2 && \
+			y.x + win_p.y - md->plr.pos.z == md->win_size.y / 2)
 			project_particle(md, img, get_v2((int)img_coords.x, (int)img_y));
 	}
-	return (vertical_end);
+	return (y.x + win_p.y - md->plr.pos.z);
 }
 
 int	compute_perspective_change(t_md *md, float *height, float ray_dst)
@@ -104,7 +100,7 @@ void	draw_pxl(t_md *md, t_ray *ray, t_vec3f win_pos)
 	if (ray->wall_hit->type == nt_wall)
 	{
 		dir = determine_texture(ray);
-		img = ray->wall_hit->frames[dir];
+		img = ray->wall_hit->frames[(int)dir];
 	}
 	draw_start = get_v2(ray->index, vrt_offset);
 	vertical_end = draw_wall_column(md, img, draw_start, win_pos);
@@ -119,7 +115,7 @@ void	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
 
 	ray->distance = maxf(0.01, dist);
 	fisheye_corrector = (md->win_size.y * wall->size.y) / \
-	(dist * fabs(cos((ray->angle - md->plr.angle) * (60.0 / FOV))));
+	(dist * fabs(cos((ray->angle - md->plr.angle) * (60.0 / (int)md->fov))));
 
 	if (fisheye_corrector > md->win_size.y * 1.5)
 		fisheye_corrector = md->win_size.y * 1.5;

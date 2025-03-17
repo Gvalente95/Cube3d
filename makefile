@@ -5,32 +5,33 @@ c_files/raycasting/rays.c c_files/tools/debug.c c_files/tools/math_tools.c c_fil
 c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update.c c_files/update/movement.c c_files/update/update_ents.c \
 c_files/render/render_minimap.c c_files/render/render.c c_files/render/render_background.c c_files/particles/particles.c \
 c_files/collisions/collisions_old.c c_files/collisions/collisions.c c_files/raycasting/ray_visualize.c c_files/render/filter.c \
-c_files/update/update_menu.c c_files/init/init_menu.c c_files/init/init_hud.c c_files/update/update_projectile.c
+c_files/update/update_menu.c c_files/init/init_menu.c c_files/init/init_hud.c c_files/update/update_projectile.c c_files/update/update_input.c \
+
 
 SRC			= main.c
 GAME_NAME	= cube
 
-GNL_DIR		= gnl/
+GNL_DIR		= ressources/gnl/
 GNL			= $(GNL_DIR)get_next_line.a
 
-LISTS_DIR	= lists/
-LISTS		= lists/lists.a
+LISTS_DIR	= ressources/lists/
+LISTS		= $(LISTS_DIR)lists.a
 
-LIBFT_DIR	= mlx_wrapper/libft/
+LIBFT_DIR	= ressources/mlx_wrapper/libft/
 LIBFT		= $(LIBFT_DIR)libft.a
 
-MLX_WRP_DIR = mlx_wrapper/
+MLX_WRP_DIR = ressources/mlx_wrapper/
 MLX_WRAPPER = $(MLX_WRP_DIR)mlx_wrapper.a
 
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Linux)
 	PLATFORM = linux
-	MLXFLAGS = -L mlx_wrapper/mlx_linux -lmlx -lX11 -lXext -lXcursor -lGL -lz -lm
+	MLXFLAGS = -L $(MLX_WRP_DIR)mlx_linux -lmlx -lX11 -lXext -lXcursor -lGL -lz -lm
 	CFLAGS += -DIS_LINUX
 else
 	PLATFORM = mac
-	MLXFLAGS = -L mlx_wrapper/mlx_mac -lmlx -framework OpenGL -framework AppKit -lz
+	MLXFLAGS = -L $(MLX_WRP_DIR)mlx_mac -lmlx -framework OpenGL -framework AppKit -lz
 endif
 
 CC			= gcc

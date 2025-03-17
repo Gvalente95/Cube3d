@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 00:07:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 13:53:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	render_cursor(t_md *md, t_image *screen, int has_hov)
 	t_vec2	pos;
 
 	pos = get_v2(md->mouse_real.x, md->mouse_real.y);
-	if (md->mouse_pressed && has_hov)
+	if (md->mouse_pressed == MOUSE_PRESS && has_hov)
 		draw_img(md->curs_grb, screen, pos, -1);
 	else if (has_hov)
 		draw_img(md->curs_dtc, screen, pos, -1);
@@ -87,6 +87,7 @@ void	render(t_md *md)
 	render_hud_elements(md);
 	show_update_information(md);
 	show_fps(md, get_v2(0, md->win_size.y - (md->txt_scale * 1.5) * 3));
-	//apply_fxaa(md->screen, 15, 0.3);
+	if (md->menu.hue.r != 1 || md->menu.hue.g != 1 || md->menu.hue.b != 1)
+		set_hue(md->screen, md->menu.hue);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

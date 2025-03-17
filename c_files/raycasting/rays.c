@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 01:19:09 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 14:13:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	cast_ray(t_md *md, t_ray *ray, t_vec2 visu_offset)
 	{
 		ray->vertical_hit = ray->hit_vrt_at_e;
 		ray->pos = ray->pos_at_e;
-		draw_sprite(md, ray->dist_at_e, ray->hit, ray, md->win_size.x);
+		draw_sprite(md, ray->dist_at_e, ray->hit, ray);
 	}
 }
 
@@ -104,7 +104,7 @@ void	precompute_rays(t_md *md, float *cos_vals, float *sin_vals)
 		yaw += 2 * M_PI;
 	else if (yaw >= M_PI)
 		yaw -= 2 * M_PI;
-	fov = FOV * (M_PI / 180.0f);
+	fov = (int)md->fov * (M_PI / 180.0f);
 	angle_step = fov / (float)(md->win_size.x - 1);
 	i = -1;
 	while (++i < md->win_size.x)
@@ -134,8 +134,8 @@ void	cast_rays(t_md *md, t_vec3f start_pos)
 		md->rays[i].dir = get_v3f(cos_vals[i], sin_vals[i], 0);
 		cast_ray(md, &md->rays[i], center_ray_visu_pos);
 	}
-	// if (md->mouse_clicked && md->timer.shoot_timer < md->timer.current_time + SHOOT_REFRESH)
-	// 	launch_prt(md, &md->plr, md->plr.pos, md->rays[md->win_size.x / 2].dir);
+	if (md->plr.shot)
+		launch_prt(md, &md->plr, md->plr.pos, md->rays[md->win_size.x / 2].dir);
 	if (md->hud.floor_start < 0)
 		md->hud.floor_start = 0;
 }

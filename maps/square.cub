@@ -1,0 +1,11 @@
+NO ent/wall/NORTH.xpm
+SO ent/wall/SOUTH.xpm
+WE ent/wall/WEST.xpm
+EA ent/wall/EAST.xpm
+F 180,100,130
+C 50,20,155
+11111111
+1C0000C1
+1010N001
+100000C1
+11111111

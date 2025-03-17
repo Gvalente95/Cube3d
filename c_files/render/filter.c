@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:51:08 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/16 23:20:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 03:54:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void apply_fxaa(t_image *img, float edge_threshold, float blend_factor)
 	free(new_data);
 }
 
-void	shift_rgb(t_image *img, t_vec4f rgb_factors)
+void	set_hue(t_image *img, t_vec4f rgb_factors)
 {
 	int				num_pixels;
 	t_vec4			rgba;

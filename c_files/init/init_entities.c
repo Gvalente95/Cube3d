@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 00:06:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 06:17:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,8 @@
 
 static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 {
-	if (type == nt_plr)
-	{
-		if (c == 'N')
-			e->rot.x = -90;
-		if (c == 'S')
-			e->rot.x = 90;
-		else if (c == 'W')
-			e->rot.x = -180;
-	}
-	if (e->type == nt_wall)
+	(void)c;
+	if (type == nt_wall)
 	{
 		e->frames = malloc(sizeof(t_image) * 4);
 		e->frames[0] = copy_image(md, md->wall_img[0]);
@@ -31,10 +23,10 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 		e->frames[2] = copy_image(md, md->wall_img[2]);
 		e->frames[3] = copy_image(md, md->wall_img[3]);
 	}
-	if (e->type == nt_mob || e->type == nt_coin)
-		e->pos.z = e->size.y;
-	if (e->type != nt_wall)
+	else
 		e->dir = get_v3f(r_range(-1, 1), r_range(-1, 1), r_range(-1, 1));
+	if (type == nt_mob || type == nt_coin)
+		e->pos.z = e->size.y;
 }
 
 
@@ -72,7 +64,15 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 	set_base_ent_values(md, &md->plr, c, pos);
 	md->plr.map_index = map_index;
 	md->mapped_ents[map_index] = &md->plr;
-	set_type_specifics(md, &md->plr, nt_plr, c);
+	md->mmap.limits_x = get_v2(md->plr.pos.x, md->plr.pos.x);
+	md->mmap.limits_y = get_v2(md->plr.pos.y, md->plr.pos.y);
+	if (c == 'N')
+		md->plr.rot.x = -90;
+	if (c == 'S')
+		md->plr.rot.x = 90;
+	else if (c == 'W')
+		md->plr.rot.x = -180;
+	md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
 }
 
 t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 01:52:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 06:00:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	if (md->key_clicked == SPACE_KEY && md->plr.pos.z >= -EPSILON)
 		mov.z -= (PLR_JUMPPOW);
 	if (md->key_prs[R_KEY] == 1)
-		mov.z = -(PLR_JUMPPOW * spd);
-	md->input_mov = get_v3f(mv_lft - mv_rght, mv_for - mv_back, md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY]);
+		mov.z = -(PLR_JUMPPOW * .2);
+	md->input_mov = get_v3f(\
+		mv_lft - mv_rght, mv_for - mv_back, \
+		md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY]);
 	return (mov);
 }
 
@@ -42,7 +44,7 @@ static t_vec3f	set_input_mov(t_md *md)
 	t_vec3f	for_dir;
 	t_vec3f	rgt_dir;
 
-	spd = ACCSPD;
+	spd = 1;
 	if (md->key_prs[SHIFT_KEY])
 		spd *= 2;
 	for_dir.x = cosf(md->plr.angle);
@@ -75,7 +77,8 @@ static int	update_player_mov(t_md *md)
 	md->plr_wrd_mv = get_v3f(\
 		new_mov.x * rgt_dir.x + new_mov.y * rgt_dir.y, \
 		-(new_mov.x * for_dir.x + new_mov.y * for_dir.y), new_mov.z);
-	md->plr.mov = get_v3f(new_mov.x * md->timer.delta_time, new_mov.y * md->timer.delta_time, new_mov.z);
+	md->plr.mov = get_v3f(md->plr.mov.x + new_mov.x * md->timer.delta_time, \
+		md->plr.mov.y + new_mov.y * md->timer.delta_time, new_mov.z);
 	return (conv_mov.x || conv_mov.y);
 }
 
@@ -83,20 +86,18 @@ static void	update_player_rot(t_md *md)
 {
 	if (!md->mouse_focus)
 		return ;
-	md->plr.rot.x = fmod((md->mouse_pos.x - md->arrow_rot.x), 360.0f);
-	if (md->plr.rot.x < -180.0f)
-		md->plr.rot.x += 360.0f;
-	else if (md->plr.rot.x > 180.0f)
-		md->plr.rot.x -= 360.0f;
-	if (md->lock_y)
-		md->plr.rot.y = 0;
-	else
-		md->plr.rot.y = (md->mouse_pos.y - md->arrow_rot.y);
-	if (md->ray_mode)
+	if (md->lock_rotation.x)
 	{
-		md->plr.rot.y = minmaxf(-40, 40, md->plr.rot.y);
-		md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
+		md->plr.rot.x = fmod((md->mouse_pos.x - md->arrow_rot.x), 360.0f);
+		if (md->plr.rot.x < -180.0f)
+			md->plr.rot.x += 360.0f;
+		else if (md->plr.rot.x > 180.0f)
+			md->plr.rot.x -= 360.0f;
 	}
+	if (md->lock_rotation.y)
+		md->plr.rot.y = (md->mouse_pos.y - md->arrow_rot.y);
+	md->plr.rot.y = minmaxf(-40, 40, md->plr.rot.y);
+	md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
 	md->plr.dir.x = cosf(md->plr.angle);
 	md->plr.dir.y = sinf(md->plr.angle);
 	md->plr.dir.z = 0;
@@ -117,5 +118,6 @@ int	update_player(t_md *md, t_ent *plr)
 	move_player(md, plr);
 	md->input_offst = get_v2(md->input_offst.x + (int)(md->plr_wrd_mv.x), \
 		md->input_offst.y - (int)(md->plr_wrd_mv.y));
+
 	return (1);
 }

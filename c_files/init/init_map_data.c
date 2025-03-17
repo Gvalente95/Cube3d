@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 15:53:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 13:23:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,15 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
 
 	if (ft_strlen(line) <= 4)
 		free_and_quit(md, "wrong value for txtr", line);
-	path = line + 3;
+	path = ft_strjoin(IMG_PATH, line + 3);
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 		free_and_quit(md, "file at path not found for txtr", path);
 	close(fd);
-	md->wall_img[dir] = init_img_data(md, md->e_sizes[nt_wall], path, -1);
+	free(path);
+	md->wall_img[dir] = init_img(md, md->e_sizes[nt_wall], line + 3, -1);
 	fill_transparency(md->wall_img[dir], md->rgb[RGB_BLACK]);
-	md->wall_img2d[dir] = init_img_data(md, md->e_sizes2d[nt_wall], path, -1);
+	md->wall_img2d[dir] = init_img(md, md->e_sizes2d[nt_wall], line + 3, -1);
 	if (md->debug_mode)
 		printf("%s texture[%d] correctly set\n", path, dir);
 }

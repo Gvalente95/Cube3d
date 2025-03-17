@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/16 23:08:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 13:52:58 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	render_sky(t_md *md, t_image *bufr, t_image *sky)
 	return (draw_sky(md, bufr, sky, sky_pos));
 }
 
-static int	draw_floor(t_md *md, t_image *bufr, t_image *floor, t_vec2	*floor_pos)
+static int	draw_floor(t_md *md, t_image *bufr, t_image *floor, t_vec2	*pos)
 {
 	int		i;
 	int		drew_len;
@@ -73,21 +73,21 @@ static int	draw_floor(t_md *md, t_image *bufr, t_image *floor, t_vec2	*floor_pos
 	i = -1;
 	while (++i < 9)
 	{
-		if (floor_pos[i].y < md->hud.floor_start - win_sz.y)
+		if (pos[i].y < md->hud.floor_start - win_sz.y)
 			continue ;
-		if (floor_pos[i].y > win_sz.y)
+		if (pos[i].y > win_sz.y)
 			continue ;
-		if (floor_pos[i].x < -md->win_size.x)
+		if (pos[i].x < -md->win_size.x)
 			continue ;
-		if (floor_pos[i].x > md->win_size.x)
+		if (pos[i].x > md->win_size.x)
 			continue ;
-		draw_img(floor, bufr, floor_pos[i], md->hud.bgr_color);
+		draw_img(floor, bufr, pos[i], md->hud.bgr_color);
 		drew_len++;
 	}
 	return (drew_len);
 }
 
-static int	render_floor(t_md *md, t_image *bufr, t_image *floor)
+int	render_floor(t_md *md, t_image *bufr, t_image *floor)
 {
 	t_vec3f	speed;
 	t_vec2	scroll;
@@ -125,6 +125,8 @@ void	render_background(t_md *md)
 	else
 	{
 		render_sky(md, md->screen, md->hud.sky);
-		render_floor(md, md->screen, md->hud.floor);
+		draw_img(md->hud.base_floor, md->screen, \
+			get_v2(0, md->hud.floor_start), md->hud.bgr_color);
+		//render_floor(md, md->screen, md->hud.floor);
 	}
 }

@@ -6,33 +6,32 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 01:51:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 14:02:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUBE_H
 # define CUBE_H
 
-# include "mlx_wrapper/mlx_utils.h"
-# include "lists/lists.h"
-# include "gnl/get_next_line.h"
+# include "ressources/mlx_wrapper/mlx_utils.h"
+# include "ressources/lists/lists.h"
+# include "ressources/gnl/get_next_line.h"
 # include <math.h>
 //# include <X11/X.h>
 
-# define RESOLUTION		5
+# define RESOLUTION		4
 //		SCREEN
 # define SCRN_W			1000
 # define SCRN_H			600
 //		RAYS
 # define RAY_DEPTH		3000
-# define FOV			60
 //		PLR
-# define PLRSPD 20
-# define ACCSPD 1
+# define PLRSPD 75
+# define ACCSPD 0.5
 # define PLR_HEIGHT 20
-# define PLR_JUMPPOW .1
+# define PLR_JUMPPOW .2
 # define GRAVITY .015
-# define ARROW_ROTATION_SPD 15
+# define ARROW_ROTATION_SPD 1
 //		CURSOR
 
 # define SHOOT_REFRESH	.1
@@ -42,6 +41,7 @@
 # define ENNEMY_SPEED	.1
 # define MAX_PARTICLES	50
 # define PARTICLE_SPEED 4000
+# define IMG_PATH		"ressources/xpm/"
 
 typedef enum polar_dir
 {
@@ -92,9 +92,6 @@ const char *attr);
 void	show_init_information(t_md *md);
 void	show_update_information(t_md *md);
 void	show_fps(t_md *md, t_vec2 pos);
-void	show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
-void	show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
-void	show_vec3f(t_md *md, char *label, t_vec3f vec, t_vec2 pos);
 
 //		text.c
 void	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...);
@@ -124,8 +121,8 @@ int		ent_in_bounds(t_ent *ent, t_ent *bounds);
 
 //		filters
 void	apply_fxaa(t_image *img, float edge_threshold, float blend_factor);
-void 	apply_antialiasing(t_image *img);
-void	shift_rgb(t_image *img, t_vec4f rgb_factors);
+void	apply_antialiasing(t_image *img);
+void	set_hue(t_image *img, t_vec4f rgb_factors);
 void	plr_shoot(t_md *md);
 
 #endif

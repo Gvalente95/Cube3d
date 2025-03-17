@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 06:11:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/16 23:50:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 13:19:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir)
 	t_ent	*new_prt;
 	t_ent	*to_del;
 
-	return ;
 	if (md->particles_alive > MAX_PARTICLES)
 	{
 		del_node = dblst_first(md->particles);

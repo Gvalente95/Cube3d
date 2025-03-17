@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 20:07:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 02:43:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,11 @@ int	move_player(t_md *md, t_ent *e)
 		e->mov.z = 0;
 	}
 	e->pos = get_v3f(\
-		e->pos.x + sign_mov.x, \
-		e->pos.y + sign_mov.y, \
-		e->pos.z + sign_mov.z);
+		e->pos.x + sign_mov.x, e->pos.y + sign_mov.y, e->pos.z + sign_mov.z);
 	e->mov = get_v3f(\
-		e->mov.x - decc_mov.x, \
-		e->mov.y - decc_mov.y, \
-		e->mov.z);
+		e->mov.x - decc_mov.x, e->mov.y - decc_mov.y, e->mov.z);
 	e->coord_pos = get_v3(\
-		e->pos.x / md->t_len, \
-		e->pos.y / md->t_len, \
-		e->pos.z / md->t_len);
+		e->pos.x / md->t_len, e->pos.y / md->t_len, e->pos.z / md->t_len);
 	update_map_index(md, e);
 	return (1);
 }
