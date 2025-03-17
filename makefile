@@ -4,7 +4,8 @@ c_files/init/init_entities.c c_files/init/init_cube.c c_files/raycasting/draw_sp
 c_files/raycasting/rays.c c_files/tools/debug.c c_files/tools/math_tools.c c_files/tools/text.c c_files/tools/image_tools.c \
 c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update.c c_files/update/movement.c c_files/update/update_ents.c \
 c_files/render/render_minimap.c c_files/render/render.c c_files/render/render_background.c c_files/particles/particles.c \
-c_files/collisions/collisions_old.c c_files/collisions/collisions.c c_files/raycasting/ray_visualize.c
+c_files/collisions/collisions_old.c c_files/collisions/collisions.c c_files/raycasting/ray_visualize.c c_files/render/filter.c \
+c_files/update/update_menu.c c_files/init/init_menu.c c_files/init/init_hud.c c_files/update/update_projectile.c
 
 SRC			= main.c
 GAME_NAME	= cube

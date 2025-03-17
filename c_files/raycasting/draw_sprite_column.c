@@ -5,71 +5,92 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/14 14:20:47 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:24:29 by giuliovalen      ###   ########.fr       */
+/*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
+/*   Updated: 2025/03/15 19:01:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	draw_column(t_md *md, t_image *img, t_vec2 start_pos, t_vec2 win_pos)
+int determine_sprite_texture(t_ent *sprite, int screen_column, int total_rays)
 {
-	t_vec2	y;
-	t_vec2	draw_position;
-	int		pixel;
-	int		pixel_index;
-	float	step;
+    int texture_column;
 
-	y.x = (md->win_size.y / 2 - win_pos.y / 2) - 1;
-	y.y = (md->win_size.y / 2 + win_pos.y / 2);
-	step = img->size.y / win_pos.y;
-	while (++y.x < y.y)
-	{
-		win_pos.y = (y.y - (md->win_size.y / 2 - win_pos.y / 2)) * step;
-		if (win_pos.y < 0 || win_pos.y >= img->size.y)
-			continue ;
-		pixel_index = ((int)win_pos.y * (img->size_line / 4)) + win_pos.x;
-		pixel = *(img->src_data + pixel_index);
-		if ((pixel >> 24) != 0x00)
-			continue ;
-		draw_position = get_v2(start_pos.x, y.y + start_pos.y - md->plr.pos.z);
-		draw_pixel(md->screen, draw_position, pixel, -1);
-	}
+    texture_column = (screen_column * sprite->frame->size.x) / total_rays;
+    if (texture_column < 0)
+        texture_column = 0;
+    else if (texture_column >= sprite->frame->size.x)
+        texture_column = sprite->frame->size.x - 1;
+
+    return texture_column;
 }
 
-void	draw_sprite_pixel(t_md *md, t_ray *ray, t_vec2 screen_position)
+int draw_sprite_column(t_md *md, t_image *img, t_vec2 win_pos, t_vec3f img_coords)
 {
-	t_vec2	draw_start;
-	t_image	*img;
-	t_ent	*sprite;
-	float	y_offset;
+    t_vec2 y;
+    int pixel;
+    int img_offset;
+    int img_y;
+    int vertical_end;
+    float step;
 
-	sprite = ray->hit;
-	img = md->e_frms[sprite->type][0][0];
-	y_offset = compute_perspective_change(md, NULL, ray->distance);
-	draw_start = get_v2(ray->index, y_offset);
-	draw_column(md, img, draw_start, screen_position);
+    vertical_end = md->win_size.y;
+    y.x = (md->win_size.y / 2 - img_coords.y / 2) - 1;
+    step = img->size.y / img_coords.y;
+    y.y = (md->win_size.y / 2 + img_coords.y / 2);
+
+    while (++y.x < y.y)
+    {
+        img_y = (y.x - (md->win_size.y / 2 - img_coords.y / 2)) * step;
+        if (img_y < 0 || img_y >= img->size.y)
+            continue;
+
+        img_offset = ((int)img_y * (img->size_line / 4)) + (int)img_coords.x;
+        pixel = *(img->src_data + img_offset);
+
+        if ((pixel >> 24) != 0x00) // Ignore transparent pixels
+            continue;
+
+        vertical_end = y.x + win_pos.y - md->plr.pos.z;
+
+        // Draw the pixel at the correct position
+        draw_pixel(md->screen, get_v2(win_pos.x, y.x + win_pos.y - md->plr.pos.z), pixel, -1);
+    }
+
+    return vertical_end;
 }
 
-void	draw_sprite(t_md *md, float dist, t_ray *ray)
+void draw_sprite_pxl(t_md *md, t_ray *ray, t_ent *sprite, t_vec3f win_pos)
 {
-	t_vec2	screen_pos;
-	t_ent	*sprite;
-	int		sprite_height;
-	float	fisheye_correct;
-	int		sprite_with;
+    t_vec2 draw_start;
+    t_image *img;
+    float vrt_offset;
+    int vertical_end;
+    int texture_column;
 
-	dist = maxf(0.1, dist);
-	ray->distance = dist;
-	sprite = ray->hit;
-	sprite_height = md->e_sizes[sprite->type].y;
-	fisheye_correct = maxf(0.1, dist * fabs(cos(ray->angle - md->plr.angle)));
-	screen_pos.y = (md->win_size.y * sprite_height) / fisheye_correct;
-	screen_pos.y = minf(md->win_size.y * 1.5, screen_pos.y);
-	sprite_with = sprite->size.x;
-	if (ray->vertical_hit)
-		screen_pos.x = (int)((ray->pos.y / sprite_height) * sprite_with);
-	else
-		screen_pos.x = (int)((ray->pos.x / sprite_with) * sprite_with);
-	draw_sprite_pixel(md, ray, screen_pos);
+    vrt_offset = compute_perspective_change(md, NULL, ray->distance);
+    img = sprite->frame;  // Get sprite frame
+    texture_column = determine_sprite_texture(sprite, ray->index, md->win_size.x);
+	(void)texture_column;
+    draw_start = get_v2(ray->index, vrt_offset);
+    vertical_end = draw_sprite_column(md, img, draw_start, win_pos);
+    if (vertical_end < md->hud.floor_start)
+        md->hud.floor_start = vertical_end;
+    sprite->row_draw_index++;
+}
+
+void draw_sprite(t_md *md, float dist, t_ent *sprite, t_ray *ray, int total_rays)
+{
+    t_vec3f win_pos;
+    float fisheye_corrector;
+
+    ray->distance = maxf(0.01, dist);
+
+    fisheye_corrector = (md->win_size.y * sprite->size.y) /
+                        (dist * (fabs(ray->angle - md->plr.angle) + 0.0001f));
+	fisheye_corrector = (md->win_size.y * sprite->size.y) / 
+	(dist * fabs(cos(ray->angle - md->plr.angle)));
+    win_pos.x = determine_sprite_texture(sprite, sprite->row_draw_index, total_rays);
+    win_pos.y = fisheye_corrector;
+    draw_sprite_pxl(md, ray, sprite, win_pos);
 }

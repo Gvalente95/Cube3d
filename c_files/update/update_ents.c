@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 23:31:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 11:14:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ void	update_ent_frame(t_md *md, t_ent *e)
 
 static int	update_ent(t_md *md, t_ent *e)
 {
+	e->row_draw_index = 0;
 	if (e->type == nt_wall || e->type == nt_empty)
 		return (0);
-	update_ent_frame(md, e);
+	//update_ent_frame(md, e);
 	if (e->type != nt_mob)
 		return (1);
 	if (e->hp <= 0 || !e->is_active || !e->in_screen)

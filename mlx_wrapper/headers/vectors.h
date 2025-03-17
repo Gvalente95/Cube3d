@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 23:31:02 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/16 09:00:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,21 @@ typedef struct s_Vector4
 	int	a;
 }	t_vec4;
 
+
+typedef struct s_Vector4f
+{
+	float	r;
+	float	g;
+	float	b;
+	float	a;
+}	t_vec4f;
+
 //		VECTOR_2.c
 t_vec2	get_v2(int x, int y);
 t_vec2	v3_to_v2(t_vec3 vec);
 int		cmp_vec2(t_vec2 a, t_vec2 b);
 int		print_vec2(t_vec2 a, const char *label);
+t_vec2	center_pos(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size);
 
 //		VECTOR_3.c
 t_vec3	get_v3(int x, int y, int z);
@@ -68,6 +78,11 @@ t_vec4	get_v4(int r, int g, int b, int a);
 t_vec3	v4_to_v3(t_vec4 a);
 int		cmp_vec4(t_vec4 a, t_vec4 b);
 int		print_vec4(t_vec4 a, const char *label);
+
+//		VECTOR_4f.c
+t_vec4f	get_v4f(float r, float g, float b, float a);
+int		print_vec4f(t_vec4f a, const char *label);
+t_vec3f	v4f_to_v3f(t_vec4f a);
 
 //		VECTOR_b
 t_vec2	v2_center(t_vec2 a, t_vec2 b);

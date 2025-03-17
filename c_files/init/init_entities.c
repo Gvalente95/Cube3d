@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 00:12:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 00:06:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 {
-	(void)md;
 	if (type == nt_plr)
 	{
 		if (c == 'N')
@@ -23,6 +22,14 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 			e->rot.x = 90;
 		else if (c == 'W')
 			e->rot.x = -180;
+	}
+	if (e->type == nt_wall)
+	{
+		e->frames = malloc(sizeof(t_image) * 4);
+		e->frames[0] = copy_image(md, md->wall_img[0]);
+		e->frames[1] = copy_image(md, md->wall_img[1]);
+		e->frames[2] = copy_image(md, md->wall_img[2]);
+		e->frames[3] = copy_image(md, md->wall_img[3]);
 	}
 	if (e->type == nt_mob || e->type == nt_coin)
 		e->pos.z = e->size.y;
@@ -34,8 +41,8 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 void	set_base_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 {
 	e->emitter = NULL;
-	e->frame = NULL;
 	e->type = get_char_index(md->ents_tp_map[0], c);
+	e->frame = copy_image(md, md->e_frms[e->type][0][0]);
 	e->action = ac_idl;
 	e->character = c;
 	e->size = md->e_sizes[e->type];
@@ -43,10 +50,14 @@ void	set_base_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 	e->start_pos = get_v3f(e->pos.x, e->pos.y, e->pos.z);
 	e->coord_pos = get_v3(pos.x, pos.y, 0);
 	e->mov = get_v3f(0, 0, 0);
-	e->rot = get_v3f(0, 0, 0);
+	e->rot = get_v3(0, 0, 0);
 	e->dir = get_v3f(0, 0, 0);
 	e->is_active = 1;
 	e->in_screen = 1;
+	e->shot = 0;
+	e->shot_timer = 0;
+	e->can_shoot = 1;
+	e->row_draw_index = 0;
 	e->hp = 0;
 	e->jumps = 0;
 	e->level = 0;

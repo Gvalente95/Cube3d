@@ -6,23 +6,23 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:49:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 00:07:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	render_cursor(t_md *md, int has_hov)
+void	render_cursor(t_md *md, t_image *screen, int has_hov)
 {
 	t_vec2	pos;
 
-	pos = get_v2(md->mouse_pos.x, md->mouse_pos.y);
+	pos = get_v2(md->mouse_real.x, md->mouse_real.y);
 	if (md->mouse_pressed && has_hov)
-		draw_img(md->curs_grb, md->screen, pos, -1);
+		draw_img(md->curs_grb, screen, pos, -1);
 	else if (has_hov)
-		draw_img(md->curs_dtc, md->screen, pos, -1);
+		draw_img(md->curs_dtc, screen, pos, -1);
 	else
-		draw_img(md->cursor, md->screen, pos, -1);
+		draw_img(md->cursor, screen, pos, -1);
 }
 
 void	render_2d_ent(t_md *md, t_ent *e)
@@ -55,17 +55,26 @@ void	render_entities(t_md *md)
 	render_2d_ent(md, &md->plr);
 }
 
-void	render_center_cross(t_md *md)
+void	render_hud_elements(t_md *md)
 {
 	t_vec2	center_cross;
+	t_vec2	center_gun;
+	t_image	*gun_image;
 
 	center_cross = v2_center(md->win_size, md->center->size);
 	draw_img(md->center, md->screen, center_cross, -1);
+	gun_image = md->hud.gun[md->plr.can_shoot];
+	center_gun = center_pos(\
+		get_v2(md->win_size.x / 2, \
+		(md->win_size.y / 2) * 2 + gun_image->size.y / 2), \
+		gun_image->size, get_v2(0, 0), \
+		md->win_size);
+	draw_img(gun_image, md->screen, center_gun, -1);
 }
 
 void	render(t_md *md)
 {
-	flush_img(md->screen, md->rgb[2], -1);
+	flush_img(md->screen, md->hud.bgr_color, -1, 0);
 	cast_rays(md, get_v3f(\
 		md->plr.pos.x + md->plr.size.x / 2, \
 		md->plr.pos.y + md->plr.size.y / 2, \
@@ -75,9 +84,9 @@ void	render(t_md *md)
 		render_minimap(md, &md->mmap);
 	if (!md->ray_mode)
 		render_entities(md);
-	draw_img(md->wall_img2d[0], md->screen, get_v2(md->plr.coord_pos.x * md->t_len, md->plr.coord_pos.y * md->t_len), -1);
-	render_center_cross(md);
+	render_hud_elements(md);
 	show_update_information(md);
 	show_fps(md, get_v2(0, md->win_size.y - (md->txt_scale * 1.5) * 3));
+	//apply_fxaa(md->screen, 15, 0.3);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

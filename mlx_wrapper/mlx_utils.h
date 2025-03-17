@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/15 03:04:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 01:43:28 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <unistd.h>
-
 
 # ifdef IS_LINUX
 #  define LIN 1
@@ -82,19 +81,20 @@ typedef struct s_image_data
 	int		*scl_d;
 }	t_image;
 
-# define MAX_RAYS 	10000
-# define ENT_FRAMES_MAX	5
+# define MAX_RAYS 			10000
+# define ENT_FRAMES_MAX		5
+# define MOUSE_SENSITIVITY .2
 
 typedef struct s_mmap
 {
-	t_image		*bgrnd;
+	t_image		*bg;
 	t_image		*plr_icon;
 	t_vec3f		ray_pos[MAX_RAYS];
 	t_vec2		size;
 	int			ic_scl;
 	int			active;
 	int			mray_len;
-	int			background_color;
+	int			bgr_color;
 }	t_mmap;
 
 typedef struct s_ray
@@ -117,8 +117,16 @@ typedef struct s_hud
 {
 	t_image		*sky;
 	t_image		*floor;
+	t_image		*base_sky;
+	t_image		*base_floor;
+	t_image		*background;
 	t_image		*gun[2];
 	t_image		*hp_bar;
+	int			bgr_color;
+	int			floor_color;
+	int			sky_color;
+	int			floor_start;
+	int			active_background;
 }	t_hud;
 
 typedef struct s_md
@@ -132,10 +140,9 @@ typedef struct s_md
 	t_image		*cursor;
 	t_image		*curs_dtc;
 	t_image		*curs_grb;
-	t_gs		gst;
+	t_menu		menu;
 	t_map		map;
 	t_mmap		mmap;
-	t_map_d		mp_d;
 	t_timer		timer;
 	t_ray		rays[MAX_RAYS];
 	t_dblst		*entities;
@@ -145,13 +152,14 @@ typedef struct s_md
 	t_vec2		e_sizes[ENT_TYPE_LEN];
 	t_vec2		e_sizes2d[ENT_TYPE_LEN];
 	t_vec3f		input_mov;
-	t_vec2		mouse_pos;
+	t_vec3f		mouse_pos;
 	t_vec2		mouse_real;
 	t_vec2		prev_mouse;
 	t_vec2		mouse_delta;
+	t_vec2		input_offst;
 	t_vec2		mouse_world_pos;
 	t_vec2		mouse_grid_pos;
-	t_vec2		arrow_rotation_offst;
+	t_vec2		arrow_rot;
 	t_vec3f		cam_ofst;
 	t_vec3f		wrd_mv_offst;
 	t_vec3f		plr_wrd_mv;
@@ -171,8 +179,9 @@ typedef struct s_md
 	char		img_format[20];
 	int			ray_depth;
 	int			is_linux;
-	int			rgb[17];
+	int			rgb[19];
 	int			key_prs[512];
+	int			lock_y;
 	int			txt_scale;
 	int			size_2d;
 	int			init_steps;
@@ -184,21 +193,14 @@ typedef struct s_md
 	int			mouse_pressed;
 	int			mouse_clicked;
 	int			mouse_hide;
-	int			time;
 	int			death_amount;
 	int			row_amount;
 	int			t_len;
-	int			floor_color;
-	int			sky_color;
-	int			fps;
-	int			prv_fps;
-	int			floor_start;
 	int			lock_mouse;
 	int			particles_alive;
 	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
 	void		*(*mlx_make)(void *mlx, char *name, int *with, int *height);
 }	t_md;
-
 
 t_vec2	get_v2_grid_pos(t_md *md, t_vec2 pos);
 t_vec3	get_grid_pos(t_md *md, t_vec3 pos);
@@ -226,15 +228,14 @@ void	reset_mlx_values(t_md *md);
 int		close_window(t_md *md);
 
 //		RENDER.c
-int		draw_pixel(t_image *src, t_vec2 pos, int color, float transp);
+int		draw_pixel(t_image *texture, t_vec2 pos, int color, float transp);
 int		draw_pixels(t_image *txtr, t_vec2 start_crd, t_vec2 end_crd, int colr);
 int		draw_img(t_image *from, t_image *onto, t_vec2 pos, int drawover);
-void	flush_img(t_image *src, int color, float transp);
+void	flush_img(t_image *src, int color, float transp, int ignore_alpha);
 void	draw_transp_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp);
 
 //		TIME.c
 double	get_time_in_seconds(void);
-void	init_time_data(t_md *md, t_lvl_data *data);
 double	check_timer(double timer);
 void	start_timer(double *timer);
 void	stop_timer(t_timer *timer);
@@ -248,16 +249,18 @@ int		free_md2(t_md *md, int free_count);
 
 //		IMAGES_a.c
 void	set_new_size(t_image *q, t_vec2 *old_size, t_vec2 *new_size);
-void	*scale_img_keep_ratio(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
+void	*scale_img_keep_ratio(t_md *md, void *img, t_vec2 *old_size, \
+	t_vec2 new_size);
 void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
 void	set_img_data_color(t_image *img_data, t_vec2 size, int col, float str);
 //		IMAGES_b.c
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size);
 void	*add_img(char *relative_path, int *width, int *height, t_md *md);
-void	render_cursor(t_md *md, int has_hov);
+void	render_cursor(t_md *md, t_image *screen, int has_hov);
 //		IMG_DATA.c
 void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, int maintain_ratios);
-void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath, int maintain_ratios);
+void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath, \
+	int maintain_ratios);
 t_image	*init_img_data(t_md *md, t_vec2 size, char *path, int color);
 t_image	**init_imgs_data(t_md *md, t_vec2 size, char *path);
 
@@ -311,10 +314,12 @@ void	*md_realloc(t_md *d, void *ptr, size_t new_size);
 char	*md_strndup(t_md *d, const char	*s1, ssize_t n);
 int		only_contains(char *str, char *to_contain);
 int		get_char_index(const char *str, char to_check);
-char	*ft_megajoin(const char *a, const char *b, const char *c, const char *d);
+char	*ft_megajoin(const char *a, const char *b, \
+	const char *c, const char *d);
 
 int		update_map_index(t_md *md, t_ent *e);
-void	draw_sprite(t_md *md, float dist, t_ray *ray);
+void	draw_sprite(t_md *md, float dist, t_ent *sprite, \
+	t_ray *ray, int total_rays);
 int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 
 //		PARTICLES
@@ -322,6 +327,14 @@ void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir);
 void	update_particles(t_md *md);
 int		blend_color(int color_a, int color_b, float factor);
 
-t_dblst	*del_ent(t_md *md, t_dblst *node, t_ent *e);
+void	init_timer(t_md *md, t_timer *timer);
+double	update_time(t_md *md, t_timer *timer);
+void	fill_transparency(t_image *src, int color);
+int		draw_trimmed_img(t_image *src, t_image *dst, \
+	t_vec2 pos, t_vec3 draw_end);
+
+char	**get_frames(t_md *md, char *dir, int *amount, int max);
+t_image	*copy_image(t_md *md, t_image *src_img);
+int		draw_sphere(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 20:04:47 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/15 12:17:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ unsigned char	get_b(int trgb);
 # define RGB_CORAL	14
 # define RGB_WHITE	15
 # define RGB_BLACK	16
+# define RGB_YELLOW	17
+# define RGB_ORANGE	18
 
 # define COLOR_RED        		0xFFFF0000  // Fully opaque red
 # define COLOR_GREEN      		0xFF00FF00  // Fully opaque green

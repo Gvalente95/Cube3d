@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/11 20:28:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 15:22:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,5 +112,6 @@ int	init_map(t_md *md, char *file_name)
 	init_map_data(md);
 	md->map.size = get_map_size(md->map.buffer);
 	md->map.buffer = redimension_map(md->map.buffer, md->map.size);
+	md->map.len = ft_strlen(md->map.buffer);
 	return (1);
 }

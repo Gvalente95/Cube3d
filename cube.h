@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:13:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 01:51:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,29 @@
 # include <math.h>
 //# include <X11/X.h>
 
-# define RESOLUTION		4
+# define RESOLUTION		5
 //		SCREEN
-# define SCRN_W			800
+# define SCRN_W			1000
 # define SCRN_H			600
 //		RAYS
 # define RAY_DEPTH		3000
 # define FOV			60
 //		PLR
-# define PLRSPD 12.0f
-# define ACCSPD 0.6f
+# define PLRSPD 20
+# define ACCSPD 1
 # define PLR_HEIGHT 20
-# define PLR_JUMPPOW 1
-# define GRAVITY .1
+# define PLR_JUMPPOW .1
+# define GRAVITY .015
 # define ARROW_ROTATION_SPD 15
-# define SCROLL_SPD .2
 //		CURSOR
+
+# define SHOOT_REFRESH	.1
 
 # define STARS_AMOUNT	200
 # define CROSS_SCALE	10
 # define ENNEMY_SPEED	.1
 # define MAX_PARTICLES	50
-# define PARTICLE_SPEED 50
+# define PARTICLE_SPEED 4000
 
 typedef enum polar_dir
 {
@@ -60,12 +61,15 @@ void	init_ents_labels(t_md *md);
 void	init_entities(t_md *md, t_vec2 pos);
 void	init_labels(t_md *md);
 t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index);
+void	init_menu(t_md *md, t_menu *menu);
+void	init_hud(t_md *md);
 
 //		render
 void	render(t_md *md);
 void	color_img(void *frame, t_vec2 size, int col, t_vec4 d);
 int		compute_perspective_change(t_md *md, float *height, float ray_dst);
 void	render_minimap(t_md *md, t_mmap *mp);
+void	render_background(t_md *md);
 
 //		update
 int		update_and_render(t_md *md);
@@ -73,6 +77,7 @@ int		update_player(t_md *md, t_ent *plr);
 int		move_ent(t_md *md, t_ent *e);
 int		move_player(t_md *md, t_ent *e);
 int		update_ents(t_md *md);
+int		update_menu(t_md *md, t_menu *menu);
 
 //		collision
 int		set_collisions(t_md *md, t_ent *e);
@@ -107,15 +112,20 @@ int		ft_sign(float a);
 char	*ftoa(float num, int precision);
 
 //		rays.c
-int		render_ray(t_md *md, t_ray *ray, t_ent *ray_hit);
+t_vec2	get_centered_ray_position(t_md *md);
+int		render_ray(t_md *md, t_ray *ray, t_ent *ray_hit, t_vec2 visu_center);
 void	cast_rays(t_md *md, t_vec3f start_pos);
 void	draw_wall_line(t_md *md, float dist, t_ent *col, t_ray *ray);
-t_ent	*check_in_map(t_md *md, t_ray *ray, float distance);
 
 int		vec4_to_color(int r, int g, int b, int a);
 
 void	reset_mapped_end(t_md *md, t_ent *e);
 int		ent_in_bounds(t_ent *ent, t_ent *bounds);
-void	render_background(t_md *md);
+
+//		filters
+void	apply_fxaa(t_image *img, float edge_threshold, float blend_factor);
+void 	apply_antialiasing(t_image *img);
+void	shift_rgb(t_image *img, t_vec4f rgb_factors);
+void	plr_shoot(t_md *md);
 
 #endif

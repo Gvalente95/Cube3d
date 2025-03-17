@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/01/15 22:07:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/16 21:51:02 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define GAME_H
 
 # include "../mlx_utils.h"
+
+typedef struct s_image_data t_image;
 
 typedef enum e_gamestate
 {
@@ -29,16 +31,23 @@ typedef enum e_gamestate
 	gamestate_count,
 }	t_gamestate;
 
-
 typedef struct s_time_handler
 {
 	double	game_start;
+	double	shoot_timer;
+	double	delta_time;
+	double	prev_time;
+	double	current_time;
 	double	level_timer;
 	double	menu_timer;
 	double	elapsed_pause;
 	double	trg[3];
 	int		stars;
 	int		is_game_running;
+	int		time;
+	int		fps;
+	int		prv_fps;
+	int		avrg_fps;
 }	t_timer;
 
 typedef struct s_map
@@ -73,68 +82,34 @@ typedef enum e_button_fct
 
 typedef struct s_menu_button
 {
-	t_timer		time_data;
-	char		*label;
+	t_image		*clk_bgr;
+	t_image		*unact_bgr;
+	t_image		*hov_bgr;
+	t_image		*act_bgr;
+	t_vec2		pos;
+	t_vec2		size;
+	t_gamestate	navigation;
+	t_btn_fct	function;
+	const char	label[50];
+	void		*action;
 	int			color;
 	int			show;
-	t_gamestate	nav;
-	t_btn_fct	fct;
-	void		*action;
-	t_vec3		pos;
-	t_vec2		size;
-	void		*clk_bgr;
-	void		*unact_bgr;
-	void		*hov_bgr;
-	void		*act_bgr;
 	int			sound_played;
 	int			active;
-}	t_but;
+}	t_button;
 
-typedef struct s_gst
+typedef struct s_menu
 {
+	t_image			*overlay;
 	t_gamestate		prv_state;
 	t_gamestate		state;
-	t_but			***buttons;
-	char			*menu_titles[9];
+	t_button		buttons[9];
+	const char		*menu_titles[9][50];
+	int				bgr_color;
 	int				pages_amount[9];
 	int				cur_page[9];
 	int				menu_time;
-	int				g_menu_started;
-	int				load_lbl_indx;
 	int				active;
-}	t_gs;
-
-typedef struct s_lvl_data
-{
-	int		coins_collected;
-	int		star_collected;
-	double	best_time;
-	double	trg_timer[3];
-	char	*level_name;
-	char	*path_name;
-}	t_lvl_data;
-
-typedef struct s_world_data
-{
-	t_lvl_data	**lvl_data;
-	int			secret_lvl_index;
-	int			stars_clcted;
-	int			lvl_count;
-	int			stars_req;
-	char		*name;
-	char		*path;
-}	t_wrd_data;
-
-typedef struct s_mp_d
-{
-	t_wrd_data		**wrd_data;
-	char			**wrld_names;
-	int				worlds_amount;
-	int				cur_wrld_index;
-	int				cur_lvl_index;
-	int				men_sel_ind;
-	t_lvl_data		*cur_lvl;
-}	t_map_d;
-
+}	t_menu;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 06:11:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:43:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/16 23:50:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,14 @@ void	update_particles(t_md *md)
 		next = node->next;
 		if (e->is_active)
 			update_prt_ent(md, e);
+		else
+		{
+			// reset_mapped_end(md, e);
+			// dblst_delone(node, free);
+		}
 		node = next;
 	}
 }
-
 
 static t_ent	*init_prt(t_md *md, t_ent *emitter, t_vec3f pos, t_vec3f dir)
 {
@@ -54,6 +58,8 @@ static t_ent	*init_prt(t_md *md, t_ent *emitter, t_vec3f pos, t_vec3f dir)
 	e = init_ent(md, md->ents_tp_map[0][nt_prt - 1], coord_pos, map_index);
 	e->type = nt_prt;
 	e->character = 'P';
+	e->frame = md->e_frms[nt_prt][0][0];
+	e->size = e->frame->size;
 	e->emitter = emitter;
 	e->pos = pos;
 	e->dir = dir;
@@ -68,6 +74,7 @@ void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir)
 	t_ent	*new_prt;
 	t_ent	*to_del;
 
+	return ;
 	if (md->particles_alive > MAX_PARTICLES)
 	{
 		del_node = dblst_first(md->particles);
@@ -79,4 +86,5 @@ void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir)
 	new_node = dblst_new((void *)new_prt);
 	dblst_add_back(&md->particles, new_node);
 	md->particles_alive++;
+	md->timer.shoot_timer = md->timer.current_time + SHOOT_REFRESH;
 }

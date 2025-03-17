@@ -6,15 +6,14 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 03:07:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 12:13:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	display_letter(t_md *md, char c, t_vec4 data)
+char	*get_img_path(t_md *md, char c)
 {
-	t_image	*l;
 	char	*path;
 	char	*txt;
 
@@ -33,9 +32,20 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 	}
 	path = ft_megajoin(md->image_dir, "/utils/font/", txt, md->img_format);
 	free(txt);
-	if (access(path, F_OK) == -1)
-		return (printf("font not found: %s\n", path), free(path), 0);
-	l = init_img_data(md, get_v2(data.a, data.a), path, data.b);
+	return (path);
+}
+
+static int	display_letter(t_md *md, char c, t_vec4 data)
+{
+	t_image	*l;
+	char	*path;
+
+	path = get_img_path(md, c);
+	if (!path)
+		return (printf("font not found: %c\n", c), 0);
+	l = init_img_data(md, get_v2(data.a, data.a), path, -1);
+	if (data.b != -1)
+		flush_img(l, data.b, 0.5, 1);
 	free(path);
 	if (l->img)
 	{

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:29:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 01:00:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	render_minimap_ray(t_md *md, t_mmap *mp)
 {
 	t_vec3f	ray_p;
 	t_vec2	draw_pos;
+	int		map_index;
+	t_ent	*e;
 
 	while (mp->mray_len > 0)
 	{
@@ -41,6 +43,18 @@ void	render_minimap_ray(t_md *md, t_mmap *mp)
 		draw_pixel(md->screen, draw_pos, md->rgb[1], -1);
 		ray_p = get_v3f(0, 0, 0);
 		mp->mray_len--;
+
+	}
+
+	draw_pixel(md->screen, draw_pos, md->rgb[2], -1);
+
+	map_index = draw_pos.x + ((md->map.size.x + 1) * draw_pos.y);
+	if (map_index > 0 && map_index < md->map.len)
+	{
+		draw_pixel(md->screen, draw_pos, md->rgb[2], -1);
+		e = md->mapped_ents[map_index];
+		if (e && e->type == nt_wall)
+			printf("%d\n", e->map_index);
 	}
 }
 
@@ -63,7 +77,7 @@ void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
 		draw_pixels(\
 			md->screen, \
 			get_v2(pos.x + 1, pos.y + 1), \
-			get_v2(pos.x + mp->ic_scl - 1, pos.y + mp->ic_scl - 1), \
+			get_v2(mp->ic_scl - 1, mp->ic_scl - 1), \
 			draw_color);
 		if (e->dir.x || e->dir.y)
 			render_debug_ray(md, get_v2(pos.x + mp->ic_scl / 2, pos.y + mp->ic_scl / 2), e->dir, draw_color + 10000);
@@ -75,7 +89,7 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	t_vec2	centr;
 
 	centr = get_v2(md->win_size.x - mp->size.x, 0);
-	draw_transp_img(mp->bgrnd, md->screen, centr, 0.05);
+	draw_transp_img(mp->bg, md->screen, centr, 0.05);
 	render_minimap_entities(md, mp, centr);
 	render_minimap_ray(md, mp);
 }

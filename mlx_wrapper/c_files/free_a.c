@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:29:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/15 13:22:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	free_md(t_md *md, int quit)
 	free_count += free_image_data(md, md->hud.sky);
 	free_count += free_image_data(md, md->hud.floor);
 	free_count += free_image_data(md, md->center);
-	free_count += free_image_data(md, md->mmap.bgrnd);
+	free_count += free_image_data(md, md->mmap.bg);
 	free_count += free_image_data(md, md->mmap.plr_icon);
 	free_count += free_images_data(md, md->txtr_2d, "txtr_2d");
 	free_count += free_images_data(md, md->wall_img, "wall_img");

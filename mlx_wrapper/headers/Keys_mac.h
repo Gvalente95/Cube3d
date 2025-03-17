@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Keys_mac.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/13 00:32:27 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/17 01:46:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@
 # define RIGHT_KEY      124
 # define DOWN_KEY       125
 # define UP_KEY         126
+
 # define W_KEY          13
 # define A_KEY          0
 # define S_KEY          1

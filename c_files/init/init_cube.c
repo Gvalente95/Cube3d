@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 03:08:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 01:27:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ static void	init_cursor(t_md *md)
 {
 	md->mouse_pressed = 0;
 	md->mouse_clicked = 0;
-	md->mouse_pos = get_v2(0, 0);
+	md->mouse_pos = get_v3f(0, 0, 0);
 	md->mouse_world_pos = get_v2(0, 0);
 	md->mouse_real = get_v2(0, 0);
+	md->input_offst = get_v2(0, 0);
 	md->prev_mouse = get_v2(0, 0);
 	md->mouse_grid_pos = get_v2(0, 0);
 	md->mouse_delta = get_v2(0, 0);
@@ -47,14 +48,14 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 	t_vec2		pos;
 	int			i;
 	int			color_index;
-	int			background_color;
+	int			bg_color;
 
 	mmap->mray_len = 0;
 	mmap->active = 0;
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
 	mmap->ic_scl = ic_len;
-	background_color = md->rgb[RGB_INDIGO];
-	mmap->bgrnd = init_img_data(md, get_v2(mmap->size.x, mmap->size.y), NULL, background_color);
+	bg_color = md->rgb[RGB_INDIGO];
+	mmap->bg = init_img_data(md, mmap->size, NULL, bg_color);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
@@ -64,39 +65,12 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 		if (color_index == -1)
 			continue ;
 		pos = get_v2(i % (md->map.size.x + 1), i / (md->map.size.x + 1));
-		draw_pixels(\
-			mmap->bgrnd, \
-			get_v2(ic_len * pos.x + 1, ic_len * pos.y + 1), \
-			get_v2(ic_len * pos.x + ic_len - 1, ic_len * pos.y + ic_len - 1), \
+		draw_pixels(mmap->bg, get_v2(ic_len * pos.x + 1, ic_len * pos.y + 1), \
+			get_v2(ic_len - 1, ic_len - 1), \
 			md->rgb[color_index]);
 	}
 }
 
-static void	init_screen_images(t_md *md)
-{
-	t_vec2	r_pos;
-	int		i;
-	char	*ground_path;
-	int		pow;
-
-	md->screen = init_img_data(md, md->win_size, NULL, -1);
-	md->hud.gun[0] = init_img_data(md, md->win_size, "png/gun/0.png", -1);
-	md->hud.gun[1] = init_img_data(md, md->win_size, "png/gun/1.png", -1);
-	ground_path = ft_megajoin(md->image_dir, "/ground", md->img_format, NULL);
-	md->hud.floor = init_img_data(md, md->win_size, ground_path, -1);
-	flush_img(md->hud.floor, md->floor_color, 0.8);
-	md->hud.sky = init_img_data(md, md->win_size, NULL, md->sky_color);
-	i = -1;
-	while (++i < STARS_AMOUNT)
-	{
-		pow = r_range(50, 255);
-		r_pos = get_v2(r_range(0, md->win_size.x), r_range(0, md->win_size.y));
-		draw_pixels(md->hud.sky, \
-			get_v2(r_pos.x, r_pos.y), \
-			get_v2(r_pos.x + 1, r_pos.y + 1), \
-			vec4_to_color(pow, pow, pow, pow));
-	}
-}
 
 static void	init_game_params(t_md *md, int start_debug)
 {
@@ -117,11 +91,14 @@ static void	init_game_params(t_md *md, int start_debug)
 	md->rgb[RGB_CORAL] = str_to_color("255,128,80");
 	md->rgb[RGB_WHITE] = str_to_color("255,255,255");
 	md->rgb[RGB_BLACK] = str_to_color("0,0,0");
+	md->rgb[RGB_YELLOW] = str_to_color("255,255,0");
+	md->rgb[RGB_ORANGE] = str_to_color("255,165,0");
 	md->debug_mode = start_debug;
 	md->ray_mode = !md->debug_mode;
 	md->show_rays = md->debug_mode;
 	md->ray_depth = md->t_len * md->win_size.x;
 	md->mmap.ic_scl = md->win_size.x / 100;
+	md->lock_y = 1;
 	md->size_2d = 40;
 }
 
@@ -132,11 +109,12 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_ents_data(md);
 	init_map(md, file_arg);
 	md->init_steps++;
-	init_screen_images(md);
+	init_hud(md);
 	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);
+	init_menu(md, &md->menu);
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;
 	if (md->debug_mode)

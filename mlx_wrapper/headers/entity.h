@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 15:53:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 00:04:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,17 +91,21 @@ typedef struct s_entity
 	t_ent			*emitter;
 	t_ent_type		type;
 	t_ent_action	action;
-	t_vec2			size;
-	t_vec3f			rot;
 	t_vec3f			dir;
 	t_vec3f			mov;
 	t_vec3f			pos;
 	t_vec3f			start_pos;
+	t_vec3			rot;
 	t_vec3			coord_pos;
+	t_vec2			size;
 	t_image			*frame;
+	t_image			**frames;
 	t_image			***anim;
+	double			shot_timer;
 	float			angle;
 	char			character;
+	int				shot;
+	int				can_shoot;
 	int				map_index;
 	int				is_active;
 	int				level;
