@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 12:32:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 03:31:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,44 +32,65 @@ typedef enum e_dir
 	DIR_LEN
 }	t_dir;
 
+typedef enum e_weapon_types
+{
+	Knife,
+	Pistol,
+	Shotgun,
+	Machine_Gun,
+	Flame_Thrower,
+	Rocket,
+	WEAPON_TYPE_LEN
+}	t_weapon_types;
+
+typedef enum e_mob_types
+{
+	Rat,
+	Guard,
+	Elite_Guard,
+	Officer,
+	Death_Knight,
+	Mecha_Meister,
+	MOB_TYPE_LEN
+}	t_mob_types;
+
+typedef enum e_pickup_types
+{
+	Ammo,
+	Health,
+	Keys,
+	Score,
+	Weapon,
+	PICKUP_TYPE_LEN
+}	t_pickup_types;
+
 typedef enum e_entity_types
 {
-	nt_plr,
-	nt_mob,
-	nt_coin,
-	nt_key,
-	nt_door,
-	nt_portal,
 	nt_wall,
 	nt_empty,
-	nt_axe,
-	nt_ground,
-	nt_tile,
-	nt_mover,
-	nt_bush,
-	nt_spike,
-	nt_thrower,
-	nt_trees,
-	nt_star,
-	nt_road,
-	nt_env,
-	nt_prt,
+	nt_plr,
+	nt_mob,
+	nt_door,
+	nt_pickup,
 	ENT_TYPE_LEN
 }	t_ent_type;
 
+typedef enum e_player_action
+{
+	plr_idle,
+	plr_walk,
+	plr_hurt,
+	plr_attack,
+	plr_death,
+	PLR_ACTION_LEN
+}	t_player_action;
+
 typedef enum e_entity_action
 {
-	ac_idl,
-	ac_wlk,
-	ac_run,
-	ac_fall,
-	ac_jmp,
-	ac_hurt,
-	ac_atk,
-	ac_throw,
-	ac_push,
-	ac_slide,
-	ac_death,
+	m_idle,
+	m_walk,
+	m_atk,
+	m_death,
 	ENT_ACTION_LEN
 }	t_ent_action;
 
@@ -88,8 +109,8 @@ typedef struct s_entity t_ent;
 typedef struct s_entity
 {
 	t_ent			*col_hit;
-	t_ent			*emitter;
 	t_ent_type		type;
+	t_mob_types		mob_type;
 	t_ent_action	action;
 	t_vec3f			dir;
 	t_vec3f			mov;
@@ -97,6 +118,7 @@ typedef struct s_entity
 	t_vec3f			start_pos;
 	t_vec3			rot;
 	t_vec3			coord_pos;
+	t_vec3f			target_pos;
 	t_vec2			size;
 	t_image			*frame;
 	t_image			**frames;
@@ -104,6 +126,7 @@ typedef struct s_entity
 	double			shot_timer;
 	float			angle;
 	char			character;
+	int				was_hit;
 	int				shot;
 	int				can_shoot;
 	int				map_index;

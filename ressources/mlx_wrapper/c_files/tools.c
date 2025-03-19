@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TOOLS.c                                            :+:      :+:    :+:   */
+/*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:21:44 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/07 13:37:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 20:13:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
+
+int	r_range_seed(unsigned int *g_seed, int min, int max)
+{
+	if (min > max)
+		return (-1);
+
+	*g_seed = (*g_seed * 1103515245 + 12345) & 0x7FFFFFFF;
+	return (min + (*g_seed % (max - min + 1)));
+}
 
 int	r_range(int min, int max)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 00:22:49 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/19 01:55:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,28 @@ int	get_char_index(const char *str, char to_check)
 		if (str[i] == to_check)
 			return (i);
 	return (-1);
+}
+
+char	*ft_strndup(const char	*s1, ssize_t n)
+{
+	char		*dst;
+	ssize_t		i;
+	ssize_t		len;
+
+	if (!s1 || n < 0)
+		return (NULL);
+	len = ft_strlen(s1);
+	if (n > len)
+		n = len;
+	dst = (char *)malloc(n + 1);
+	if (!dst)
+		return (printf("alloc for %s in ft_strdnup\n", s1), NULL);
+	i = 0;
+	while (i < n)
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
 }

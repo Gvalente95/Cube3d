@@ -6,83 +6,112 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:21:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 04:50:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-int	get_column(t_ent *sprite, int screen_column, int total_rays)
+void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord)
 {
-	int	texture_column;
+	int			action_index;
+	int			frame_index;
+	t_image		*img;
 
-	texture_column = (screen_column * sprite->frame->size.x) / total_rays;
-	if (texture_column < 0)
-		texture_column = 0;
-	else if (texture_column >= sprite->frame->size.x)
-		texture_column = sprite->frame->size.x - 1;
-
-	return (texture_column);
+	txtr_coord.x += r_range(-30, 30);
+	txtr_coord.y += r_range(-10, 10);
+	action_index = -1;
+	while (++action_index < ENT_ACTION_LEN)
+	{
+		if (action_index == m_death)
+			txtr_coord.y += e->frame->size.y * .5;
+		frame_index = -1;
+		while (e->anim[action_index][++frame_index])
+		{
+			img = e->anim[action_index][frame_index];
+			draw_blood(md, img, txtr_coord, md->rgb[RGB_RED]);
+		}
+	}
+	e->was_hit = 1;
+	if (e->type != nt_mob)
+		return ;
+	e->hp--;
+	if (!e->hp)
+		e->frame_index = 0;
 }
 
-int	draw_sprite_column(t_md *md, t_image *img, t_vec2 win_pos, t_vec3f coord)
+int	get_prspctive_offset(t_md *md, float ray_dst, t_ent *e)
+{
+	float	pitch_factor;
+	int		pitch_offset;
+	float	vrt_offst;
+
+	pitch_factor = tanf(md->plr.rot.y * (M_PI / 180.0f));
+	vrt_offst = (md->plr.pos.z - e->pos.z) * md->win_size.y / (ray_dst + 1.0f);
+	pitch_offset = (-pitch_factor * md->win_size.y / 2) - vrt_offst;
+	return (pitch_offset);
+}
+
+void	draw_sprite_slice(t_md *md, t_ent *ent, t_vec2 winp, t_vec3f crd)
 {
 	t_vec2	y;
 	t_vec2	pxl;
+	t_vec2	wins;
 	int		img_y;
-	int		vertical_end;
-	float	step;
 
-	vertical_end = md->win_size.y;
-	y.x = (md->win_size.y / 2 - coord.y / 2) - 1;
-	step = img->size.y / coord.y;
-	y.y = (md->win_size.y / 2 + coord.y / 2);
+	wins = md->win_size;
+	y = (t_vec2){(wins.y / 2 - crd.y / 2) - 1, (wins.y / 2 + crd.y / 2)};
+	crd.x = minmax(0, ent->frame->size.x - 1, crd.x);
 	while (++y.x < y.y)
 	{
-		img_y = (y.x - (md->win_size.y / 2 - coord.y / 2)) * step;
-		if (img_y < 0 || img_y >= img->size.y)
+		img_y = (y.x - (wins.y / 2 - crd.y / 2)) * (ent->frame->size.y / crd.y);
+		if (img_y < 0 || img_y >= ent->frame->size.y)
 			continue ;
-		pxl.y = ((int)img_y * (img->size_line / 4)) + (int)coord.x;
-		pxl.x = *(img->src_data + pxl.y);
+		pxl.y = (img_y * (ent->frame->size_line / 4)) + (int)crd.x;
+		pxl.x = *(ent->frame->src_data + pxl.y);
 		if ((pxl.x >> 24) != 0x00)
 			continue ;
-		vertical_end = y.x + win_pos.y - md->plr.pos.z;
+		if (ent->was_hit == 2)
+			pxl.x = md->rgb[RGB_RED];
 		draw_pixel(md->screen, \
-			get_v2(win_pos.x, y.x + win_pos.y - md->plr.pos.z), pxl.x, -1);
+			get_v2(winp.x, y.x + winp.y - md->plr.pos.z), pxl.x, -1);
+		if (md->plr.shot && winp.x == wins.x / 2 && ent->hp && \
+			y.x + winp.y - md->plr.pos.z - wins.y / 2 < md->t_len)
+			paint_ent(md, ent, get_v2((int)crd.x, (int)crd.x));
 	}
-	return (vertical_end);
 }
 
-void	draw_sprite_pxl(t_md *md, t_ray *ray, t_ent *sprite, t_vec3f win_pos)
+void	draw_sprite_pxl(t_md *md, t_ray *ray, t_ent *sprite, t_vec3f txtr_crd)
 {
 	t_vec2	draw_start;
-	t_image	*img;
-	float	vrt_offset;
-	int		vertical_end;
-	int		texture_column;
+	float	vrt_offs;
 
-	vrt_offset = compute_perspective_change(md, NULL, ray->distance);
-	img = sprite->frame;
-	texture_column = get_column(sprite, ray->index, md->win_size.x);
-	(void)texture_column;
-	draw_start = get_v2(ray->index, vrt_offset);
-	vertical_end = draw_sprite_column(md, img, draw_start, win_pos);
-	if (vertical_end < md->hud.floor_start)
-		md->hud.floor_start = vertical_end;
-	sprite->row_draw_index++;
+	vrt_offs = get_prspctive_offset(md, ray->distance, sprite);
+	draw_start = get_v2(ray->index, vrt_offs - (sprite->pos.z / ray->distance));
+	draw_sprite_slice(md, sprite, draw_start, txtr_crd);
 }
 
-void	draw_sprite(t_md *md, float dist, t_ent *sprite, t_ray *ray)
+void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data)
 {
-	t_vec3f	win_pos;
-	float	fisheye_corrector;
+	t_vec3f	texture_coord;
+	t_ent	*sprite;
+	float	sprt_scrn_width;
+	float	nrm_dst;
+	float	scale_factor;
 
-	ray->distance = maxf(0.01, dist);
-	fisheye_corrector = (md->win_size.y * sprite->size.y) / \
-		(dist * (fabs(ray->angle - md->plr.angle) + 0.0001f));
-	fisheye_corrector = (md->win_size.y * sprite->size.y) / \
-		(dist * fabs(cos(ray->angle - md->plr.angle)));
-	win_pos.x = ray->index;
-	win_pos.y = fisheye_corrector;
-	draw_sprite_pxl(md, ray, sprite, win_pos);
+	sprite = hit_data.hit;
+	sprite->in_screen ++;
+	ray->distance = maxf(0.1, hit_data.dist_at_e);
+	scale_factor = sprite->frame->size.y / md->e_sizes[nt_mob].y;
+	nrm_dst = (hit_data.dist_at_e / 2) * scale_factor;
+	sprt_scrn_width = (md->win_size.y * sprite->frame->size.y) / nrm_dst;
+	texture_coord.x = sprite->row_draw_index;
+	texture_coord.y = sprt_scrn_width;
+	draw_sprite_pxl(md, ray, sprite, texture_coord);
+	md->texture_accumulator += sprite->size.x / sprt_scrn_width;
+	while (md->texture_accumulator >= 1.0f)
+	{
+		sprite->row_draw_index += 1;
+		md->texture_accumulator -= 1.0f;
+	}
 }

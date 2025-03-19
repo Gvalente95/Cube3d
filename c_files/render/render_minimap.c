@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 03:25:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 12:56:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	render_minimap_ray(t_md *md, t_mmap *mp, t_vec2 center)
 		draw_pixel(mp->img, draw_pos, md->rgb[1], -1);
 		ray_p = get_v3f(0, 0, 0);
 		mp->mray_len--;
-
 	}
 }
 
@@ -56,7 +55,7 @@ void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
 	while (md->map.buffer[++i])
 	{
 		e = md->mapped_ents[i];
-		if (!e || e->type == nt_wall || e->type == nt_empty)
+		if (!e || e->type == nt_wall)
 			continue ;
 		draw_color = md->rgb[e->type];
 		pos.x = center.x + (e->pos.x / md->t_len) * mp->ic_scl;
@@ -77,13 +76,18 @@ void	render_minimap(t_md *md, t_mmap *mp)
 {
 	t_vec2	centr;
 
-	mp->limits_x = get_v2(minf(md->plr.pos.x, mp->limits_x.x), maxf(md->plr.pos.x, mp->limits_x.y));
-	mp->limits_y = get_v2(minf(md->plr.pos.y, mp->limits_y.x), maxf(md->plr.pos.y, mp->limits_y.y));
+	mp->limits_x = get_v2(\
+		minf(md->plr.pos.x, mp->limits_x.x), \
+		maxf(md->plr.pos.x, mp->limits_x.y));
+	mp->limits_y = get_v2(\
+		minf(md->plr.pos.y, mp->limits_y.x), \
+		maxf(md->plr.pos.y, mp->limits_y.y));
 	centr = get_v2(0, 0);
 	flush_img(mp->img, -1, -1, -1);
 	draw_img(mp->bg, mp->img, centr, -1);
 	render_minimap_entities(md, mp, centr);
 	render_minimap_ray(md, mp, centr);
 	centr = get_v2(md->win_size.x - mp->size.x, 0);
+	apply_scanlines(mp->img, .5);
 	draw_transp_img(mp->img, md->screen, centr, 0.1);
 }

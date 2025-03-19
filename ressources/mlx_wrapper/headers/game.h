@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 05:46:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 01:01:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_time_handler
 	double	delta_time;
 	double	prev_time;
 	double	current_time;
+	double	anim_timer;
 	double	level_timer;
 	double	menu_timer;
 	double	elapsed_pause;
@@ -93,25 +94,18 @@ typedef struct s_slider
 
 typedef struct s_menu_button
 {
-	t_image		*clk_bgr;
-	t_image		*unact_bgr;
-	t_image		*hov_bgr;
-	t_image		*act_bgr;
+	t_image		*img;
 	t_vec2		pos;
-	t_vec2		size;
-	t_gamestate	navigation;
 	t_btn_fct	function;
 	char		label[50];
-	void		*action;
-	int			color;
-	int			show;
-	int			sound_played;
+	int			*value;
 	int			active;
 }	t_button;
 
 typedef struct s_menu
 {
 	t_image			*overlay;
+	t_image			*freeze_frame;
 	t_gamestate		prv_state;
 	t_gamestate		state;
 	t_button		buttons[9];

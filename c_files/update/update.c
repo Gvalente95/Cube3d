@@ -6,25 +6,28 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 06:51:02 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 16:52:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static void	update_cam_ofst(t_md *md)
+static void	update_camera_offset(t_md *md)
 {
 	t_vec3f	dspl;
-	float	wrd_spd;
+	t_vec2	win_size;
+	t_vec2	plr_size;
+	t_vec3f	plr_pos;
 
-	dspl = get_v3f(\
-		md->plr.pos.x - md->plr.size.x / 2 - md->win_size.x / 2 + md->t_len / 2, \
-		md->plr.pos.y - md->plr.size.y / 2 - md->win_size.y / 2 + md->t_len / 2, \
-		md->plr.pos.z);
+	win_size = md->win_size;
+	plr_size = md->plr.size;
+	plr_pos = md->plr.pos;
+	dspl.x = plr_pos.x - plr_size.x / 2 - win_size.x / 2 + md->t_len / 2;
+	dspl.y = plr_pos.y - plr_size.y / 2 - win_size.y / 2 + md->t_len / 2;
+	dspl.z = plr_pos.z;
 	md->cam_ofst = dspl;
-	wrd_spd = 20;
-	md->wrd_mv_offst.x += md->plr_wrd_mv.x * wrd_spd;
-	md->wrd_mv_offst.y += md->plr_wrd_mv.y * wrd_spd;
+	md->wrd_mv_offst.x += md->plr_wrd_mv.x * 20;
+	md->wrd_mv_offst.y += md->plr_wrd_mv.y * 20;
 }
 
 int	update_and_render(t_md *md)
@@ -33,9 +36,8 @@ int	update_and_render(t_md *md)
 		return (update_menu(md, &md->menu));
 	update_input(md);
 	update_mouse(md);
-	update_particles(md);
 	update_player(md, &md->plr);
-	update_cam_ofst(md);
+	update_camera_offset(md);
 	update_ents(md);
 	render(md);
 	reset_mlx_values(md);

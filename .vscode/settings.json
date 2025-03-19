@@ -5,6 +5,10 @@
 		"array": "c",
 		"string": "c",
 		"string_view": "c",
-		"vector": "c"
+		"vector": "c",
+		"__bit_reference": "c",
+		"bitset": "c",
+		"unordered_map": "c",
+		"__node_handle": "c"
 	}
 }

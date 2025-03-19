@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 02:48:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 16:37:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 03:11:09 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,38 @@ int	free_void_array(void **elements)
 	return (free_count + 1);
 }
 
-int	free_player_animations(t_ent *plr, t_md *md)
-{
-	int	i;
-	int	freed_count;
 
-	i = -1;
-	freed_count = 0;
-	while (++i < ENT_ACTION_LEN)
+int	free_mob_images(t_md *md, t_ent *e, char *label)
+{
+	int	actions;
+	int	len;
+
+	len = 0;
+	actions = -1;
+	while (++actions < ENT_ACTION_LEN)
+		len += free_images_data(md, e->anim[actions], "label");
+	free(e->anim);
+	return (len);
+}
+
+int	free_ents(t_md *md)
+{
+	int		count;
+	t_dblst	*node;
+	t_ent	*e;
+	int		i;
+
+	count = 0;
+	node = dblst_first(md->entities);
+	while (node)
 	{
-		if (plr->anim[i])
-			freed_count += free_image_data(md, *plr->anim[i]);
+		if (e->type == nt_mob)
+			count += free_mob_images(md, e, "mob");
+		node = node->next;
 	}
-	return (freed_count);
+	count += dblst_size(md->entities);
+	dblst_clear(&md->entities, free);
+	return (count);
 }
 
 int	free_md2(t_md *md, int free_count)
@@ -62,10 +81,10 @@ int	free_md2(t_md *md, int free_count)
 	{
 		free_count += mlx_destroy_window(md->mlx, md->win) + 1;
 		free_count += free_void(md->mlx);
+		ft_printf("(PART A) Freed: %d elements\n", free_count);
 		return (free_count);
 	}
-	dblst_clear(&md->entities, free);
-	dblst_clear(&md->particles, free);
+	free_count += free_ents(md);
 	free_count += free_image_data(md, md->cursor);
 	free_count += free_image_data(md, md->curs_dtc);
 	free_count += free_image_data(md, md->curs_grb);

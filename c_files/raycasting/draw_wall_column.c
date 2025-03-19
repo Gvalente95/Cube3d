@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:20:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 04:51:00 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-t_wrd_dir	determine_texture(t_ray *ray)
+static t_wrd_dir	determine_texture(t_ray *ray)
 {
 	if (ray->vertical_hit)
 	{
@@ -25,17 +25,7 @@ t_wrd_dir	determine_texture(t_ray *ray)
 	return (NORTH);
 }
 
-void	project_particle(t_md *md, t_image *img, t_vec2	pos)
-{
-	t_vec2	r_size;
-	t_vec2	start_draw;
-
-	r_size = get_v2(10, 10);
-	start_draw = get_v2((int)pos.x - r_size.x / 2, (int)pos.y - r_size.y / 2);
-	draw_sphere(img, start_draw, r_size, md->rgb[RGB_BLACK]);
-}
-
-int	draw_wall_column(t_md *md, t_image *img, t_vec2 win_p, t_vec3f img_coords)
+static int	draw_strip(t_md *md, t_image *img, t_vec3 win_p, t_vec3f img_coords)
 {
 	t_vec2	y;
 	t_vec2	pxl;
@@ -54,10 +44,12 @@ int	draw_wall_column(t_md *md, t_image *img, t_vec2 win_p, t_vec3f img_coords)
 		pxl.y = *(img->src_data + pxl.x);
 		if ((pxl.y >> 24) != 0x00)
 			continue ;
-		draw_pixel(md->screen, get_v2(win_p.x, y.x + win_p.y - md->plr.pos.z), pxl.y, -1);
+		draw_pixel(md->screen, get_v2(win_p.x, y.x + win_p.y - md->plr.pos.z), \
+			pxl.y, -1);
 		if (md->plr.shot && win_p.x == md->win_size.x / 2 && \
 			y.x + win_p.y - md->plr.pos.z == md->win_size.y / 2)
-			project_particle(md, img, get_v2((int)img_coords.x, (int)img_y));
+			draw_blood(md, img, get_v2((int)img_coords.x, (int)img_y), \
+				md->rgb[RGB_BLACK]);
 	}
 	return (y.x + win_p.y - md->plr.pos.z);
 }
@@ -86,9 +78,9 @@ int	compute_perspective_change(t_md *md, float *height, float ray_dst)
 	return (pitch_offset);
 }
 
-void	draw_pxl(t_md *md, t_ray *ray, t_vec3f win_pos)
+static void	draw_pxl(t_md *md, t_ray *ray, t_vec3f win_pos)
 {
-	t_vec2		draw_start;
+	t_vec3		draw_start;
 	t_image		*img;
 	t_wrd_dir	dir;
 	float		vrt_offset;
@@ -102,10 +94,10 @@ void	draw_pxl(t_md *md, t_ray *ray, t_vec3f win_pos)
 		dir = determine_texture(ray);
 		img = ray->wall_hit->frames[(int)dir];
 	}
-	draw_start = get_v2(ray->index, vrt_offset);
-	vertical_end = draw_wall_column(md, img, draw_start, win_pos);
-	if (vertical_end < md->hud.floor_start)
-		md->hud.floor_start = vertical_end;
+	draw_start = get_v3(ray->index, vrt_offset, ray->hits_amount > 0);
+	vertical_end = draw_strip(md, img, draw_start, win_pos);
+	if (vertical_end < md->hud.new_floor_start)
+		md->hud.new_floor_start = vertical_end;
 }
 
 void	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
@@ -116,7 +108,6 @@ void	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
 	ray->distance = maxf(0.01, dist);
 	fisheye_corrector = (md->win_size.y * wall->size.y) / \
 	(dist * fabs(cos((ray->angle - md->plr.angle) * (60.0 / (int)md->fov))));
-
 	if (fisheye_corrector > md->win_size.y * 1.5)
 		fisheye_corrector = md->win_size.y * 1.5;
 	if (ray->vertical_hit)

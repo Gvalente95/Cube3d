@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:23:11 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/14 01:51:47 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/18 20:02:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	main(int argc, char *argv[])
 	int		res;
 	t_vec2	scrn_size;
 
-	printf("LIN = %d\n", LIN);
 	if (argc >= 6)
 		return (printf("unvalid arg size\n"), 1);
 	res = RESOLUTION;

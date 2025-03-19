@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:02:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 02:51:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/17 14:39:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	color_img(void *frame, t_vec2 size, int col, t_vec4 d)
 	t_image	q;
 	int		pixel_index;
 
-	q.src_data = (int *)mlx_get_data_addr(frame, &q.bpp, &q.size_line, &q.endian);
+	q.src_data = \
+	(int *)mlx_get_data_addr(frame, &q.bpp, &q.size_line, &q.endian);
 	q.pos.y = -1;
 	while (++q.pos.y < size.y)
 	{

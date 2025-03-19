@@ -187,10 +187,10 @@ int	draw_sphere(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 		while (draw_pos.x <= end_coord.x)
 		{
 			dist = sqrtf((draw_pos.x - center.x) * (draw_pos.x - center.x) + \
-							 (draw_pos.y - center.y) * (draw_pos.y - center.y));
+				(draw_pos.y - center.y) * (draw_pos.y - center.y));
 			probability = 1.0f - (dist / radius);
-			if (probability > 0 && r_range(0, 20) < probability * 100)
-				draw_pixel(txtr, draw_pos, color, .3);
+			if (probability > 0 && r_range(0, 20) < probability * 50)
+				draw_pixel(txtr, draw_pos, color, .8);
 			draw_pos.x++;
 		}
 		draw_pos.y++;

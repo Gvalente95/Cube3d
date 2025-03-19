@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:00:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:11:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 13:24:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**get_frames(t_md *md, char *dir, int *amount, int max)
 	*amount = 0;
 	path = ft_megajoin(IMG_PATH, dir, num_str, ".xpm");
 	if (access(path, F_OK) == -1)
-		return (printf("\"%s\" not found in get_frames\n", dir), free(path), NULL);
+		return (printf("\"%s\" not found in get_frames\n", path), free(path), NULL);
 	while (access(path, F_OK) != -1 && *amount < max)
 	{
 		free(path);

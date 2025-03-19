@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:04:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 19:29:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ typedef struct s_Vector4
 	int	g;
 	int	b;
 	int	a;
+	int	w;
+	int	x;
+	int	y;
+	int	z;
 }	t_vec4;
 
 
@@ -89,7 +93,12 @@ t_vec2	v2_center(t_vec2 a, t_vec2 b);
 t_vec3f	v3f_center(t_vec3f a, t_vec3f b);
 t_vec3	v3_center(t_vec3 a, t_vec3 b);
 int		v2_bounds(t_vec2 a, t_vec2 bnd_pos, t_vec2 bnd_size);
-int		v3f_bounds(t_vec3f a, t_vec3f pos, t_vec3f size);
+int		v3f_bounds(t_vec3f a, t_vec3f a_size, t_vec3f pos, t_vec3f b_size);
 int		v3_bounds(t_vec3 a, t_vec3 pos, t_vec3 size);
+t_vec3f	normalize_vec3f(t_vec3f v);
+
+t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b);
+t_vec3f	scale_vec3f(t_vec3f v, float s);
+t_vec3f	add_vec3f(t_vec3f a, t_vec3f b);
 
 #endif

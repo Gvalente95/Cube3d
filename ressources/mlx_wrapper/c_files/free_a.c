@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 02:46:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 03:19:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,21 +68,6 @@ int	free_images(t_md *md, void ***images, char *label)
 	return (free_count + 1);
 }
 
-int	free_e_frms(t_md *md)
-{
-	int	i;
-	int	free_am;
-
-	if (!md->e_frms)
-		return (ft_printf("no e_frms to free"), 0);
-	free_am = 0;
-	i = -1;
-	while (md->e_frms[++i])
-		free_am += free_images_data(md, *md->e_frms[i], "e_frms");
-	free(md->e_frms);
-	return (free_am);
-}
-
 int	free_md(t_md *md, int quit)
 {
 	int	free_count;
@@ -91,19 +76,21 @@ int	free_md(t_md *md, int quit)
 		stop_sound(md->bgrnd_au);
 	if (is_audio_playing(md->bgrnd_mus))
 		stop_sound(md->bgrnd_mus);
-	if (!md->init_steps)
+	if (!md->init_steps || !md->map.buffer)
 		return (0);
 	free_count = 0;
-	if (md->map.buffer)
-		free(md->map.buffer);
+	free(md->map.buffer);
 	free_count += free_image_data(md, md->screen);
 	free_count += free_image_data(md, md->hud.sky);
 	free_count += free_image_data(md, md->hud.floor);
+	free_count += free_image_data(md, md->hud.base_sky);
+	free_count += free_image_data(md, md->hud.base_floor);
+	free_count += free_image_data(md, md->hud.lock_x_icon);
+	free_count += free_image_data(md, md->hud.lock_y_icon);
 	free_count += free_image_data(md, md->center);
 	free_count += free_image_data(md, md->mmap.bg);
-	free_count += free_images_data(md, md->txtr_2d, "txtr_2d");
+	free_count += free_image_data(md, md->mmap.img);
 	free_count += free_images_data(md, md->wall_img, "wall_img");
 	free_count += free_images_data(md, md->wall_img2d, "wall_img2d");
-	free_count += free_e_frms(md);
 	return (free_md2(md, free_count));
 }

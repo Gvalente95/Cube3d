@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/17 13:23:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 13:23:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_image	**init_images(t_md *md, t_vec2 size, char *path)
 		return (printf("\"%s\" frames NULL\n", path), NULL);
 	img_data = md_malloc(md, sizeof(t_image *) * (amount + 1));
 	i = -1;
-	while (frms[++i] && i < amount)
+	while (frms[++i])
 	{
 		img_data[i] = init_img(md, size, frms[i], -1);
 		free(frms[i]);
@@ -105,4 +105,20 @@ t_image	*copy_image(t_md *md, t_image *src_img)
 	new_img->size_line = src_img->size_line;
 	new_img->endian = src_img->endian;
 	return (new_img);
+}
+
+t_image	*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_size, int keep_ratio)
+{
+	if (keep_ratio)
+		imgd->img = scale_img_keep_ratio(md, imgd->img, &imgd->size, new_size);
+	else
+		imgd->img = resize_img(md, imgd->img, &imgd->size, new_size);
+	imgd->addr = mlx_get_data_addr(imgd->img, &imgd->bpp, \
+		&imgd->size_line, &imgd->endian);
+	if (!imgd->addr)
+		return (printf("ERR: Failed to get image data address\n"), imgd);
+	imgd->src_data = (int *)imgd->addr;
+	if (!imgd->src_data)
+		return (printf("ERR: Failed to get src data\n"), imgd);
+	return (imgd);
 }

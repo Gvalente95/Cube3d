@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:59:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 05:22:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,21 @@
 
 void	show_init_information(t_md *md)
 {
+	int	i;
+
 	print_vec2(md->map.size, "map size");
 	print_vec3f(md->plr.pos, "plr pos");
 	print_vec3(md->plr.rot, "plr rot");
 	print_vec3(md->plr.coord_pos, "plr coord");
-	printf("map name: %s\nmap content: \n%s\n", md->map.name, md->map.buffer);
+	printf("map name: %s\nmap content: \n", md->map.name);
+	i = -1;
+	while (md->map.buffer[++i])
+	{
+		if (md->map.buffer[i] == '\n')
+			printf("n\n");
+		else
+			printf("%c", md->map.buffer[i]);
+	}
 }
 
 void	show_fps(t_md *md, t_vec2 pos)
@@ -36,9 +46,9 @@ void	show_fps(t_md *md, t_vec2 pos)
 	if (!md->debug_mode)
 		return ;
 	txt_data.b = -1;
-	txt_data.g += md->txt_scale * 1.5;
+	txt_data.g -= md->txt_scale * 1.5;
 	rnd_abs_txt(md, txt_data, "time: %.3f", md->timer.current_time);
-	txt_data.g += md->txt_scale * 1.5;
+	txt_data.g -= md->txt_scale * 1.5;
 	rnd_abs_txt(md, txt_data, "delta:	%.3f", md->timer.delta_time);
 }
 
@@ -58,9 +68,9 @@ void	show_update_information(t_md *md)
 	show_vec3(md, "rot", md->plr.rot, get_v2(0, y++));
 	show_float(md, "angle: ", md->plr.angle, get_v2(0, y++));
 	show_float(md, "FOV: ", md->fov, get_v2(0, y++));
-	show_int(md, "particles: ", md->particles_alive, get_v2(0, y++));
 	show_vec3(md, "crd", md->plr.coord_pos, get_v2(0, y++));
 	show_vec3f(md, "mouse pos", md->mouse_pos, get_v2(0, y++));
+	show_vec2(md, "mouse delta", md->mouse_delta, get_v2(0, y++));
 	show_vec2(md, "mouse wrd", md->mouse_world_pos, get_v2(0, y++));
 	show_vec2(md, "mouse grd", md->mouse_grid_pos, get_v2(0, y++));
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 06:00:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 05:22:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,14 @@ static void	update_player_rot(t_md *md)
 {
 	if (!md->mouse_focus)
 		return ;
-	if (md->lock_rotation.x)
-	{
-		md->plr.rot.x = fmod((md->mouse_pos.x - md->arrow_rot.x), 360.0f);
-		if (md->plr.rot.x < -180.0f)
-			md->plr.rot.x += 360.0f;
-		else if (md->plr.rot.x > 180.0f)
-			md->plr.rot.x -= 360.0f;
-	}
-	if (md->lock_rotation.y)
-		md->plr.rot.y = (md->mouse_pos.y - md->arrow_rot.y);
+	if (!md->lock_rotation.x)
+		md->plr.rot.x = md->plr.rot.x + (md->mouse_delta.x * MOUSE_ROT_SPD);
+	if (md->plr.rot.x < -180.0f)
+		md->plr.rot.x += 360.0f;
+	else if (md->plr.rot.x > 180.0f)
+		md->plr.rot.x -= 360.0f;
+	if (!md->lock_rotation.y)
+		md->plr.rot.y += (md->mouse_delta.y * MOUSE_ROT_SPD);
 	md->plr.rot.y = minmaxf(-40, 40, md->plr.rot.y);
 	md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
 	md->plr.dir.x = cosf(md->plr.angle);
@@ -105,12 +103,14 @@ static void	update_player_rot(t_md *md)
 
 int	update_player(t_md *md, t_ent *plr)
 {
+	if (md->update_frames && md->hud.weapon_frame >= 1)
+		md->hud.weapon_frame++;
 	if (!md->plr.can_shoot && \
 		md->timer.current_time - SHOOT_REFRESH > md->plr.shot_timer)
 		md->plr.can_shoot = 1;
 	update_player_rot(md);
 	update_player_mov(md);
-	set_collisions(md, plr);
+	set_collisions(md, plr, get_v2(plr->size.x, plr->size.y));
 	if (!plr->mov.x)
 		md->plr_wrd_mv.x = 0;
 	if (!plr->mov.y)
@@ -118,6 +118,5 @@ int	update_player(t_md *md, t_ent *plr)
 	move_player(md, plr);
 	md->input_offst = get_v2(md->input_offst.x + (int)(md->plr_wrd_mv.x), \
 		md->input_offst.y - (int)(md->plr_wrd_mv.y));
-
 	return (1);
 }

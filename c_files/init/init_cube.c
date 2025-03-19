@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:46:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 01:41:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ static void	init_cursor(t_md *md)
 	t_vec2	cursor_sz;
 
 	cursor_sz = get_v2(30, 30);
-	md->center = init_img(md, get_v2(10, 10), "utils/center.xpm", md->rgb[RGB_RED]);
+	md->center = init_img(md, get_v2(10, 10), "utils/center.xpm", \
+		md->rgb[RGB_RED]);
 	md->cursor = init_img(md, cursor_sz, "utils/cursor/default.xpm", -1);
 	md->curs_dtc = init_img(md, cursor_sz, "utils/cursor/hand_open.xpm", -1);
 	md->curs_grb = init_img(md, cursor_sz, "utils/cursor/hand_closed.xpm", -1);
 	md->mouse_pressed = 0;
-	md->mouse_clicked = 0;
+	md->mouse_click = 0;
 	md->mouse_pos = get_v3f(0, 0, 0);
 	md->mouse_world_pos = get_v2(0, 0);
 	md->mouse_real = get_v2(0, 0);
@@ -31,8 +32,9 @@ static void	init_cursor(t_md *md)
 	md->mouse_grid_pos = get_v2(0, 0);
 	md->mouse_delta = get_v2(0, 0);
 	md->mouse_focus = 0;
-	//if (!md->is_linux)
-	mlx_mouse_hide();
+	md->resolution = RESOLUTION;
+	if (!LIN)
+		mlx_mouse_hide();
 	mlx_mouse_hook(md->win, mouse_event_handler, md);
 	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
 	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
@@ -93,19 +95,19 @@ static void	init_colors(t_md *md)
 static void	init_game_params(t_md *md, int start_debug)
 {
 	init_colors(md);
+	md->anti_aliasing = 0;
 	md->debug_mode = start_debug;
-	md->ray_mode = !md->debug_mode;
+	md->real_mode = !md->debug_mode;
 	md->show_rays = md->debug_mode;
-	md->ray_depth = md->t_len * md->win_size.x;
+	md->ray_depth = md->t_len * RAY_DEPTH;
 	md->mmap.ic_scl = md->win_size.x / 100;
-	md->lock_rotation = get_v2(1, 0);
+	md->lock_rotation = get_v2(0, 1);
 	md->size_2d = 40;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
 	init_game_params(md, start_debug);
-	init_labels(md);
 	init_ents_data(md);
 	init_map(md, file_arg);
 	md->init_steps++;
@@ -118,7 +120,7 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;
 	md->init_steps++;
-	if (md->debug_mode)
+	if (1)
 		show_init_information(md);
 	return (0);
 }

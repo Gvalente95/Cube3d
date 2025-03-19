@@ -6,21 +6,47 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:16:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 19:29:06 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
+#include "../../../cube.h"
 
 t_vec3f	v3f_center(t_vec3f a, t_vec3f b)
 {
 	return (get_v3f(a.x / 2 - b.x / 2, a.y / 2 - b.y / 2, a.z / 2 - b.z / 2));
 }
 
-int	v3f_bounds(t_vec3f a, t_vec3f pos, t_vec3f size)
+int	v3f_bounds(t_vec3f a, t_vec3f a_size, t_vec3f pos, t_vec3f b_size)
 {
-	return (a.x >= pos.x && \
-		a.x <= pos.x + size.x && \
-		a.y >= pos.y && \
-		a.y <= pos.y + size.y);
+	return (a.x + a_size.x >= pos.x && \
+		a.x <= pos.x + b_size.x && \
+		a.y + a_size.y >= pos.y && \
+		a.y <= pos.y + b_size.y);
+}
+
+t_vec3f	normalize_vec3f(t_vec3f v)
+{
+    float	length;
+
+	length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	if (length == 0.0f)
+		return ((t_vec3f){0, 0, 0});
+	return ((t_vec3f){v.x / length, v.y / length, v.z / length});
+}
+
+t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b)
+{
+	return ((t_vec3f){a.x - b.x, a.y - b.y, a.z - b.z});
+}
+
+t_vec3f	scale_vec3f(t_vec3f v, float s)
+{
+	return ((t_vec3f){v.x * s, v.y * s, v.z * s});
+}
+
+t_vec3f	add_vec3f(t_vec3f a, t_vec3f b)
+{
+	return ((t_vec3f){a.x + b.x, a.y + b.y, a.z + b.z});
 }

@@ -6,20 +6,32 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 06:29:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 03:22:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
 
-int	init_screen(t_md *md, t_vec2 win_size, int row_amount, char *win_name)
+unsigned int	get_random_seed(void)
+{
+	int				fd;
+	unsigned int	seed;
+
+	fd = open("/dev/urandom", O_RDONLY);
+	if (fd < 0 || read(fd, &seed, sizeof(seed)) != sizeof(seed))
+		seed = (unsigned int)time(NULL);
+	close(fd);
+	return (seed);
+}
+
+int	init_screen(t_md *md, t_vec2 win_size, int resolution, char *win_name)
 {
 	void	*screen_image;
 
 	md->win = mlx_new_window(md->mlx, win_size.x, win_size.y, win_name);
 	md->win_size = get_v2(win_size.x, win_size.y);
-	md->t_len = win_size.x / row_amount;
-	md->row_amount = row_amount;
+	md->t_len = win_size.x / resolution;
+	md->resolution = resolution;
 	return (1);
 }
 
@@ -28,25 +40,22 @@ int	init_md(t_md *md)
 	ft_memset(md->key_prs, 0, 512);
 	md->win_size = get_v2(0, 0);
 	md->cam_ofst = get_v3f(0, 0, 0);
-	md->arrow_rot = get_v2(0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
 	md->wrd_mv_offst = get_v3f(0, 0, 0);
 	md->plr_wrd_mv = get_v3f(0, 0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
 	md->mlx = mlx_init();
-	md->txtr_2d = NULL;
 	md->win = NULL;
-	md->particles = NULL;
 	md->wall_img = NULL;
-	md->particles_alive = 0;
 	md->lock_mouse = 1;
 	md->mouse_pressed = 0;
-	md->mouse_clicked = 0;
+	md->mouse_click = 0;
 	md->key_clicked = -1;
 	md->t_len = 60;
 	md->init_steps = 0;
-	md->txt_scale = 10;
+	md->txt_scale = 14;
 	md->mouse_hide = 1;
+	md->update_frames = 0;
 	return (1);
 }
 
@@ -57,16 +66,16 @@ void	init_os_params(t_md *md)
 	md->is_linux = 0;
 	if (LIN)
 		md->is_linux = 1;
-	ft_strlcpy(md->base_map_path, "maps/map.cub", 20);
+	ft_strlcpy(md->base_map_path, "Randomap.cub", 20);
 	printf("wrapper LIN = %d\n", LIN);
 }
 
-void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)
+void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int resolution)
 {
 	init_md(md);
 	init_os_params(md);
 	start_timer(&md->timer.game_start);
-	init_screen(md, win_size, row_amount, win_name);
+	init_screen(md, win_size, resolution, win_name);
 	init_timer(md, &md->timer);
 	// if (md->is_linux)
 	// {
@@ -80,4 +89,5 @@ void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount)
 		mlx_hook(md->win, 3, 0, handle_key_release, md);
 		mlx_hook(md->win, 17, 0, close_window, md);
 	}
+	md->random_seed = get_random_seed();
 }

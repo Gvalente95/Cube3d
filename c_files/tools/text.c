@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:23:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 01:02:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 	if (l->img)
 	{
 		if (md->menu.active)
-			draw_img(l, md->menu.overlay, get_v2(data.r, data.g), -1);
+			draw_img(l, md->menu.freeze_frame, get_v2(data.r, data.g), -1);
 		else
 			draw_img(l, md->screen, get_v2(data.r, data.g), -1);
 		free_image_data(md, l);
@@ -83,7 +83,7 @@ static void	display_text(t_md *md, char *text, t_vec4 data)
 	}
 }
 
-//	DATA.b = COLOR | DATA.a = SCALE
+//	DATA = (x position, y position, text color, text scale)
 void	render_text(t_md *md, t_vec4 data, const char *format, ...)
 {
 	char	buff[256];
@@ -99,7 +99,7 @@ void	render_text(t_md *md, t_vec4 data, const char *format, ...)
 	display_text(md, buff, data);
 }
 
-//	DATA = (pos.x, pos.y, color, scale)
+//	DATA = (x position, y position, text color, text scale)
 void	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...)
 {
 	char	buff[256];

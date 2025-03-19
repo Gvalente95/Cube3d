@@ -1,13 +1,15 @@
 SRC_UTILS	= \
-c_files/init/init_map.c c_files/init/init_labels.c c_files/init/init_ents_data.c c_files/init/init_map_data.c \
-c_files/init/init_entities.c c_files/init/init_cube.c c_files/raycasting/draw_sprite_column.c c_files/raycasting/draw_wall_column.c \
-c_files/raycasting/rays.c c_files/tools/debug.c c_files/tools/math_tools.c c_files/tools/text.c c_files/tools/image_tools.c \
-c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update.c c_files/update/movement.c c_files/update/update_ents.c \
-c_files/render/render_minimap.c c_files/render/render.c c_files/render/render_background.c c_files/particles/particles.c \
-c_files/collisions/collisions_old.c c_files/collisions/collisions.c c_files/raycasting/ray_visualize.c c_files/render/filter.c \
-c_files/update/update_menu.c c_files/init/init_menu.c c_files/init/init_hud.c c_files/update/update_projectile.c c_files/update/update_input.c \
+c_files/init/init_menu.c c_files/init/init_frames2.c c_files/init/init_hud.c c_files/init/init_map.c \
+c_files/init/init_labels.c c_files/init/init_frames.c c_files/init/init_ent_frames.c c_files/init/init_menu_elements.c \
+c_files/init/init_map_data.c c_files/init/init_map_validator.c c_files/init/init_entities.c c_files/init/init_cube.c \
+c_files/raycasting/draw_sprite_column.c c_files/raycasting/ray_visualize.c c_files/raycasting/draw_wall_column.c \
+c_files/raycasting/rays.c c_files/tools/map_gen.c c_files/tools/debug.c c_files/tools/math_tools.c c_files/tools/text.c \
+c_files/tools/image_tools.c c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c \
+c_files/update/update.c c_files/update/movement.c c_files/update/update_menu.c c_files/update/update_ents.c \
+c_files/update/collisions.c c_files/update/update_projectile.c c_files/render/render_minimap.c c_files/render/render.c \
+c_files/render/filter.c c_files/render/render_background.c c_files/render/dithering.c c_files/tools/map_gen_2.c
 
-
+RMAP_SRC	= rmap.c
 SRC			= main.c
 GAME_NAME	= cube
 
@@ -36,6 +38,7 @@ endif
 
 CC			= gcc
 CFLAGS		+= -Wall -Wextra -Werror
+SAN			= -fsanitize=address -g
 
 $(MLX_WRAPPER):
 	make -C $(MLX_WRP_DIR) PLATFORM=$(PLATFORM) --no-print-directory
@@ -58,8 +61,12 @@ leaks: all
 
 all: $(GAME_NAME)
 
+rmap: $(RMAP_SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
+	$(CC) $(SAN) $(CFLAGS) $(RMAP_SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o map
+	@echo "map Generated on $(UNAME_S)"
+
 debug: $(GAME_NAME) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT) $(SRC) $(SRC_UTILS)
-	$(CC) -fsanitize=address -g $(CFLAGS) $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o $(GAME_NAME)
+	$(CC) $(SAN) $(CFLAGS) $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o $(GAME_NAME)
 	@echo "$(GAME_NAME) debug Generated"
 
 clean:

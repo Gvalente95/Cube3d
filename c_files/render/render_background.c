@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:52:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/18 22:03:43 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	render_floor(t_md *md, t_image *bufr, t_image *floor)
 
 void	render_background(t_md *md)
 {
-	if (!md->ray_mode)
+	if (!md->real_mode)
 		draw_img(md->hud.floor, md->screen, get_v2(0, 0), md->hud.bgr_color);
 	else if (!md->hud.active_background)
 	{
@@ -127,6 +127,7 @@ void	render_background(t_md *md)
 		render_sky(md, md->screen, md->hud.sky);
 		draw_img(md->hud.base_floor, md->screen, \
 			get_v2(0, md->hud.floor_start), md->hud.bgr_color);
-		//render_floor(md, md->screen, md->hud.floor);
+		if (0)
+			render_floor(md, md->screen, md->hud.floor);
 	}
 }

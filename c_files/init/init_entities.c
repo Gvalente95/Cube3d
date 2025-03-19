@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 06:17:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 03:31:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,30 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 	}
 	else
 		e->dir = get_v3f(r_range(-1, 1), r_range(-1, 1), r_range(-1, 1));
-	if (type == nt_mob || type == nt_coin)
-		e->pos.z = e->size.y;
 }
-
 
 void	set_base_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 {
-	e->emitter = NULL;
-	e->type = get_char_index(md->ents_tp_map[0], c);
-	e->frame = copy_image(md, md->e_frms[e->type][0][0]);
-	e->action = ac_idl;
 	e->character = c;
-	e->size = md->e_sizes[e->type];
-	e->pos = get_v3f((float)(pos.x * md->t_len), (float)(pos.y * md->t_len), 0);
+	e->size = get_v2(md->t_len, md->t_len);
+	init_ent_frames(md, e, c);
+	e->pos.x = (pos.x * md->t_len) + (md->t_len - e->size.x) * 0.5f;
+	e->pos.y = (pos.y * md->t_len) + (md->t_len - e->size.y) * 0.5f;
+	e->pos.z = 0;
+	e->target_pos = get_v3f(-999, 0, 0);
 	e->start_pos = get_v3f(e->pos.x, e->pos.y, e->pos.z);
 	e->coord_pos = get_v3(pos.x, pos.y, 0);
 	e->mov = get_v3f(0, 0, 0);
 	e->rot = get_v3(0, 0, 0);
 	e->dir = get_v3f(0, 0, 0);
 	e->is_active = 1;
-	e->in_screen = 1;
+	e->in_screen = 0;
 	e->shot = 0;
+	e->was_hit = 0;
 	e->shot_timer = 0;
 	e->can_shoot = 1;
 	e->row_draw_index = 0;
-	e->hp = 0;
+	e->hp = 5;
 	e->jumps = 0;
 	e->level = 0;
 	e->audio = 0;
@@ -73,6 +71,7 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 	else if (c == 'W')
 		md->plr.rot.x = -180;
 	md->plr.angle = md->plr.rot.x * (M_PI / 180.0f);
+	md->plr.size = get_v2(md->t_len / 2, md->t_len / 2);
 }
 
 t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)

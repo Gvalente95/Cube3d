@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/17 14:13:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 05:29:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,10 @@
 # endif
 
 # define MAX_RAYS 			10000
-# define ENT_FRAMES_MAX		5
+# define ENT_FRAMES_MAX		20
 # define MOUSE_SENSITIVITY .2
-
-typedef struct s_input
-{
-	char	*buffer;
-	int		index;
-}	t_input;
+# define ANIM_REFRESH		.1
+# define MAX_OVERLAP_SPRITE	10
 
 typedef struct s_image_data
 {
@@ -79,28 +75,34 @@ typedef struct s_mmap
 	t_image		*img;
 	t_vec3f		ray_pos[MAX_RAYS];
 	t_vec2		size;
+	t_vec2		limits_x;
+	t_vec2		limits_y;
 	int			ic_scl;
 	int			active;
 	int			mray_len;
 	int			bgr_color;
-	t_vec2		limits_x;
-	t_vec2		limits_y;
 }	t_mmap;
+
+typedef struct s_hit_data
+{
+	t_ent	*hit;
+	t_vec3f	post_at_hit;
+	float	dist_at_e;
+	int		vertical_hit_at_e;
+}	t_hit_data;
 
 typedef struct s_ray
 {
-	t_ent	*hit;
-	t_ent	*wall_hit;
-	t_vec3f	pos;
-	t_vec3f	pos_at_e;
-	t_vec3f	dir;
-	float	distance;
-	float	dist_at_e;
-	int		hit_vrt_at_e;
-	float	angle;
-	int		vertical_hit;
-	int		index;
-	int		color;
+	t_hit_data	hit_data[MAX_OVERLAP_SPRITE];
+	int			hits_amount;
+	t_ent		*wall_hit;
+	t_vec3f		pos;
+	t_vec3f		dir;
+	float		distance;
+	float		angle;
+	int			vertical_hit;
+	int			index;
+	int			color;
 }	t_ray;
 
 typedef struct s_hud
@@ -109,86 +111,100 @@ typedef struct s_hud
 	t_image		*floor;
 	t_image		*base_sky;
 	t_image		*base_floor;
-	t_image		*background;
-	t_image		*gun[2];
-	t_image		*hp_bar;
+	t_image		*overlay;
+	t_image		*lock_x_icon;
+	t_image		*lock_y_icon;
 	int			bgr_color;
 	int			floor_color;
 	int			sky_color;
 	int			floor_start;
+	int			new_floor_start;
 	int			active_background;
+	int			wpn_index;
+	int			weapon_frame;
 }	t_hud;
 
 typedef struct s_md
 {
-	void		*mlx;
-	void		*win;
-	t_image		*screen;
-	t_ent		**mapped_ents;
-	t_hud		hud;
-	t_image		*center;
-	t_image		*cursor;
-	t_image		*curs_dtc;
-	t_image		*curs_grb;
-	t_menu		menu;
-	t_map		map;
-	t_mmap		mmap;
-	t_timer		timer;
-	t_ray		rays[MAX_RAYS];
-	t_dblst		*entities;
-	t_dblst		*particles;
-	t_ent		plr;
-	t_vec2		win_size;
-	t_vec2		e_sizes[ENT_TYPE_LEN];
-	t_vec2		e_sizes2d[ENT_TYPE_LEN];
-	t_vec3f		input_mov;
-	t_vec3f		mouse_pos;
-	t_vec2		mouse_real;
-	t_vec2		prev_mouse;
-	t_vec2		mouse_delta;
-	t_vec2		input_offst;
-	t_vec2		mouse_world_pos;
-	t_vec2		mouse_grid_pos;
-	t_vec2		arrow_rot;
-	t_vec3f		cam_ofst;
-	t_vec3f		wrd_mv_offst;
-	t_vec3f		plr_wrd_mv;
-	pid_t		bgrnd_au;
-	pid_t		bgrnd_mus;
-	t_image		**prt_img;
-	t_image		**wall_img;
-	t_image		**wall_img2d;
-	t_image		**txtr_2d;
-	t_image		****e_frms;
-	const char	*ents_tp_map[1];
-	const char	*e_typ_names[ENT_TYPE_LEN];
-	const char	*ents_act_names[ENT_ACTION_LEN];
-	const char	*dir_labels[4];
-	char		base_map_path[50];
-	int			ray_depth;
-	int			is_linux;
-	int			rgb[19];
-	int			key_prs[512];
-	t_vec2		lock_rotation;
-	int			txt_scale;
-	int			size_2d;
-	int			init_steps;
-	int			mouse_focus;
-	int			show_rays;
-	int			ray_mode;
-	int			debug_mode;
-	int			key_clicked;
-	int			mouse_pressed;
-	int			mouse_clicked;
-	int			mouse_hide;
-	int			death_amount;
-	int			row_amount;
-	float		fov;
-	int			t_len;
-	int			lock_mouse;
-	int			particles_alive;
-	int			(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
-	void		*(*mlx_make)(void *mlx, char *name, int *with, int *height);
+	void			*mlx;
+	void			*win;
+	t_ent			plr;
+	t_ent			**mapped_ents;
+	t_dblst			*entities;
+	t_hud			hud;
+	t_menu			menu;
+	t_map			map;
+	t_mmap			mmap;
+	t_timer			timer;
+	t_ray			rays[MAX_RAYS];
+	t_image			****mobs_txtrs;
+	t_image			****mobs_txtrs_mini;
+	t_image			***pickup_txtr;
+	t_image			***wpn_txtr;
+	t_image			***pickup_txtr_mini;
+	t_image			***wpn_txtr_2d;
+	t_image			**wall_img;
+	t_image			**wall_img2d;
+	t_image			*screen;
+	t_image			*center;
+	t_image			*cursor;
+	t_image			*curs_dtc;
+	t_image			*curs_grb;
+	t_vec3f			input_mov;
+	t_vec3f			mouse_pos;
+	t_vec3f			cam_ofst;
+	t_vec3f			wrd_mv_offst;
+	t_vec3f			plr_wrd_mv;
+	t_vec2			e_sizes[ENT_TYPE_LEN];
+	t_vec2			e_sizes2d[ENT_TYPE_LEN];
+	t_vec2			win_size;
+	t_vec2			mouse_real;
+	t_vec2			prev_mouse;
+	t_vec2			mouse_delta;
+	t_vec2			input_offst;
+	t_vec2			mouse_world_pos;
+	t_vec2			mouse_grid_pos;
+	t_vec2			lock_rotation;
+	pid_t			bgrnd_au;
+	pid_t			bgrnd_mus;
+	const char		*ents_tp_map[ENT_TYPE_LEN];
+	const char		*ents_types_names[ENT_TYPE_LEN];
+	const char		*weapons_names[WEAPON_TYPE_LEN];
+	const char		*mob_names[MOB_TYPE_LEN];
+	const char		*pickup_names[PICKUP_TYPE_LEN];
+	const char		*ents_act_names[ENT_ACTION_LEN];
+	const char		*plr_act_names[PLR_ACTION_LEN];
+	const char		*dir_labels[4];
+	char			base_map_path[50];
+	float			texture_accumulator;
+	float			ray_depth;
+	float			res_value;
+	float			txt_scale;
+	float			rgb_distortion;
+	float			scanlines;
+	float			dithering;
+	float			fov;
+	unsigned int	random_seed;
+	int				rgb[19];
+	int				key_prs[512];
+	int				anti_aliasing;
+	int				is_linux;
+	int				resolution;
+	int				size_2d;
+	int				init_steps;
+	int				mouse_focus;
+	int				show_rays;
+	int				real_mode;
+	int				debug_mode;
+	int				key_clicked;
+	int				mouse_pressed;
+	int				mouse_click;
+	int				update_frames;
+	int				mouse_hide;
+	int				t_len;
+	int				lock_mouse;
+	int				(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
+	void			*(*mlx_make)(void *mlx, char *name, int *with, int *height);
 }	t_md;
 
 t_vec2	get_v2_grid_pos(t_md *md, t_vec2 pos);
@@ -196,6 +212,8 @@ t_vec3	get_grid_pos(t_md *md, t_vec3 pos);
 
 //		TOOLS.c
 int		r_range(int min, int max);
+int		r_range_seed(unsigned int *g_seed, int min, int max);
+
 void	*flip_image_x(t_md *md, void *img, t_vec2 size);
 
 //		INPUT_MOUSE.c
@@ -241,20 +259,23 @@ void	*scale_img_keep_ratio(t_md *md, void *img, t_vec2 *old_size, \
 	t_vec2 new_size);
 void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size);
 void	set_img_data_color(t_image *img_data, t_vec2 size, int col, float str);
+
 //		IMAGES_b.c
 void	*get_image_copy(t_md *md, void *src, t_vec2 src_size);
 void	*add_img(char *relative_path, int *width, int *height, t_md *md);
 void	render_cursor(t_md *md, t_image *screen, int has_hov);
+
 //		IMG_DATA.c
 void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, int maintain_ratios);
 void	**ld_txtrs(t_md *md, t_vec2 final_size, char *dirpath, \
 	int maintain_ratios);
 t_image	*init_img(t_md *md, t_vec2 size, char *path, int color);
 t_image	**init_images(t_md *md, t_vec2 size, char *path);
+t_image	*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_size, int keep_ratio);
 
 //		INIT_WRAPPER.c
 int		init_md(t_md *md);
-void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int row_amount);
+void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int resolution);
 
 //		FREE_a.c
 int		free_images(t_md *md, void ***images, char *label);
@@ -277,7 +298,7 @@ int		get_trgb(unsigned char t, unsigned char r, \
 	unsigned char g, unsigned char b);
 t_vec3	get_grid_posf(t_md *md, t_vec3f pos);
 int		str_to_color(const char *line);
-void	update_ent_frame(t_md *md, t_ent *e);
+void	update_ent_frame(t_ent *e);
 
 //		STRING.c
 char	*md_strjoin(t_md *d, char const *s1, char const *s2);
@@ -301,18 +322,14 @@ char	*ft_megajoin(const char *a, const char *b, \
 	const char *c, const char *d);
 
 int		update_map_index(t_md *md, t_ent *e);
-void	draw_sprite(t_md *md, float dist, t_ent *sprite, t_ray *ray);
+void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data);
 int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 
-//		PARTICLES
-void	launch_prt(t_md *md, t_ent *emitter, t_vec3f start_pos, t_vec3f dir);
-void	update_particles(t_md *md);
 int		blend_color(int color_a, int color_b, float factor);
 
 //		TIMER
 void	init_timer(t_md *md, t_timer *timer);
 double	update_time(t_md *md, t_timer *timer);
-
 void	update_input(t_md *md);
 
 //		LOAD_IMG
@@ -329,5 +346,8 @@ void	show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
 void	show_vec3f(t_md *md, char *label, t_vec3f vec, t_vec2 pos);
 void	show_int(t_md *md, char *label, int value, t_vec2 pos);
 void	show_float(t_md *md, char *label, float value, t_vec2 pos);
+
+unsigned int	get_random_seed(void);
+char			*ft_strndup(const char	*s1, ssize_t n);
 
 #endif

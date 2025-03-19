@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 13:23:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 04:35:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
 	char	*path;
 	int		fd;
 
+	while (*line == ' ')
+		(*line)++;
 	if (ft_strlen(line) <= 4)
 		free_and_quit(md, "wrong value for txtr", line);
 	path = ft_strjoin(IMG_PATH, line + 3);
@@ -95,11 +97,22 @@ static char	*parse_file_data(t_md *md)
 
 void	init_map_data(t_md *md)
 {
+	int	i;
+
 	md->wall_img = md_malloc(md, sizeof(t_image *) * 5);
 	md->wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
-	md->wall_img[4] = NULL;
-	md->wall_img2d[4] = NULL;
+	i = -1;
+	while (++i < 5)
+	{
+		md->wall_img[i] = NULL;
+		md->wall_img2d[i] = NULL;
+	}
 	setstr(&md->map.buffer, parse_file_data(md));
 	if (!md->map.buffer)
 		free_and_quit(md, "no map found", NULL);
+	md->wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
+	i = -1;
+	while (++i < 4)
+		if (!md->wall_img[i])
+			free_and_quit(md, "Wall texture's path missing", NULL);
 }
