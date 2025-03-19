@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 05:37:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/19 05:38:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ static t_vec2	get_map_size(t_md *md, char *map)
 	}
 	if (cur_width > size.x)
 		size.x = cur_width;
+	size.y++;
 	return (size);
 }
 
