@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 21:59:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 16:12:07 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,9 @@ void	apply_fx(t_md *md, t_image *screen, t_post_fx_data *fx)
 		apply_barrel_distortion(screen, fx->barrel_amount);
 	if (fx->color_band > 0)
 		apply_color_banding(screen, fx->color_band);
+	if (fx->noise > 0)
+		apply_noise(md, md->screen, fx->noise, 1);
 	return ;
-	apply_noise(md, md->screen, 0.1, 1);
 }
 
 void	render(t_md *md)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_frames2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 15:02:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:30:33 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,12 @@ void	init_mobs_frames(t_md *md)
 	while (++type < MOB_TYPE_LEN)
 		handle_mobs_frames(md, &md->txd.mobs_txtrs[type], \
 			&md->txd.mobs_txtrs_mini[type], type);
+	md->txd.mobs_txtrs[type] = NULL;
+	md->txd.mobs_txtrs_mini[type] = NULL;
 }
 
-t_image	**init_mini(t_md *md, t_image ***mini, char *path, t_ent_type type)
+t_image	**init_mini(t_md *md, t_image ***mini, char *path)
 {
-	(void)type;
 	*mini = init_images(md, md->txd.e_sizes2d[0], path);
 	return (init_images(md, md->txd.e_sizes[0], path));
 }

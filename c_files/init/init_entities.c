@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_entities.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 22:17:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:44:26 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 
 void	set_base_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 {
-	e->overlay_dir = -1;
+	e->anim = NULL;
 	e->overlay = NULL;
+	e->overlay_dir = -1;
 	e->character = c;
 	e->type = get_char_index(md->txd.ents_tp_map[0], c);
 	init_ent_frames(md, &md->txd, e);

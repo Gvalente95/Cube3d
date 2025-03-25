@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collisions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 13:38:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 16:13:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	handle_soft_collisions(t_md *md, t_ent *b)
 		else
 			return (1);
 	}
-	else if (b->type == Weapon && !md->hud.unlocked_weapons[b->wpn_type])
+	else if (b->type == (int)Weapon && !md->hud.unlocked_weapons[b->wpn_type])
 		md->hud.unlocked_weapons[b->wpn_type] = 1;
 	else
 		return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/22 11:33:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 15:36:14 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int	get_valid_moves(t_md *md, t_vec3 cord, \
 	int				nw_indx;
 	t_vec3			new_cord;
 	int				valid_indexes;
-	t_vec3			valid_cords[4];
 
 	valid_indexes = 0;
 	i = -1;
@@ -56,7 +55,6 @@ static int	get_valid_moves(t_md *md, t_vec3 cord, \
 		nw_indx = new_cord.x + ((md->map.size.x + 1) * new_cord.y);
 		if (nw_indx < 0 || nw_indx >= md->map.len || md->mapped_ents[nw_indx])
 			continue ;
-		valid_cords[valid_indexes] = new_cord;
 		(*val_mvs)[valid_indexes++] = i;
 	}
 	return (valid_indexes);
@@ -109,7 +107,7 @@ void	update_mob_actions(t_md *md, t_ent *e)
 		e->action = m_atk;
 		if (!md->update_frames || e->frame_index > 1 || md->plr.was_hit)
 			return ;
-		if (e->type != Rat)
+		if (e->type != (int)Rat)
 		{
 			md->hud.hp -= e->type;
 			md->plr.was_hit = 10;

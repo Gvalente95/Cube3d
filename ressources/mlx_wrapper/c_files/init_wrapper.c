@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 09:00:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 15:49:51 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	init_md(t_md *md)
 	int	i;
 
 	i = -1;
-	while (++i < 512)
+	while (++i < 65536)
 		md->key_prs[i] = 0;
 	md->win_size = get_v2(0, 0);
 	md->cam_ofst = get_v3f(0, 0, 0);

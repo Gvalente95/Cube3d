@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_menu_elements.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 17:29:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 16:09:55 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static void	init_sliders(t_md *md, t_menu *menu, \
 	init_sldr(md, "Height", get_v4f(0, HEIGHT, md->t_len, 100), &pm->height);
 	init_sldr(md, "Difficulty", get_v4f(1, 1, 10, 10), &pm->difficulty);
 	init_sldr(md, "Fog", get_v4f(0, md->fx.fog, 2, 100), &md->fx.fog);
+	init_sldr(md, "noise", get_v4f(0, 0, 1, 100), &fx->noise);
 	init_sldr(md, "txt scale", \
 		get_v4f(10, pm->txt_scale, 30, 20), &pm->txt_scale);
 	init_sldr(md, "ray depth", \

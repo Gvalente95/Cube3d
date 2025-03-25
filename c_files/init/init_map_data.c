@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 19:34:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:09:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,5 @@ void	init_map_data(t_md *md)
 			free_and_quit(md, "Wall texture's path missing", NULL);
 		md->txd.wall_img2d[i] = copy_image(md, img, v2(md->txd.size_2d), -1);
 	}
+	md->txd.wall_img2d[i] = NULL;
 }

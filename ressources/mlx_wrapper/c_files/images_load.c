@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   images_load.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:00:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 21:17:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 18:07:44 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,15 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, t_vec2 data)
 	if (access(full_path, F_OK) == -1)
 		return (printf("\"%s\" file not found in ld_txtr\n", full_path), NULL);
 	texture = md->mlx_make(md->mlx, full_path, &txt_size.x, &txt_size.y);
+	free(full_path);
 	if (!texture)
-		return (printf("\"%s\" can't make txtr\n", full_path), NULL);
+		return (printf("\"%s\" can't make txtr\n", path), NULL);
 	if (data.x)
 		texture = scale_img_keep_ratio(md, texture, &txt_size, final_size);
 	else
 		texture = resize_img(md, texture, &txt_size, final_size);
 	if (!texture)
-		return (printf("\"%s\" can't scale txtr\n", full_path), NULL);
+		return (printf("\"%s\" can't scale txtr\n", path), NULL);
 	return (texture);
 }
 

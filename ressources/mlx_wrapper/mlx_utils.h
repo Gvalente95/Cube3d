@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/25 14:03:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 18:51:43 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # include "libft/libft.h"
 # include "../lists/lists.h"
-//# include "mlx_linux/mlx.h"
+# include "mlx_linux/mlx.h"
 # include "mlx_mac/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -30,7 +30,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-//# include <X11/X.h>
+# include <X11/X.h>
 
 # include <signal.h>
 # include <stdio.h>
@@ -125,13 +125,13 @@ typedef struct s_ray
 
 typedef struct s_hud
 {
-	t_image		*sky;
-	t_image		*sky_flipy;
-	t_image		*floor;
+	t_image		*overlay;
 	t_image		*rgun;
 	t_image		*base_sky;
+	t_image		*sky;
+	t_image		*sky_flipy;
 	t_image		*base_floor;
-	t_image		*overlay;
+	t_image		*floor;
 	t_image		*lock_x_icon;
 	t_image		*lock_y_icon;
 	t_image		*amm_icon;
@@ -169,6 +169,7 @@ typedef struct s_post_fx_data
 	float			glitch_intensity;
 	float			glow_intensity;
 	float			fog;
+	float			noise;
 	int				anti_alias;
 }	t_post_fx_data;
 
@@ -276,7 +277,7 @@ typedef struct s_md
 	t_vec3f			plr_rot;
 	t_vec3f			cam_pos;
 	float			bob_time;
-	int				key_prs[512];
+	int				key_prs[65536];
 	int				key_clicked;
 	void			*var_;
 	const char		*dir_labels[4];
@@ -333,10 +334,22 @@ double			check_timer(double timer);
 void			start_timer(double *timer);
 void			stop_timer(t_timer *timer);
 
-//		FREE_b.c
+//		FREE_IMAGES.c
 int				free_void(void *elem);
 int				free_void_array(void **elements);
-int				free_md2(t_md *md, int free_count, int quit);
+int				free_images_array(t_md *md, t_image ***arr, const char *label);
+int				free_images_data(t_md *md, t_image **images, const char *label);
+int				free_image_data(t_md *md, t_image *img_data);
+
+int				free_hud(t_md *md, t_hud *hud);
+int				free_txd(t_md *md, t_texture_data *txd);
+int				free_var(t_md *md, t_mmap *mmap, t_post_fx_data *fx, t_mouse *mouse);
+int				free_menu(t_md *md, t_menu *menu);
+int				free_void(void *elem);
+int				free_void_array(void **elements);
+int				free_mob_images(t_md *md, t_ent *e, char *label);
+int				free_ents(t_md *md);
+
 
 //		IMAGES_a.c
 t_vec3f			set_new_size(t_image *q, t_vec2 *old_size, t_vec2 *new_size);
@@ -365,7 +378,7 @@ void			init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int resolution);
 //		FREE_a.c
 int				free_images(t_md *md, void ***images, char *label);
 int				free_image_data(t_md *md, t_image *img_data);
-int				free_images_data(t_md *md, t_image **images, char *label);
+int				free_images_data(t_md *md, t_image **images, const char *label);
 int				free_md(t_md *md, int quit);
 int				safe_free(void *item);
 int				free_and_quit(t_md *d, const char *msg, const char *attribute);

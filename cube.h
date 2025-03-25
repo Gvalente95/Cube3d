@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 13:09:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:30:49 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@
 
 # define IMG_PATH			"ressources/xpm/"
 
-# define RESOLUTION		10
+# define RESOLUTION		25
 //		SCREEN
-# define SCRN_W			1000
-# define SCRN_H			600
+# define SCRN_W			1750
+# define SCRN_H			1200
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -76,7 +76,7 @@ void	init_menu_elements(t_md *md, t_menu *menu);
 void	handle_mobs_frames(t_md *md, t_image ****frames, \
 	t_image ****mini, t_mob_types type);
 void	init_mobs_frames(t_md *md);
-t_image	**init_mini(t_md *md, t_image ***mini, char *path, t_ent_type type);
+t_image	**init_mini(t_md *md, t_image ***mini, char *path);
 t_image	**init_weapon(t_md *md, t_image ***mini, char *path);
 void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e);
 

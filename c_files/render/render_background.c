@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_background.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 14:14:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 18:01:42 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

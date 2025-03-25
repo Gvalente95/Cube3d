@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_gen_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 01:00:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 18:04:02 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static int	set_character(char c, int amount, char *buffer, int len)
 		if (buffer[free_indexes[random_index]] == '0')
 			buffer[free_indexes[random_index]] = c;
 	}
+	free(free_indexes);
 	return (free_amount - set_amount);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cube.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 13:34:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 15:41:52 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	init_cursor(t_md *md)
 	msd->delta = get_v2(0, 0);
 	msd->focus = 0;
 	if (!LIN)
-		mlx_mouse_hide();
+		mlx_mouse_hide(md->mlx, md->win);
 	mlx_mouse_hook(md->win, mouse_event_handler, md);
 	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
 	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);

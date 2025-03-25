@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_hud.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:44:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 02:19:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 16:07:39 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_fx(t_md *md, t_post_fx_data *fx)
 	fx->palette[9] = 0xFF00FF;
 	fx->palette[10] = 0x00FFFF;
 	fx->fog = .5;
+	fx->noise = 0.5;
 	fx->palette_size = sizeof(fx->palette) / sizeof(fx->palette[0]);
 }
 

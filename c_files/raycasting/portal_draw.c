@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   portal_draw.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:09:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 12:56:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:45:44 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 15:39:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 16:10:29 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ typedef struct s_menu
 	t_gamestate		prv_state;
 	t_gamestate		state;
 	t_button		buttons[9];
-	t_slider		sliders[20];
+	t_slider		sliders[50];
 	t_slider		*selected_slider;
 	int				slider_fill_clr;
 	int				slider_bgr_clr;

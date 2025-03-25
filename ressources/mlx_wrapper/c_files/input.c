@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/23 15:18:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 15:50:42 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 int	handle_key_press(int keycode, t_md *md)
 {
-	if (keycode == 65505)
-		keycode = SHIFT_KEY;
-	if (keycode < 0 || keycode > 512)
+	if (keycode < 0 || keycode > 65536)
 		return (0);
 	md->key_clicked = keycode;
 	md->key_prs[keycode] = 1;
@@ -25,10 +23,8 @@ int	handle_key_press(int keycode, t_md *md)
 
 int	handle_key_release(int keycode, t_md *md)
 {
-	if (keycode == 65505)
-		keycode = SHIFT_KEY;
 	printf("keycode : %d\n", keycode);
-	if (keycode >= 0 && keycode < 512)
+	if (keycode >= 0 && keycode < 65536)
 		md->key_prs[keycode] = 0;
 	md->key_clicked = -1;
 	return (0);

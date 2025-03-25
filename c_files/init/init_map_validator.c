@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map_validator.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 02:32:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 12:45:27 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 18:41:21 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	validate_map(t_md *md, char *map)
 
 	valid_chars = md_strjoin(md, md->txd.ents_tp_map[0], " 10NSEW\n");
 	unvalid_char = find_unvalid_char(map, valid_chars);
+	free(valid_chars);
 	if (unvalid_char != '\0')
 		return (printf("Error\nUnvalid char: %c\n", unvalid_char), 0);
 	return (1);

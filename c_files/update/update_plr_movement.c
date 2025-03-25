@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_plr_movement.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 02:33:16 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 15:34:58 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,16 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	float	mv_lft;
 
 	mov = get_v3f(0, 0, 0);
-	mv_for = ((md->key_prs[W_KEY]) * spd);
-	mv_back = ((md->key_prs[S_KEY]) * spd);
-	mv_rght = ((md->key_prs[D_KEY]) * spd);
-	mv_lft = ((md->key_prs[A_KEY]) * spd);
+	mv_for = ((md->key_prs[NUM_W_KEY]) * spd);
+	mv_back = ((md->key_prs[NUM_S_KEY]) * spd);
+	mv_rght = ((md->key_prs[NUM_D_KEY]) * spd);
+	mv_lft = ((md->key_prs[NUM_A_KEY]) * spd);
 	mov.x = (mv_for - mv_back) * for_dir.x + (mv_rght - mv_lft) * -rgt_dir.x;
 	mov.y = (mv_for - mv_back) * for_dir.y + (mv_rght - mv_lft) * -rgt_dir.y;
 	if (md->key_clicked == SPACE_KEY && \
 		md->plr.pos.z + md->prm.height >= -EPSILON)
-		mov.z -= (PLR_JUMPPOW);
-	if (md->key_prs[R_KEY] == 1)
+		mov.z -= (-PLR_JUMPPOW);
+	if (md->key_prs[NUM_R_KEY] == 1)
 		mov.z = -(PLR_JUMPPOW * .2);
 	md->input_mov = get_v3f(\
 		mv_lft - mv_rght, mv_for - mv_back, \

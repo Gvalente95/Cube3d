@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_frames.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 15:08:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 19:31:07 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ void	init_pickup_frames(t_md *md, t_texture_data *td)
 	if (!td->pickup_txtr || !td->pickup_txtr_mini)
 		return ;
 	td->pickup_txtr[Ammo] = init_mini(md, \
-		&td->pickup_txtr_mini[Ammo], "ent/Pickup/Ammo/", (int)Ammo);
+		&td->pickup_txtr_mini[Ammo], "ent/Pickup/Ammo/");
 	td->pickup_txtr[Health] = init_mini(md, \
-		&td->pickup_txtr_mini[Health], "ent/Pickup/Health/", (int)Health);
+		&td->pickup_txtr_mini[Health], "ent/Pickup/Health/");
 	td->pickup_txtr[Keys] = init_mini(md, \
-		&td->pickup_txtr_mini[Keys], "ent/Pickup/Keys/", (int)Keys);
+		&td->pickup_txtr_mini[Keys], "ent/Pickup/Keys/");
 	td->pickup_txtr[Score] = init_mini(md, \
-		&td->pickup_txtr_mini[Score], "ent/Pickup/Score/", (int)Score);
+		&td->pickup_txtr_mini[Score], "ent/Pickup/Score/");
 	td->pickup_txtr[Weapon] = init_mini(md, \
-		&td->pickup_txtr_mini[Weapon], "ent/Pickup/Weapons/", (int)Weapon);
+		&td->pickup_txtr_mini[Weapon], "ent/Pickup/Weapons/");
 	td->pickup_txtr[PCKP_TYPE_LEN] = NULL;
 	td->pickup_txtr_mini[PCKP_TYPE_LEN] = NULL;
 }
