@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:56:51 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:04:45 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	free_txd(t_md *md, t_texture_data *txd)
 	fa = 0;
 	fa += free_image_data(md, txd->door_txtr);
 	fa += free_image_data(md, txd->door_txtr_mini);
-	fa += free_images_data(md, md->txd.wall_img, "wall_img");
-	fa += free_images_data(md, md->txd.wall_img2d, "wall_img2d");
+	fa += free_images_data(md, txd->wall_img, "wall_img");
+	fa += free_images_data(md, txd->wall_img2d, "wall_img2d");
 	fa += free_images_array(md, txd->pickup_txtr, "pickup tex");
 	fa += free_images_array(md, txd->pickup_txtr_mini, "minipick tex");
 	fa += free_images_array(md, txd->wpn_txtr, "wpn tex");
@@ -118,6 +118,8 @@ int	free_ents(t_md *md)
 		e = (t_ent *)node->content;
 		if (e->type == nt_mob)
 			fa += free_mob_images(md, e, "mob");
+		if (e->frames)
+			fa += free_images_data(md, e->frames, "e frames");
 		node = node->next;
 	}
 	fa += dblst_size(md->entities);

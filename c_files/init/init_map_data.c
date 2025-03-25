@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:09:04 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:06:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ void	init_map_data(t_md *md)
 		free_and_quit(md, "no map found", NULL);
 	if (trim_excess_newlines(&md->map.buffer, ft_strlen(md->map.buffer)))
 		printf("Excess characters found, still playable tho\n");
-	md->txd.wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
 	i = -1;
 	while (++i < 4)
 	{
@@ -130,5 +129,4 @@ void	init_map_data(t_md *md)
 			free_and_quit(md, "Wall texture's path missing", NULL);
 		md->txd.wall_img2d[i] = copy_image(md, img, v2(md->txd.size_2d), -1);
 	}
-	md->txd.wall_img2d[i] = NULL;
 }

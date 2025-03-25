@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:44:26 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:01:29 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 	(void)c;
 	if (type == nt_wall)
 	{
-		e->frames = malloc(sizeof(t_image) * 4);
+		e->frames = malloc(sizeof(t_image) * 5);
 		e->frames[0] = copy_image(md, md->txd.wall_img[0], get_v2(-1, -1), -1);
 		e->frames[1] = copy_image(md, md->txd.wall_img[1], get_v2(-1, -1), -1);
 		e->frames[2] = copy_image(md, md->txd.wall_img[2], get_v2(-1, -1), -1);
 		e->frames[3] = copy_image(md, md->txd.wall_img[3], get_v2(-1, -1), -1);
+		e->frames[4] = NULL;
 	}
 	else
 		e->dir = get_v3f(r_range(-1, 1), r_range(-1, 1), r_range(-1, 1));
@@ -32,6 +33,7 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type, char c)
 void	set_base_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 {
 	e->anim = NULL;
+	e->frames = NULL;
 	e->overlay = NULL;
 	e->overlay_dir = -1;
 	e->character = c;
