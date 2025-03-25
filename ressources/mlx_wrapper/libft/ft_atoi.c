@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:38:47 by gvalente          #+#    #+#             */
-/*   Updated: 2024/10/03 11:41:34 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/21 03:41:34 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "limits.h"
 
 static int	ft_isspace(char c)
 {
@@ -21,37 +22,40 @@ static int	ft_isspace(char c)
 	return (0);
 }
 
-static void	set_variables(int *res, int *i, int *is_minus)
+static int	set_variables(int *res, int *i, int *sign, const char *str)
 {
+	if (!str)
+		return (0);
 	*res = 0;
 	*i = 0;
-	*is_minus = 1;
+	*sign = 1;
+	return (1);
 }
 
 int	ft_atoi(const char *str)
 {
-	int	res;
 	int	i;
-	int	is_minus;
+	int	sign;
+	int	res;
 
-	set_variables(&res, &i, &is_minus);
+	if (!set_variables(&res, &i, &sign, str))
+		return (0);
 	while (ft_isspace(str[i]))
 		i++;
-	if (!str || (!ft_isdigit(str[i]) && str[i] != '-' && str[i] != '+'))
+	if ((str[i] == '-' || str[i] == '+') && str[i++] == '-')
+		sign = -1;
+	if (!ft_isdigit(str[i]))
 		return (0);
-	if (str[i] == '-' || str[i] == '+')
+	while (ft_isdigit(str[i]))
 	{
-		if (str[i] == '-')
-			is_minus = -1;
+		if (res > (INT_MAX - str[i] - '0') / 10 && sign)
+		{
+			if (sign)
+				return (INT_MAX);
+			return (INT_MIN);
+		}
+		res = res * 10 + str[i] - '0';
 		i++;
 	}
-	if (!str[i] || !ft_isdigit(str[i]))
-		return (0);
-	while (str[i] && ft_isdigit(str[i]))
-	{
-		res = res * 10 + (str[i] - '0');
-		i++;
-	}
-	res *= is_minus;
-	return (res);
+	return (res * sign);
 }

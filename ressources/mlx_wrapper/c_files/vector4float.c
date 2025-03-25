@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:04:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/15 14:02:47 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/20 14:55:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,9 @@ int	print_vec4f(t_vec4f a, const char *label)
 		printf("%s: ", label);
 	printf("r%f g%f %fb %fa", a.r, a.g, a.b, a.a);
 	return (1);
+}
+
+t_vec4f	v4f(float scale)
+{
+	return (get_v4f(scale, scale, scale, scale));
 }

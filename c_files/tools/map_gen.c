@@ -6,98 +6,121 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 23:10:51 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 05:20:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 20:29:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	is_border(t_vec2 size, t_vec3 pos)
-{
-	int	is_it_border;
-
-	is_it_border = 0;
-	if (pos.x <= 0)
-		is_it_border = 1;
-	if (pos.x >= size.x - 1)
-		is_it_border = 1;
-	if (pos.y <= 0)
-		is_it_border = 1;
-	if (pos.y >= size.y - 1)
-		is_it_border = 1;
-	return (is_it_border);
-}
-
-int	get_char_amount(char *buffer, char c)
+int	set_rect_cell(char *full, t_vec3 draw_p, t_vec3 full_sz, int is_border)
 {
 	int	i;
-	int	amount;
 
-	amount = 0;
-	i = -1;
-	while (buffer[++i])
-		if (buffer[i] == c)
-			amount++;
-	return (amount);
+	i = (full_sz.x * draw_p.y + draw_p.x);
+	if (i >= full_sz.z - 1 || i < 0 || full[i] == '\n')
+		return (0);
+	if (draw_p.x <= 1 || draw_p.x == full_sz.x || \
+		draw_p.y == 0 || draw_p.y == full_sz.y)
+		return (full[i] = '1', 0);
+	if ((is_border && (full[i] == ' ' || r_range(0, 25) > 3)) || \
+		r_range(0, 15) == 0)
+		full[i] = '1';
+	else
+		full[i] = '0';
+	if (is_border && \
+		r_range(0, 50) == 0 && \
+		full[i - 1] == '1' && \
+		full[i - 2] == '1' && full[i - full_sz.x - 1] == '0' && \
+		full[i + full_sz.x - 1] == '0')
+		full[i - 1] = 'D';
+	return (1);
 }
 
-static char	*generate_map(t_vec2 size)
+int	set_rect_home(char *full, t_vec3 draw_p, t_vec3 full_sz, t_vec3 rect_pos)
 {
-	char	*buffer;
-	t_vec3	pos;
-	int		current_width;
+	int		i;
+	int		is_border;
+	t_dir	dir;
+	int		neigh_index;
 
-	buffer = malloc((size.x + 1) * size.y + 1);
-	pos = get_v3(-1, -1, 0);
-	current_width = size.x - r_range(0, size.x * .2);
-	while (++pos.y < size.y)
+	dir = draw_p.z;
+	is_border = rect_pos.z;
+	i = (full_sz.x * draw_p.y + draw_p.x);
+	if (i >= full_sz.z - 1 || i < 0 || full[i] == '\n')
+		return (0);
+	if (draw_p.x <= 1 || draw_p.x == full_sz.x || \
+		draw_p.y == 0 || draw_p.y == full_sz.y)
+		return (full[i] = '1', 0);
+	if (is_border && rect_pos.x == 3 && rect_pos.y == 0 + ((dir == down) * 6))
 	{
-		if (r_range(0, 5) == 0)
-			current_width = size.x - r_range(0, size.x * .2);
-		pos.x = -1;
-		while (++pos.x < current_width)
+		neigh_index = i - (full_sz.x * (1 - ((dir == down) * 2)));
+		if (full[neigh_index] == '1')
+			full[neigh_index] = '0';
+		return (full[i] = 'D', 1);
+	}
+	else if (is_border)
+		return (full[i] = '1', 1);
+	if (dir == up && rect_pos.x == 3 && rect_pos.y == 3)
+		return (full[i] = 'N', 1);
+	return (full[i] = 'P', 1);
+}
+
+void	join_rect(char *full, t_vec2 rect_size, t_vec3 rect_pos, t_vec3 full_sz)
+{
+	t_vec3	draw_p;
+	t_vec2	end_draw;
+	int		bdr;
+	t_vec3	data;
+
+	draw_p = get_v3(rect_pos.x - 1, rect_pos.y - 1, rect_pos.z);
+	end_draw = get_v2(rect_pos.x + rect_size.x, rect_pos.y + rect_size.y);
+	while (++draw_p.y < end_draw.y)
+	{
+		if (draw_p.y > full_sz.y)
+			break ;
+		draw_p.x = rect_pos.x - 1;
+		while (++draw_p.x < end_draw.x)
 		{
-			buffer[pos.z] = '0';
-			if (is_border(get_v2(current_width, size.y), pos))
-				buffer[pos.z] = '1';
-			pos.z++;
+			if (draw_p.x > full_sz.x)
+				break ;
+			bdr = (draw_p.x == rect_pos.x || draw_p.x == end_draw.x - 1 || \
+					draw_p.y == rect_pos.y || draw_p.y == end_draw.y - 1);
+			data = get_v3(draw_p.x - rect_pos.x, draw_p.y - rect_pos.y, bdr);
+			if (rect_pos.z > -1)
+				set_rect_home(full, draw_p, full_sz, data);
+			else
+				set_rect_cell(full, draw_p, full_sz, bdr);
 		}
-		pos.x--;
-		while (++pos.x < size.x)
-			buffer[pos.z++] = ' ';
-		buffer[pos.z++] = '\n';
 	}
-	buffer[pos.z] = '\0';
-	return (buffer);
 }
 
-static char	*set_map_with_base(char *map)
+char	*get_collapsed_map(t_vec2 size, int rects_amount, int i)
 {
-	const char	data_info[6][50] = {
-		"NO ent/wall/NORTH.xpm\n", "SO ent/wall/SOUTH.xpm\n", \
-		"WE ent/wall/WEST.xpm\n", "EA ent/wall/EAST.xpm\n", \
-		"F 96,64,32\n", "C 32,64,128\n"
-	};
-	int			i;
-	char		*full_data;
-	char		*tmp;
+	char	*map;
+	t_vec2	rect_size;
+	t_vec3	rect_pos;
+	t_vec3	map_sz;
 
-	full_data = ft_strdup("");
-	if (!full_data)
-		return (NULL);
-	i = -1;
-	while (++i < 6)
+	map_sz = get_v3(size.x, size.y, (size.x * size.y) + 1);
+	map = malloc(map_sz.z);
+	while (++i < map_sz.z - 1)
 	{
-		tmp = full_data;
-		full_data = ft_strjoin(tmp, data_info[i]);
-		free(tmp);
-		if (!full_data)
-			return (NULL);
+		map[i] = ' ';
+		if (i % size.x == 0)
+			map[i] = '\n';
 	}
-	tmp = full_data;
-	full_data = ft_strjoin(tmp, map);
-	free(tmp);
-	return (full_data);
+	map[i] = '\0';
+	rect_pos.z = -1;
+	while (rects_amount--)
+	{
+		rect_size = get_v2(r_range(5, size.x * .75), r_range(5, size.y * .75));
+		rect_pos.x = r_range(0, size.x - rect_size.x - 1);
+		rect_pos.y = r_range(3, size.y - rect_size.y - 3);
+		join_rect(map, rect_size, rect_pos, map_sz);
+	}
+	join_rect(map, v2(7), get_v3(size.x / 2 - 4, size.y - 7, up), map_sz);
+	join_rect(map, v2(7), get_v3(size.x / 2 - 4, 0, down), map_sz);
+	return (map);
 }
 
 char	*get_new_map(int difficulty, t_vec2 *size, char *data_info)
@@ -111,9 +134,9 @@ char	*get_new_map(int difficulty, t_vec2 *size, char *data_info)
 	seed = get_random_seed();
 	size->x = r_range_seed(&seed, size->x * .8, size->x * 1.2);
 	size->y = r_range_seed(&seed, size->y * .8, size->y * 1.2);
-	map = generate_map(*size);
-	generate_maze(map, *size);
+	map = get_collapsed_map(*size, 10, -1);
 	set_characters(map, difficulty);
+	close_map(map, *size, ft_strlen(map));
 	if (!data_info)
 		map_data = set_map_with_base(map);
 	else

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 05:30:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 21:59:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ void	render_cursor(t_md *md, t_image *screen, int has_hov)
 	t_vec2	pos;
 	t_image	*img;
 
-	pos = get_v2(md->mouse_real.x, md->mouse_real.y);
-	if (md->mouse_pressed == MOUSE_PRESS && has_hov)
-		img = md->curs_grb;
+	pos = get_v2(md->mouse.real.x, md->mouse.real.y);
+	if (md->mouse.pressed == MOUSE_PRESS && has_hov)
+		img = md->mouse.curs_grb;
 	else if (has_hov)
-		img = md->curs_dtc;
+		img = md->mouse.curs_dtc;
 	else
-		img = md->cursor;
+		img = md->mouse.cursor;
 	if (screen)
 		draw_img(img, screen, pos, -1);
 	else
@@ -32,19 +32,27 @@ void	render_cursor(t_md *md, t_image *screen, int has_hov)
 
 void	render_2d_ent(t_md *md, t_ent *e, t_vec2 centr)
 {
-	t_vec2	ent_p;
+	t_vec2			ent_p;
+	t_texture_data	*td;
+	t_image			*img;
 
-	ent_p.x = centr.x + (e->pos.x / md->t_len) * md->size_2d;
-	ent_p.y = centr.y + (e->pos.y / md->t_len) * md->size_2d;
+	td = &md->txd;
+	ent_p.x = centr.x + (e->pos.x / md->t_len) * td->size_2d;
+	ent_p.y = centr.y + (e->pos.y / md->t_len) * td->size_2d;
+	img = td->wall_img2d[0];
 	if (e->type == nt_mob)
-		draw_img(md->mobs_txtrs_mini[e->mob_type][e->action][e->frame_index], \
-			md->screen, ent_p, -1);
+		img = td->mobs_txtrs_mini[e->mob_type][e->action][e->frame_index];
 	else if (e->type == nt_pickup)
-		draw_img(e->frame, md->screen, ent_p, -1);
-	else if (e->type == nt_wall)
-		draw_img(md->wall_img2d[0], md->screen, ent_p, -1);
+		img = td->pickup_txtr_mini[e->pckp_type][0];
+	else if (e->type == nt_door)
+		img = td->door_txtr_mini;
 	else if (e->type == nt_plr)
-		draw_img(md->mobs_txtrs_mini[0][0][0], md->screen, ent_p, -1);
+	{
+		ent_p.x = ent_p.x - td->e_sizes2d[nt_mob].x / 2;
+		ent_p.y = ent_p.y - td->e_sizes2d[nt_mob].y / 2;
+		img = td->mobs_txtrs_mini[1][md->plr.action][md->plr.frame_index];
+	}
+	draw_img(img, md->screen, ent_p, -1);
 }
 
 void	render_entities(t_md *md)
@@ -53,10 +61,10 @@ void	render_entities(t_md *md)
 	t_ent	*e;
 	t_vec2	centr;
 
-	centr = get_v2((md->win_size.x / 4 + md->size_2d / 2 - \
-		(md->cam_ofst.x / md->t_len * md->size_2d)), \
-		md->win_size.y / 4 + md->size_2d / 2 - \
-		((md->cam_ofst.y / md->t_len) * md->size_2d));
+	centr = get_v2((md->win_size.x * .5 - md->txd.size_2d * 2 - \
+		(md->cam_ofst.x / md->t_len * md->txd.size_2d)), \
+		md->win_size.y * .5 - md->txd.size_2d * 2 - \
+		((md->cam_ofst.y / md->t_len) * md->txd.size_2d));
 	node = md->entities;
 	while (node)
 	{
@@ -68,62 +76,43 @@ void	render_entities(t_md *md)
 	render_2d_ent(md, &md->plr, centr);
 }
 
-void	render_hud_elements(t_md *md, t_hud *hud)
+void	apply_fx(t_md *md, t_image *screen, t_post_fx_data *fx)
 {
-	t_vec2	center_gun;
-	t_vec2	cross_pos;
-	t_image	*gun_image;
-	t_vec2	lock_pos;
-
-	cross_pos = (t_vec2){md->win_size.x / 2, md->win_size.y / 2};
-	draw_img(md->center, md->screen, cross_pos, -1);
-	if (!md->wpn_txtr[hud->wpn_index][hud->weapon_frame])
-		hud->weapon_frame = 0;
-	gun_image = md->wpn_txtr[hud->wpn_index][hud->weapon_frame];
-	center_gun = get_v2(md->win_size.x / 2 - gun_image->size.x / 2 + 30, \
-		md->win_size.y - gun_image->size.y);
-	draw_img(gun_image, md->screen, center_gun, -1);
-	if (!md->lock_rotation.x && !md->lock_rotation.y)
-		return ;
-	lock_pos = get_v2(md->win_size.x - hud->lock_x_icon->size.x, \
-		md->win_size.y - hud->lock_y_icon->size.y);
-	if (md->lock_rotation.x)
-		draw_img(hud->lock_x_icon, md->screen, lock_pos, -1);
-	lock_pos.y -= hud->lock_x_icon->size.y;
-	if (md->lock_rotation.y)
-		draw_img(hud->lock_y_icon, md->screen, lock_pos, -1);
-}
-
-void	apply_fx(t_md *md, t_image *screen)
-{
-	if (md->scanlines != 1)
-		apply_scanlines(screen, md->scanlines);
-	if (md->menu.hue.r != 1 || md->menu.hue.g != 1 || md->menu.hue.b != 1)
-		set_hue(screen, md->menu.hue);
-	if (md->dithering)
-		apply_dithering(screen, md->dithering);
-	if (md->rgb_distortion)
-		apply_rgb_glitch(screen, md->rgb_distortion);
-	if (md->anti_aliasing)
+	if (fx->anti_alias)
 		apply_antialiasing(screen);
+	if (fx->scanlines > 0)
+		apply_scanlines(screen, fx->scanlines);
+	if (fx->hue.r != 1 || fx->hue.g != 1 || fx->hue.b != 1)
+		set_hue(screen, fx->hue);
+	if (fx->dithering > 0)
+		apply_dithering(screen, fx->dithering, \
+			fx->palette, fx->palette_size);
+	if (fx->rgb_distortion > 0)
+		apply_glitch(screen, fx->rgb_distortion);
+	if (fx->bloom_threshold > 0)
+		apply_bloom(screen, fx->bloom_threshold);
+	if (fx->barrel_amount > 0)
+		apply_barrel_distortion(screen, fx->barrel_amount);
+	if (fx->color_band > 0)
+		apply_color_banding(screen, fx->color_band);
+	return ;
+	apply_noise(md, md->screen, 0.1, 1);
 }
 
 void	render(t_md *md)
 {
 	flush_img(md->screen, md->hud.bgr_color, -1, 0);
-	cast_rays(md, get_v3f(\
-		md->plr.pos.x + md->plr.size.x / 2, \
-		md->plr.pos.y + md->plr.size.y / 2, \
-		md->plr.pos.z));
+	if (md->timer.time > 3)
+		cast_rays(md, md->cam_pos);
 	render_background(md);
-	if (!md->real_mode)
+	if (!md->prm.real_mode)
 		render_entities(md);
 	else
 		render_hud_elements(md, &md->hud);
 	if (md->mmap.active)
 		render_minimap(md, &md->mmap);
 	show_update_information(md);
-	show_fps(md, get_v2(0, md->win_size.y - (md->txt_scale * 1.5)));
-	apply_fx(md, md->screen);
+	show_fps(md, get_v2(0, md->win_size.y - (md->prm.txt_scale * 1.5)));
+	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

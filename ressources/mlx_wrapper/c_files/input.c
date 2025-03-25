@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   INPUT.c                                            :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/18 16:52:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 15:18:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int	handle_key_release(int keycode, t_md *md)
 void	reset_mlx_values(t_md *md)
 {
 	md->key_clicked = -1;
-	md->mouse_click = 0;
-	if (md->mouse_pressed == MOUSE_RELEASE)
-		md->mouse_pressed = 0;
-	md->mouse_delta = get_v2(0, 0);
+	md->mouse.click = 0;
+	if (md->mouse.pressed == MOUSE_RELEASE)
+		md->mouse.pressed = 0;
+	md->mouse.delta = get_v2(0, 0);
 }
 
 int	close_window(t_md *md)

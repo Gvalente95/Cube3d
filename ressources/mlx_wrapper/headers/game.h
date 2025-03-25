@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/18 01:01:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 15:39:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,9 @@ typedef struct s_slider
 	char		label[50];
 	float		*value;
 	int			point;
+	int			steps;
 	int			active;
+	int			base_point;
 }	t_slider;
 
 typedef struct s_menu_button
@@ -109,9 +111,8 @@ typedef struct s_menu
 	t_gamestate		prv_state;
 	t_gamestate		state;
 	t_button		buttons[9];
-	t_slider		sliders[9];
+	t_slider		sliders[20];
 	t_slider		*selected_slider;
-	t_vec4f			hue;
 	int				slider_fill_clr;
 	int				slider_bgr_clr;
 	const char		*menu_titles[9][50];
@@ -119,6 +120,9 @@ typedef struct s_menu
 	int				pages_amount[9];
 	int				cur_page[9];
 	int				menu_time;
+	int				slider_index;
+	int				refresh;
+	int				hov;
 	int				active;
 }	t_menu;
 

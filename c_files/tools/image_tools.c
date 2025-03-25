@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:02:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:39:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/22 01:44:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	color_img(void *frame, t_vec2 size, int col, t_vec4 d)
 	t_image	q;
 	int		pixel_index;
 
-	q.src_data = \
+	q.src = \
 	(int *)mlx_get_data_addr(frame, &q.bpp, &q.size_line, &q.endian);
 	q.pos.y = -1;
 	while (++q.pos.y < size.y)
@@ -30,7 +30,7 @@ void	color_img(void *frame, t_vec2 size, int col, t_vec4 d)
 				q.pos.y < d.g || q.pos.y > d.a)
 				continue ;
 			pixel_index = (q.pos.y * q.size_line / 4) + q.pos.x;
-			q.src_data[pixel_index] = col;
+			q.src[pixel_index] = col;
 		}
 	}
 }
@@ -41,6 +41,7 @@ int	str_to_color(const char *line)
 	const char	*values;
 	char		**splits;
 
+	rgba = v4(255);
 	if (!line || ft_strlen(line) <= 3)
 		return (str_to_color("255,255,255"));
 	values = line;
@@ -48,22 +49,17 @@ int	str_to_color(const char *line)
 		values++;
 	if (!*values)
 		return (-1);
-	splits = ft_split(values, ',');
+	if (!contains(line, ','))
+		splits = ft_split(values, ' ');
+	else
+		splits = ft_split(values, ',');
 	if (!splits)
-		return (-1);
-	rgba.r = ft_atoi(splits[0]);
+		return (str_to_color("255,255,255"));
+	rgba.r = minmax(0, 255, ft_atoi(splits[0]));
 	if (splits[1])
-		rgba.g = ft_atoi(splits[1]);
+		rgba.g = minmax(0, 255, ft_atoi(splits[1]));
 	if (splits[1] && splits[2])
-		rgba.b = ft_atoi(splits[2]);
+		rgba.b = minmax(0, 255, ft_atoi(splits[2]));
 	free_void_array((void **)splits);
-	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
-}
-
-int	vec4_to_color(int r, int g, int b, int a)
-{
-	t_vec4		rgba;
-
-	rgba = get_v4(r, g, b, a);
 	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FREE_b.c                                           :+:      :+:    :+:   */
+/*   free_b.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 02:48:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 03:11:09 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 16:44:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	free_void_array(void **elements)
 	return (free_count + 1);
 }
 
-
 int	free_mob_images(t_md *md, t_ent *e, char *label)
 {
 	int	actions;
@@ -75,9 +74,9 @@ int	free_ents(t_md *md)
 	return (count);
 }
 
-int	free_md2(t_md *md, int free_count)
+int	free_md2(t_md *md, int free_count, int quit)
 {
-	if (!quit || md->init_steps == 1)
+	if (!quit || md->init_steps <= 1)
 	{
 		free_count += mlx_destroy_window(md->mlx, md->win) + 1;
 		free_count += free_void(md->mlx);
@@ -85,9 +84,9 @@ int	free_md2(t_md *md, int free_count)
 		return (free_count);
 	}
 	free_count += free_ents(md);
-	free_count += free_image_data(md, md->cursor);
-	free_count += free_image_data(md, md->curs_dtc);
-	free_count += free_image_data(md, md->curs_grb);
+	free_count += free_image_data(md, md->mouse.cursor);
+	free_count += free_image_data(md, md->mouse.curs_dtc);
+	free_count += free_image_data(md, md->mouse.curs_grb);
 	free_count += mlx_destroy_window(md->mlx, md->win) + 1;
 	free_count += free_void(md->mlx);
 	ft_printf("Freed: %d elements\n", free_count);

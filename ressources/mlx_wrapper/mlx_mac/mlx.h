@@ -50,6 +50,15 @@
 #define ButtonReleaseMask 0
 #define PointerMotionMask 1L << 6
 
+
+# define KeyPress				2
+# define KeyPressMask			0
+# define KeyRelease				3
+# define KeyReleaseMask			0
+# define DestroyNotify			17
+# define StructureNotifyMask	0
+
+
 void	*mlx_init();
 /*
 **  needed before everything else.

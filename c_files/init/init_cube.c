@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 01:41:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/25 13:34:28 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,24 @@
 
 static void	init_cursor(t_md *md)
 {
+	t_mouse	*msd;
 	t_vec2	cursor_sz;
 
+	msd = &md->mouse;
 	cursor_sz = get_v2(30, 30);
-	md->center = init_img(md, get_v2(10, 10), "utils/center.xpm", \
-		md->rgb[RGB_RED]);
-	md->cursor = init_img(md, cursor_sz, "utils/cursor/default.xpm", -1);
-	md->curs_dtc = init_img(md, cursor_sz, "utils/cursor/hand_open.xpm", -1);
-	md->curs_grb = init_img(md, cursor_sz, "utils/cursor/hand_closed.xpm", -1);
-	md->mouse_pressed = 0;
-	md->mouse_click = 0;
-	md->mouse_pos = get_v3f(0, 0, 0);
-	md->mouse_world_pos = get_v2(0, 0);
-	md->mouse_real = get_v2(0, 0);
+	msd->cursor = init_img(md, cursor_sz, "utils/cursor/default.xpm", -1);
+	msd->curs_dtc = init_img(md, cursor_sz, "utils/cursor/hand_open.xpm", -1);
+	msd->curs_grb = init_img(md, cursor_sz, "utils/cursor/hand_closed.xpm", -1);
+	msd->pressed = 0;
+	msd->click = 0;
+	msd->pos = get_v3f(0, 0, 0);
+	msd->world = get_v2(0, 0);
+	msd->real = get_v2(0, 0);
 	md->input_offst = get_v2(0, 0);
-	md->prev_mouse = get_v2(0, 0);
-	md->mouse_grid_pos = get_v2(0, 0);
-	md->mouse_delta = get_v2(0, 0);
-	md->mouse_focus = 0;
-	md->resolution = RESOLUTION;
+	msd->prev = get_v2(0, 0);
+	msd->grid_pos = get_v2(0, 0);
+	msd->delta = get_v2(0, 0);
+	msd->focus = 0;
 	if (!LIN)
 		mlx_mouse_hide();
 	mlx_mouse_hook(md->win, mouse_event_handler, md);
@@ -46,20 +45,18 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 	int			i;
 	int			color_index;
 
+	mmap->collapsed = 1;
 	mmap->mray_len = 0;
-	mmap->active = 0;
+	mmap->active = 1;
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
-	mmap->ic_scl = ic_len;
 	mmap->img = init_img(md, mmap->size, NULL, -1);
-	mmap->bg = init_img(md, mmap->size, NULL, md->rgb[RGB_INDIGO]);
-	mmap->limits_x = get_v2(0, 0);
-	mmap->limits_x = get_v2(0, 0);
+	mmap->bg = init_img(md, mmap->size, NULL, md->rgb[RGB_WHITE]);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
 		if (md->map.buffer[i] != '1')
 			continue ;
-		color_index = get_char_index(md->ents_tp_map[0], md->map.buffer[i]);
+		color_index = get_char_index(md->txd.ents_tp_map[0], md->map.buffer[i]);
 		if (color_index == -1)
 			continue ;
 		pos = get_v2(i % (md->map.size.x + 1), i / (md->map.size.x + 1));
@@ -71,47 +68,64 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 
 static void	init_colors(t_md *md)
 {
-	md->rgb[RGB_RED] = vec4_to_color(255, 0, 0, 0);
-	md->rgb[RGB_GREEN] = vec4_to_color(0, 255, 0, 0);
-	md->rgb[RGB_BLUE] = vec4_to_color(0, 0, 255, 0);
-	md->rgb[RGB_CYAN] = vec4_to_color(0, 255, 255, 0);
-	md->rgb[RGB_MAGENT] = vec4_to_color(255, 0, 255, 0);
-	md->rgb[RGB_GRAY] = vec4_to_color(169, 169, 169, 0);
-	md->rgb[RGB_BROWN] = vec4_to_color(139, 69, 19, 0);
-	md->rgb[RGB_TEAL] = vec4_to_color(0, 128, 128, 0);
-	md->rgb[RGB_LIME] = vec4_to_color(0, 255, 0, 0);
-	md->rgb[RGB_GOLD] = vec4_to_color(255, 215, 0, 0);
-	md->rgb[RGB_SILVER] = vec4_to_color(192, 192, 192, 0);
-	md->rgb[RGB_TURQ] = vec4_to_color(64, 224, 208, 0);
-	md->rgb[RGB_INDIGO] = vec4_to_color(75, 0, 130, 0);
-	md->rgb[RGB_VIOLET] = vec4_to_color(238, 130, 238, 0);
-	md->rgb[RGB_CORAL] = vec4_to_color(255, 128, 80, 0);
-	md->rgb[RGB_WHITE] = vec4_to_color(255, 255, 255, 0);
-	md->rgb[RGB_BLACK] = vec4_to_color(0, 0, 0, 0);
-	md->rgb[RGB_YELLOW] = vec4_to_color(255, 255, 0, 0);
-	md->rgb[RGB_ORANGE] = vec4_to_color(255, 165, 0, 0);
+	md->rgb[RGB_RED] = v4_to_color(255, 0, 0, 255);
+	md->rgb[RGB_GREEN] = v4_to_color(0, 255, 0, 255);
+	md->rgb[RGB_BLUE] = v4_to_color(0, 0, 255, 255);
+	md->rgb[RGB_CYAN] = v4_to_color(0, 255, 255, 255);
+	md->rgb[RGB_MAGENT] = v4_to_color(255, 0, 255, 255);
+	md->rgb[RGB_GRAY] = v4_to_color(169, 169, 169, 255);
+	md->rgb[RGB_BROWN] = v4_to_color(139, 69, 19, 255);
+	md->rgb[RGB_TEAL] = v4_to_color(0, 128, 128, 255);
+	md->rgb[RGB_LIME] = v4_to_color(0, 255, 0, 255);
+	md->rgb[RGB_GOLD] = v4_to_color(255, 215, 0, 255);
+	md->rgb[RGB_SILVER] = v4_to_color(192, 192, 192, 255);
+	md->rgb[RGB_TURQ] = v4_to_color(64, 224, 208, 255);
+	md->rgb[RGB_INDIGO] = v4_to_color(75, 0, 130, 255);
+	md->rgb[RGB_VIOLET] = v4_to_color(238, 130, 238, 255);
+	md->rgb[RGB_CORAL] = v4_to_color(255, 128, 80, 255);
+	md->rgb[RGB_WHITE] = v4_to_color(255, 255, 255, 255);
+	md->rgb[RGB_BLACK] = v4_to_color(0, 0, 0, 255);
+	md->rgb[RGB_YELLOW] = v4_to_color(255, 255, 0, 255);
+	md->rgb[RGB_ORANGE] = v4_to_color(255, 165, 0, 255);
 }
 
-static void	init_game_params(t_md *md, int start_debug)
+static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 {
-	init_colors(md);
-	md->anti_aliasing = 0;
-	md->debug_mode = start_debug;
-	md->real_mode = !md->debug_mode;
-	md->show_rays = md->debug_mode;
-	md->ray_depth = md->t_len * RAY_DEPTH;
-	md->mmap.ic_scl = md->win_size.x / 100;
-	md->lock_rotation = get_v2(0, 1);
-	md->size_2d = 40;
+	md->mmap.ic_scl = md->win_size.x / 75;
+	if (md->win_size.x > md->win_size.y)
+		md->mmap.ic_scl = md->win_size.y / 75;
+	md->mmap.collaps_scl = md->mmap.ic_scl * .75;
+	md->mouse.lock_rotation = get_v2(0, 1);
+	md->score = 0;
+	md->txd.size_2d = 40;
+	md->plr.was_hit = 0;
+	prm->difficulty = 1;
+	prm->debug_mode = start_debug;
+	prm->real_mode = !prm->debug_mode;
+	prm->show_rays = prm->debug_mode;
+	prm->ray_depth = md->t_len * RAY_DEPTH;
+	prm->audio_volume = 1;
+	prm->height = HEIGHT;
+	prm->plr_speed = PLRSPD;
+	prm->rot_speed = MOUSESPD;
+	prm->resolution = RESOLUTION;
+	prm->zoom = md->t_len / 2;
+	prm->ent_mode = 0;
+	md->bob_time = 0.0f;
+	md->portal_gun.entrance = NULL;
+	md->portal_gun.exit = NULL;
+	md->portal_gun.last_shot_exit = 0;
+	md->portal_gun.last_passage = NULL;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
-	init_game_params(md, start_debug);
-	init_ents_data(md);
+	init_colors(md);
+	init_game_params(md, &md->prm, start_debug);
+	init_ents_data(md, &md->txd);
 	init_map(md, file_arg);
 	md->init_steps++;
-	init_hud(md);
+	init_hud(md, &md->hud);
 	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);

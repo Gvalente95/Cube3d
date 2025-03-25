@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   INIT_WRAPPER.c                                     :+:      :+:    :+:   */
+/*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 03:22:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 09:00:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,17 @@ int	init_screen(t_md *md, t_vec2 win_size, int resolution, char *win_name)
 	md->win = mlx_new_window(md->mlx, win_size.x, win_size.y, win_name);
 	md->win_size = get_v2(win_size.x, win_size.y);
 	md->t_len = win_size.x / resolution;
-	md->resolution = resolution;
+	md->prm.resolution = resolution;
 	return (1);
 }
 
 int	init_md(t_md *md)
 {
-	ft_memset(md->key_prs, 0, 512);
+	int	i;
+
+	i = -1;
+	while (++i < 512)
+		md->key_prs[i] = 0;
 	md->win_size = get_v2(0, 0);
 	md->cam_ofst = get_v3f(0, 0, 0);
 	md->input_mov = get_v3f(0, 0, 0);
@@ -46,15 +50,15 @@ int	init_md(t_md *md)
 	md->input_mov = get_v3f(0, 0, 0);
 	md->mlx = mlx_init();
 	md->win = NULL;
-	md->wall_img = NULL;
-	md->lock_mouse = 1;
-	md->mouse_pressed = 0;
-	md->mouse_click = 0;
+	md->txd.wall_img = NULL;
+	md->mouse.locked = 1;
+	md->mouse.pressed = 0;
+	md->mouse.click = 0;
 	md->key_clicked = -1;
 	md->t_len = 60;
 	md->init_steps = 0;
-	md->txt_scale = 14;
-	md->mouse_hide = 1;
+	md->prm.txt_scale = 14;
+	md->mouse.hide = 1;
 	md->update_frames = 0;
 	return (1);
 }
@@ -77,13 +81,13 @@ void	init_wrapper(t_md *md, t_vec2 win_size, char *win_name, int resolution)
 	start_timer(&md->timer.game_start);
 	init_screen(md, win_size, resolution, win_name);
 	init_timer(md, &md->timer);
-	// if (md->is_linux)
-	// {
-	// 	mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
-	// 	mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
-	// 	mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
-	// }
-	//else
+	if (md->is_linux)
+	{
+		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
+		mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
+		mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
+	}
+	else
 	{
 		mlx_hook(md->win, 2, 0, handle_key_press, md);
 		mlx_hook(md->win, 3, 0, handle_key_release, md);

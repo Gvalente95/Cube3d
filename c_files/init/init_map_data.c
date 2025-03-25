@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 04:35:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 19:34:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,42 +33,48 @@ static char	*extract_line(const char *str)
 	return (line);
 }
 
-static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir)
+static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir, int flip_x)
 {
-	char	*path;
-	int		fd;
+	int				fd;
+	t_texture_data	*txd;
 
+	txd = &md->txd;
 	while (*line == ' ')
 		(*line)++;
 	if (ft_strlen(line) <= 4)
 		free_and_quit(md, "wrong value for txtr", line);
-	path = ft_strjoin(IMG_PATH, line + 3);
-	fd = open(path, O_RDONLY);
+	fd = open(line + 3, O_RDONLY);
 	if (fd == -1)
-		free_and_quit(md, "file at path not found for txtr", path);
+		free_and_quit(md, "file at path not found for txtr", line + 3);
 	close(fd);
-	free(path);
-	md->wall_img[dir] = init_img(md, md->e_sizes[nt_wall], line + 3, -1);
-	fill_transparency(md->wall_img[dir], md->rgb[RGB_BLACK]);
-	md->wall_img2d[dir] = init_img(md, md->e_sizes2d[nt_wall], line + 3, -1);
-	if (md->debug_mode)
-		printf("%s texture[%d] correctly set\n", path, dir);
+	while (*line == ' ')
+		line++;
+	txd->wall_img[dir] = init_abs_img(md, txd->e_sizes[nt_wall], line + 3);
+	if (flip_x)
+		flipx_image_data(txd->wall_img[dir]);
+	fill_transparency(txd->wall_img[dir], md->rgb[RGB_BLACK]);
+	if (md->prm.debug_mode)
+		printf("%s texture[%d] correctly set\n", line + 3, dir);
 }
 
 static int	parse_file_line(char *line, t_md *md)
 {
+	while (*line == ' ')
+		line++;
+	if (!*line)
+		return (1);
 	if (!ft_strncmp(line, "NO ", 3))
-		add_texture_img(md, line, NORTH);
+		add_texture_img(md, line, NORTH, 0);
 	else if (!ft_strncmp(line, "SO ", 3))
-		add_texture_img(md, line, SOUTH);
+		add_texture_img(md, line, SOUTH, 1);
 	else if (!ft_strncmp(line, "EA ", 3))
-		add_texture_img(md, line, EAST);
+		add_texture_img(md, line, EAST, 0);
 	else if (!ft_strncmp(line, "WE ", 3))
-		add_texture_img(md, line, WEST);
-	else if (!ft_strncmp(line, "F ", 2))
-		md->hud.floor_color = str_to_color(line + 2);
-	else if (!ft_strncmp(line, "C ", 2))
+		add_texture_img(md, line, WEST, 1);
+	else if (line[0] == 'C')
 		md->hud.sky_color = str_to_color(line + 2);
+	else if (line[0] == 'F')
+		md->hud.floor_color = str_to_color(line + 2);
 	else if (char_in_str('1', line) || char_in_str('0', line))
 		return (0);
 	return (1);
@@ -92,27 +98,36 @@ static char	*parse_file_data(t_md *md)
 			break ;
 		setstr(&line, extract_line(file_content));
 	}
+	print_color(md->hud.sky_color, "Sky color");
+	print_color(md->hud.floor_color, "Floor color");
 	return (safe_free(line), ft_strdup(file_content));
 }
 
 void	init_map_data(t_md *md)
 {
-	int	i;
+	int		i;
+	t_image	*img;
 
-	md->wall_img = md_malloc(md, sizeof(t_image *) * 5);
-	md->wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
+	md->txd.wall_img = md_malloc(md, sizeof(t_image *) * 5);
+	md->txd.wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
 	i = -1;
 	while (++i < 5)
 	{
-		md->wall_img[i] = NULL;
-		md->wall_img2d[i] = NULL;
+		md->txd.wall_img[i] = NULL;
+		md->txd.wall_img2d[i] = NULL;
 	}
 	setstr(&md->map.buffer, parse_file_data(md));
 	if (!md->map.buffer)
 		free_and_quit(md, "no map found", NULL);
-	md->wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
+	if (trim_excess_newlines(&md->map.buffer, ft_strlen(md->map.buffer)))
+		printf("Excess characters found, still playable tho\n");
+	md->txd.wall_img2d = md_malloc(md, sizeof(t_image *) * 5);
 	i = -1;
 	while (++i < 4)
-		if (!md->wall_img[i])
+	{
+		img = md->txd.wall_img[i];
+		if (!img)
 			free_and_quit(md, "Wall texture's path missing", NULL);
+		md->txd.wall_img2d[i] = copy_image(md, img, v2(md->txd.size_2d), -1);
+	}
 }

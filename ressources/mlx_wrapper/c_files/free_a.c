@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   FREE_a.c                                           :+:      :+:    :+:   */
+/*   free_a.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 03:19:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 15:02:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,10 @@ int	free_md(t_md *md, int quit)
 {
 	int	free_count;
 
-	if (is_audio_playing(md->bgrnd_au))
-		stop_sound(md->bgrnd_au);
-	if (is_audio_playing(md->bgrnd_mus))
-		stop_sound(md->bgrnd_mus);
-	if (!md->init_steps || !md->map.buffer)
-		return (0);
 	free_count = 0;
 	free(md->map.buffer);
+	if (!md->init_steps)
+		return (0);
 	free_count += free_image_data(md, md->screen);
 	free_count += free_image_data(md, md->hud.sky);
 	free_count += free_image_data(md, md->hud.floor);
@@ -90,7 +86,7 @@ int	free_md(t_md *md, int quit)
 	free_count += free_image_data(md, md->center);
 	free_count += free_image_data(md, md->mmap.bg);
 	free_count += free_image_data(md, md->mmap.img);
-	free_count += free_images_data(md, md->wall_img, "wall_img");
-	free_count += free_images_data(md, md->wall_img2d, "wall_img2d");
-	return (free_md2(md, free_count));
+	free_count += free_images_data(md, md->txd.wall_img, "wall_img");
+	free_count += free_images_data(md, md->txd.wall_img2d, "wall_img2d");
+	return (free_md2(md, free_count, quit));
 }

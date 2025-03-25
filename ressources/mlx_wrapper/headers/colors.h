@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/15 12:17:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 20:55:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ unsigned char	get_b(int trgb);
 # define COLOR_WHITE      		0xFFFFFFFF  // Fully opaque white
 # define COLOR_BLACK			0xFF000000  // Fully opaque black
 
+# define PORTAL_START			0xFF111111  // Fully opaque black
+# define PORTAL_ENT				0xFF222222  // Fully opaque black
+
 # define COLOR_TRANSP_RED      0x80FF0000  // 50% transparent red
 # define COLOR_TRANSP_GREEN    0x8000FF00  // 50% transparent green
 # define COLOR_TRANSP_BLUE     0x800000FF  // 50% transparent blue
@@ -58,6 +61,6 @@ unsigned char	get_b(int trgb);
 # define COLOR_TRANSP_BLACK    0x80000000  // 50% transparent black
 
 # define COLOR_TXT_RED				"\033[31m"
-# define COLOR_RESET				"\033[0m"
+# define COLOR_TXT_RESET			"\033[0m"
 # define COLOR_TXT_GREEN			"\033[32m"
 #endif

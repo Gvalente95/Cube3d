@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:16:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/18 19:29:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 16:57:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	v3f_bounds(t_vec3f a, t_vec3f a_size, t_vec3f pos, t_vec3f b_size)
 
 t_vec3f	normalize_vec3f(t_vec3f v)
 {
-    float	length;
+	float	length;
 
 	length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 	if (length == 0.0f)
@@ -44,9 +44,4 @@ t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b)
 t_vec3f	scale_vec3f(t_vec3f v, float s)
 {
 	return ((t_vec3f){v.x * s, v.y * s, v.z * s});
-}
-
-t_vec3f	add_vec3f(t_vec3f a, t_vec3f b)
-{
-	return ((t_vec3f){a.x + b.x, a.y + b.y, a.z + b.z});
 }

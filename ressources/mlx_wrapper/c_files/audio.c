@@ -6,15 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/18 20:12:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 16:41:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
 
-int	g_au_volume;
-
-pid_t	play_random_sound(const char *path, int len, const char *format)
+pid_t	play_random_sound(t_md *md, const char *path, int len)
 {
 	pid_t	sound;
 	char	*with_index;
@@ -22,32 +20,27 @@ pid_t	play_random_sound(const char *path, int len, const char *format)
 	char	*index_str;
 	int		index;
 
-	if (!g_au_volume)
+	if (!md->prm.audio_volume)
 		return (0);
 	index = r_range(0, len - 1);
 	index_str = ft_itoa(index);
 	with_index = ft_strjoin(path, index_str);
 	free(index_str);
-	fullpath = ft_strjoin(with_index, format);
+	fullpath = ft_strjoin(with_index, ".mp3");
 	free(with_index);
-	sound = play_sound(fullpath, 0);
+	sound = play_sound(md, fullpath);
 	free(fullpath);
 	return (sound);
 }
 
-int	mute_unmute_audio(int mute)
-{
-	g_au_volume = mute;
-	return (mute);
-}
-
-pid_t	play_sound(const char *filename, int loop)
+pid_t	play_sound(t_md *md, const char *filename)
 {
 	pid_t	pid;
 
-	(void)loop;
-	if (!g_au_volume)
+	if (!md->prm.audio_volume)
 		return (0);
+	if (access(filename, F_OK) == -1)
+		return (printf("%s audio file not found\n", filename), 0);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -60,17 +53,19 @@ pid_t	play_sound(const char *filename, int loop)
 	return (pid);
 }
 
-pid_t	play_index(const char *filepath, int index)
+pid_t	play_index(t_md *md, const char *filepath, int index)
 {
 	pid_t	pid;
 	char	*index_txt;
 	char	*path_with_index;
 	char	*full_path;
 
+	if (!md->prm.audio_volume)
+		return (0);
 	index_txt = ft_itoa(index);
 	path_with_index = ft_strjoin(index_txt, ".mp3");
 	full_path = ft_strjoin(filepath, path_with_index);
-	pid = play_sound(full_path, 0);
+	pid = play_sound(md, full_path);
 	free(full_path);
 	free(path_with_index);
 	free(index_txt);
@@ -83,11 +78,11 @@ void	stop_sound(pid_t pid)
 		kill(pid, SIGTERM);
 }
 
-int	is_audio_playing(pid_t pid)
+int	is_audio_playing(t_md *md, pid_t pid)
 {
 	int	status;
 
-	if (!g_au_volume)
+	if (!md->prm.audio_volume)
 		return (1);
 	if (waitpid(pid, &status, WNOHANG) == 0)
 		return (1);

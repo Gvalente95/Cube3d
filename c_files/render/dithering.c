@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 23:17:47 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 04:30:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/21 21:30:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	apply_error(t_image *img, t_vec2 pos, t_vec4 err_rgb, t_vec3f data)
 
 	factor = data.x;
 	dither_strength = data.y;
-	pixel = img->src_data[pos.x + pos.y * img->size.x];
+	pixel = img->src[pos.x + pos.y * img->size.x];
 	rgb.r = ((pixel >> 16) & 0xFF) + \
 		(int)(err_rgb.r * factor * dither_strength);
 	rgb.g = ((pixel >> 8) & 0xFF) + (int)(err_rgb.g * factor * dither_strength);
@@ -70,7 +70,7 @@ void	apply_error(t_image *img, t_vec2 pos, t_vec4 err_rgb, t_vec3f data)
 	rgb.r = minmax(0, 255, rgb.r);
 	rgb.g = minmax(0, 255, rgb.g);
 	rgb.b = minmax(0, 255, rgb.b);
-	img->src_data[pos.x + pos.y * img->size.x] = \
+	img->src[pos.x + pos.y * img->size.x] = \
 		(rgb.r << 16) | (rgb.g << 8) | rgb.b;
 }
 
@@ -81,9 +81,9 @@ void	dither(t_image *img, t_vec3 pos, unsigned int *palette, float str)
 	t_vec4	new;
 	t_vec2	pxl;
 
-	pxl.x = img->src_data[pos.x + pos.y * img->size.x];
+	pxl.x = img->src[pos.x + pos.y * img->size.x];
 	pxl.y = find_near_clr(pxl.x, palette, pos.z);
-	img->src_data[pos.x + pos.y * img->size.x] = pxl.y;
+	img->src[pos.x + pos.y * img->size.x] = pxl.y;
 	old = get_v4((pxl.x >> 16) & 0xFF, (pxl.x >> 8) & 0xFF, pxl.x & 0xFF, 0);
 	new = get_v4((pxl.y >> 16) & 0xFF, (pxl.y >> 8) & 0xFF, pxl.y & 0xFF, 0);
 	rgb = get_v4(old.r - new.r, old.g - new.g, \
@@ -102,31 +102,24 @@ void	dither(t_image *img, t_vec3 pos, unsigned int *palette, float str)
 	img, get_v2(pos.x + 1, pos.y + 1), rgb, get_v3f(1.0 / 16.0, str, 0));
 }
 
-void	apply_dithering(t_image *img, float dither_strength)
+void	apply_dithering(t_image *img, float dither_strength, \
+	unsigned int *palette, int palette_size)
 {
-	unsigned int	palette[11];
-	int				palette_size;
 	t_vec3			pos;
 	t_vec2			size;
 
-	palette[0] = 0x000000;
-	palette[1] = 0x555555;
-	palette[2] = 0xAAAAAA;
-	palette[3] = 0xFFFFFF;
-	palette[4] = 0xFF0000;
-	palette[6] = 0x00FF00;
-	palette[7] = 0x0000FF;
-	palette[8] = 0xFFFF00;
-	palette[9] = 0xFF00FF;
-	palette[10] = 0x00FFFF;
 	size = img->size;
-	palette_size = sizeof(palette) / sizeof(palette[0]);
 	pos.y = -1;
 	pos.z = palette_size;
 	while (++pos.y < size.y)
 	{
+		if (pos.y % 2 == 0)
+			continue ;
 		pos.x = -1;
 		while (++pos.x < size.x)
-			dither(img, pos, palette, dither_strength);
+		{
+			if (pos.x % 2 == 0)
+				dither(img, pos, palette, dither_strength);
+		}
 	}
 }

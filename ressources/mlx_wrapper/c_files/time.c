@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TIME.c                                             :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:55:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/18 16:04:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 16:46:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,26 +48,4 @@ void	init_timer(t_md *md, t_timer *timer)
 	timer->anim_timer = 0;
 	timer->prev_time = get_time_in_seconds();
 	timer->game_start = timer->prev_time;
-}
-
-double update_time(t_md *md, t_timer *timer)
-{
-	timer->current_time = get_time_in_seconds();
-	md->timer.fps++;
-	if (timer->current_time - md->timer.elapsed_pause >= 1)
-	{
-		md->timer.elapsed_pause = timer->current_time;
-		md->timer.prv_fps = md->timer.fps;
-		md->timer.fps = 0;
-	}
-	md->update_frames = 0;
-	if (md->timer.anim_timer < md->timer.current_time)
-	{
-		md->timer.anim_timer = md->timer.current_time + ANIM_REFRESH;
-		md->update_frames = 1;
-	}
-    timer->delta_time = (timer->current_time - timer->prev_time);
-    timer->prev_time = timer->current_time;
-	md->timer.time++;
-    return (timer->delta_time);
 }

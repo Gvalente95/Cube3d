@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filter.c                                           :+:      :+:    :+:   */
+/*   filters.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:51:08 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/19 05:28:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 18:32:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_hue(t_image *img, t_vec4f rgb_factors)
 	i = -1;
 	while (++i < num_pixels)
 	{
-		color = img->src_data[i];
+		color = img->src[i];
 		rgba.r = ((color >> 16) & 0xFF) * rgb_factors.r;
 		rgba.g = ((color >> 8) & 0xFF) * rgb_factors.g;
 		rgba.b = (color & 0xFF) * rgb_factors.b;
@@ -32,39 +32,40 @@ void	set_hue(t_image *img, t_vec4f rgb_factors)
 		rgba.g = minmaxf(0, 255, rgba.g);
 		rgba.b = minmaxf(0, 255, rgba.b);
 		color = (rgba.a << 24) | (rgba.r << 16) | (rgba.g << 8) | rgba.b;
-		img->src_data[i] = color;
+		img->src[i] = color;
 	}
+}
+
+void	apply_d2(t_image *img, t_vec2 pos, t_vec3 *ij, t_vec4 *rgb)
+{
+	t_vec2			p;
+	unsigned int	pixel;
+
+	p = get_v2(pos.x + ij->x, pos.y + ij->y);
+	if (p.x < 0 || p.x >= img->size.x || p.y < 0 || p.y >= img->size.y)
+		return ;
+	pixel = img->src[p.y * img->size.x + p.x];
+	rgb->x += (pixel >> 16) & 0xFF;
+	rgb->y += (pixel >> 8) & 0xFF;
+	rgb->z += pixel & 0xFF;
+	rgb->w += (pixel >> 24) & 0xFF;
+	*ij = get_v3(ij->x, ij->y++, ij->z++);
 }
 
 void	apply_d(t_image *img, unsigned int *new_d, t_vec2 pos, float half_krnfl)
 {
 	t_vec4			rgb;
 	t_vec3			ij;
-	unsigned int	pixel;
 	unsigned int	rgba[4];
-	t_vec2			p;
 
 	rgb = get_v4(0, 0, 0, 0);
 	ij.z = 0;
-	ij.x = -half_krnfl;
-	while (ij.x <= half_krnfl)
+	ij.x = -half_krnfl - 1;
+	while (++ij.x <= half_krnfl)
 	{
-		ij.y = -half_krnfl;
-		while (ij.y <= half_krnfl)
-		{
-			p = get_v2(pos.x + ij.x, pos.y + ij.y);
-			ij.y++;
-			if (p.x < 0 || p.x >= img->size.x || p.y < 0 || p.y >= img->size.y)
-				continue ;
-			ij.y--;
-			pixel = img->src_data[p.y * img->size.x + p.x];
-			rgb.x += (pixel >> 16) & 0xFF;
-			rgb.y += (pixel >> 8) & 0xFF;
-			rgb.z += pixel & 0xFF;
-			rgb.w += (pixel >> 24) & 0xFF;
-			ij = get_v3(ij.x, ij.y++, ij.z++);
-		}
-		ij.x++;
+		ij.y = -half_krnfl - 1;
+		while (++ij.y <= half_krnfl)
+			apply_d2(img, pos, &ij, &rgb);
 	}
 	if (ij.z == 0)
 		ij.z = 1;
@@ -95,7 +96,7 @@ void	apply_antialiasing(t_image *img)
 		while (++pos.x < size.x)
 			apply_d(img, new_data, pos, half_kernel);
 	}
-	ft_memcpy(img->src_data, new_data, size.x * size.y * sizeof(unsigned int));
+	ft_memcpy(img->src, new_data, size.x * size.y * sizeof(unsigned int));
 	free(new_data);
 }
 
@@ -113,44 +114,44 @@ void	apply_scanlines(t_image *img, float factor)
 		{
 			if (pos.y % 2 == 0)
 				continue ;
-			pixel = img->src_data[pos.y * img->size.x + pos.x];
+			pixel = img->src[pos.y * img->size.x + pos.x];
 			rgba[0] = (pixel >> 16) & 0xFF;
 			rgba[1] = (pixel >> 8) & 0xFF;
 			rgba[2] = pixel & 0xFF;
 			rgba[3] = (pixel >> 24) & 0xFF;
-			rgba[0] = (int)(rgba[0] * factor);
-			rgba[1] = (int)(rgba[1] * factor);
-			rgba[2] = (int)(rgba[2] * factor);
-			img->src_data[pos.y * img->size.x + pos.x] = \
+			rgba[0] = (int)(rgba[0] * (1.0f - factor));
+			rgba[1] = (int)(rgba[1] * (1.0f - factor));
+			rgba[2] = (int)(rgba[2] * (1.0f - factor));
+			img->src[pos.y * img->size.x + pos.x] = \
 			(rgba[3] << 24) | (rgba[0] << 16) | (rgba[1] << 8) | rgba[2];
 		}
 	}
 }
 
-void	apply_rgb_glitch(t_image *img, int intensity)
-{
-	t_vec2			pos;
-	unsigned char	rgb[3];
-	unsigned int	pixel;
-	int				offset;
-	int				new_x;
 
-	pos = get_v2(-1, -1);
-	while (++pos.y < img->size.y)
+void	apply_noise(t_md *md, t_image *img, float factor, float colors_amount)
+{
+	int		i;
+	int		pxl;
+	t_vec4	rgb;
+	int		displ;
+	int		total_pixels;
+	int		gray;
+
+	displ = (int)(factor * 100);
+	total_pixels = img->size.y * (img->size_line / 4);
+	i = -1;
+	while (++i < total_pixels)
 	{
-		pos.x = -1;
-		while (++pos.x < img->size.x)
-		{
-			offset = (rand() % (intensity * 2)) - intensity;
-			new_x = pos.x + offset;
-			if (new_x < 0 || new_x >= img->size.x)
-				continue ;
-			pixel = img->src_data[pos.y * img->size.x + new_x];
-			rgb[0] = (pixel >> 16) & 0xFF;
-			rgb[1] = (pixel >> 8) & 0xFF;
-			rgb[2] = pixel & 0xFF;
-			img->src_data[pos.y * img->size.x + pos.x] = \
-				((rgb[0] << 16) | (rgb[1] << 8) | rgb[2]);
-		}
+		pxl = img->src[i];
+		rgb = color_to_v4(pxl);
+		rgb.r = minmax(0, 255, rgb.r + r_range_seed(&md->random_seed, -displ, displ));
+		rgb.g = minmax(0, 255, rgb.g + r_range_seed(&md->random_seed, -displ, displ));
+		rgb.b = minmax(0, 255, rgb.b + r_range_seed(&md->random_seed, -displ, displ));
+		gray = (rgb.r + rgb.g + rgb.b) / 3;
+		rgb.r = (rgb.r * colors_amount) + (gray * (1.0f - colors_amount));
+		rgb.g = (rgb.g * colors_amount) + (gray * (1.0f - colors_amount));
+		rgb.b = (rgb.b * colors_amount) + (gray * (1.0f - colors_amount));
+		img->src[i] = v4_to_color((int)rgb.r, (int)rgb.g, (int)rgb.b, 255);
 	}
 }

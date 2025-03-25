@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 00:07:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/04 22:59:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/23 16:56:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ t_vec4	get_v4(int r, int g, int b, int a)
 	res.b = b;
 	res.a = a;
 	return (res);
+}
+
+t_vec4	v4(int scale)
+{
+	return ((t_vec4){scale, scale, scale, scale});
 }
 
 t_vec3	v4_to_v3(t_vec4 a)

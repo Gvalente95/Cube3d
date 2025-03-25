@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:13:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:47 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/24 19:53:37 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@ t_vec2	center_pos(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size)
 {
 	t_vec2	a_center;
 	t_vec2	b_center;
+	t_vec2	center;
 
 	a_center = v2_center(a, a_size);
 	b_center = v2_center(b, b_size);
-	return (get_v2(a_center.x / 2 - b_center.x / 2, a_center.y / 2 - b_center.y / 2));
+	center.x = a_center.x / 2 - b_center.x / 2;
+	center.y = a_center.y / 2 - b_center.y / 2;
+	return (center);
 }
 
 int	v2_bounds(t_vec2 a, t_vec2 bnd_pos, t_vec2 bnd_size)
@@ -33,4 +36,18 @@ int	v2_bounds(t_vec2 a, t_vec2 bnd_pos, t_vec2 bnd_size)
 		a.x <= bnd_pos.x + bnd_size.x && \
 		a.y >= bnd_pos.y && \
 		a.y <= bnd_pos.y + bnd_size.y);
+}
+
+t_vec2	v2(int scale)
+{
+	return ((t_vec2){scale, scale});
+}
+
+int	v2_touch(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size)
+{
+	return (a.x < b.x + b_size.x && \
+		a.x + a_size.x > b.x && \
+		a.y < b.y + b_size.y && \
+		a.y + a_size.y > b.y \
+	);
 }

@@ -11,11 +11,13 @@ else
 endif
 
 SOURCES = \
-c_files/string_3.c c_files/render_pixels.c c_files/vector_2.c c_files/tools.c c_files/input_mouse.c c_files/vector_3floatb.c \
-c_files/vector_3float.c c_files/string.c c_files/render.c c_files/time2.c c_files/images_data.c c_files/input.c \
-c_files/time.c c_files/free.c c_files/free_b.c c_files/vector_4.c c_files/images_b.c c_files/init_wrapper.c \
-c_files/Vector_3b.c c_files/string_2.c c_files/images_a.c c_files/free_a.c c_files/vector_2b.c c_files/audio.c \
-c_files/colors.c c_files/vector_3.c  c_files/vector4float.c c_files/images_load.c c_files/vectors_show.c
+c_files/string_3.c c_files/input_tools.c c_files/vector_2.c c_files/tools.c c_files/input_mouse.c c_files/vectors_show.c \
+c_files/vector_3floatb.c c_files/vector_math.c c_files/draw_img.c c_files/vector_3float.c c_files/draw_img_2.c \
+c_files/string.c c_files/time2.c c_files/images_data.c c_files/images_load.c c_files/input.c c_files/draw_alpha.c \
+c_files/time.c c_files/free.c c_files/free_b.c c_files/vector_4.c c_files/images_b.c c_files/draw_pixels.c \
+c_files/init_wrapper.c c_files/Vector_3b.c c_files/vector4float.c c_files/string_2.c c_files/images_a.c \
+c_files/free_a.c c_files/vector_2b.c c_files/audio.c c_files/colors.c c_files/vector_3.c c_files/vector_2f_b.c \
+c_files/vector_2f.c
 
 OBJ = $(SOURCES:.c=.o)
 
