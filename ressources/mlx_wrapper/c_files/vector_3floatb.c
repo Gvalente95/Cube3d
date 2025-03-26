@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:16:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 16:57:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/26 16:41:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_vec3f	normalize_vec3f(t_vec3f v)
 {
 	float	length;
 
-	length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	if (length == 0.0f)
 		return ((t_vec3f){0, 0, 0});
 	return ((t_vec3f){v.x / length, v.y / length, v.z / length});

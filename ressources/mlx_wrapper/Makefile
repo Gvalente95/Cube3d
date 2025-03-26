@@ -17,7 +17,7 @@ c_files/init_wrapper.c c_files/input.c c_files/input_mouse.c c_files/input_tools
 c_files/string_3.c c_files/time.c c_files/time2.c c_files/tools.c c_files/vector4float.c c_files/vector_2.c \
 c_files/vector_2b.c c_files/vector_2f.c c_files/vector_2f_b.c c_files/vector_3.c c_files/vector_3float.c \
 c_files/vector_3floatb.c c_files/vector_4.c c_files/vector_math.c c_files/vectors_show.c c_files/free_image.c \
-c_files/free_elements.c
+c_files/free_elements.c c_files/math_tools.c
 
 OBJ = $(SOURCES:.c=.o)
 

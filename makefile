@@ -5,7 +5,7 @@ c_files/init/init_map_data.c c_files/init/init_background.c c_files/init/init_ma
 c_files/init/init_cube.c c_files/raycasting/ray_tools_2.c c_files/raycasting/draw_sprite_column.c c_files/raycasting/portal_raycast.c \
 c_files/raycasting/portal_draw.c c_files/raycasting/draw_wall_column.c c_files/raycasting/ray_tools.c \
 c_files/raycasting/rays.c c_files/tools/map_gen.c c_files/tools/parse_tools.c c_files/tools/map_gen_2.c \
-c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/math_tools.c c_files/tools/text.c c_files/tools/image_tools.c \
+c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/text.c c_files/tools/image_tools.c \
 c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update.c \
 c_files/update/movement.c c_files/update/update_menu.c c_files/update/update_ents.c c_files/update/collisions.c \
 c_files/update/update_projectile.c c_files/update/update_plr_movement.c c_files/render/render_minimap.c \

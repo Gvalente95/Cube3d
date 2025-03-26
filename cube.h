@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:30:49 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:36:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@
 
 # define RESOLUTION		25
 //		SCREEN
-# define SCRN_W			1750
-# define SCRN_H			1200
+# define SCRN_W			1300
+# define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -116,13 +116,6 @@ void	show_fps(t_md *md, t_vec2 pos);
 //	DATA = (x pos, y pos, text color, text scale) return: text width
 int		rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...);
 int		render_text(t_md *md, t_vec4 data, const char *format, ...);
-
-//		math_tools.c
-int		minmax(int min, int max, int curr);
-float	minmaxf(float min, float max, float value);
-float	minf(float a, float b);
-float	maxf(float a, float b);
-int		ft_sign(float a);
 
 //		ftoa.c
 char	*ftoa(float num, int precision);

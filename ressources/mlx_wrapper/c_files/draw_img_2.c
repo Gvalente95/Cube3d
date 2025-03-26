@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 22:04:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 02:30:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/26 16:41:54 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	draw_sphere(t_image *dst, t_vec2 pos, t_vec2 draw_size, t_vec3 data)
 		{
 			rdp.x = (dd.pos.x - center.x) / r.x;
 			rdp.y = (dd.pos.y - center.y) / r.y;
-			r.z = sqrtf(rdp.x * rdp.x + rdp.y * rdp.y);
+			r.z = sqrt(rdp.x * rdp.x + rdp.y * rdp.y);
 			rdp.z = 1.0f - r.z;
 			if (!(rdp.z > 0 && (data.z || r_range(0, 20) < rdp.z * 50)))
 				continue ;

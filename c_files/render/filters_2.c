@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:52:06 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 22:40:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/26 16:41:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	apply_barrel_distortion(t_image *img, float intensity)
 		{
 			norm.x = (pos.x - center.x) / (float)center.x;
 			norm.y = (pos.y - center.y) / (float)center.y;
-			rad.x = sqrtf(norm.x * norm.x + norm.y * norm.y);
+			rad.x = sqrt(norm.x * norm.x + norm.y * norm.y);
 			n.x = center.x + norm.x * (1.0 + rad.y * rad.x) * center.x;
 			n.y = center.y + norm.y * (1.0 + rad.y * rad.x) * center.y;
 			if (n.x >= 0 && n.x < img->size.x && n.y >= 0 && n.y < img->size.y)

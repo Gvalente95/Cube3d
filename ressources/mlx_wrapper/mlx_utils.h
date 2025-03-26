@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/25 18:51:43 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:41:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <X11/X.h>
+//# include <X11/X.h>
 
 # include <signal.h>
 # include <stdio.h>
@@ -461,5 +461,13 @@ t_vec4			color_to_v4(int color);
 
 void			replace_image(t_md *md, t_image **dst, t_image *src);
 void			flipy_image_data(t_image *img);
+
+//		math_tools.c
+int				minmax(int min, int max, int curr);
+float			minmaxf(float min, float max, float value);
+float			minf(float a, float b);
+float			maxf(float a, float b);
+int				ft_sign(float a);
+float			fast_inverse_sqrt(float number);
 
 #endif

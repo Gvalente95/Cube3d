@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 15:42:04 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:30:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ double	update_time(t_md *md, t_timer *timer)
 int	set_menu_mode(t_md *md, t_menu *menu, int mode)
 {
 	set_mouse_lock(md, !mode);
-	if (mode)
-		mlx_mouse_move(md->mlx, md->win, md->win_size.x / 2, md->win_size.y / 2);
-	else
-		mlx_mouse_move(md->mlx, md->win, md->mouse.prev.x, md->mouse.prev.y);
+	if (md->is_linux)
+	{
+		if (mode)
+			mlx_mouse_move(md->mlx, md->win, md->win_size.x / 2, md->win_size.y / 2);
+		else
+			mlx_mouse_move(md->mlx, md->win, md->mouse.prev.x, md->mouse.prev.y);
+	}
 	menu->active = mode;
 	if (menu->freeze_frame)
 		free_image_data(md, menu->freeze_frame);
