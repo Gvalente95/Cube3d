@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 01:03:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 14:21:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int	get_prspctive_offset(t_md *md, float ray_dst, t_ent *e)
 	float	vrt_offst;
 
 	pitch_factor = tanf(md->plr_rot.y * (M_PI / 180.0f));
-	vrt_offst = (md->cam_pos.z - e->pos.z) * md->win_size.y / (ray_dst + 1.0f);
-	pitch_offset = (-pitch_factor * md->win_size.y / 2) - vrt_offst;
+	vrt_offst = (md->cam_pos.z - e->pos.z) * md->win_sz.y / (ray_dst + 1.0f);
+	pitch_offset = (-pitch_factor * md->win_sz.y / 2) - vrt_offst;
 	return (pitch_offset);
 }
 
@@ -60,7 +60,7 @@ void	draw_sprite_slice(t_md *md, t_ent *ent, t_vec2 winp, t_vec3f crd)
 	t_vec2	wins;
 	int		img_y;
 
-	wins = md->win_size;
+	wins = md->win_sz;
 	y = (t_vec2){(wins.y / 2 - crd.y / 2) - 1, (wins.y / 2 + crd.y / 2)};
 	crd.x = minmax(0, ent->frame->size.x - 1, crd.x);
 	while (++y.x < y.y)
@@ -111,12 +111,10 @@ void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data)
 	sprite = hit_data.hit;
 	if (!ray->had_door)
 		sprite->in_screen++;
-	if (ray->teleported_once)
-		return ;
 	ray->distance = maxf(0.1, hit_data.dist_at_e);
 	scale_factor = sprite->frame->size.y / md->txd.e_sizes[nt_mob].y;
 	nrm_dst = (hit_data.dist_at_e / 2) * scale_factor;
-	sprt_scrn_width = (md->win_size.y * sprite->frame->size.y) / nrm_dst;
+	sprt_scrn_width = (md->win_sz.y * sprite->frame->size.y) / nrm_dst;
 	sprt_scrn_width = maxf(1, sprt_scrn_width);
 	if (hit_data.hit->type == nt_door)
 		draw_wall_line(md, hit_data.dist_at_e, hit_data.hit, ray);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_gen_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 18:04:02 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:59:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,30 @@
 static int	set_character(char c, int amount, char *buffer, int len)
 {
 	int	*free_indexes;
-	int	free_amount;
+	int	dispo_len;
 	int	random_index;
 	int	set_amount;
 	int	i;
 
-	free_amount = 0;
+	dispo_len = 0;
 	free_indexes = malloc(sizeof(int) * len);
 	i = -1;
 	while (buffer[++i])
 		if (buffer[i] == '0')
-			free_indexes[free_amount++] = i;
-	if (free_amount < 5)
+			free_indexes[dispo_len++] = i;
+	if (dispo_len < 5)
 		return (0);
-	if (amount > free_amount)
-		amount = free_amount;
+	if (amount > dispo_len)
+		amount = dispo_len;
 	set_amount = amount;
 	i = -1;
 	while (amount--)
 	{
-		random_index = r_range(0, free_amount - 1);
+		random_index = r_range(0, dispo_len - 1);
 		if (buffer[free_indexes[random_index]] == '0')
 			buffer[free_indexes[random_index]] = c;
 	}
-	free(free_indexes);
-	return (free_amount - set_amount);
+	return (free(free_indexes), dispo_len - set_amount);
 }
 
 void	set_doors(char *map, int doors_amount)

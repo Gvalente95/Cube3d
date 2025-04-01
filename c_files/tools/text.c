@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TEXT.c                                             :+:      :+:    :+:   */
+/*   text.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 15:10:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/30 14:52:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static int	display_text(t_md *md, char *text, t_vec4 data)
 			continue ;
 		}
 		cur_pos.r += display_letter(md, text[i], cur_pos);
-		total_width += md->prm.txt_scale * 1.5;
+		total_width += md->prm.txt_sc * 1.5;
 	}
 	return (total_width);
 }

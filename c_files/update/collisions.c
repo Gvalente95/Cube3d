@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collisions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 16:13:18 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/31 04:54:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,101 +72,34 @@ static int	handle_soft_collisions(t_md *md, t_ent *b)
 		return (0);
 	reset_mapped_end(md, b);
 	b->is_active = 0;
-	if (b->type == nt_door)
-		return (play_sound(md, AU_OPEN), 1);
 	play_sound(md, AU_GRAB);
 	return (1);
 }
 
-int	angle_diff(int a, int b)
-{
-	int	diff;
-
-	diff = (a - b) % 360;
-	if (diff < -180)
-		diff += 360;
-	if (diff > 180)
-		diff -= 360;
-	return (diff);
-}
-
-static int	pass_through_portal(t_md *md, t_ent *portal, \
-	t_ent *plr, t_vec2 portal_pos)
-{
-	t_wrd_dir	rot;
-	int			new_rot;
-	t_vec2		new_pos;
-
-	if (v2_bounds(get_v2((int)plr->pos.x, (int)plr->pos.y), \
-	portal_pos, portal->overlay->size))
-		return (1);
-	rot = portal->overlay_dir;
-	new_pos = portal_pos;
-	if (rot == NORTH)
-	{
-		new_pos.y += md->t_len * 1.3;
-		new_rot = 90;
-	}
-	else if (rot == SOUTH)
-	{
-		new_pos.y -= md->t_len * 1.3;
-		new_rot = -90;
-	}
-	else if (rot == EAST)
-	{
-		new_rot = 180;
-		new_pos.x -= md->t_len * 1.3;
-	}
-	else
-	{
-		new_pos.x += md->t_len * 1.3;
-		new_rot = 0;
-	}
-	md->plr_rot.x = new_rot;
-	plr->angle = (md->plr_rot.x) * (M_PI / 180.0f);
-	plr->dir.x = cosf(plr->angle);
-	plr->dir.y = sinf(plr->angle);
-	plr->pos.x = new_pos.x;
-	plr->pos.y = new_pos.y;
-	if (md->input_mov.y < 0)
-	{
-		md->plr_rot.x = -md->plr_rot.x;
-		plr->angle = (md->plr_rot.x) * (M_PI / 180.0f);
-		plr->dir.x = cosf(plr->angle);
-		plr->dir.y = sinf(plr->angle);
-	}
-	return (0);
-}
-
 static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 {
-	int	solved;
-
 	if (!a || !b)
 		return (0);
 	if (!a->is_active || !b->is_active)
 		return (0);
-	if (md->portal_gun.last_passage == b)
+	if (md->portal.last_passage == b)
 		return (1);
 	if (!md->prm.ent_mode && b->type != nt_door && b->type != nt_wall)
 		return (0);
-	if (a->type == nt_plr && (b->type == nt_pickup || b->type == nt_door))
+	if (a->type == nt_plr && (b->type == nt_pickup))
 	{
 		if (is_collision(a, b, v2(md->t_len * 2)))
-			solved = handle_soft_collisions(md, b);
-		if (b->type != nt_door || solved)
-			return (0);
-	}
-	if (!is_collision(a, b, a_size))
+			handle_soft_collisions(md, b);
 		return (0);
-	if (b->type == nt_wall && b->overlay && md->portal_gun.entrance == b)
-		return (pass_through_portal(md, md->portal_gun.exit, &md->plr, md->portal_gun.exit_pos));
-	if (b->type == nt_wall && b->overlay && md->portal_gun.exit == b)
-		return (pass_through_portal(md, md->portal_gun.entrance, &md->plr, md->portal_gun.entrance_pos));
-	if (b->mob_type == Rat && b->action == m_atk)
-		md->hud.hp--;
+	}
 	if (b->type != nt_wall && b->type != nt_door)
 		return (0);
+	if (b->type == nt_door && !b->hp)
+		return (0);
+	if (!is_collision(a, b, a_size))
+		return (0);
+	if (b->type == nt_wall && b->overlay)
+		return (validate_portal_collision(md, b));
 	return (1);
 }
 
@@ -180,6 +113,8 @@ int	set_collisions(t_md *md, t_ent *e, t_vec2 e_size)
 	int				col_amount;
 	int				map_i;
 
+	if (md->prm.free_cam)
+		return (1);
 	col_amount = 0;
 	e->col_hit = NULL;
 	i = -1;

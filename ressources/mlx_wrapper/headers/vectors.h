@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 20:00:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 15:17:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_Vector4
 	int	w;
 }	t_vec4;
 
-
 typedef struct s_Vector4f
 {
 	float	r;
@@ -74,13 +73,12 @@ int		v2_touch(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size);
 
 //		VECTOR_2f.c
 t_vec2f	v3_to_v2f(t_vec3 vec);
-int		cmp_vec2f(t_vec2f a, t_vec2f b);
+int		cmp_vec2f(t_vec2f a, t_vec2f b, float margin);
 t_vec2f	get_v2f(float x, float y);
 int		print_vec2f(t_vec2f a, const char *label);
 
 //		VECTOR_2f_b.c
 t_vec2f	v2f_center(t_vec2f a, t_vec2f b);
-t_vec2f	v2f_center_pos(t_vec2f a, t_vec2f a_size, t_vec2f b, t_vec2f b_size);
 int		v2f_bounds(t_vec2f a, t_vec2f bnd_pos, t_vec2f bnd_size);
 t_vec2f	v2f(int scale);
 int		v2f_touch(t_vec2f a, t_vec2f a_size, t_vec2f b, t_vec2f b_size);
@@ -121,15 +119,27 @@ int		v3f_bounds(t_vec3f a, t_vec3f a_size, t_vec3f pos, t_vec3f b_size);
 int		v3_bounds(t_vec3 a, t_vec3 pos, t_vec3 size);
 t_vec3f	normalize_vec3f(t_vec3f v);
 
-t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b);
-t_vec3f	scale_vec3f(t_vec3f v, float s);
-t_vec3f	add_vec3f(t_vec3f a, t_vec3f b);
-
 t_vec2	v2(int scale);
 t_vec3	v3(int scale);
 t_vec3f	v3f(float scale);
 t_vec4	v4(int scale);
 t_vec4f	v4f(float scale);
 int		v4_to_color(int r, int g, int b, int a);
+t_vec4	color_to_v4(int color);
+
+t_vec3f	scale_vec3f(t_vec3f v, float s);
+t_vec3	scale_vec3(t_vec3 v, float s);
+t_vec2f	scale_vec2f(t_vec2f v, float s);
+t_vec2	scale_vec2(t_vec2 v, float s);
+
+t_vec3f	add_vec3f(t_vec3f a, t_vec3f b);
+t_vec3	add_vec3(t_vec3 a, t_vec3 b);
+t_vec2f	add_vec2f(t_vec2f a, t_vec2f b);
+t_vec2	add_vec2(t_vec2 a, t_vec2 b);
+
+t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b);
+t_vec3	sub_vec3(t_vec3 a, t_vec3 b);
+t_vec2f	sub_vec2f(t_vec2f a, t_vec2f b);
+t_vec2	sub_vec2(t_vec2 a, t_vec2 b);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 22:17:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 10:51:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # define PRT_AMOUNT		500
 # define PART_BASE_SIZE	35
 
-typedef struct s_image_data t_image;
-
+typedef struct s_image_data	t_image;
+typedef struct s_entity		t_ent;
 
 typedef enum e_world_direction
 {
@@ -81,6 +81,8 @@ typedef enum e_entity_types
 	nt_mob,
 	nt_door,
 	nt_pickup,
+	nt_bush,
+	nt_tree,
 	ENT_TYPE_LEN
 }	t_ent_type;
 
@@ -102,8 +104,6 @@ typedef enum e_entity_action
 	m_death,
 	ENT_ACTION_LEN
 }	t_ent_action;
-
-typedef struct s_entity t_ent;
 
 typedef struct s_entity
 {
@@ -128,17 +128,17 @@ typedef struct s_entity
 	double			shot_timer;
 	float			angle;
 	char			character;
+	float			hit_dist;
+	t_vec2			crp_pxl;
+	int				ray_hit_index;
 	int				was_hit;
 	int				shot;
 	int				can_shoot;
+	int				grounded;
 	int				map_index;
 	int				is_active;
 	float			tex_accumulator;
-	int				level;
 	int				hp;
-	int				hurt_timer;
-	int				audio;
-	int				is_grounded;
 	int				frame_index;
 	int				in_screen;
 	int				row_draw_index;

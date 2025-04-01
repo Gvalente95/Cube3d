@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 13:56:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 11:18:27 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,27 @@ void	set_weapon_index(t_md *md)
 
 static void	update_player_rot(t_md *md)
 {
-	float	speed;
+	float		speed;
+	const float	pitch = md->plr_rot.y * (M_PI / 180.0f);
 
 	speed = md->prm.rot_speed;
-	if (!md->mouse.focus)
-		return ;
-	if (!md->mouse.lock_rotation.x && md->mouse.delta.x)
+	if (!md->mouse.lock_rot.x && md->mouse.delta.x && md->mouse.focus)
 		md->plr_rot.x += (md->mouse.delta.x * speed);
 	if (md->plr_rot.x < -180.0f)
 		md->plr_rot.x += 360.0f;
 	else if (md->plr_rot.x > 180.0f)
 		md->plr_rot.x -= 360.0f;
-	if (!md->mouse.lock_rotation.y)
+	if (!md->mouse.lock_rot.y && md->mouse.delta.y && md->mouse.focus)
 		md->plr_rot.y += (md->mouse.delta.y * speed);
-	md->plr_rot.y = minmaxf(-80, 80, md->plr_rot.y);
+	if (md->prm.free_cam)
+		md->plr_rot.y = minmaxf(-140, 140, md->plr_rot.y);
+	else
+		md->plr_rot.y = minmaxf(-80, 80, md->plr_rot.y);
 	md->plr_rot.z = 0;
 	md->plr.angle = (md->plr_rot.x) * (M_PI / 180.0f);
 	md->plr.dir.x = cosf(md->plr.angle);
 	md->plr.dir.y = sinf(md->plr.angle);
-	md->plr.dir.z = 0;
+	md->plr.dir.z = sinf(pitch) * .05;
 }
 
 static void	update_player_action(t_md *md, t_ent *plr)
@@ -70,10 +72,10 @@ static void	update_player_action(t_md *md, t_ent *plr)
 
 static void	update_player_weapon(t_md *md, t_ent *plr)
 {
-	if (md->prm.ent_mode && md->update_frames && md->hud.weapon_frame >= 1)
+	if (md->prm.ent_mode && md->timer.trig_anim && md->hud.weapon_frame >= 1)
 		md->hud.weapon_frame++;
 	if (!plr->can_shoot && \
-		md->timer.current_time > plr->shot_timer && !plr->shot)
+		md->timer.cur_tm > plr->shot_timer && !plr->shot)
 		plr->can_shoot = 1;
 }
 
@@ -85,5 +87,9 @@ int	update_player(t_md *md, t_ent *plr)
 	update_player_action(md, plr);
 	md->input_offst = get_v2(md->input_offst.x + (int)(md->plr_wrd_mv.x), \
 		md->input_offst.y - (int)(md->plr_wrd_mv.y));
+	if (md->timer.trig_walk && !md->prm.free_cam && plr->grounded && \
+		!cmp_vec3f(md->input_mov, v3f(0), .01))
+			play_random_sound(md, AU_WALK_GRASS, 8);
+	play_loop(md, &md->au.wind_pid, AU_WIND, md->prm.free_cam);
 	return (1);
 }

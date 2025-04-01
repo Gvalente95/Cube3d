@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_frames2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:30:33 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:54:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_image	**init_weapon(t_md *md, t_image ***mini, char *path)
 {
 	t_vec2	hud_weap_size;
 
-	hud_weap_size = get_v2(md->win_size.x / 2, md->win_size.y / 2);
+	hud_weap_size = get_v2(md->win_sz.x / 2, md->win_sz.y / 2);
 	*mini = init_images(md, md->txd.e_sizes2d[0], path);
 	return (init_images(md, hud_weap_size, path));
 }

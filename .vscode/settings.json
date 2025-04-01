@@ -16,6 +16,8 @@
 		"istream": "c",
 		"locale": "c",
 		"tuple": "c",
-		"cube.h": "c"
+		"cube.h": "c",
+		"__threading_support": "c",
+		"math.h": "c"
 	}
 }

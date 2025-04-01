@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:50:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 13:47:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 20:07:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	draw_locks_icons(t_md *md, t_hud *hud, t_vec2 winsz)
 
 	lock_pos = get_v2(winsz.x - hud->lock_x_icon->size.x, \
 		winsz.y - hud->lock_y_icon->size.y);
-	if (md->mouse.lock_rotation.x)
+	if (md->mouse.lock_rot.x)
 		draw_img(hud->lock_x_icon, md->screen, lock_pos, -1);
 	lock_pos.y -= hud->lock_x_icon->size.y;
-	if (md->mouse.lock_rotation.y)
+	if (md->mouse.lock_rot.y)
 		draw_img(hud->lock_y_icon, md->screen, lock_pos, -1);
 }
 
@@ -33,7 +33,7 @@ void	draw_info(t_md *md, t_vec2 *screen_pos, t_image *icon, int value)
 		screen_pos->x + icon->size.x * 2, \
 		screen_pos->y, \
 		-1, \
-		md->prm.txt_scale);
+		md->prm.txt_sc);
 	draw_img(icon, md->screen, *screen_pos, -1);
 	rnd_abs_txt(md, txt_data, "%d", value);
 	screen_pos->x -= icon->size.x * 3;
@@ -45,9 +45,9 @@ void	draw_game_info(t_md *md, t_hud *hud, t_vec2 winsz)
 	int		txt_space;
 	int		i;
 
-	if (md->mouse.lock_rotation.x || md->mouse.lock_rotation.y)
+	if (md->mouse.lock_rot.x || md->mouse.lock_rot.y)
 		draw_locks_icons(md, hud, winsz);
-	txt_space = md->prm.txt_scale * 1.5;
+	txt_space = md->prm.txt_sc * 1.5;
 	start_pos = get_v2(winsz.x - txt_space * 5, winsz.y - txt_space);
 	i = 0;
 	while (i < hud->ammo && md->hud.ammo > md->hud.wpn_index)
@@ -60,9 +60,9 @@ void	draw_game_info(t_md *md, t_hud *hud, t_vec2 winsz)
 	draw_info(md, &start_pos, md->hud.key_icon, md->hud.keys);
 	draw_info(md, &start_pos, md->hud.key_icon, md->hud.hp);
 	if (md->hud.ammo < md->hud.wpn_index)
-		rnd_abs_txt(md, get_v4(md->win_size.x / 2 - \
-			md->prm.txt_scale * 10, md->win_size.y * .4, \
-			md->rgb[RGB_RED], md->prm.txt_scale * 2), "Not enough ammo!");
+		rnd_abs_txt(md, get_v4(md->win_sz.x / 2 - \
+			md->prm.txt_sc * 10, md->win_sz.y * .4, \
+			md->rgb[RGB_RED], md->prm.txt_sc * 2), "Not enough ammo!");
 }
 
 void	draw_hud_weapon(t_md *md, t_hud *hud, t_vec2 winsz)
@@ -93,17 +93,13 @@ void	render_hud_elements(t_md *md, t_hud *hud)
 	t_vec2	cross_pos;
 	t_vec2	winsz;
 
-	winsz = md->win_size;
+	winsz = md->win_sz;
 	cross_pos = (t_vec2){winsz.x / 2 - 5, winsz.y / 2 - 5};
 	draw_img(md->center, md->screen, cross_pos, -1);
-	draw_hud_weapon(md, hud, winsz);
+	if (0)
+		draw_hud_weapon(md, hud, winsz);
 	if (!md->prm.ent_mode)
 		return ;
-	if (md->plr.was_hit)
-		draw_sphere(md->screen, \
-			get_v2(0, 0), \
-			get_v2(md->win_size.x, md->win_size.y * 2), \
-			get_v3(md->rgb[RGB_RED], md->plr.was_hit-- / 2, 1));
 	draw_game_info(md, hud, winsz);
 	if (md->timer.time % 50 == 0)
 		md->hud.hp--;

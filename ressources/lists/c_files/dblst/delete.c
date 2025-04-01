@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:23:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/11 19:43:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/30 19:11:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	dblst_clear(t_dblst **lst, void (*del)(void *))
 	while (cur)
 	{
 		tmp = cur->next;
-		del(cur->content);
+		if (del)
+			del(cur->content);
 		free(cur);
 		cur = tmp;
 	}

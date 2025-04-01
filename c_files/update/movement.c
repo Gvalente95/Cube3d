@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 15:36:14 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/31 14:07:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	set_ent_target_pos(t_md *md, t_ent *e)
 	valid_amount = get_valid_moves(md, e->coord, moves, &valid_moves);
 	if (!valid_amount)
 		return ;
-	move_dir = valid_moves[r_range_seed(&md->random_seed, 0, valid_amount - 1)];
+	move_dir = valid_moves[r_range_seed(&md->r_seed, 0, valid_amount - 1)];
 	e->target_pos = (t_vec3f){e->pos.x + moves[move_dir].x * md->t_len, \
 		e->pos.y + moves[move_dir].y * md->t_len, e->pos.z};
 }
@@ -86,14 +86,14 @@ void	move_ent_to_target(t_md *md, t_ent *e, t_vec3f target_p)
 	e->pos = add_vec3f(e->pos, scale_vec3f(dir, 5));
 	if (cmp_vec3f(e->pos, target_p, 1))
 	{
-		e->pos = get_v3f((int)target_p.x, (int)target_p.y, e->pos.z);
+		e->pos = get_v3f((int)target_p.x, (int)target_p.y, (int)target_p.z);
 		new_cord = get_v3(e->pos.x / md->t_len, \
 			e->pos.y / md->t_len, e->pos.z / md->t_len);
+		e->target_pos.x = -999;
 		e->coord = new_cord;
 		md->mapped_ents[e->map_index] = NULL;
 		e->map_index = new_cord.x + ((md->map.size.x + 1) * new_cord.y);
 		md->mapped_ents[e->map_index] = e;
-		e->target_pos.x = -999;
 	}
 }
 
@@ -102,10 +102,10 @@ void	update_mob_actions(t_md *md, t_ent *e)
 	t_ent_action	prev_action;
 
 	prev_action = e->action;
-	if (e->in_screen >= e->size.x * .7)
+	if (e->in_screen)
 	{
 		e->action = m_atk;
-		if (!md->update_frames || e->frame_index > 1 || md->plr.was_hit)
+		if (!md->timer.trig_anim || e->frame_index > 1 || md->plr.was_hit)
 			return ;
 		if (e->type != (int)Rat)
 		{
@@ -116,12 +116,13 @@ void	update_mob_actions(t_md *md, t_ent *e)
 		else
 			e->target_pos = md->plr.pos;
 	}
-	if (e->target_pos.x != -999)
+	if (e->target_pos.x != -999 && 0)
 		move_ent_to_target(md, e, e->target_pos);
-	else if (md->timer.time % 20 == 0)
+	else if (md->timer.time % 20 == 0 && 0)
 		set_ent_target_pos(md, e);
 	else
 		e->action = m_idle;
 	if (e->action != prev_action)
 		e->frame_index = 0;
+	e->in_screen = 0;
 }

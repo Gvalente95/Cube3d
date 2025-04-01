@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 16:12:07 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/01 18:30:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void	render_entities(t_md *md)
 	t_ent	*e;
 	t_vec2	centr;
 
-	centr = get_v2((md->win_size.x * .5 - md->txd.size_2d * 2 - \
+	centr = get_v2((md->win_sz.x * .5 - md->txd.size_2d * 2 - \
 		(md->cam_ofst.x / md->t_len * md->txd.size_2d)), \
-		md->win_size.y * .5 - md->txd.size_2d * 2 - \
+		md->win_sz.y * .5 - md->txd.size_2d * 2 - \
 		((md->cam_ofst.y / md->t_len) * md->txd.size_2d));
 	node = md->entities;
 	while (node)
@@ -76,7 +76,7 @@ void	render_entities(t_md *md)
 	render_2d_ent(md, &md->plr, centr);
 }
 
-void	apply_fx(t_md *md, t_image *screen, t_post_fx_data *fx)
+void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 {
 	if (fx->anti_alias)
 		apply_antialiasing(screen);
@@ -87,8 +87,6 @@ void	apply_fx(t_md *md, t_image *screen, t_post_fx_data *fx)
 	if (fx->dithering > 0)
 		apply_dithering(screen, fx->dithering, \
 			fx->palette, fx->palette_size);
-	if (fx->rgb_distortion > 0)
-		apply_glitch(screen, fx->rgb_distortion);
 	if (fx->bloom_threshold > 0)
 		apply_bloom(screen, fx->bloom_threshold);
 	if (fx->barrel_amount > 0)
@@ -104,16 +102,21 @@ void	render(t_md *md)
 {
 	flush_img(md->screen, md->hud.bgr_color, -1, 0);
 	if (md->timer.time > 3)
-		cast_rays(md, md->cam_pos);
+	{
+		if (md->prm.use_thrd)
+			cast_ray_threads(md);
+		else
+			cast_rays(md, md->cam_pos);
+	}
 	render_background(md);
-	if (!md->prm.real_mode)
+	if (!md->prm.ray_mode)
 		render_entities(md);
 	else
 		render_hud_elements(md, &md->hud);
 	if (md->mmap.active)
 		render_minimap(md, &md->mmap);
 	show_update_information(md);
-	show_fps(md, get_v2(0, md->win_size.y - (md->prm.txt_scale * 1.5)));
+	show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
 	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

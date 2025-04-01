@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/26 12:59:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/29 14:20:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,19 +115,5 @@
 # define SHIFT_KEY      257
 # define CTRL_KEY       256
 # define ALT_KEY        261
-
-
-
-
-#define ButtonReleaseMask 0
-#define PointerMotionMask 1L << 6
-
-
-# define KeyPress				2
-# define KeyPressMask			0
-# define KeyRelease				3
-# define KeyReleaseMask			0
-# define DestroyNotify			17
-# define StructureNotifyMask	0
 
 #endif

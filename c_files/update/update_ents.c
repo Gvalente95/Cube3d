@@ -6,18 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 20:37:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 18:19:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-void	reset_mapped_end(t_md *md, t_ent *e)
-{
-	if (e->map_index > 0 && e->map_index <= md->map.len - 1 && \
-		md->mapped_ents[e->map_index] == e)
-		md->mapped_ents[e->map_index] = NULL;
-}
 
 void	update_ent_frame(t_ent *e)
 {
@@ -46,13 +39,56 @@ void	update_ent_frame(t_ent *e)
 	e->size = e->frame->size;
 }
 
+static int	update_door(t_ent *e)
+{
+	const float	target = (e->hp > 0) + .3f;
+	const float	speed = 0.1;
+
+	if (e->angle < target)
+		e->angle = fmin(e->angle + speed, target);
+	else if (e->angle > target)
+		e->angle = fmax(e->angle - speed, target);
+	return (1);
+}
+
+static int	update_wall(t_md *md, t_ent *e)
+{
+	t_image	*frame;
+	int		i;
+	float	interp_factor;
+	int		green_intensity;
+	int		red_intensity;
+
+	if (!md->timer.trig_fe)
+		return (0);
+	i = -1;
+	while (++i < 4)
+	{
+		frame = e->frames[i];
+		interp_factor = 1 - (float)e->crp_pxl.y / (frame->size.y - 1);
+		green_intensity = 50 + (int)((255 - 50) * interp_factor);
+		green_intensity = minmax(0, 255, green_intensity);
+		interp_factor = 1 - (float)e->crp_pxl.x / (frame->size.y - 1);
+		red_intensity = (int)((255) * interp_factor);
+		red_intensity = minmax(0, 255, red_intensity / 3);
+		draw_pixel(frame, e->crp_pxl, v4_to_color(red_intensity, green_intensity, 0, 255), 1);
+		e->crp_pxl.x = minmax(0, frame->size.x - 1, e->crp_pxl.x + r_range(-1, 1));
+		e->crp_pxl.y = minmax(0, frame->size.y - 1, e->crp_pxl.y + r_range(-1, 1));
+	}
+	return (1);
+}
+
 static int	update_ent(t_md *md, t_ent *e)
 {
 	e->row_draw_index = 0;
 	e->tex_accumulator = 0;
 	if (e->type == nt_wall)
-		return (0);
-	if (md->update_frames && e->is_active && e->type == nt_mob)
+		return (update_wall(md, e));
+	if (e->type == nt_door)
+		return (update_door(e));
+	if (!md->prm.ent_mode)
+		return (1);
+	if (md->timer.trig_anim && e->is_active && e->type == nt_mob)
 		update_ent_frame(e);
 	if (e->type != nt_mob || !e->is_active)
 		return (1);
@@ -71,8 +107,8 @@ int	update_ents(t_md *md)
 	t_dblst	*next;
 	int		upd_render;
 
-	if (!md->prm.ent_mode)
-		return (1);
+	if (!md->timer.fe_time)
+		return (0);
 	upd_render = 0;
 	node = md->entities;
 	while (node)
@@ -83,12 +119,4 @@ int	update_ents(t_md *md)
 		node = next;
 	}
 	return (upd_render);
-}
-
-int	ent_in_bounds(t_ent *ent, t_ent *bounds)
-{
-	return (ent->pos.x >= bounds->pos.x + bounds->mov.x && \
-		ent->pos.x <= bounds->pos.x + bounds->mov.x + bounds->size.x && \
-		ent->pos.y >= bounds->pos.y + bounds->mov.y && \
-		ent->pos.y <= bounds->pos.y + bounds->mov.y + bounds->size.y);
 }

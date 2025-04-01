@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 16:10:29 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/01 00:54:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,7 @@
 
 # include "../mlx_utils.h"
 
-typedef struct s_image_data t_image;
-
-typedef enum e_gamestate
-{
-	in_game,
-	strt_men,
-	main_men,
-	map_men,
-	load_men,
-	opt_men,
-	edit_men,
-	cred_men,
-	end_men,
-	gamestate_count,
-}	t_gamestate;
+typedef struct s_image_data	t_image;
 
 typedef struct s_time_handler
 {
@@ -37,16 +23,23 @@ typedef struct s_time_handler
 	double	shoot_timer;
 	double	delta_time;
 	double	prev_time;
-	double	current_time;
-	double	anim_timer;
-	double	level_timer;
-	double	menu_timer;
+	double	cur_tm;
+	double	tm_anim;
+	double	tm_level;
+	double	tm_fe;
+	double	tm_menu;
+	double	tm_walk;
 	double	elapsed_pause;
+	double	no_portal_cooldown;
 	double	trg[3];
+	double	fe_time;
 	int		stars;
 	int		is_game_running;
 	int		time;
 	int		fps;
+	int		trig_anim;
+	int		trig_fe;
+	int		trig_walk;
 	int		prv_fps;
 	int		avrg_fps;
 }	t_timer;
@@ -64,23 +57,6 @@ typedef struct s_map
 	int		difficulty;
 }	t_map;
 
-typedef enum e_button_fct
-{
-	back,
-	quit,
-	edit_cur,
-	edit_new,
-	load,
-	load_next,
-	load_name,
-	ch_mus,
-	mute_swch,
-	load_ind,
-	dec_page,
-	inc_page,
-	t_button_fct_count,
-}	t_btn_fct;
-
 typedef struct s_slider
 {
 	t_image		*img;
@@ -96,33 +72,30 @@ typedef struct s_slider
 
 typedef struct s_menu_button
 {
-	t_image		*img;
-	t_vec2		pos;
-	t_btn_fct	function;
-	char		label[50];
-	int			*value;
-	int			active;
+	t_vec2			pos;
+	char			label[50];
+	int				*value;
+	int				active;
+	unsigned int	key_trigger;
+	char			key_show[5];
 }	t_button;
 
 typedef struct s_menu
 {
 	t_image			*overlay;
 	t_image			*freeze_frame;
-	t_gamestate		prv_state;
-	t_gamestate		state;
-	t_button		buttons[9];
+	t_button		buttons[20];
 	t_slider		sliders[50];
 	t_slider		*selected_slider;
 	int				slider_fill_clr;
 	int				slider_bgr_clr;
-	const char		*menu_titles[9][50];
 	int				bgr_color;
-	int				pages_amount[9];
-	int				cur_page[9];
 	int				menu_time;
 	int				slider_index;
-	int				refresh;
-	int				hov;
+	int				refresh_bg;
+	int				refresh_ui;
+	int				slider_hov;
+	int				button_hov;
 	int				active;
 }	t_menu;
 

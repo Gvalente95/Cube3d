@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 01:58:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 12:16:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/30 22:32:55 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,42 +50,39 @@ void	rotate_90_deg(t_vec3f *vec, int times)
 	}
 }
 
-int	check_portal_validity(t_md *md, t_ray *ray, t_ent *portal)
+int	get_portal_index(t_md *md, t_ray *ray, t_ent *portal)
 {
 	if (ray->teleported_once > 2)
+		return (-1);
+	if (!md->portal.ends[0].e || !md->portal.ends[1].e)
+		return (-1);
+	if (portal == md->portal.ends[0].e)
 		return (0);
-	if (!md->portal_gun.entrance || !md->portal_gun.exit)
-		return (0);
-	if (portal != md->portal_gun.entrance && portal != md->portal_gun.exit)
-		return (0);
-	return (1);
+	if (portal == md->portal.ends[1].e)
+		return (1);
+	return (-1);
 }
 
 int	translate_ray(t_md *md, t_ray *ray, t_ent *portal, float distance)
 {
-	t_ent	*src;
-	t_ent	*dst;
-	t_vec3f	rel_pos;
-	int		rot_offset;
+	t_wrd_dir	src_dir;
+	t_wrd_dir	dst_dir;
+	t_vec2		out_pos;
+	int			rot_offset;
+	int			view_index;
 
-	if (!md->portal_gun.entrance || !md->portal_gun.exit)
+	view_index = get_portal_index(md, ray, portal);
+	if (view_index == -1)
 		return (0);
-	if (portal != md->portal_gun.entrance && portal != md->portal_gun.exit)
-		return (0);
-	src = md->portal_gun.entrance;
-	dst = md->portal_gun.exit;
-	if (portal == md->portal_gun.exit)
-	{
-		src = md->portal_gun.exit;
-		dst = md->portal_gun.entrance;
-	}
-	rel_pos = get_v3f(ray->pos.x - src->pos.x, ray->pos.y - src->pos.y, 0);
-	rot_offset = dir_to_rotation(src->overlay_dir, dst->overlay_dir);
-	rotate_90_deg(&rel_pos, rot_offset);
+	src_dir = md->portal.ends[view_index].dir;
+	dst_dir = md->portal.ends[!view_index].dir;
+	out_pos = md->portal.ends[!view_index].out;
+	rot_offset = dir_to_rotation(src_dir, dst_dir);
 	rotate_90_deg(&ray->dir, rot_offset);
-	int	val = md->t_len * 1;
-	ray->pos.x = dst->pos.x + rel_pos.x + ray->dir.x * val;
-	ray->pos.y = dst->pos.y + rel_pos.y + ray->dir.y * val;
-	init_base_ray(ray, ray->index, ray->pos, distance + val);
-	return (ray->teleported_once++, cast_ray(md, ray, get_2d_ray_pos(md)), 1);
+	ray->pos.x = out_pos.x;
+	ray->pos.y = out_pos.y;
+	init_base_ray(ray, ray->index, ray->pos, distance);
+	ray->teleported_once++;
+	cast_ray(md, ray, get_2d_ray_pos(md));
+	return (1);
 }

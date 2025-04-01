@@ -6,110 +6,108 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 11:39:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 18:20:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static t_wrd_dir	get_wall_orientation(t_ray *ray)
+static int	skip_pxl(t_md *md, t_ray_draw_d *d, int pxl_color, t_vec2 win_sz)
 {
-	if (ray->vrcl)
-		return (EAST);
-	if (ray->vertical_hit)
-	{
-		if (ray->dir.x > 0)
-			return (EAST);
-		return (WEST);
-	}
-	else if (ray->dir.y > 0)
-		return (SOUTH);
-	return (NORTH);
-}
-
-static int	draw_strip(t_md *md, t_ray *ray, t_vec3 win_p, t_vec3f img_coords, int first_pass, int *has_portal)
-{
-	t_vec2	y;
-	t_vec3	pxl;
-	float	step;
-	t_vec2	win_draw_pos;
-	t_image	*img;
+	t_ray	*ray;
 	int		rgb;
 
-	img = ray->wall_hit->frame;
-	y.x = (md->win_size.y / 2 - img_coords.y / 2) - 1;
-	step = img->size.y / img_coords.y;
-	y.y = (md->win_size.y / 2 + img_coords.y / 2);
-	while (++y.x < y.y)
+	ray = d->ray;
+	if ((pxl_color >> 24) != 0x00)
+		return (1);
+	rgb = pxl_color & 0x00FFFFFF;
+	if ((rgb == 0x0000FF || rgb == 0xFF0000) && \
+		get_portal_index(md, ray, ray->wall_hit) != -1)
 	{
-		pxl.z = (y.x - (md->win_size.y / 2 - img_coords.y / 2)) * step;
-		if (pxl.z < 0 || pxl.z >= img->size.y)
-			continue ;
-		pxl.x = ((int)pxl.z * (img->size_line / 4)) + (int)img_coords.x;
-		pxl.y = *(img->src + pxl.x);
-		win_draw_pos = get_v2(win_p.x, y.x + win_p.y - md->cam_pos.z);
-		if ((pxl.y >> 24) != 0x00)
-			continue ;
-		rgb = pxl.y & 0x00FFFFFF;
-		if ((rgb == 0x0000FF || rgb == 0xFF0000) && check_portal_validity(md, ray, ray->wall_hit))
-		{
-			if (first_pass)
-				*has_portal = 1;
-			else if (translate_ray(md, ray, ray->wall_hit, ray->distance))
-				return (md->win_size.y);
-			continue ;
-		}
-		draw_pixel(md->screen, win_draw_pos, pxl.y, -1);
-		if (md->fx.fog)
-			draw_pixel(md->screen, win_draw_pos, md->rgb[RGB_BLACK], \
-		minmaxf(0, .9, ((ray->distance / md->t_len) / 10) * md->fx.fog));
-		if (md->plr.shot && win_p.x == md->win_size.x / 2 && y.x + win_p.y - md->plr.pos.z == md->win_size.y / 2)
-			draw_portal(md, ray->wall_hit, get_v2((int)img_coords.x, (int)pxl.z));
+		if (d->pass == 0)
+			d->has_portal = 1;
+		else if (translate_ray(md, ray, ray->wall_hit, ray->distance))
+			return (win_sz.y);
+		return (1);
 	}
-	return (y.x + win_p.y - md->cam_pos.z);
+	return (0);
 }
 
-int	compute_row_start(t_md *md, float ray_dst)
+static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 {
-	float	pitch_factor;
-	int		pitch_offset;
-	float	vertical_offset;
+	t_vec2	win_p;
+	t_ray	*ray;
+	int		skip_this;
 
-	pitch_factor = tanf(md->plr_rot.y * (M_PI / 180.0f));
-	vertical_offset = (md->cam_pos.z * md->win_size.y) / (ray_dst + 1.0f);
-	pitch_offset = (-pitch_factor * md->win_size.y / 2) - vertical_offset;
-	return (pitch_offset);
+	d->pxl_i = ((int)d->win_y * (d->img->size_line / 4)) + (int)d->txd_crd.x;
+	d->pxl_clr = *(d->img->src + d->pxl_i);
+	skip_this = skip_pxl(md, d, d->pxl_clr, win_sz);
+	if (skip_this)
+		return (skip_this);
+	win_p.x = d->win_start.x;
+	win_p.y = d->y_start + d->win_start.y - md->cam_pos.z;
+	if (d->ray->wall_hit->angle)
+		draw_pixel(md->screen, win_p, d->pxl_clr, d->ray->wall_hit->angle);
+	else
+		draw_pixel(md->screen, win_p, d->pxl_clr, -1);
+	ray = d->ray;
+	if (md->fx.fog)
+		draw_pixel(md->screen, win_p, md->rgb[RGB_BLACK], \
+	minmaxf(0, .95, ((ray->distance / md->t_len) / 10) * md->fx.fog));
+	if (md->plr.shot && !ray->had_door && \
+		d->win_start.x == win_sz.x / 2 && \
+		d->y_start + d->win_start.y - md->plr.pos.z == win_sz.y / 2)
+		draw_portal(md, ray->wall_hit, get_v2((int)d->txd_crd.x, d->win_y));
+	return (1);
 }
 
-static int	draw_pxl(t_md *md, t_ray *ray, \
-	t_vec3f txtr_coord, t_vec3 screen_pos)
+static int	draw_strip(t_md *md, t_ray_draw_d *d, t_vec2 win_sz, int pass)
 {
-	t_ent		*wall;
-	t_image		*img;
-	t_wrd_dir	dir;
-	int			vertical_end;
-	int			portal;
+	const float		step = d->img->size.y / d->txd_crd.y;
+	int				ret;
 
-	wall = ray->wall_hit;
-	img = wall->frame;
-	if (wall->type == nt_wall)
+	d->pass = pass;
+	d->y_start = (win_sz.y / 2 - d->txd_crd.y / 2) - 1;
+	d->y_end = (win_sz.y / 2 + d->txd_crd.y / 2);
+	while (++d->y_start < d->y_end)
+	{
+		d->win_y = (d->y_start - (win_sz.y / 2 - d->txd_crd.y / 2)) * step;
+		if (d->win_y < 0 || d->win_y >= d->img->size.y)
+			continue ;
+		ret = pxl_draw(md, d, win_sz);
+		if (ret > 1)
+			return (ret);
+	}
+	d->y_max = d->y_start + d->win_start.y - md->cam_pos.z;
+	return (d->y_max);
+}
+
+static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
+{
+	t_image			*img;
+	t_wrd_dir		dir;
+	t_ray_draw_d	draw_d;
+
+	img = ray->wall_hit->frame;
+	if (ray->wall_hit->type == nt_wall)
 	{
 		dir = get_wall_orientation(ray);
-		if (!wall->overlay)
-			wall->overlay_dir = dir;
-		img = wall->frames[(int)dir];
-		if (wall->overlay && wall->overlay_dir == dir)
-			img = wall->overlay;
-		wall->frame = img;
+		if (!ray->wall_hit->overlay)
+			ray->wall_hit->overlay_dir = dir;
+		img = ray->wall_hit->frames[(int)dir];
+		if (ray->wall_hit->overlay && ray->wall_hit->overlay_dir == dir)
+			img = ray->wall_hit->overlay;
+		ray->wall_hit->frame = img;
 	}
-	portal = 0;
-	vertical_end = draw_strip(md, ray, screen_pos, txtr_coord, 1, &portal);
-	if (portal)
-		return (draw_strip(md, ray, screen_pos, txtr_coord, 0, &portal), 1);
-	if (vertical_end < md->hud.new_floor_start)
-		md->hud.new_floor_start = vertical_end;
-	if (!wall->overlay)
-		wall->overlay_dir = -1;
+	draw_d = (t_ray_draw_d){ray, ray->wall_hit->frame, \
+		screen_p, screen_p, 0, 0, txtr_crd, 0, 0, 0, 0, 0, 0, 0};
+	draw_strip(md, &draw_d, md->win_sz, 0);
+	if (draw_d.has_portal)
+		draw_strip(md, &draw_d, md->win_sz, 1);
+	md->hud.new_floor_start = minf(md->hud.new_floor_start, draw_d.y_max);
+	if (md->hud.active_bgr && ray->is_floor_worker)
+		draw_floor(md, ray, draw_d.y_max, \
+			get_v2f(-md->plr.dir.y * .66, md->plr.dir.x * .66));
 	return (1);
 }
 
@@ -120,13 +118,14 @@ int	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
 
 	ray->wall_hit = wall;
 	ray->distance = maxf(0.01, dist);
+	wall->hp = ray->distance > md->t_len * 2;
 	txtr_cord.y = correct_fisheye(md, ray, wall, dist);
 	if (ray->vertical_hit)
 		txtr_cord.x = (int)fmod(ray->pos.y, wall->size.y);
 	else
 		txtr_cord.x = (int)fmod(ray->pos.x, wall->size.x);
 	screen_pos.x = ray->index;
-	screen_pos.y = compute_row_start(md, ray->distance);
+	screen_pos.y = compute_row_start(md, wall, ray->distance);
 	screen_pos.z = ray->hits_len > 0;
 	draw_pxl(md, ray, txtr_cord, screen_pos);
 	return (1);

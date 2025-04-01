@@ -11,13 +11,15 @@ else
 endif
 
 SOURCES = \
-c_files/Vector_3b.c c_files/audio.c c_files/colors.c c_files/draw_alpha.c c_files/draw_img.c c_files/draw_img_2.c \
-c_files/draw_pixels.c c_files/free.c c_files/images_a.c c_files/images_b.c c_files/images_data.c c_files/images_load.c \
-c_files/init_wrapper.c c_files/input.c c_files/input_mouse.c c_files/input_tools.c c_files/string.c c_files/string_2.c \
-c_files/string_3.c c_files/time.c c_files/time2.c c_files/tools.c c_files/vector4float.c c_files/vector_2.c \
-c_files/vector_2b.c c_files/vector_2f.c c_files/vector_2f_b.c c_files/vector_3.c c_files/vector_3float.c \
-c_files/vector_3floatb.c c_files/vector_4.c c_files/vector_math.c c_files/vectors_show.c c_files/free_image.c \
-c_files/free_elements.c c_files/math_tools.c
+c_files/input/input_tools.c c_files/input/input_mouse.c c_files/input/input.c c_files/free/free_image.c \
+c_files/free/free_elements.c c_files/free/free.c c_files/var/time2.c c_files/var/time.c c_files/var/audio.c \
+c_files/var/colors.c c_files/vectors/vector_math_scale.c c_files/vectors/vector_2.c c_files/vectors/vectors_show.c \
+c_files/vectors/vector_3floatb.c c_files/vectors/vector_3float.c c_files/vectors/vector_4.c c_files/vectors/vector_2f_b.c \
+c_files/vectors/Vector_3b.c c_files/vectors/vector4float.c c_files/vectors/vector_math_sub.c c_files/vectors/vector_math_add.c \
+c_files/vectors/vector_math_f.c c_files/vectors/vector_2f.c c_files/vectors/vector_2b.c c_files/vectors/vector_3.c \
+c_files/math/math_tools.c c_files/init_wrapper.c c_files/string/string_3.c c_files/string/string.c c_files/string/string_2.c \
+c_files/draw/rotate.c c_files/draw/draw_img.c c_files/draw/draw_img_2.c c_files/draw/images_data.c c_files/draw/images_load.c \
+c_files/draw/draw_alpha.c c_files/draw/images_b.c c_files/draw/draw_pixels.c c_files/draw/images_a.c \
 
 OBJ = $(SOURCES:.c=.o)
 

@@ -46,7 +46,6 @@
 
 #define	MLX_H
 
-
 #define ButtonReleaseMask 0
 #define PointerMotionMask 1L << 6
 

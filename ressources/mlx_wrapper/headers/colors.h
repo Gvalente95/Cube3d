@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/24 20:55:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 14:49:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,13 @@ unsigned char	get_b(int trgb);
 # define COLOR_TXT_RED				"\033[31m"
 # define COLOR_TXT_RESET			"\033[0m"
 # define COLOR_TXT_GREEN			"\033[32m"
+
+//		var/colors.c
+int				get_trgb(unsigned char t, unsigned char r, \
+	unsigned char g, unsigned char b);
+unsigned char	get_t(int trgb);
+unsigned char	get_r(int trgb);
+unsigned char	get_g(int trgb);
+unsigned char	get_b(int trgb);
+
 #endif

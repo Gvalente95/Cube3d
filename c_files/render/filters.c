@@ -6,37 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:51:08 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 18:32:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/29 18:25:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	set_hue(t_image *img, t_vec4f rgb_factors)
-{
-	int				num_pixels;
-	t_vec4			rgba;
-	unsigned int	color;
-	int				i;
-
-	num_pixels = img->size.x * img->size.y;
-	i = -1;
-	while (++i < num_pixels)
-	{
-		color = img->src[i];
-		rgba.r = ((color >> 16) & 0xFF) * rgb_factors.r;
-		rgba.g = ((color >> 8) & 0xFF) * rgb_factors.g;
-		rgba.b = (color & 0xFF) * rgb_factors.b;
-		rgba.a = (color >> 24) & 0xFF;
-		rgba.r = minmaxf(0, 255, rgba.r);
-		rgba.g = minmaxf(0, 255, rgba.g);
-		rgba.b = minmaxf(0, 255, rgba.b);
-		color = (rgba.a << 24) | (rgba.r << 16) | (rgba.g << 8) | rgba.b;
-		img->src[i] = color;
-	}
-}
-
-void	apply_d2(t_image *img, t_vec2 pos, t_vec3 *ij, t_vec4 *rgb)
+void	apply_d2(t_image *img, t_vec2 pos, t_vec3 *ij, t_vec4f *rgb)
 {
 	t_vec2			p;
 	unsigned int	pixel;
@@ -45,20 +21,20 @@ void	apply_d2(t_image *img, t_vec2 pos, t_vec3 *ij, t_vec4 *rgb)
 	if (p.x < 0 || p.x >= img->size.x || p.y < 0 || p.y >= img->size.y)
 		return ;
 	pixel = img->src[p.y * img->size.x + p.x];
-	rgb->x += (pixel >> 16) & 0xFF;
-	rgb->y += (pixel >> 8) & 0xFF;
-	rgb->z += pixel & 0xFF;
-	rgb->w += (pixel >> 24) & 0xFF;
-	*ij = get_v3(ij->x, ij->y++, ij->z++);
+	rgb->r += (pixel >> 16) & 0xFF;
+	rgb->g += (pixel >> 8) & 0xFF;
+	rgb->b += pixel & 0xFF;
+	rgb->a += (pixel >> 24) & 0xFF;
+	ij->z++;
 }
 
 void	apply_d(t_image *img, unsigned int *new_d, t_vec2 pos, float half_krnfl)
 {
-	t_vec4			rgb;
+	t_vec4f			rgb;
 	t_vec3			ij;
 	unsigned int	rgba[4];
 
-	rgb = get_v4(0, 0, 0, 0);
+	rgb = get_v4f(0, 0, 0, 0);
 	ij.z = 0;
 	ij.x = -half_krnfl - 1;
 	while (++ij.x <= half_krnfl)
@@ -69,10 +45,10 @@ void	apply_d(t_image *img, unsigned int *new_d, t_vec2 pos, float half_krnfl)
 	}
 	if (ij.z == 0)
 		ij.z = 1;
-	rgba[0] = (unsigned int)(rgb.x / ij.z);
-	rgba[1] = (unsigned int)(rgb.y / ij.z);
-	rgba[2] = (unsigned int)(rgb.z / ij.z);
-	rgba[3] = (unsigned int)(rgb.w / ij.z);
+	rgba[0] = minmaxf(0, 255, rgb.r / (float)ij.z);
+	rgba[1] = minmaxf(0, 255, rgb.g / (float)ij.z);
+	rgba[2] = minmaxf(0, 255, rgb.b / (float)ij.z);
+	rgba[3] = minmaxf(0, 255, rgb.a / (float)ij.z);
 	new_d[pos.y * img->size.x + pos.x] = \
 		(rgba[3] << 24) | (rgba[0] << 16) | (rgba[1] << 8) | rgba[2];
 }
@@ -128,26 +104,23 @@ void	apply_scanlines(t_image *img, float factor)
 	}
 }
 
-
 void	apply_noise(t_md *md, t_image *img, float factor, float colors_amount)
 {
 	int		i;
-	int		pxl;
 	t_vec4	rgb;
-	int		displ;
+	int		dspl;
 	int		total_pixels;
 	int		gray;
 
-	displ = (int)(factor * 100);
+	dspl = (int)(factor * 100);
 	total_pixels = img->size.y * (img->size_line / 4);
 	i = -1;
 	while (++i < total_pixels)
 	{
-		pxl = img->src[i];
-		rgb = color_to_v4(pxl);
-		rgb.r = minmax(0, 255, rgb.r + r_range_seed(&md->random_seed, -displ, displ));
-		rgb.g = minmax(0, 255, rgb.g + r_range_seed(&md->random_seed, -displ, displ));
-		rgb.b = minmax(0, 255, rgb.b + r_range_seed(&md->random_seed, -displ, displ));
+		rgb = color_to_v4(img->src[i]);
+		rgb.r = minmax(0, 255, rgb.r + r_range_seed(&md->r_seed, -dspl, dspl));
+		rgb.g = minmax(0, 255, rgb.g + r_range_seed(&md->r_seed, -dspl, dspl));
+		rgb.b = minmax(0, 255, rgb.b + r_range_seed(&md->r_seed, -dspl, dspl));
 		gray = (rgb.r + rgb.g + rgb.b) / 3;
 		rgb.r = (rgb.r * colors_amount) + (gray * (1.0f - colors_amount));
 		rgb.g = (rgb.g * colors_amount) + (gray * (1.0f - colors_amount));

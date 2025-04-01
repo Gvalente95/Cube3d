@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 23:10:51 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 20:29:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 13:34:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	join_rect(char *full, t_vec2 rect_size, t_vec3 rect_pos, t_vec3 full_sz)
 	}
 }
 
-char	*get_collapsed_map(t_vec2 size, int rects_amount, int i)
+char	*get_cmps_map(t_vec2 size, int rects_amount, int i)
 {
 	char	*map;
 	t_vec2	rect_size;
@@ -131,10 +131,10 @@ char	*get_new_map(int difficulty, t_vec2 *size, char *data_info)
 	int				fd;
 	unsigned int	seed;
 
-	seed = get_random_seed();
+	seed = get_r_seed();
 	size->x = r_range_seed(&seed, size->x * .8, size->x * 1.2);
 	size->y = r_range_seed(&seed, size->y * .8, size->y * 1.2);
-	map = get_collapsed_map(*size, 10, -1);
+	map = get_cmps_map(*size, 10, -1);
 	set_characters(map, difficulty);
 	close_map(map, *size, ft_strlen(map));
 	if (!data_info)

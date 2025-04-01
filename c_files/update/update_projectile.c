@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:56:16 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 13:11:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/31 17:46:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	plr_shoot(t_md *md)
 {
+	if (!md->plr.can_shoot)
+		return ;
 	if (md->hud.ammo < md->hud.wpn_index)
 		return ;
 	md->hud.ammo = minmax(0, MAX_AMMO, md->hud.ammo - md->hud.wpn_index);
@@ -22,13 +24,6 @@ void	plr_shoot(t_md *md)
 	md->plr.shot = md->hud.wpn_index;
 	md->plr.can_shoot = 0;
 	md->hud.weapon_frame = 1;
-	if (!md->prm.ent_mode)
-	{
-		play_sound(md, AU_PORTAL_SHOOT);
-		return ;
-	}
 	if (md->hud.wpn_index == Knife)
 		play_sound(md, AU_SLICE);
-	else
-		play_sound(md, AU_SHOOT);
 }

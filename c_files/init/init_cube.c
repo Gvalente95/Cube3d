@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cube.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 15:41:52 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:02:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 	int			i;
 	int			color_index;
 
-	mmap->collapsed = 1;
+	mmap->cmps = 1;
 	mmap->mray_len = 0;
 	mmap->active = 1;
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
@@ -91,31 +91,31 @@ static void	init_colors(t_md *md)
 
 static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 {
-	md->mmap.ic_scl = md->win_size.x / 75;
-	if (md->win_size.x > md->win_size.y)
-		md->mmap.ic_scl = md->win_size.y / 75;
-	md->mmap.collaps_scl = md->mmap.ic_scl * .75;
-	md->mouse.lock_rotation = get_v2(0, 1);
+	md->mouse.lock_rot = get_v2(0, 0);
 	md->score = 0;
 	md->txd.size_2d = 40;
 	md->plr.was_hit = 0;
-	prm->difficulty = 1;
+	md->bob_time = 0.0f;
+	md->portal.ends[0].e = NULL;
+	md->portal.ends[1].e = NULL;
+	md->portal.last_shot_index = 0;
+	md->portal.last_passage = NULL;
 	prm->debug_mode = start_debug;
-	prm->real_mode = !prm->debug_mode;
+	prm->ray_mode = !prm->debug_mode;
 	prm->show_rays = prm->debug_mode;
 	prm->ray_depth = md->t_len * RAY_DEPTH;
-	prm->audio_volume = 1;
+	prm->free_cam = 0;
 	prm->height = HEIGHT;
 	prm->plr_speed = PLRSPD;
 	prm->rot_speed = MOUSESPD;
 	prm->resolution = RESOLUTION;
 	prm->zoom = md->t_len / 2;
 	prm->ent_mode = 0;
-	md->bob_time = 0.0f;
-	md->portal_gun.entrance = NULL;
-	md->portal_gun.exit = NULL;
-	md->portal_gun.last_shot_exit = 0;
-	md->portal_gun.last_passage = NULL;
+	prm->use_thrd = 1;
+	prm->use_grass = 1;
+	prm->au_amb_on = 1;
+	prm->use_sky = 1;
+	prm->au_on = 1;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
@@ -129,12 +129,15 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
+	md->mmap.ic_scl = md->win_sz.x / 125;
+	md->mmap.collaps_scl = md->mmap.ic_scl * .75;
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);
 	init_menu(md, &md->menu);
+	init_env(md);
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;
 	md->init_steps++;
-	if (1)
-		show_init_information(md);
+	show_init_information(md);
+	init_ray_threads(md);
 	return (0);
 }

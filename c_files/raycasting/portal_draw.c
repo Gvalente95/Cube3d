@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   portal_draw.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:09:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:45:44 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/30 22:41:31 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,94 +24,100 @@ static void	draw_portal_layers(t_image *img, \
 	draw_sphere(img, pos, size, get_v3(colors.x, 0, 1));
 }
 
-static t_vec2	rotate_overlay_offset(t_vec2 offset, t_wrd_dir dir)
+static void	set_portal_pos(t_ent *e, int x_pos_offset, t_vec2 *out_pos)
 {
-	t_vec2	result;
+	t_wrd_dir	dir;
 
+	dir = e->overlay_dir;
 	if (dir == NORTH)
-		return (offset);
-	else if (dir == EAST)
-		result = (get_v2(offset.y, -offset.x));
+	{
+		out_pos->y = e->pos.y + e->size.y;
+		out_pos->x = e->pos.x + x_pos_offset;
+	}
 	else if (dir == SOUTH)
-		result = (get_v2(-offset.x, -offset.y));
-	else if (dir == WEST)
-		result = (get_v2(-offset.y, offset.x));
+	{
+		out_pos->y = e->pos.y;
+		out_pos->x = e->pos.x + x_pos_offset;
+	}
+	else if (dir == EAST)
+	{
+		out_pos->x = e->pos.x;
+		out_pos->y = e->pos.y + x_pos_offset;
+	}
 	else
-		result = offset;
-	return (result);
+	{
+		out_pos->x = e->pos.y + e->size.y;
+		out_pos->y = e->pos.y + x_pos_offset;
+	}
 }
 
-static void	clear_prev_portal(t_md *md, t_ent *e, \
-	int is_exit, t_vec2 world_p)
+static void	clear_prev_portal(t_md *md, t_ent *e, t_vec2 out_pos)
 {
-	if (is_exit)
-	{
-		free_image_data(md, md->portal_gun.exit->overlay);
-		md->portal_gun.exit->overlay = NULL;
-		md->portal_gun.exit = e;
-		md->portal_gun.exit_pos = world_p;
-		md->portal_gun.last_shot_exit = 0;
-	}
-	else
-	{
-		free_image_data(md, md->portal_gun.entrance->overlay);
-		md->portal_gun.entrance->overlay = NULL;
-		md->portal_gun.entrance = e;
-		md->portal_gun.entrance_pos = world_p;
-		md->portal_gun.last_shot_exit = 1;
-	}
+	t_portal	*p;
+	int			index;
+
+	index = md->portal.last_shot_index;
+	p = &md->portal;
+	free_image_data(md, p->ends[index].e->overlay);
+	p->ends[index].e->overlay = NULL;
+	p->ends[index].e = e;
+	p->ends[index].dir = e->overlay_dir;
+	p->ends[index].out = out_pos;
+	md->portal.last_shot_index = !index;
 }
 
-static int	set_single(t_md *md, t_ent *e, t_vec2 overlay_pos, t_vec4 data)
+static int	set_single(t_md *md, t_ent *e, t_vec2 out_pos, t_vec4 data)
 {
 	t_vec2	draw_pos;
 	t_vec2	size;
+	int		i;
+	int		color;
 
 	draw_pos = get_v2(data.r, data.g);
 	size = get_v2(data.b, data.a);
-	if (!md->portal_gun.entrance)
+	i = -1;
+	while (++i < 2)
 	{
-		md->portal_gun.entrance_pos = overlay_pos;
-		md->portal_gun.entrance = e;
+		if (md->portal.ends[i].e)
+			continue ;
+		md->portal.ends[i].e = e;
+		color = md->rgb[RGB_INDIGO];
+		if (i == 1)
+			color = md->rgb[RGB_ORANGE];
 		draw_portal_layers(e->overlay, draw_pos, size,
-			get_v3(md->rgb[RGB_BLUE], 0, md->rgb[RGB_ORANGE]));
-		return (1);
+			get_v3(md->rgb[RGB_BLUE], 0, color));
+		md->portal.ends[i].out = out_pos;
+		md->portal.ends[i].dir = e->overlay_dir;
+		return (i);
 	}
-	if (!md->portal_gun.exit)
-	{
-		md->portal_gun.exit = e;
-		md->portal_gun.exit_pos = overlay_pos;
-		md->portal_gun.last_shot_exit = 1;
-		draw_portal_layers(e->overlay, draw_pos, size,
-			get_v3(md->rgb[RGB_RED], 0, md->rgb[RGB_INDIGO]));
-		return (1);
-	}
-	return (0);
+	return (-1);
 }
 
 void	draw_portal(t_md *md, t_ent *e, t_vec2 pos)
 {
 	t_vec2	draw_sz;
 	t_vec2	draw_p;
-	t_vec2	world_pos;
-	t_vec2	rot_offst;
+	t_vec2	out_pos;
+	int		index;
 
 	if (e->overlay || e->type != nt_wall)
 		return ;
+	(void)pos;
+	play_sound(md, AU_PORTAL_SHOOT);
 	draw_sz = get_v2(md->t_len / 3, md->t_len * 0.75f);
-	draw_p = get_v2(\
-		minmax(10, e->size.x - draw_sz.x - 3, pos.x - draw_sz.x / 2), \
-		minmax(10, e->size.y - draw_sz.y - 3, pos.y - draw_sz.y / 2));
-	rot_offst = rotate_overlay_offset(draw_p, e->overlay_dir);
-	world_pos = get_v2(e->pos.x + rot_offst.x, e->pos.y + rot_offst.y);
+	draw_p = get_v2(e->size.x / 2 - draw_sz.x / 2, \
+		e->size.y / 2 - draw_sz.y / 2);
 	e->overlay = copy_image(md, e->frame, e->frame->size, -1);
-	if (set_single(md, e, world_pos, get_v4(draw_p.x, draw_p.y, draw_sz.x, draw_sz.y)))
+	set_portal_pos(e, e->size.x / 2, &out_pos);
+	index = set_single(md, e, out_pos, \
+		get_v4(draw_p.x, draw_p.y, draw_sz.x, draw_sz.y));
+	if (index != -1)
 		return ;
-	clear_prev_portal(md, e, md->portal_gun.last_shot_exit, world_pos);
-	if (md->portal_gun.last_shot_exit)
+	clear_prev_portal(md, e, out_pos);
+	if (md->portal.last_shot_index == 0)
 		draw_portal_layers(e->overlay, draw_p, draw_sz, \
 			get_v3(md->rgb[RGB_BLUE], 0, md->rgb[RGB_ORANGE]));
 	else
 		draw_portal_layers(e->overlay, draw_p, draw_sz, \
-			get_v3(md->rgb[RGB_RED], 0, md->rgb[RGB_INDIGO]));
+			get_v3(md->rgb[RGB_BLUE], 0, md->rgb[RGB_INDIGO]));
 }

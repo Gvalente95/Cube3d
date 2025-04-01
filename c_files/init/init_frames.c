@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_frames.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 19:31:07 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/03/31 20:28:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@ void	store_entities_sizes(t_texture_data *td, t_vec2 base)
 	td->e_sizes[nt_pickup] = v2(base.x * .5);
 	td->e_sizes[nt_door] = base;
 	td->e_sizes[nt_wall] = base;
+	td->e_sizes[nt_bush] = base;
+	td->e_sizes[nt_tree] = v2(base.x * 2);
+}
+
+void	init_env_frames(t_md *md, t_texture_data *td)
+{
+	td->bush_txtr = init_images(md, td->e_sizes[nt_bush], "ent/bush/");
+	td->tree_txtr = init_images(md, td->e_sizes[nt_tree], "ent/trees/");
 }
 
 void	init_ents_data(t_md *md, t_texture_data *txd)
@@ -75,6 +83,7 @@ void	init_ents_data(t_md *md, t_texture_data *txd)
 	init_weapon_frames(md, txd);
 	init_pickup_frames(md, txd);
 	init_mobs_frames(md);
+	init_env_frames(md, txd);
 	txd->door_txtr = init_img(md, txd->e_sizes[nt_door], "ent/door/0.xpm", -1);
 	txd->door_txtr_mini = \
 		init_img(md, get_v2(txd->size_2d, txd->size_2d), "ent/door/0.xpm", -1);

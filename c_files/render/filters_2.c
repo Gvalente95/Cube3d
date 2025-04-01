@@ -6,34 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:52:06 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/26 16:41:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/03/26 16:48:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-void	apply_glitch(t_image *img, float intensity)
-{
-	t_vec2	pos;
-	int		glitch_strength;
-	int		offset;
-
-	glitch_strength = (int)(intensity * 10.0f);
-	pos.y = -1;
-	while (++pos.y < img->size.y)
-	{
-		if (pos.y % 5 == 0 && r_range(0, 100) < (intensity * 100))
-		{
-			offset = r_range(-glitch_strength, glitch_strength);
-			pos.x = img->size.x / 2 + offset;
-			while (++pos.x < img->size.x - offset)
-			{
-				img->src[pos.y * img->size.x + pos.x] = \
-				img->src[pos.y * img->size.x + (pos.x - offset)];
-			}
-		}
-	}
-}
 
 void	apply_barrel_distortion(t_image *img, float intensity)
 {
@@ -146,5 +123,29 @@ void	apply_vignette(t_image *img, float intensity, int color)
 			img->src[pos.y * img->size.x + pos.x] = \
 				blend_color(txtr_color, color, alpha);
 		}
+	}
+}
+
+void	set_hue(t_image *img, t_vec4f rgb_factors)
+{
+	int				num_pixels;
+	t_vec4			rgba;
+	unsigned int	color;
+	int				i;
+
+	num_pixels = img->size.x * img->size.y;
+	i = -1;
+	while (++i < num_pixels)
+	{
+		color = img->src[i];
+		rgba.r = ((color >> 16) & 0xFF) * rgb_factors.r;
+		rgba.g = ((color >> 8) & 0xFF) * rgb_factors.g;
+		rgba.b = (color & 0xFF) * rgb_factors.b;
+		rgba.a = (color >> 24) & 0xFF;
+		rgba.r = minmaxf(0, 255, rgba.r);
+		rgba.g = minmaxf(0, 255, rgba.g);
+		rgba.b = minmaxf(0, 255, rgba.b);
+		color = (rgba.a << 24) | (rgba.r << 16) | (rgba.g << 8) | rgba.b;
+		img->src[i] = color;
 	}
 }
