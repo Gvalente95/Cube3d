@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 18:19:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:41:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	update_ents(t_md *md)
 	t_dblst	*next;
 	int		upd_render;
 
-	if (!md->timer.fe_time)
+	if (!md->prm.fe_speed)
 		return (0);
 	upd_render = 0;
 	node = md->entities;

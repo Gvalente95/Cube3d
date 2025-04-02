@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 12:47:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:48:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,5 +159,6 @@ void			draw_rot_y(t_md *md, t_image *src, t_image *dst, t_vec3f p);
 void			draw_rot_yz(t_md *md, t_image *src, t_image *dst, t_vec4f p);
 void			draw_img_yaw(t_md *md, t_image *src, t_image *dst, t_vec3f p);
 void			draw_img_pitch(t_md *md, t_image *src, t_image *dst, t_vec3f p);
+void			remove_img_color(t_image *img, int remove_color);
 
 #endif

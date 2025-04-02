@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/31 14:49:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:36:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ unsigned char	get_b(int trgb);
 # define RGB_BLACK	16
 # define RGB_YELLOW	17
 # define RGB_ORANGE	18
+# define RGB_NULL	18
 
 # define COLOR_RED        		0xFFFF0000  // Fully opaque red
 # define COLOR_GREEN      		0xFF00FF00  // Fully opaque green

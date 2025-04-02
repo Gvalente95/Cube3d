@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:09:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/30 22:41:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 21:30:12 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ static void	draw_portal_layers(t_image *img, \
 
 	glow_pos = get_v2(pos.x - 5, pos.y - 5);
 	glow_size = get_v2(size.x + 10, size.y + 10);
-	draw_sphere(img, glow_pos, glow_size, get_v3(colors.z, 50, 1));
-	draw_sphere(img, pos, size, get_v3(colors.x, 0, 1));
+	if (0)
+		draw_pixels(img, glow_pos, glow_size, colors.z);
+	draw_pixels(img, pos, size, colors.x);
 }
 
 static void	set_portal_pos(t_ent *e, int x_pos_offset, t_vec2 *out_pos)
@@ -104,7 +105,7 @@ void	draw_portal(t_md *md, t_ent *e, t_vec2 pos)
 		return ;
 	(void)pos;
 	play_sound(md, AU_PORTAL_SHOOT);
-	draw_sz = get_v2(md->t_len / 3, md->t_len * 0.75f);
+	draw_sz = get_v2(md->t_len / 3, md->t_len / 2);
 	draw_p = get_v2(e->size.x / 2 - draw_sz.x / 2, \
 		e->size.y / 2 - draw_sz.y / 2);
 	e->overlay = copy_image(md, e->frame, e->frame->size, -1);

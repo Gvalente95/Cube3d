@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 11:18:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 14:25:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ static t_vec3f	set_input_mov(t_md *md)
 		spd *= 2;
 	if (md->prm.free_cam)
 		return (set_free_cam_mov(md, spd));
-	for_dir.x = cosf(md->plr.angle);
-	for_dir.y = sinf(md->plr.angle);
+	for_dir.x = md->plr.dir.x;
+	for_dir.y = md->plr.dir.y
 	rgt_dir.x = cosf(md->plr.angle - M_PI_2);
 	rgt_dir.y = sinf(md->plr.angle - M_PI_2);
 	return (set_input_mov_2(md, spd, for_dir, rgt_dir));
@@ -146,7 +146,7 @@ int	update_player_mov(t_md *md)
 	conv_mov = set_input_mov(md);
 	if (!md->prm.free_cam && md->plr.pos.z + md->prm.height < 0)
 		md->plr.mov.z += GRAVITY;
-	else if (!md->prm.free_cam && md->plr.pos.z + md->prm.height > 1)
+	else if (!md->prm.free_cam && md->plr.pos.z + md->prm.height > 0)
 	{
 		md->plr.pos.z = -md->prm.height;
 		md->plr.mov.z = 0;

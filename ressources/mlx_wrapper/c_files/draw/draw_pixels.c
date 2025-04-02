@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/01 18:18:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 20:40:12 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,23 +89,27 @@ int	draw_pixel(t_image *texture, t_vec2 pos, int color, float opacity)
 	return (1);
 }
 
-int	draw_safe_pixel(t_image *texture, t_vec2 pos, int color, int drawover)
+//		clr_ign.x = color | clr_ign.y = drawover
+int	draw_safe_pixel(t_image *img, t_vec2 pos, t_vec2 clr_over, float opacity)
 {
 	int	index;
 	int	cur_clr;
 
-	if (!texture || !texture->src)
+	if (!img || !img->src)
 		return (0);
-	if (pos.x < 0 || pos.x >= texture->size.x || \
-		pos.y < 0 || pos.y >= texture->size.y)
+	if (pos.x < 0 || pos.x >= img->size.x || \
+		pos.y < 0 || pos.y >= img->size.y)
 		return (0);
-	if ((texture->size_line / 4) != texture->size.x)
+	if ((img->size_line / 4) != img->size.x)
 		return (printf("Warning: size_line / 4 != size.x\n"), 0);
-	index = pos.y * (texture->size_line / 4) + pos.x;
-	cur_clr = texture->src[index];
-	if (cur_clr != drawover)
+	index = pos.y * (img->size_line / 4) + pos.x;
+	cur_clr = img->src[index];
+	if (cur_clr != clr_over.y)
 		return (0);
-	texture->src[index] = color;
+	if (opacity < 0)
+		img->src[index] = clr_over.x;
+	else
+		img->src[index] = blend_color(img->src[index], clr_over.x, opacity);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/01 19:01:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 14:23:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ typedef struct s_mmap
 	t_image		*arrow;
 	t_vec2		size;
 	int			cmps;
-	int			ic_scl;
 	int			collaps_scl;
+	int			ic_scl;
 	int			active;
 	int			mray_len;
 	int			bgr_color;
@@ -308,7 +308,7 @@ int				is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 int				ent_in_bounds(t_ent *ent, t_ent *bounds);
 void			upd_timer(double *timer, double cur_tm, double incr, int *event);
 void			draw_random_pixel(t_image *img, int scale, int base_color, float rand);
-int				draw_safe_pixel(t_image *texture, t_vec2 pos, int color, int ign_clr);
+int				draw_safe_pixel(t_image *img, t_vec2 pos, t_vec2 clr_over, float opacity);
 void			update_fe(t_md *md, t_vec2 start, \
 	t_fe *fe, t_floor_draw_d d);
 

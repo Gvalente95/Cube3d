@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 16:52:47 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:16:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ double	update_time(t_md *md, t_timer *tm)
 		tm->prv_fps = tm->fps;
 		tm->fps = 0;
 	}
-	upd_timer(&tm->tm_fe, tm->cur_tm, .01 / md->prm.fe_speed, &tm->trig_fe);
+	upd_timer(&tm->tm_fe, tm->cur_tm, .005 / md->prm.fe_speed, &tm->trig_fe);
 	upd_timer(&tm->tm_anim, tm->cur_tm, ANIM_REFRESH, &tm->trig_anim);
 	walk_increment = WALK_REFRESH;
 	if (md->key_prs[SHIFT_KEY])

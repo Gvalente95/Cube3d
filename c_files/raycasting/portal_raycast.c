@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 01:58:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/30 22:32:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 21:38:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,14 @@ int	get_portal_index(t_md *md, t_ray *ray, t_ent *portal)
 	return (-1);
 }
 
-int	translate_ray(t_md *md, t_ray *ray, t_ent *portal, float distance)
+int	translate_ray(t_md *md, t_ray *ray, t_ent *portal, int view_index)
 {
 	t_wrd_dir	src_dir;
 	t_wrd_dir	dst_dir;
 	t_vec2		out_pos;
 	int			rot_offset;
-	int			view_index;
 
-	view_index = get_portal_index(md, ray, portal);
-	if (view_index == -1)
-		return (0);
+	(void)portal;
 	src_dir = md->portal.ends[view_index].dir;
 	dst_dir = md->portal.ends[!view_index].dir;
 	out_pos = md->portal.ends[!view_index].out;
@@ -81,7 +78,7 @@ int	translate_ray(t_md *md, t_ray *ray, t_ent *portal, float distance)
 	rotate_90_deg(&ray->dir, rot_offset);
 	ray->pos.x = out_pos.x;
 	ray->pos.y = out_pos.y;
-	init_base_ray(ray, ray->index, ray->pos, distance);
+	init_base_ray(ray, ray->index, ray->pos, ray->distance);
 	ray->teleported_once++;
 	cast_ray(md, ray, get_2d_ray_pos(md));
 	return (1);

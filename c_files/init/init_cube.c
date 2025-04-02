@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 11:02:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 14:16:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,26 +43,27 @@ static void	init_minimap(t_md *md, t_mmap *mmap, int ic_len)
 {
 	t_vec2		pos;
 	int			i;
-	int			color_index;
+	char		c;
 
 	mmap->cmps = 1;
 	mmap->mray_len = 0;
 	mmap->active = 1;
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
-	mmap->img = init_img(md, mmap->size, NULL, -1);
-	mmap->bg = init_img(md, mmap->size, NULL, md->rgb[RGB_WHITE]);
+	mmap->img = init_img(md, mmap->size, NULL, md->rgb[RGB_NULL]);
+	mmap->bg = init_img(md, mmap->size, NULL, md->rgb[RGB_NULL]);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
-		if (md->map.buffer[i] != '1')
-			continue ;
-		color_index = get_char_index(md->txd.ents_tp_map[0], md->map.buffer[i]);
-		if (color_index == -1)
+		c = md->map.buffer[i];
+		if (c == ' ')
 			continue ;
 		pos = get_v2(i % (md->map.size.x + 1), i / (md->map.size.x + 1));
-		draw_pixels(mmap->bg, get_v2(ic_len * pos.x + 2, ic_len * pos.y + 2), \
-			get_v2(ic_len - 2, ic_len - 2), \
-			md->rgb[color_index]);
+		draw_pixels(mmap->bg, get_v2(ic_len * pos.x, ic_len * pos.y), \
+			v2(ic_len), md->rgb[RGB_YELLOW]);
+		if (c != '1')
+			continue ;
+		draw_pixels(mmap->bg, get_v2(ic_len * pos.x - 1, ic_len * pos.y - 1), \
+		v2(ic_len - 1), md->rgb[RGB_BLACK]);
 	}
 }
 
@@ -87,6 +88,7 @@ static void	init_colors(t_md *md)
 	md->rgb[RGB_BLACK] = v4_to_color(0, 0, 0, 255);
 	md->rgb[RGB_YELLOW] = v4_to_color(255, 255, 0, 255);
 	md->rgb[RGB_ORANGE] = v4_to_color(255, 165, 0, 255);
+	md->rgb[RGB_NULL] = v4_to_color(0, 0, 0, 0);
 }
 
 static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
@@ -129,8 +131,9 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	init_entities(md, get_v2(0, 0));
 	init_cursor(md);
-	md->mmap.ic_scl = md->win_sz.x / 125;
-	md->mmap.collaps_scl = md->mmap.ic_scl * .75;
+	//md->mmap.ic_scl = md->win_sz.x / 125;
+	md->mmap.ic_scl = 5;
+	md->mmap.collaps_scl = md->win_sz.x / 150;
 	init_minimap(md, &md->mmap, md->mmap.ic_scl);
 	init_menu(md, &md->menu);
 	init_env(md);

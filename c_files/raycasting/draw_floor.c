@@ -6,13 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 19:13:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:20:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-
 
 static int	find_and_store_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe)
 {
@@ -26,29 +24,32 @@ static int	find_and_store_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe)
 		return (1);
 	rel.x = d.flr.x * (md->t_len / md->prm.grass_w);
 	rel.y = d.flr.y * (md->t_len / md->prm.grass_w);
-	local.x = minmax(0, safe_mod((int)rel.x, md->t_len), md->t_len);
-	local.y = minmax(0, safe_mod((int)rel.y, md->t_len), md->t_len);
+	local.x = minmax(0, safe_mod((int)rel.x, md->t_len), md->t_len - 1);
+	local.y = minmax(0, safe_mod((int)rel.y, md->t_len), md->t_len - 1);
 	fe = &env->grass[(int)d.flr.y][(int)d.flr.x][local.y][local.x];
-	if (!fe->active || fe == *prv_fe)
+	if (!fe->active)
 		return (1);
 	update_fe(md, d.win, fe, d);
-	render_fe(md, fe, max(1, FLOOR_PER_THRD - 1 - d.rwd));
+	render_fe(md, fe, 1, d.rwd);
 	return (*prv_fe = fe, 1);
 }
 
 static int	draw_floor_px(t_md *md, t_floor_draw_d d)
 {
+	const t_vec2	fog_clr_d = (t_vec2){md->rgb[RGB_BLACK], md->hud.bgr_color};
+	const t_vec2	clr_d = (t_vec2){d.clr, md->hud.bgr_color};
+
 	d.fogalpha = -1;
 	if (md->fx.fog > 0)
 		d.fogalpha = minmaxf(0, 1, (d.rwd / 10.0f) * md->fx.fog);
 	if (d.fogalpha >= 1)
 	{
-		draw_pixel(md->screen, d.win, md->rgb[RGB_BLACK], d.fogalpha);
+		draw_pixel(md->screen, d.win, fog_clr_d.x, d.fogalpha);
 		return (1);
 	}
-	draw_safe_pixel(md->screen, d.win, d.clr, md->hud.bgr_color);
+	draw_pixel(md->screen, d.win, clr_d.x, 1);
 	if (d.fogalpha > 0)
-		draw_pixel(md->screen, d.win, md->rgb[RGB_BLACK], d.fogalpha);
+		draw_pixel(md->screen, d.win, fog_clr_d.x, d.fogalpha);
 	return (1);
 }
 
@@ -62,18 +63,22 @@ void	init_floor_data(t_md *md, t_ray *ray, t_vec2f pn, t_floor_draw_d *d)
 	md->env.stored_blades = NULL;
 }
 
-int	set_floor_data(t_md *md, t_floor_draw_d *d, int sub_ray, t_fe **prv_fe)
+int	set_floor_pxl(t_md *md, t_floor_draw_d *d, t_fe **prv_fe)
 {
 	const t_image	*img = md->hud.floor;
 	const t_vec2	img_sz = md->hud.floor->size;
 
-	d->win.x = d->ray->index - sub_ray;
 	if (d->win.x < 0 || d->win.x >= md->win_sz.x)
 		return (0);
 	d->flr.x = (d->plr.x / md->t_len);
 	d->flr.x += d->rwd * d->dirl.x + d->stp.x * d->win.x;
 	d->flr.y = (d->plr.y / md->t_len);
 	d->flr.y += d->rwd * d->dirl.y + d->stp.y * d->win.x;
+	if (d->win.y > md->win_sz.y && md->prm.use_grass)
+	{
+		find_and_store_fe(md, *d, prv_fe);
+		return (1);
+	}
 	d->txp.x = ((int)(d->flr.x * img_sz.x) % img_sz.x + img_sz.x) % img_sz.x;
 	d->txp.y = ((int)(d->flr.y * img_sz.y) % img_sz.y + img_sz.y) % img_sz.y;
 	d->clr = img->src[d->txp.y * (img->size_line / 4) + d->txp.x];
@@ -87,13 +92,12 @@ void	draw_floor(t_md *md, t_ray *ray, int y_start, t_vec2f pn)
 	t_floor_draw_d	d;
 	const t_vec2	winsz = md->win_sz;
 	t_fe			*prv_fe;
-	int				sub_ray;
 
 	prv_fe = NULL;
 	init_floor_data(md, ray, pn, &d);
 	d.win.x = ray->index;
 	d.win.y = max(y_start, winsz.y / 2 - md->plr_rot.y * 8) - 1;
-	while (++d.win.y < winsz.y + 30)
+	while (++d.win.y < winsz.y + md->t_len)
 	{
 		d.p = d.win.y - (winsz.y / 2 - md->plr_rot.y * 8);
 		if (d.p == 0)
@@ -101,15 +105,7 @@ void	draw_floor(t_md *md, t_ray *ray, int y_start, t_vec2f pn)
 		d.rwd = ((0.5 - (md->cam_pos.z / md->t_len)) * winsz.y) / d.p;
 		d.stp.x = d.rwd * (d.dirr.x - d.dirl.x) / winsz.x;
 		d.stp.y = d.rwd * (d.dirr.y - d.dirl.y) / winsz.x;
-		sub_ray = -1;
-		while (++sub_ray < FLOOR_PER_THRD)
-			if (!set_floor_data(md, &d, sub_ray, &prv_fe))
-				break ;
+		if (!set_floor_pxl(md, &d, &prv_fe))
+			break ;
 	}
 }
-
-
-
-
-
-

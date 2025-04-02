@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 17:58:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:17:10 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@
 # define RAY_ZOOM		25
 
 # define THREADS_BATCH	32
-# define FLOOR_PER_THRD	8
+# define FLOOR_WORKERS	8
 
 # define FE_PER_TILE	75
-
 
 //		init/init_menu.c
 void	set_menu_pos(t_md *md, t_menu *menu, \
@@ -142,7 +141,7 @@ void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data);
 int		dir_to_rotation(t_wrd_dir a, t_wrd_dir b);
 void	rotate_90_deg(t_vec3f *vec, int times);
 int		get_portal_index(t_md *md, t_ray *ray, t_ent *portal);
-int		translate_ray(t_md *md, t_ray *ray, t_ent *portal, float distance);
+int		translate_ray(t_md *md, t_ray *ray, t_ent *portal, int view_index);
 
 //	raycasting/portal_draw.c
 void	draw_portal(t_md *md, t_ent *e, t_vec2 pos);
@@ -303,6 +302,6 @@ void	reset_grass(t_md *md, t_fe *fe);
 
 void	store_fe(t_md *md, t_floor_draw_d d, t_fe *fe);
 void	draw_stored_fe(t_md *md);
-int		render_fe(t_md *md, t_fe *fe, int width);
+int		render_fe(t_md *md, t_fe *fe, int width, float rwd);
 
 #endif

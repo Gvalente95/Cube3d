@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 18:12:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 13:25:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,6 @@ static int	cast_thread_ray(t_md *md, t_ray *ray)
 		return (1);
 	if (!ray->check_hit && ray->wall_hit)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
-	if (!ray->wall_hit && ray->is_floor_worker)
-		draw_floor(md, ray, compute_row_start(md, ray->wall_hit, ray->distance), \
-		get_v2f(-md->plr.dir.y * .66, md->plr.dir.x * .66));
 	while (ray->hits_len--)
 	{
 		hit_data = &ray->hit_data[ray->hits_len];
@@ -46,6 +43,11 @@ static int	cast_thread_ray(t_md *md, t_ray *ray)
 		ray->pos = hit_data->post_at_hit;
 		draw_sprite(md, ray, *hit_data);
 	}
+	if (!ray->wall_hit || ray->distance >= md->prm.ray_depth)
+		ray->floor_y_start = md->win_sz.y * .5 - md->plr_rot.y * 8 - md->cam_pos.z;
+	if (ray->floor_y_start < md->win_sz.y && md->hud.active_bgr)
+		draw_floor(md, ray, ray->floor_y_start, \
+			get_v2f(-md->plr.dir.y * .66, md->plr.dir.x * .66));
 	return (1);
 }
 
@@ -66,10 +68,7 @@ void	*cast_thread_batch(void *content)
 		if (ray_index >= md->win_sz.x)
 			break ;
 		ray = &md->rays[thread->index + i];
-		if (ray_index == md->win_sz.x -1)
-			ray->is_floor_worker = 1;
-		else
-			ray->is_floor_worker = ((i + 1) % FLOOR_PER_THRD == 0);
+		ray->is_floor_worker = ((i + 1) % FLOOR_WORKERS == 0);
 		if (!cast_thread_ray(md, ray))
 			break ;
 	}

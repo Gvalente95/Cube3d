@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:03:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 20:36:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->start = start_pos;
 	ray->pos = start_pos;
 	ray->distance = distance;
+	ray->floor_y_start = 9999;
 	ray->teleported_once = 0;
 }
 

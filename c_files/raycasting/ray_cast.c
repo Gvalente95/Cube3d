@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 13:33:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 21:57:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	cast_ray(t_md *md, t_ray *ray, t_vec2 visu_offset)
 	wall_collision = ray_move(md, ray, visu_offset);
 	if (!md->prm.ray_mode)
 		return (0);
-	if (!ray->check_hit && ray->wall_hit)
+	if (ray->wall_hit)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
 	while (ray->hits_len > 0 && \
 		(!ray->check_hit || ray->check_hit->type != nt_door))

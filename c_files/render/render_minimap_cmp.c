@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:54:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 13:34:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 14:23:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist)
 		center.y - (view_dist - 1) * md->mmap.collaps_scl);
 	psz = v2((view_dist * 2) * md->mmap.collaps_scl);
 	draw_sphere(md->screen, p, psz, get_v3(md->rgb[RGB_INDIGO], 9, 1));
-	cosin.z = (md->plr_rot.x + 90) * (M_PI / 180.0f);
-	cosin.x = cosf(cosin.z);
-	cosin.y = sinf(cosin.z);
+	cosin.z = md->plr.angle;
+	cosin.x = md->plr.dir.x;
+	cosin.y = md->plr.dir.y;
 	show_mmap_dir(md, cosin, psz, p);
 	cosin.z = view_dist;
 	i = -1;

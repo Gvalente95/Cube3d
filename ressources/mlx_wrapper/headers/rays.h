@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 18:53:03 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 21:06:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_ray
 	t_vec3f		start;
 	t_vec3f		dir;
 	float		distance;
+	float		sprite_distance;
 	float		angle;
 	int			vertical_hit;
 	int			corner;
@@ -64,6 +65,7 @@ typedef struct s_ray
 	int			is_floor_worker;
 	int			steps;
 	int			check_steps;
+	int			floor_y_start;
 	int			teleported_once;
 }	t_ray;
 

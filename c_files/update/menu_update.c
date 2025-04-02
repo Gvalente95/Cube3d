@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:33:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 19:01:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/01 22:05:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	update_slider(t_md *md, t_slider *sld)
 	end = get_v2((sz.x * sld->point) / (sld->steps - 1), sz.y);
 	draw_pixels(sld->img, v2(0), end, md->menu.slider_fill_clr);
 	md->plr.pos.z = -md->prm.height;
+	md->cam_pos.z = md->plr.pos.z - md->prm.height;
 	if (!ft_strncmp(sld->label, "win", 3))
 		return (replace_window(md, md->prm.win_x, md->prm.win_y));
 	render(md);
