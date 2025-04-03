@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 21:06:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:15:12 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct s_portal
 {
 	t_portal_wall	ends[2];
 	int				last_shot_index;
-	t_ent			*last_passage;
 }	t_portal;
 
 typedef struct s_hit_data
@@ -65,7 +64,7 @@ typedef struct s_ray
 	int			is_floor_worker;
 	int			steps;
 	int			check_steps;
-	int			floor_y_start;
+	int			flr_y;
 	int			teleported_once;
 }	t_ray;
 

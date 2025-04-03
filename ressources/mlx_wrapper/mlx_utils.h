@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/02 14:23:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 15:52:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,16 @@ typedef struct s_mmap
 	t_image		*bg;
 	t_image		*img;
 	t_image		*sphere;
-	t_image		*arrow;
+	t_image		*full_map;
 	t_vec2		size;
 	int			cmps;
-	int			collaps_scl;
+	int			comps_scl;
 	int			ic_scl;
 	int			active;
 	int			mray_len;
 	int			bgr_color;
+	int			revealed_cur;
+	int			revealed_len;
 }	t_mmap;
 
 typedef struct s_hud
@@ -77,6 +79,7 @@ typedef struct s_hud
 	t_image		*sky_flipy;
 	t_image		*base_floor;
 	t_image		*floor;
+	t_image		*floor2d;
 	t_image		*lock_x_icon;
 	t_image		*lock_y_icon;
 	t_image		*amm_icon;
@@ -124,12 +127,12 @@ typedef struct s_parameters
 	int				ray_mode;
 	int				debug_mode;
 	int				use_thrd;
-	int				free_cam;
+	int				fly_cam;
 	int				ent_mode;
 	int				au_on;
 	int				use_grass;
+	int				use_bob;
 	int				use_sky;
-	int				au_amb_on;
 	float			sun_x;
 	float			sun_y;
 	float			grass_w;
@@ -143,6 +146,7 @@ typedef struct s_parameters
 	float			zoom;
 	float			fov;
 	float			win_x;
+	float			floor_fov;
 	float			win_y;
 }	t_parameters;
 
@@ -204,7 +208,7 @@ typedef struct s_md
 	int				key_prs[65536];
 	int				key_clicked;
 	int				check_steps;
-	int				rgb[19];
+	int				rgb[20];
 	int				t_len;
 	int				var;
 	int				init_steps;
@@ -306,10 +310,12 @@ void			show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
 void			show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
 int				is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 int				ent_in_bounds(t_ent *ent, t_ent *bounds);
-void			upd_timer(double *timer, double cur_tm, double incr, int *event);
-void			draw_random_pixel(t_image *img, int scale, int base_color, float rand);
-int				draw_safe_pixel(t_image *img, t_vec2 pos, t_vec2 clr_over, float opacity);
+void			upd_timer(double *tmr, double cur_tm, double incr, int *event);
 void			update_fe(t_md *md, t_vec2 start, \
 	t_fe *fe, t_floor_draw_d d);
+
+//				camera.c
+void			update_cam(t_md *md);
+t_vec3f			update_fly_cam(t_md *md, float spd);
 
 #endif

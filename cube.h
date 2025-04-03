@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:17:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 15:12:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,19 @@
 //# include <X11/X.h>
 
 # define IMG_PATH			"ressources/xpm/"
-# define RESOLUTION		15
+# define RESOLUTION		10
 //		SCREEN
 # define SCRN_W			1300
 # define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
-# define PLRSPD			1000
+# define PLRSPD			800
 # define ACCSPD			0.4
 # define HEIGHT			0
 # define BOB_AMOUNT		.6
 # define BOB_SPD		7
-# define PLR_JUMPPOW	.2
+# define PLR_JUMPPOW	3
 # define GRAVITY		.015
 # define ARROW_ROT_SPEED 2
 # define MOUSESPD		.05
@@ -49,10 +49,11 @@
 # define ENNEMY_SPEED	.1
 # define RAY_ZOOM		25
 
-# define THREADS_BATCH	32
+# define THREADS_BATCH	16
 # define FLOOR_WORKERS	8
 
-# define FE_PER_TILE	75
+# define FE_PER_TILE	64
+# define REVEAL_DISTANCE 5
 
 //		init/init_menu.c
 void	set_menu_pos(t_md *md, t_menu *menu, \
@@ -77,6 +78,9 @@ void	init_env(t_md *md);
 char	*get_resized_line(char *buffer, int width, char replace_end_with);
 char	*redimension_map(char *map_buffer, t_vec2 size);
 int		init_map(t_md *md, char *file_name);
+
+//	init/init_minimap.c
+void	init_minimap(t_md *md, t_mmap *mmap);
 
 //	init/init_labels.c
 void	init_action_labels(t_texture_data *td);
@@ -157,7 +161,7 @@ void	draw_floor(t_md *md, t_ray *ray, int y_start, t_vec2f pn);
 //	raycasting/ray_tools.c
 void	draw_blood(t_md *md, t_image *img, t_vec2 pos, int color);
 t_vec2	get_2d_ray_pos(t_md *md);
-int		render_ray(t_md *md, t_ray *ray, t_ent *ray_hit, t_vec2 visu_offset);
+int		render_ray(t_md *md, t_ray *ray, t_vec2 visu_offset);
 void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance);
 int		validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type);
 
@@ -239,9 +243,8 @@ int		set_collisions(t_md *md, t_ent *e, t_vec2 e_size);
 void	plr_shoot(t_md *md);
 
 //	update/update_plr_movement.c
-void	update_cam(t_md *md, t_ent *plr);
 int		move_player(t_md *md, t_ent *e);
-int		update_player_mov(t_md *md);
+int		update_player_mov(t_md *md, t_ent *plr);
 
 //	update/collisions_portal.c
 int		dir_to_angle(t_wrd_dir dir);
@@ -251,7 +254,7 @@ int		validate_portal_collision(t_md *md, t_ent *b);
 //	render/render_minimap.c
 void	render_mmap_ray(t_md *md, int ray_index, int color);
 void	render_minimap_ray(t_md *md);
-void	show_minimap_entity(t_md *md, int scl, t_ent *e, t_vec2 cntr);
+void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw);
 void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center);
 void	render_minimap(t_md *md, t_mmap *mp);
 
@@ -300,8 +303,10 @@ void	render_menu(t_md *md, t_menu *menu);
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
 void	reset_grass(t_md *md, t_fe *fe);
 
-void	store_fe(t_md *md, t_floor_draw_d d, t_fe *fe);
 void	draw_stored_fe(t_md *md);
-int		render_fe(t_md *md, t_fe *fe, int width, float rwd);
+int		render_fe(t_md *md, t_fe *fe, int width);
+
+int		update_key_input(t_md *md, unsigned int c);
+void	show_revealed_perc(t_md *md, int scale, t_vec2 pos);
 
 #endif

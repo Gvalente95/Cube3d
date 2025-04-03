@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 14:07:48 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:09:43 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,6 @@ void	update_mob_actions(t_md *md, t_ent *e)
 		e->action = m_atk;
 		if (!md->timer.trig_anim || e->frame_index > 1 || md->plr.was_hit)
 			return ;
-		if (e->type != (int)Rat)
-		{
-			md->hud.hp -= e->type;
-			md->plr.was_hit = 10;
-			return ;
-		}
 		else
 			e->target_pos = md->plr.pos;
 	}

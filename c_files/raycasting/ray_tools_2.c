@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:04:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 01:51:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:14:55 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ int	update_ray_grid_pos(t_md *md, t_ray *ray)
 			ray->vertical_hit = md->rays[ray->index - 1].vertical_hit;
 		}
 	}
-	if (!md->prm.ray_mode && md->prm.show_rays)
-		set_ray_color(md, ray);
 	return (is_on_grid);
 }
 
@@ -54,21 +52,15 @@ int	correct_fisheye(t_md *md, t_ray *ray, t_ent *e, float dist)
 {
 	float	fov_correction_factor;
 	float	angle_diff;
-	float	angle_projection;
-	float	projection_plane_height;
+	float	height_factor;
+	float	plane_proj_height;
 	float	fisheye_corrector;
 
 	fov_correction_factor = 60.0f / (float)md->prm.fov;
+	height_factor = md->t_len / (md->t_len + 0.3f * (e->pos.z - md->cam_pos.z));
+	plane_proj_height = md->win_sz.y * e->size.y * height_factor;
 	angle_diff = (ray->angle - md->plr.angle) * fov_correction_factor;
-	angle_projection = fabsf(cosf(angle_diff));
-	if (md->prm.height > 0)
-	{
-		float vertical_scale = md->t_len / (md->t_len + (e->pos.z - md->cam_pos.z));
-		projection_plane_height = md->win_sz.y * e->size.y * vertical_scale;
-	}
-	else
-		projection_plane_height = md->win_sz.y * e->size.y;
-	fisheye_corrector = projection_plane_height / (dist * angle_projection);
+	fisheye_corrector = plane_proj_height / (dist * fabsf(cosf(angle_diff)));
 	if (fisheye_corrector > md->win_sz.y * 1.5)
 		fisheye_corrector = md->win_sz.y * 1.5;
 	return (fisheye_corrector);

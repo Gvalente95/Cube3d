@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 21:42:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 20:24:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:17:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
 	e->action = 0;
 	e->frame_index = 0;
 	e->row_draw_index = 0;
+	if (e->type == nt_empty)
+		e->frame = md->hud.floor;
 	if (e->type == nt_bush)
 		e->frame = txd->bush_txtr[r_range(0, 4)];
 	else if (e->type == nt_tree)
@@ -80,15 +82,9 @@ void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
 	else
 	{
 		e->pckp_type = r_range_seed(&md->r_seed, 0, PCKP_TYPE_LEN - 1);
+		e->wpn_type = r_range(0, 3);
+		e->frame = txd->pickup_txtr[e->pckp_type][0];
 		if (e->pckp_type == Weapon)
-		{
-			e->wpn_type = r_range(0, 3);
 			e->frame = txd->pickup_txtr[4][e->wpn_type];
-		}
-		else
-			e->frame = txd->pickup_txtr[e->pckp_type][0];
 	}
-	if (!e->frame)
-		printf("entity %s %s had no frame\n", \
-			txd->ents_types_names[e->type], txd->pickup_names[e->pckp_type]);
 }

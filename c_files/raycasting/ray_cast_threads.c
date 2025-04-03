@@ -6,12 +6,28 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:25:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 16:09:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
+t_vec2f	get_flr_pln(t_md *md, float fov_factor)
+{
+	float	fov_rad;
+	float	base_len;
+	float	final_len;
+	float	dyn_factor;
+
+	fov_rad = (float)md->prm.fov * (M_PI / 180.0f);
+	base_len = tanf(fov_rad / 2.0f);
+	dyn_factor = 1.0f - (fabsf(md->plr_rot.y) / 90.0f) * 0.2f;
+	final_len = base_len * minmaxf(0.0f, 1.0f, fov_factor * dyn_factor);
+	return ((t_vec2f){
+		-md->plr.dir.y * final_len,
+		 md->plr.dir.x * final_len
+	});
+}
 void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 {
 	ray->hit_data[0].hit = NULL;
@@ -32,6 +48,10 @@ static int	cast_thread_ray(t_md *md, t_ray *ray)
 		return (1);
 	if (!ray->check_hit && ray->wall_hit)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
+	if (!ray->wall_hit || ray->distance >= md->prm.ray_depth)
+		ray->flr_y = md->win_sz.y * .5 - md->plr_rot.y * 8 - md->cam_pos.z;
+	if (ray->flr_y < md->win_sz.y && md->hud.active_bgr)
+		draw_floor(md, ray, ray->flr_y, get_flr_pln(md, md->prm.floor_fov));
 	while (ray->hits_len--)
 	{
 		hit_data = &ray->hit_data[ray->hits_len];
@@ -43,11 +63,6 @@ static int	cast_thread_ray(t_md *md, t_ray *ray)
 		ray->pos = hit_data->post_at_hit;
 		draw_sprite(md, ray, *hit_data);
 	}
-	if (!ray->wall_hit || ray->distance >= md->prm.ray_depth)
-		ray->floor_y_start = md->win_sz.y * .5 - md->plr_rot.y * 8 - md->cam_pos.z;
-	if (ray->floor_y_start < md->win_sz.y && md->hud.active_bgr)
-		draw_floor(md, ray, ray->floor_y_start, \
-			get_v2f(-md->plr.dir.y * .66, md->plr.dir.x * .66));
 	return (1);
 }
 
@@ -96,7 +111,9 @@ void	init_ray_threads(t_md *md)
 		}
 	}
 	mon->threads_amount = threads_amount;
-	printf("%d threads will each handle %d rays for %d width total handled %d\n", threads_amount, THREADS_BATCH, md->win_sz.x, threads_amount * THREADS_BATCH);
+	printf("%d threads will each handle %d rays for \
+		%d width total handled %d\n", threads_amount, \
+		THREADS_BATCH, md->win_sz.x, threads_amount * THREADS_BATCH);
 }
 
 void	cast_ray_threads(t_md *md)

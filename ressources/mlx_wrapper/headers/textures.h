@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:48:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:27:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,9 @@ int				put_pxl_if_vis(t_draw_d *dd, int over, int blend, float alpha);
 int				draw_pixel(t_image *dst, t_vec2 pos, int color, float alpha);
 int				draw_pixels(t_image *dst, t_vec2 pos, t_vec2 draw_sz, int clr);
 void			draw_line(t_image *dst, t_vec2 start, t_vec2 end, t_vec2 clr_d);
+int				draw_safe_pxls(t_image *img, t_vec2 p, t_vec2 draw_sz, int clr);
+void			draw_random_pixel(t_image *img, int scale, int clr, float rand);
+int				draw_safe_pxl(t_image *img, t_vec2 p, t_vec2 ovrcl, float opct);
 
 //		draw/images_a.c
 t_vec3f			set_new_size(t_image *q, t_vec2 *old_size, t_vec2 *new_size);

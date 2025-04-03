@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 18:27:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 16:42:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ void	render_2d_floor(t_md *md)
 
 void	render_background(t_md *md)
 {
+	if (!md->prm.use_sky)
+		return ;
 	if (md->cam_pos.z < -30)
 		md->hud.floor_start = md->win_sz.y;
 	if (!md->prm.ray_mode)

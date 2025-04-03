@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:16:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 13:36:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	reset_mapped_end(t_md *md, t_ent *e)
 
 int	set_menu_mode(t_md *md, t_menu *menu, int mode)
 {
+	if (mode)
+		play_sound(md, AU_MENU_IN);
 	set_mouse_lock(md, !mode);
 	if (md->is_linux)
 	{
@@ -64,34 +66,24 @@ int	set_menu_mode(t_md *md, t_menu *menu, int mode)
 	return (mode);
 }
 
-static void	update_camera_offset(t_md *md)
+void	update_audio(t_md *md, t_au_manager *au)
 {
-	t_vec3f	dspl;
-	t_vec2	win_sz;
-	t_vec2	plr_size;
-	t_vec3f	plr_pos;
-
-	win_sz = md->win_sz;
-	plr_size = md->plr.size;
-	plr_pos = md->plr.pos;
-	dspl.x = plr_pos.x - plr_size.x / 2 - win_sz.x / 2 + md->t_len / 2;
-	dspl.y = plr_pos.y - plr_size.y / 2 - win_sz.y / 2 + md->t_len / 2;
-	dspl.z = plr_pos.z;
-	md->cam_ofst = dspl;
-	md->wrd_mv_offst.x += md->plr_wrd_mv.x * 20;
-	md->wrd_mv_offst.y += md->plr_wrd_mv.y * 20;
+	play_loop(md, &au->mus_pid, AU_MUS, md->prm.au_on);
+	play_loop(md, &au->wind_pid, AU_WIND, md->prm.fly_cam);
+	if (md->timer.trig_walk && !md->prm.fly_cam && md->plr.grounded && \
+		!cmp_vec3f(md->input_mov, v3f(0), .01))
+		play_random_sound(md, AU_WALK_GRASS, 8);
 }
 
 int	update_and_render(t_md *md)
 {
-	play_loop(md, &md->au.mus_pid, AU_MUS, !md->menu.active);
+	update_audio(md, &md->au);
 	if (md->menu.active)
 		return (update_menu(md, &md->menu));
 	update_time(md, &md->timer);
 	update_input(md);
 	update_mouse(md);
 	update_player(md, &md->plr);
-	update_camera_offset(md);
 	update_ents(md);
 	render(md);
 	reset_mlx_values(md);

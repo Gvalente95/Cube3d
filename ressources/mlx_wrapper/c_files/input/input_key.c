@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
+/*   input_key.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/01 00:41:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 13:08:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	handle_key_press(int keycode, t_md *md)
 
 int	handle_key_release(int keycode, t_md *md)
 {
-	//printf("keycode : %d\n", keycode);
 	if (keycode >= 0 && keycode < 65536)
 		md->key_prs[keycode] = 0;
 	md->key_clicked = -1;
@@ -33,7 +32,7 @@ int	handle_key_release(int keycode, t_md *md)
 void	reset_mlx_values(t_md *md)
 {
 	md->key_clicked = -1;
-	md->mouse.click = 0;
+	md->mouse.click = MOUSE_NOPRESS;
 	if (md->mouse.pressed == MOUSE_RELEASE)
 		md->mouse.pressed = 0;
 	md->mouse.delta = get_v2(0, 0);

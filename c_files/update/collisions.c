@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 04:54:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 08:44:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 {
 	if (!a || !b)
 		return (0);
+	if (b->type == nt_empty)
+		return (0);
 	if (!a->is_active || !b->is_active)
 		return (0);
-	if (md->portal.last_passage == b)
-		return (1);
 	if (!md->prm.ent_mode && b->type != nt_door && b->type != nt_wall)
 		return (0);
 	if (a->type == nt_plr && (b->type == nt_pickup))
@@ -113,7 +113,7 @@ int	set_collisions(t_md *md, t_ent *e, t_vec2 e_size)
 	int				col_amount;
 	int				map_i;
 
-	if (md->prm.free_cam)
+	if (md->prm.fly_cam)
 		return (1);
 	col_amount = 0;
 	e->col_hit = NULL;

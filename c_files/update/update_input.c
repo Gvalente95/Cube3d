@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 01:53:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 13:43:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,33 @@ static void	update_arrow_rotation(t_md *md)
 		md->plr_rot.y += rot_speed;
 }
 
-static void	update_key_input(t_md *md, unsigned int c)
+int	update_key_input(t_md *md, unsigned int c)
 {
 	int	i;
 
 	if (c == (unsigned int)-1)
-		return ;
+		return (0);
 	i = -1;
 	while (md->menu.buttons[++i].active)
 	{
 		if (c != md->menu.buttons[i].key_trigger)
 			continue ;
 		*md->menu.buttons[i].value = !(*md->menu.buttons[i].value);
-		break ;
+		md->menu.refresh_ui = 1;
+		md->menu.refresh_bg = 1;
+		return (render(md), play_sound(md, AU_MOUSE_CLICK), 1);
 	}
 	if (c == TAB_KEY)
 		set_weapon_index(md);
 	else if (c == ESC_KEY)
-		set_menu_mode(md, &md->menu, 1);
+		set_menu_mode(md, &md->menu, !md->menu.active);
 	else if (c == NUM_Q_KEY)
 		free_and_quit(md, NULL, NULL);
 	else if (c == SHIFT_KEY)
 		md->timer.tm_walk = md->timer.cur_tm - 1;
 	else if (c == NUM_C_KEY)
 		plr_shoot(md);
-	else if (c == NUM_H_KEY)
-		set_mouse_lock(md, !md->mouse.locked);
+	return (0);
 }
 
 static void	update_mouse_input(t_md *md)
@@ -63,8 +64,6 @@ static void	update_mouse_input(t_md *md)
 		md->plr.shot--;
 	if (md->mouse.click != MOUSE_NOPRESS && !md->mouse.locked)
 		set_mouse_lock(md, 1);
-	if (md->mouse.click)
-		play_sound(md, AU_GRAB);
 	if (md->prm.ray_mode)
 		return ;
 	if (md->mouse.pressed == MOUSE_PRESS)

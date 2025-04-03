@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 10:51:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 15:07:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ typedef enum e_pckp_types
 typedef enum e_entity_types
 {
 	nt_wall,
-	nt_empty,
 	nt_plr,
 	nt_mob,
 	nt_door,
 	nt_pickup,
 	nt_bush,
 	nt_tree,
+	nt_empty,
 	ENT_TYPE_LEN
 }	t_ent_type;
 
@@ -141,6 +141,7 @@ typedef struct s_entity
 	int				hp;
 	int				frame_index;
 	int				in_screen;
+	int				revealed;
 	int				row_draw_index;
 }	t_ent;
 

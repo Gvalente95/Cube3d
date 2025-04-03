@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 20:31:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:24:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,14 @@ static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 	e->coord = get_v3(pos.x, pos.y, 0);
 	e->mov = get_v3f(0, 0, 0);
 	e->dir = get_v3f(0, 0, 0);
-	e->is_active = 1;
-	e->in_screen = 0;
 	e->shot = 0;
 	e->was_hit = 0;
 	e->shot_timer = 0;
 	e->can_shoot = 1;
 	e->hp = 5;
+	e->is_active = 1;
+	e->in_screen = 0;
+	e->revealed = 0;
 }
 
 static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
@@ -97,27 +98,23 @@ void	init_entities(t_md *md, t_vec2 pos)
 {
 	int			i;
 	t_dblst		*ents;
-	t_ent		*e;
+	char		c;
 
+	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
 	ents = NULL;
 	pos = get_v2(0, 0);
 	i = -1;
 	while (md->map.buffer[++i])
 	{
-		if (md->map.buffer[i] == '\n')
-		{
-			pos.y++;
-			pos.x = 0;
-			continue ;
-		}
-		if (char_in_str(md->map.buffer[i], "NSEW"))
-			init_player(md, md->map.buffer[i], pos, i);
-		else if (!char_in_str(md->map.buffer[i], " 0\n"))
-		{
-			e = init_ent(md, md->map.buffer[i], pos, i);
-			dblst_add_back(&ents, dblst_new((void *)e));
-		}
+		c = md->map.buffer[i];
+		if (c == '\n')
+			pos = (t_vec2){-1, pos.y + 1};
+		else if (char_in_str(c, "NSEW"))
+			init_player(md, c, pos, i);
+		else if (!char_in_str(c, " \n"))
+			dblst_add_back(&ents, dblst_new((void *)init_ent(md, c, pos, i)));
 		pos.x++;
 	}
 	md->entities = dblst_first(ents);
+	md->mmap.revealed_len = dblst_size(md->entities);
 }

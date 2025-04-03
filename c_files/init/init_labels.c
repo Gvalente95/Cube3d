@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 20:23:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 20:14:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ void	init_weapon_labels(t_texture_data *td)
 
 void	init_ents_labels(t_texture_data *td)
 {
-	td->ents_tp_map[0] = "10*MDPBT";
+	td->ents_tp_map[0] = "1*MDPBT0";
 	td->ents_types_names[nt_wall] = "Wall";
-	td->ents_types_names[nt_empty] = "Empty";
 	td->ents_types_names[nt_plr] = "Player";
 	td->ents_types_names[nt_mob] = "Mob";
 	td->ents_types_names[nt_door] = "Door";
 	td->ents_types_names[nt_pickup] = "Pickup";
 	td->ents_types_names[nt_bush] = "Bush";
 	td->ents_types_names[nt_tree] = "Tree";
+	td->ents_types_names[nt_empty] = "Empty";
 	td->pickup_names[Keys] = "Keys";
 	td->pickup_names[Score] = "Score";
 	td->pickup_names[Health] = "Health";

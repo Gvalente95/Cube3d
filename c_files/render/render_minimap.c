@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 14:19:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:26:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,33 @@ void	render_minimap_ray(t_md *md)
 	render_mmap_ray(md, md->win_sz.x / 2, color);
 }
 
-void	show_minimap_entity(t_md *md, int scl, t_ent *e, t_vec2 cntr)
+void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 {
-	const int		portal[2] = {md->rgb[RGB_INDIGO], md->rgb[RGB_ORANGE]};
 	int				draw_clr;
 	t_vec2			pos;
 	int				psz;
 	int				offset;
 
-	if (!e || (e->type == nt_wall && !e->overlay))
+	if (!e || (no_redraw && e->revealed))
 		return ;
 	draw_clr = md->rgb[e->type];
-	if (e == md->portal.ends[0].e)
-		draw_clr = portal[0];
-	else if (e == md->portal.ends[1].e)
-		draw_clr = portal[1];
-	psz = max(1, md->mmap.ic_scl / scl);
+	if (e->type == nt_plr)
+		draw_clr = md->rgb[RGB_GOLD];
+	psz = max(1, md->mmap.ic_scl);
 	offset = (md->mmap.ic_scl - psz) / 2;
-	pos.x = cntr.x + 1 + (e->pos.x / (md->t_len / scl)) * psz - offset;
-	pos.y = cntr.y + 1 + (e->pos.y / (md->t_len / scl)) * psz - offset;
-	draw_pixels(md->mmap.img, pos, v2((psz) - 1), draw_clr);
+	pos.x = 1 + (e->pos.x / (md->t_len)) * psz - offset;
+	pos.y = 1 + (e->pos.y / (md->t_len)) * psz - offset;
+	if (e->type == nt_empty)
+	{
+		psz++;
+		pos = sub_vec2(pos, v2(1));
+	}
+	set_alpha(draw_clr, .5);
+	draw_safe_pxls(screen, sub_vec2(pos, v2(1)), v2(psz + 1), md->rgb[16]);
+	draw_pixels(screen, pos, v2(psz - 1), draw_clr);
+	if (!e->revealed && e->type != nt_plr)
+		md->mmap.revealed_cur++;
+	e->revealed = 1;
 }
 
 void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
@@ -74,9 +81,8 @@ void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
 	i = -1;
 	while (md->map.buffer[++i])
 		if (md->mapped_ents[i] && md->mapped_ents[i]->type != nt_plr)
-			show_minimap_entity(md, 1, md->mapped_ents[i], center);
+			show_minimap_entity(md, md->mapped_ents[i], mp->bg, 1);
 	render_minimap_ray(md);
-	show_minimap_entity(md, 10, md->mapped_ents[md->plr.map_index], center);
 	i = -1;
 	while (++i < 2)
 	{
@@ -91,22 +97,27 @@ void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
 
 void	render_minimap(t_md *md, t_mmap *mp)
 {
-	t_vec2	center;
-	int		view_len;
-	int		cmps_width;
+	t_vec2			center;
+	int				view_len;
+	int				width;
+	t_vec2			txp;
+	const int		txsc = md->prm.txt_sc * .5;
 
-	view_len = 10;
-	cmps_width = mp->collaps_scl * view_len;
-	center = get_v2(md->win_sz.x - cmps_width * 1.5, cmps_width);
-	show_cmps_mmap(md, center, view_len);
 	if (mp->cmps)
+	{
+		view_len = 10;
+		width = mp->comps_scl * view_len;
+		center = get_v2(md->win_sz.x - width * 1.5, width);
+		show_cmps_mmap(md, center, view_len);
 		return ;
+	}
 	flush_img(mp->img, md->rgb[RGB_RED], 1, 0);
 	remove_img_color(mp->img, md->rgb[RGB_RED]);
-	draw_alpha_img(mp->bg, mp->img, v2(0), .75f);
-	render_minimap_entities(md, mp, v2(0));
-	center.x = 0;
-	center.y = 0;
-	apply_scanlines(mp->img, .1);
+	draw_alpha_img(mp->bg, mp->img, v2(0), 1);
+	render_minimap_ray(md);
+	show_minimap_entity(md, &md->plr, mp->img, 0);
+	center = get_v2(md->win_sz.x - mp->img->size.x, 0);
+	txp = get_v2(center.x + mp->img->size.x / 2, mp->img->size.y);
+	show_revealed_perc(md, txsc, txp);
 	draw_alpha_img(mp->img, md->screen, center, 0.75);
 }

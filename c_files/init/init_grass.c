@@ -24,7 +24,7 @@ static int	get_grass_color(void)
 
 t_fe_type	get_random_fe_type(void)
 {
-	const int	type_distr[4] = {[fe_grass] = 400, [fe_tree] = 2, [fe_bush] = 1};
+	const int	distr[4] = {[fe_grass] = 400, [fe_tree] = 2, [fe_bush] = 1};
 	int			total;
 	int			r;
 	int			i;
@@ -33,13 +33,13 @@ t_fe_type	get_random_fe_type(void)
 	total = 0;
 	i = -1;
 	while (++i < fe_type_len)
-		total += type_distr[i];
+		total += distr[i];
 	r = r_range(0, total - 1);
 	acc = 0;
 	i = -1;
 	while (++i < fe_type_len)
 	{
-		acc += type_distr[i];
+		acc += distr[i];
 		if (r < acc)
 			return (i);
 	}

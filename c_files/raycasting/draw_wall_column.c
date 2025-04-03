@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 22:01:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:16:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,15 @@ static int	skip_pxl(t_md *md, t_ray_draw_d *d, int pxl_color)
 	rgb = pxl_color & 0x00FFFFFF;
 	is_portal_color = (rgb == 0x0000FF || rgb == 0xFF0000);
 	ray = d->ray;
-	portal_index = get_portal_index(md, ray, ray->wall_hit);
-	if (is_portal_color && portal_index != -1)
+	if (is_portal_color)
 	{
+		portal_index = get_portal_index(md, ray, ray->wall_hit);
+		if (portal_index == -1)
+			return (0);
 		if (d->pass == 0)
 			d->has_portal++;
 		else
-		{
-			translate_ray(md, ray, ray->wall_hit, portal_index);
-			return (0);
-		}
+			return (translate_ray(md, ray, ray->wall_hit, portal_index), 0);
 		return (1);
 	}
 	return (0);
@@ -51,7 +50,7 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 	win_p.y = d->y_start + d->win_start.y - md->cam_pos.z;
 	if (win_p.y > win_sz.y)
 		return (0);
-	if (win_p.y > win_sz.y || win_p.y < 0 || win_p.x < 0 || win_p.x > win_sz.x)
+	if (win_p.y < 0 || win_p.x < 0 || win_p.x > win_sz.x)
 		return (1);
 	if (skip_pxl(md, d, d->pxl_clr))
 		return (1);
@@ -69,9 +68,9 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 	return (1);
 }
 
-static void	draw_strip(t_md *md, t_ray_draw_d *d, t_vec2 win_sz, int pass)
+static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 {
-	const float		step = d->img->size.y / d->txd_crd.y;
+	const t_vec2	win_sz = md->win_sz;
 
 	d->pass = pass;
 	d->y_start = (win_sz.y / 2 - d->txd_crd.y / 2) - 1;
@@ -94,6 +93,7 @@ static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
 	t_image			*img;
 	t_wrd_dir		dir;
 	t_ray_draw_d	draw_d;
+	float			step;
 
 	img = ray->wall_hit->frame;
 	if (ray->wall_hit->type == nt_wall)
@@ -108,30 +108,30 @@ static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
 	}
 	draw_d = (t_ray_draw_d){ray, ray->wall_hit->frame, \
 		screen_p, screen_p, 0, 0, txtr_crd, 0, 0, 0, 9999, 0, 0, 0};
-	draw_strip(md, &draw_d, md->win_sz, 0);
+	step = draw_d.img->size.y / draw_d.txd_crd.y;
+	draw_strip(md, &draw_d, 0, step);
 	if (draw_d.has_portal)
-		draw_strip(md, &draw_d, md->win_sz, 1);
+		draw_strip(md, &draw_d, 1, step);
 	md->hud.new_floor_start = minf(md->hud.new_floor_start, draw_d.y_max);
-	if (ray->floor_y_start > draw_d.y_max)
-		ray->floor_y_start = draw_d.y_max;
+	ray->flr_y = min(draw_d.y_max, ray->flr_y);
 	return (1);
 }
 
-int	draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray)
+int	draw_wall_line(t_md *md, float dist, t_ent *hit, t_ray *ray)
 {
 	t_vec3f	txtr_cord;
 	t_vec3	screen_pos;
 
-	ray->wall_hit = wall;
-	ray->distance = maxf(0.01, dist);
-	wall->hp = ray->distance > md->t_len * 2;
-	txtr_cord.y = correct_fisheye(md, ray, wall, dist);
+	ray->wall_hit = hit;
+	ray->distance = maxf(5, dist);
+	hit->hp = ray->distance > md->t_len * 2;
+	txtr_cord.y = correct_fisheye(md, ray, hit, dist);
 	if (ray->vertical_hit)
-		txtr_cord.x = (int)fmod(ray->pos.y, wall->size.y);
+		txtr_cord.x = (int)fmod(ray->pos.y, hit->size.y);
 	else
-		txtr_cord.x = (int)fmod(ray->pos.x, wall->size.x);
+		txtr_cord.x = (int)fmod(ray->pos.x, hit->size.x);
 	screen_pos.x = ray->index;
-	screen_pos.y = compute_row_start(md, wall, ray->distance);
+	screen_pos.y = compute_row_start(md, hit, ray->distance);
 	screen_pos.z = ray->hits_len > 0;
 	draw_pxl(md, ray, txtr_cord, screen_pos);
 	return (1);

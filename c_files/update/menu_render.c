@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:30:53 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 19:17:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 13:25:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	render_buttons(t_md *md, t_menu *menu)
 		txt_data.g = but->pos.y;
 		txt_data.b = md->rgb[RGB_RED + (*but->value == 1)];
 		if (menu->button_hov == i)
-			txt_data.b += 10000;
+			txt_data.b += 500;
 		rnd_abs_txt(md, txt_data, "%s", but->label);
 		txt_data.r -= 15;
 		txt_data.b = md->rgb[RGB_BLUE];
@@ -101,7 +101,7 @@ void	render_menu(t_md *md, t_menu *menu)
 		render_sliders(md, menu, menu->freeze_frame);
 		render_buttons(md, menu);
 		center_txt(md, get_v2(0, -win_sz.y * .4), win_sz.x / 20, "GRASS");
-		center_txt(md, get_v2(0, -win_sz.y * .3), win_sz.x / 40, "a cube3D project");
+		center_txt(md, get_v2(0, -win_sz.y * .3), win_sz.x / 60, "cube3D");
 		menu->refresh_ui = 0;
 	}
 	else if (menu->selected_slider)

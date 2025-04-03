@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:24:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 00:53:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:32:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	reset_grass(t_md *md, t_fe *fe)
 	fe->age = 0;
 }
 
-int	render_fe(t_md *md, t_fe *fe, int width, float rwd)
+int	render_fe(t_md *md, t_fe *fe, int width)
 {
 	float				shade;
 	t_vec4				rgb;
@@ -27,7 +27,6 @@ int	render_fe(t_md *md, t_fe *fe, int width, float rwd)
 	const t_vec2		draw_sz = (t_vec2){width, 1};
 
 	pos = fe->pos;
-	(void)rwd;
 	while (++pos.y < fe->end_y)
 	{
 		if (pos.y >= md->win_sz.y || pos.y < 0)
@@ -57,7 +56,7 @@ void	draw_stored_fe(t_md *md)
 	while (node)
 	{
 		f = (t_fe *)node->content;
-		render_fe(md, f, 1, 3);
+		render_fe(md, f, 1);
 		node = node->next;
 	}
 	dblst_clear(&md->env.stored_blades, NULL);

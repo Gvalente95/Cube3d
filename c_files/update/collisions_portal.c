@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:52:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 21:23:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:03:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ static void	set_pos_and_angle(t_md *md, t_wrd_dir start_dir, \
 	plr->angle = (new_angle) * (M_PI / 180.0f);
 	plr->dir.x = cosf(plr->angle);
 	plr->dir.y = sinf(plr->angle);
-	plr->pos.x = out_pos.x + plr->dir.x;
-	plr->pos.y = out_pos.y + plr->dir.y;
+	plr->pos.x = out_pos.x;
+	plr->pos.y = out_pos.y;
 }
 
 static int	pass_through(t_md *md, int cur_index, t_vec2 in_pos, t_vec2 out_pos)

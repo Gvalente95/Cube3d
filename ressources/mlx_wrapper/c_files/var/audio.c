@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 14:59:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 10:50:54 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,6 @@ pid_t	play_sound(t_md *md, const char *filename)
 			exit(EXIT_FAILURE);
 		}
 	}
-	return (pid);
-}
-
-pid_t	play_index(t_md *md, const char *filepath, int index)
-{
-	pid_t	pid;
-	char	*index_txt;
-	char	*path_with_index;
-	char	*full_path;
-
-	if (!md->prm.au_on)
-		return (0);
-	index_txt = ft_itoa(index);
-	path_with_index = ft_strjoin(index_txt, ".mp3");
-	full_path = ft_strjoin(filepath, path_with_index);
-	pid = play_sound(md, full_path);
-	free(full_path);
-	free(path_with_index);
-	free(index_txt);
 	return (pid);
 }
 

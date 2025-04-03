@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:58:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 10:29:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	render_2d_ent(t_md *md, t_ent *e, t_vec2 centr)
 	draw_img(img, md->screen, ent_p, -1);
 }
 
-void	render_entities(t_md *md)
+void	render_2d_entities(t_md *md)
 {
 	t_dblst	*node;
 	t_ent	*e;
@@ -69,7 +69,7 @@ void	render_entities(t_md *md)
 	while (node)
 	{
 		e = (t_ent *)node->content;
-		if (e->is_active)
+		if (e->is_active && e->type != nt_empty)
 			render_2d_ent(md, e, centr);
 		node = node->next;
 	}
@@ -110,7 +110,7 @@ void	render(t_md *md)
 	}
 	render_background(md);
 	if (!md->prm.ray_mode)
-		render_entities(md);
+		render_2d_entities(md);
 	else
 		render_hud_elements(md, &md->hud);
 	if (md->mmap.active)

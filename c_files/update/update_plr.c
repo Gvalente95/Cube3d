@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 14:22:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 12:17:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	update_player_rot(t_md *md)
 		md->plr_rot.x -= 360.0f;
 	if (!md->mouse.lock_rot.y && md->mouse.delta.y && md->mouse.focus)
 		md->plr_rot.y += (md->mouse.delta.y * speed);
-	if (md->prm.free_cam)
+	if (md->prm.fly_cam)
 		md->plr_rot.y = minmaxf(-140, 140, md->plr_rot.y);
 	else
 		md->plr_rot.y = minmaxf(-80, 80, md->plr_rot.y);
@@ -67,7 +67,6 @@ static void	update_player_action(t_md *md, t_ent *plr)
 		md->plr.action = m_idle;
 	if (md->plr.action != prv_action)
 		md->plr.frame_index = 0;
-	update_cam(md, plr);
 }
 
 static void	update_player_weapon(t_md *md, t_ent *plr)
@@ -83,13 +82,9 @@ int	update_player(t_md *md, t_ent *plr)
 {
 	update_player_weapon(md, plr);
 	update_player_rot(md);
-	update_player_mov(md);
+	update_player_mov(md, plr);
 	update_player_action(md, plr);
-	md->input_offst = get_v2(md->input_offst.x + (int)(md->plr_wrd_mv.x), \
-		md->input_offst.y - (int)(md->plr_wrd_mv.y));
-	if (md->timer.trig_walk && !md->prm.free_cam && plr->grounded && \
-		!cmp_vec3f(md->input_mov, v3f(0), .01))
-			play_random_sound(md, AU_WALK_GRASS, 8);
-	play_loop(md, &md->au.wind_pid, AU_WIND, md->prm.free_cam);
+	update_cam(md);
+	md->plr.pos.z = minmaxf(-md->t_len * 3, 0, md->plr.pos.z);
 	return (1);
 }

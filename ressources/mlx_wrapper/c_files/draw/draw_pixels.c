@@ -6,40 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/01 20:40:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:26:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
-
-int	blend_color(int color_a, int color_b, float opacity)
-{
-	t_vec4	rgb_a;
-	t_vec4	rgb_b;
-	t_vec4	b;
-	int		result;
-
-	if (opacity < 0.0f)
-		opacity = 0.0f;
-	if (opacity > 1.0f)
-		opacity = 1.0f;
-	rgb_a.a = (color_a >> 24) & 0xFF;
-	rgb_a.r = (color_a >> 16) & 0xFF;
-	rgb_a.g = (color_a >> 8) & 0xFF;
-	rgb_a.b = color_a & 0xFF;
-	rgb_b.a = (color_b >> 24) & 0xFF;
-	rgb_b.r = (color_b >> 16) & 0xFF;
-	rgb_b.g = (color_b >> 8) & 0xFF;
-	rgb_b.b = color_b & 0xFF;
-	if (opacity == 0.0f)
-		opacity = 1.0f - ((float)rgb_b.a / 255.0f);
-	b.r = (rgb_a.r * (1.0f - opacity)) + (rgb_b.r * opacity);
-	b.g = (rgb_a.g * (1.0f - opacity)) + (rgb_b.g * opacity);
-	b.b = (rgb_a.b * (1.0f - opacity)) + (rgb_b.b * opacity);
-	b.a = (rgb_a.a * (1.0f - opacity)) + (rgb_b.a * opacity);
-	result = ((int)b.a << 24) | ((int)b.r << 16) | ((int)b.g << 8) | (int)b.b;
-	return (result);
-}
 
 int	put_pxl_if_vis(t_draw_d *dd, int overlap, int blend, float opacty)
 {
@@ -89,30 +60,6 @@ int	draw_pixel(t_image *texture, t_vec2 pos, int color, float opacity)
 	return (1);
 }
 
-//		clr_ign.x = color | clr_ign.y = drawover
-int	draw_safe_pixel(t_image *img, t_vec2 pos, t_vec2 clr_over, float opacity)
-{
-	int	index;
-	int	cur_clr;
-
-	if (!img || !img->src)
-		return (0);
-	if (pos.x < 0 || pos.x >= img->size.x || \
-		pos.y < 0 || pos.y >= img->size.y)
-		return (0);
-	if ((img->size_line / 4) != img->size.x)
-		return (printf("Warning: size_line / 4 != size.x\n"), 0);
-	index = pos.y * (img->size_line / 4) + pos.x;
-	cur_clr = img->src[index];
-	if (cur_clr != clr_over.y)
-		return (0);
-	if (opacity < 0)
-		img->src[index] = clr_over.x;
-	else
-		img->src[index] = blend_color(img->src[index], clr_over.x, opacity);
-	return (1);
-}
-
 int	draw_pixels(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 {
 	t_vec2	draw_pos;
@@ -141,32 +88,52 @@ int	draw_pixels(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 	return (draw_count);
 }
 
-//		color_d: x = colr - y = thickness
-void	draw_line(t_image *onto, t_vec2 start, t_vec2 end, t_vec2 color_d)
+//		clr_ign.x = color | clr_ign.y = drawover
+int	draw_safe_pxl(t_image *img, t_vec2 pos, t_vec2 clr_over, float opacity)
 {
-	t_vec3f	delta;
-	t_vec3f	step;
-	float	steps;
-	float	i;
-	t_vec3f	pos;
+	int	index;
+	int	cur_clr;
 
-	delta.x = end.x - start.x;
-	delta.y = end.y - start.y;
-	steps = fmaxf(fabsf(delta.x), fabsf(delta.y));
-	if (steps == 0)
-		return ;
-	step.x = delta.x / steps;
-	step.y = delta.y / steps;
-	pos.x = start.x;
-	pos.y = start.y;
-	i = -1;
-	while (++i <= steps)
+	if (!img || !img->src)
+		return (0);
+	if (pos.x < 0 || pos.x >= img->size.x || \
+		pos.y < 0 || pos.y >= img->size.y)
+		return (0);
+	if ((img->size_line / 4) != img->size.x)
+		return (printf("Warning: size_line / 4 != size.x\n"), 0);
+	index = pos.y * (img->size_line / 4) + pos.x;
+	cur_clr = img->src[index];
+	if (cur_clr != clr_over.y)
+		return (0);
+	if (opacity < 0)
+		img->src[index] = clr_over.x;
+	else
+		img->src[index] = blend_color(img->src[index], clr_over.x, opacity);
+	return (1);
+}
+
+int	draw_safe_pxls(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
+{
+	t_vec2	draw_pos;
+	t_vec2	end_coord;
+	int		draw_count;
+	float	alpha;
+
+	if (!txtr || !txtr->src || pos.x < 0 || pos.y < 0)
+		return (0);
+	alpha = 1.0f - ((float)((color >> 24) & 0xFF) / 255.0f);
+	if (alpha < 0.2f)
+		alpha = 0.2f;
+	end_coord = get_v2(pos.x + draw_size.x, pos.y + draw_size.y);
+	draw_count = 0;
+	draw_pos = pos;
+	while (draw_pos.y < end_coord.y)
 	{
-		start = (t_vec2){(int)(pos.x + 0.5f), (int)(pos.y + 0.5f)};
-		if (color_d.y > 1)
-			draw_pixels(onto, start, v2(color_d.y), color_d.x);
-		else
-			draw_pixel(onto, start, color_d.x, get_alpha(color_d.x));
-		pos = get_v3f(pos.x + step.x, pos.y + step.y, pos.z);
+		draw_pos.x = pos.x - 1;
+		while (++draw_pos.x < end_coord.x)
+			draw_count += draw_safe_pxl(txtr, draw_pos, \
+				get_v2(color, v4_to_color(0, 0, 0, 0)), alpha);
+		draw_pos.y++;
 	}
+	return (draw_count);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/02 13:57:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 10:42:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,26 +141,5 @@ void	flush_img(t_image *src, int color, \
 			img_data[i] = color;
 		else
 			img_data[i] = blend_color(img_data[i], color, transp);
-	}
-}
-
-void	remove_img_color(t_image *img, int remove_color)
-{
-	int		*img_data;
-	int		total_pixels;
-	int		i;
-	t_vec4	target;
-	t_vec4	clr;
-
-	if (!img || !img->src)
-		return ;
-	total_pixels = img->size.x * img->size.y;
-	i = -1;
-	while (++i < total_pixels)
-	{
-		clr = color_to_v4(img->src[i]);
-		target = color_to_v4(remove_color);
-		if (clr.r == target.r && clr.g == target.g && clr.b == target.b)
-			img->src[i] = 0xFF000000;
 	}
 }

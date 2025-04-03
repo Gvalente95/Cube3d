@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/28 09:59:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 14:21:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ void	set_characters(char *map, int difficulty)
 		set_character('N', 1, map, len);
 	space = get_char_amount(map, '0');
 	mobs_amount = minmax(1, 30, (space / (10 - difficulty)));
-	set_character('M', mobs_amount, map, len);
 	space = get_char_amount(map, '0');
 	pickup_amount = minmax(1, 30, (space / (10 + difficulty)));
-	set_character('P', pickup_amount, map, len);
+	set_character('T', pickup_amount, map, len);
+	set_character('B', mobs_amount, map, len);
 	door_amount = len / 20;
 	set_doors(map, door_amount);
 }
@@ -83,10 +83,10 @@ void	set_characters(char *map, int difficulty)
 char	*set_map_with_base(char *map)
 {
 	const char	data_info[6][50] = {
-		"NO ressources/xpm/ent/wall/NORTH.xpm\n", \
-		"SO ressources/xpm/ent/wall/SOUTH.xpm\n", \
-		"WE ressources/xpm/ent/wall/WEST.xpm\n", \
-		"EA ressources/xpm/ent/wall/EAST.xpm\n", \
+		"NO ressources/xpm/utils/ground.xpm\n", \
+		"SO ressources/xpm/utils/ground.xpm\n", \
+		"WE ressources/xpm/utils/ground.xpm\n", \
+		"EA ressources/xpm/utils/ground.xpm\n", \
 		"F 96,64,32\n", "C 0,0,0\n"
 	};
 	int			i;

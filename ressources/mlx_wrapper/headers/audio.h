@@ -6,12 +6,12 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:38:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 11:47:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 13:22:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AUDIO_H
-#define AUDIO_H
+# define AUDIO_H
 
 # include "../mlx_utils.h"
 
@@ -19,15 +19,16 @@
 # define AU_WALK_GRASS		"ressources/audio/footsteps/grass/"
 # define AU_RELOAD			"ressources/audio/reload/0.mp3"
 # define AU_SLICE			"ressources/audio/shoot/0.mp3"
-# define AU_SHOOT			"ressources/audio/shoot/1.mp3"
-# define AU_CLICK			"ressources/audio/UI/click.mp3"
-# define AU_HOV				"ressources/audio/UI/hov.mp3"
-# define AU_GRAB			"ressources/audio/UI/hov.mp3"
 # define AU_OPEN			"ressources/audio/open.mp3"
-# define AU_WALK_STEP		"ressources/audio/footsteps/steps/"
 # define AU_PORTAL_SHOOT	"ressources/audio/portal_shoot.mp3"
 # define AU_WIND			"ressources/audio/wind.mp3"
 # define AU_MUS				"ressources/audio/music.mp3"
+# define AU_MOUSE_CLICK		"ressources/audio/ui/mouse_click.mp3"
+# define AU_MOUSE_RELEASE	"ressources/audio/ui/mouse_release.mp3"
+# define AU_HOV				"ressources/audio/ui/hov.mp3"
+# define AU_GRAB			"ressources/audio/ui/hov.mp3"
+# define AU_MENU_IN			"ressources/audio/ui/menu_in.mp3"
+# define AU_MENU_OFF		"ressources/audio/ui/menu_off.mp3"
 
 typedef struct s_au_manager
 {

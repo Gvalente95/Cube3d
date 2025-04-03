@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:09:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 21:30:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 12:11:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,9 @@ void	draw_portal(t_md *md, t_ent *e, t_vec2 pos)
 		return ;
 	(void)pos;
 	play_sound(md, AU_PORTAL_SHOOT);
-	draw_sz = get_v2(md->t_len / 3, md->t_len / 2);
+	draw_sz = get_v2(md->t_len / 3, md->t_len * .75);
 	draw_p = get_v2(e->size.x / 2 - draw_sz.x / 2, \
-		e->size.y / 2 - draw_sz.y / 2);
+		md->t_len * .25);
 	e->overlay = copy_image(md, e->frame, e->frame->size, -1);
 	set_portal_pos(e, e->size.x / 2, &out_pos);
 	index = set_single(md, e, out_pos, \

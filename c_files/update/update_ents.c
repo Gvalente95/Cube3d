@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 13:41:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 12:06:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ static int	update_wall(t_md *md, t_ent *e)
 	t_image	*frame;
 	int		i;
 	float	interp_factor;
-	int		green_intensity;
-	int		red_intensity;
+	int		grn_fct;
+	int		red_fct;
 
 	if (!md->timer.trig_fe)
 		return (0);
@@ -66,14 +66,16 @@ static int	update_wall(t_md *md, t_ent *e)
 	{
 		frame = e->frames[i];
 		interp_factor = 1 - (float)e->crp_pxl.y / (frame->size.y - 1);
-		green_intensity = 50 + (int)((255 - 50) * interp_factor);
-		green_intensity = minmax(0, 255, green_intensity);
+		grn_fct = 50 + (int)((255 - 50) * interp_factor);
+		grn_fct = minmax(0, 255, grn_fct);
+		red_fct = (int)((255) * interp_factor);
+		red_fct = minmax(0, 255, red_fct / 3);
 		interp_factor = 1 - (float)e->crp_pxl.x / (frame->size.y - 1);
-		red_intensity = (int)((255) * interp_factor);
-		red_intensity = minmax(0, 255, red_intensity / 3);
-		draw_pixel(frame, e->crp_pxl, v4_to_color(red_intensity, green_intensity, 0, 255), 1);
-		e->crp_pxl.x = minmax(0, frame->size.x - 1, e->crp_pxl.x + r_range(-1, 1));
-		e->crp_pxl.y = minmax(0, frame->size.y - 1, e->crp_pxl.y + r_range(-1, 1));
+		draw_pixel(frame, e->crp_pxl, v4_to_color(red_fct, grn_fct, 0, 255), 1);
+		e->crp_pxl.x = minmax(0, frame->size.x - 1, \
+			e->crp_pxl.x + r_range(-1, 1));
+		e->crp_pxl.y = minmax(0, frame->size.y - 1, \
+			e->crp_pxl.y + r_range(-1, 1));
 	}
 	return (1);
 }
@@ -115,7 +117,8 @@ int	update_ents(t_md *md)
 	{
 		next = node->next;
 		e = (t_ent *)node->content;
-		upd_render += update_ent(md, e);
+		if (e && e->type != nt_empty)
+			upd_render += update_ent(md, e);
 		node = next;
 	}
 	return (upd_render);

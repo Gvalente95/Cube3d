@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:17:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:28:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,7 @@ t_vec3f	sub_vec3f(t_vec3f a, t_vec3f b);
 t_vec3	sub_vec3(t_vec3 a, t_vec3 b);
 t_vec2f	sub_vec2f(t_vec2f a, t_vec2f b);
 t_vec2	sub_vec2(t_vec2 a, t_vec2 b);
+
+int		color_compare(int color, t_vec4 cmp);
 
 #endif

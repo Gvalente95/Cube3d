@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:55:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:12:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 15:43:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,3 +32,12 @@ t_vec4	color_to_v4(int color)
 	return (clr);
 }
 
+int	color_compare(int color, t_vec4 cmp)
+{
+	t_vec4	clr_rgb;
+
+	clr_rgb = color_to_v4(color);
+	if (clr_rgb.r == cmp.r && clr_rgb.b == cmp.b && clr_rgb.b == cmp.b)
+		return (1);
+	return (0);
+}

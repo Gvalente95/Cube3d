@@ -6,12 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:19:07 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 10:39:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 15:29:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
 
 void	init_clouds(t_md *md, t_image *sky, t_vec2 win_sz)
 {
@@ -104,15 +103,11 @@ static void	init_sky(t_md *md, t_hud *hud, t_vec2 win_sz)
 	flipy_image_data(hud->sky_flipy);
 }
 
-static void	init_floor(t_md *md, t_hud *hud)
-{
-	hud->base_floor = init_img(md, md->win_sz, NULL, hud->floor_color);
-	hud->floor = init_img(md, md->win_sz, "utils/ground.xpm", -1);
-	flush_img(hud->floor, hud->floor_color, 0.5, md->rgb[RGB_BLACK]);
-}
-
 void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz)
 {
-	init_floor(md, hud);
+	hud->base_floor = init_img(md, win_sz, NULL, hud->floor_color);
+	hud->floor = init_img(md, win_sz, "utils/ground.xpm", -1);
+	hud->floor2d = copy_image(md, hud->floor, v2(md->txd.size_2d), -1);
+	flush_img(hud->floor, hud->floor_color, 0.5, md->rgb[RGB_BLACK]);
 	init_sky(md, hud, win_sz);
 }

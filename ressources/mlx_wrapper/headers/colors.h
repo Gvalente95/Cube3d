@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/02 13:36:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/02 15:51:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,19 @@ unsigned char	get_b(int trgb);
 # define RGB_MAGENT	4
 # define RGB_GRAY	5
 # define RGB_BROWN	6
-# define RGB_TEAL	7
-# define RGB_LIME	8
-# define RGB_GOLD	9
-# define RGB_SILVER	10
-# define RGB_TURQ	11
-# define RGB_INDIGO	12
-# define RGB_VIOLET	13
-# define RGB_CORAL	14
-# define RGB_WHITE	15
+# define RGB_WHITE	7
+# define RGB_TEAL	8
+# define RGB_LIME	9
+# define RGB_GOLD	10
+# define RGB_SILVER	11
+# define RGB_TURQ	12
+# define RGB_INDIGO	13
+# define RGB_VIOLET	14
+# define RGB_CORAL	15
 # define RGB_BLACK	16
 # define RGB_YELLOW	17
 # define RGB_ORANGE	18
-# define RGB_NULL	18
+# define RGB_NULL	19
 
 # define COLOR_RED        		0xFFFF0000  // Fully opaque red
 # define COLOR_GREEN      		0xFF00FF00  // Fully opaque green

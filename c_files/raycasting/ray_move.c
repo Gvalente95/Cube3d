@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:28:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 17:07:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:21:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ t_ent	*search_in_grid(t_md *md, t_ray *ray, float distance)
 	if (index <= 0 || index >= md->map.len || !md->mapped_ents[index])
 		return (NULL);
 	ent = md->mapped_ents[index];
+	if (!ent->revealed && ray->distance < md->t_len * REVEAL_DISTANCE)
+		show_minimap_entity(md, ent, md->mmap.bg, 1);
 	type = ent->type;
 	if (type == nt_wall)
 		return (ent);
@@ -31,10 +33,9 @@ t_ent	*search_in_grid(t_md *md, t_ray *ray, float distance)
 	if (!md->prm.use_thrd && (ray->index == 0 || ray->check_hit))
 		cast_check_ray(md, ray, ray->start, ent);
 	ray->hit_data[ray->hits_len].post_at_hit = ray->pos;
-	ray->hit_data[ray->hits_len].hit = ent;
 	ray->hit_data[ray->hits_len].vertical_hit_at_e = ray->vertical_hit;
 	ray->hit_data[ray->hits_len].dist_at_e = distance;
-	ray->hits_len++;
+	ray->hit_data[ray->hits_len++].hit = ent;
 	if (ent->type == nt_door)
 		ray->had_door = 1;
 	return (NULL);
@@ -68,10 +69,12 @@ int	ray_move(t_md *md, t_ray *ray, t_vec2 visu_offset)
 		ray->distance++;
 		ray->pos = add_vec3f(ray->pos, ray->dir);
 		on_grid = update_ray_grid_pos(md, ray);
+		if (!md->prm.ray_mode && md->prm.show_rays)
+			set_ray_color(md, ray);
 		if (!ray_can_look(md, ray, on_grid))
 			continue ;
 		hit = search_in_grid(md, ray, ray->steps);
-		render_ray(md, ray, hit, visu_offset);
+		render_ray(md, ray, visu_offset);
 		if (ray_can_stop(ray, hit))
 			return (-1);
 		if (hit && hit->type == nt_wall && !ray->check_hit)

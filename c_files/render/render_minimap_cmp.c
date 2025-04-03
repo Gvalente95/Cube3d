@@ -6,11 +6,23 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:54:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 14:23:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 10:51:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
+
+void	show_revealed_perc(t_md *md, int scale, t_vec2 pos)
+{
+	float	revealed_perc_;
+	int		color;
+	t_vec4	data;
+
+	revealed_perc_ = (100.0f / md->mmap.revealed_len) * md->mmap.revealed_cur;
+	color = -1;
+	data = get_v4(pos.x, pos.y, color, scale);
+	rnd_abs_txt(md, data, "%.1f/100", revealed_perc_);
+}
 
 static void	show_mmap_ent(t_md *md, t_ent *e, t_vec3f cosin, t_vec2 center)
 {
@@ -20,6 +32,8 @@ static void	show_mmap_ent(t_md *md, t_ent *e, t_vec3f cosin, t_vec2 center)
 	t_vec3f	pos;
 	int		dist;
 
+	if (e->type == nt_empty)
+		return ;
 	dist = hypotf(md->plr.pos.x - e->pos.x, md->plr.pos.y - e->pos.y);
 	if (dist > cosin.z * md->t_len)
 		return ;
@@ -29,16 +43,14 @@ static void	show_mmap_ent(t_md *md, t_ent *e, t_vec3f cosin, t_vec2 center)
 		draw_color = md->rgb[RGB_VIOLET];
 	else if (e == md->portal.ends[1].e)
 		draw_color = md->rgb[RGB_ORANGE];
-	relp.x = e->pos.x - md->plr.pos.x;
-	relp.y = e->pos.y - md->plr.pos.y;
+	relp = sub_vec3f(e->pos, md->plr.pos);
 	rotp.x = (relp.x * cosin.x - relp.y * cosin.y - md->cam_ofst.x / md->t_len);
 	rotp.y = (relp.x * cosin.y + relp.y * cosin.x - md->cam_ofst.y / md->t_len);
-	pos.x = center.x + ((rotp.x / md->t_len) * md->mmap.collaps_scl);
-	pos.y = center.y + ((rotp.y / md->t_len) * md->mmap.collaps_scl);
-	draw_pixels(md->screen,
+	pos.x = center.x + ((rotp.x / md->t_len) * md->mmap.comps_scl);
+	pos.y = center.y + ((rotp.y / md->t_len) * md->mmap.comps_scl);
+	draw_sphere(md->screen,
 		get_v2(pos.x + 1 + cosin.z, pos.y + 1 + cosin.z), \
-		get_v2(md->mmap.collaps_scl - 1, md->mmap.collaps_scl - 1), \
-		draw_color);
+		v2(md->mmap.comps_scl - 1), get_v3(draw_color, 10, 1));
 }
 
 static void	show_mmap_dir(t_md *md, t_vec3f cosin, t_vec2 psz, t_vec2 map_p)
@@ -67,22 +79,22 @@ static void	show_mmap_dir(t_md *md, t_vec3f cosin, t_vec2 psz, t_vec2 map_p)
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist)
 {
 	int		i;
-	t_vec3f	cosin;
+	t_vec3f	pdir;
 	t_vec2	p;
 	t_vec2	psz;
 
-	p = get_v2(center.x - (view_dist - 1) * md->mmap.collaps_scl, \
-		center.y - (view_dist - 1) * md->mmap.collaps_scl);
-	psz = v2((view_dist * 2) * md->mmap.collaps_scl);
-	draw_sphere(md->screen, p, psz, get_v3(md->rgb[RGB_INDIGO], 9, 1));
-	cosin.z = md->plr.angle;
-	cosin.x = md->plr.dir.x;
-	cosin.y = md->plr.dir.y;
-	show_mmap_dir(md, cosin, psz, p);
-	cosin.z = view_dist;
+	p = get_v2(center.x - (view_dist - 1) * md->mmap.comps_scl, \
+		center.y - (view_dist - 1) * md->mmap.comps_scl);
+	psz = v2((view_dist * 2) * md->mmap.comps_scl);
+	draw_sphere(md->screen, p, psz, get_v3(md->rgb[RGB_GRAY], 6, 1));
+	pdir.z = md->plr.angle + M_PI_2;
+	pdir.x = cosf(pdir.z);
+	pdir.y = sinf(pdir.z);
+	show_mmap_dir(md, pdir, psz, p);
+	pdir.z = view_dist;
 	i = -1;
 	while (md->map.buffer[++i])
 		if (md->mapped_ents[i] && md->mapped_ents[i]->type != nt_plr)
-			show_mmap_ent(md, md->mapped_ents[i], cosin, center);
-	show_mmap_ent(md, md->mapped_ents[md->plr.map_index], cosin, center);
+			show_mmap_ent(md, md->mapped_ents[i], pdir, center);
+	show_mmap_ent(md, md->mapped_ents[md->plr.map_index], pdir, center);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 18:01:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 10:39:55 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,8 @@ int	replace_window(t_md *md, int new_w, int new_h)
 	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
 	set_menu_pos(md, &md->menu, get_v3(-200, -200, 5), get_v3(300, -200, 5));
 	render(md);
-	md->menu.refresh_bg = 1;
-	md->menu.refresh_ui = 1;
 	md->menu.selected_slider = NULL;
 	md->mouse.click = MOUSE_NOPRESS;
 	md->mouse.pressed = MOUSE_NOPRESS;
-	return (-1);
+	return (md->menu.refresh_bg = 1, md->menu.refresh_ui = 1, -1);
 }
