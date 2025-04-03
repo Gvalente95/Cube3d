@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 14:06:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:12:03 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ void	show_update_information(t_md *md)
 {
 	int	y;
 
-	if (!md->prm.debug_mode)
-		return ;
 	y = 0;
 	show_vec3f(md, "input", md->input_mov, get_v2(0, y++));
 	show_vec2(md, "input offst", md->input_offst, get_v2(0, y++));

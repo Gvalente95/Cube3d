@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 15:07:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:33:32 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,13 @@ int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type)
 		return (0);
 	if (md->prm.use_thrd && ent->type != nt_door)
 	{
-		if (!md->prm.ray_mode || is_in_list(md->ray_manager.ents_to_draw, ent))
+		if (!md->prm.ray_mode || is_in_list(md->threads_manager.ents_to_draw, ent))
 			return (0);
 		if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
 	(t_vec2f){ent->pos.x + (float)(md->t_len / 2), \
 	ent->pos.y + (float)(md->t_len / 2)}, .49))
 			return (0);
-		dblst_add_back(&md->ray_manager.ents_to_draw, dblst_new((t_ent *)ent));
+		dblst_add_back(&md->threads_manager.ents_to_draw, dblst_new((t_ent *)ent));
 		return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);
 	}
 	else if (!v3f_bounds(ray->pos, v3f(0), \

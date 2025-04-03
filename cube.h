@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:28:05 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/03 22:39:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 //# include <X11/X.h>
 
 # define IMG_PATH			"ressources/xpm/"
-# define RESOLUTION		10
+# define RESOLUTION		25
 //		SCREEN
-# define SCRN_W			1800
-# define SCRN_H			1300
+# define SCRN_W			3000
+# define SCRN_H			1600
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -49,8 +49,8 @@
 # define ENNEMY_SPEED	.1
 # define RAY_ZOOM		25
 
-# define THREADS_BATCH	16
-# define FLOOR_WORKERS	8
+# define THREADS_BATCH	256
+# define FLOOR_WORKERS	16
 
 # define FE_PER_TILE	64
 # define REVEAL_DISTANCE 5
@@ -298,7 +298,7 @@ void	apply_dithering(t_image *img, float dither_strength, \
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist);
 void	draw_sprite_thread(t_md *md, t_ent *e, float fogalpha);
 int		is_in_list(t_dblst *lst, t_ent *e);
-void	draw_found_ents(t_md *md, t_ray_manager *mon);
+void	draw_found_ents(t_md *md, t_threads_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
 void	reset_grass(t_md *md, t_fe *fe);

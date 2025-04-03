@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:15:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:34:06 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,30 +44,6 @@ typedef struct s_hit_data
 	int		row_index;
 }	t_hit_data;
 
-typedef struct s_ray
-{
-	t_hit_data	hit_data[MAX_RAY_SPRITE];
-	int			hits_len;
-	t_ent		*wall_hit;
-	t_ent		*check_hit;
-	t_vec3f		pos;
-	t_vec3f		start;
-	t_vec3f		dir;
-	float		distance;
-	float		sprite_distance;
-	float		angle;
-	int			vertical_hit;
-	int			corner;
-	int			index;
-	int			color;
-	int			had_door;
-	int			is_floor_worker;
-	int			steps;
-	int			check_steps;
-	int			flr_y;
-	int			teleported_once;
-}	t_ray;
-
 typedef struct s_ray_draw_d
 {
 	t_ray	*ray;
@@ -102,21 +78,28 @@ typedef struct s_floor_draw_d
 	float	fogalpha;
 }	t_floor_draw_d;
 
-typedef struct s_thread_worker
+typedef struct s_ray
 {
-	t_md			*md;
-	int				index;
-	pthread_t		thread;
-}	t_thread_worker;
-
-typedef struct s_ray_manager
-{
-	int				threads_amount;
-	t_dblst			*ents_to_draw;
-	t_dblst			*e_distances;
-	t_vec2			ray_visu_offset;
-	t_thread_worker	threads[MAX_RAYS];
-	t_vec3f			dir_vals[MAX_RAYS];
-}	t_ray_manager;
+	t_hit_data	hit_data[MAX_RAY_SPRITE];
+	int			hits_len;
+	t_ent		*wall_hit;
+	t_ent		*check_hit;
+	t_vec3f		pos;
+	t_vec3f		start;
+	t_vec3f		dir;
+	float		distance;
+	float		sprite_distance;
+	float		angle;
+	int			vertical_hit;
+	int			corner;
+	int			index;
+	int			color;
+	int			had_door;
+	int			is_floor_worker;
+	int			steps;
+	int			check_steps;
+	int			flr_y;
+	int			teleported_once;
+}	t_ray;
 
 #endif

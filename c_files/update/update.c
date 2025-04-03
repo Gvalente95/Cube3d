@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 13:36:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:08:47 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	update_audio(t_md *md, t_au_manager *au)
 {
 	play_loop(md, &au->mus_pid, AU_MUS, md->prm.au_on);
 	play_loop(md, &au->wind_pid, AU_WIND, md->prm.fly_cam);
+	if (!md->prm.au_on)
+		return ;
 	if (md->timer.trig_walk && !md->prm.fly_cam && md->plr.grounded && \
 		!cmp_vec3f(md->input_mov, v3f(0), .01))
 		play_random_sound(md, AU_WALK_GRASS, 8);

@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:27:19 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/03 22:04:27 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_minimap(md, &md->mmap);
 	init_menu(md, &md->menu);
 	init_env(md);
-	init_ray_threads(md);
+	//init_ray_threads(md);
+	init_thread_pool(md, THREADS_BATCH);
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;
 	md->init_steps++;

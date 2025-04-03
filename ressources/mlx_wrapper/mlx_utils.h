@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 15:52:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:33:48 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "headers/math.h"
 # include "headers/math_2.h"
 # include "headers/audio.h"
+# include "headers/threads.h"
 
 # include "libft/libft.h"
 # include "../lists/lists.h"
@@ -187,7 +188,7 @@ typedef struct s_md
 	t_ray			rays[MAX_RAYS];
 	t_texture_data	txd;
 	t_parameters	prm;
-	t_ray_manager	ray_manager;
+	t_threads_manager	threads_manager;
 	t_au_manager	au;
 	t_env_manager	env;
 	t_image			*screen;

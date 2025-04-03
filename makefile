@@ -12,7 +12,8 @@ c_files/update/update_projectile.c c_files/update/update_plr_movement.c c_files/
 c_files/render/render_minimap.c c_files/render/filters.c c_files/render/render_hud.c c_files/render/render.c \
 c_files/render/filters_2.c c_files/render/render_background.c c_files/render/dithering.c c_files/render/render_minimap_cmp.c \
 c_files/raycasting/ray_cast_threads.c c_files/raycasting/draw_floor.c c_files/init/init_grass.c c_files/raycasting/ray_cast_draw_ents.c \
-c_files/raycasting/draw_fe.c c_files/init/init_minimap.c c_files/update/update_camera.c
+c_files/raycasting/draw_fe.c c_files/init/init_minimap.c c_files/update/update_camera.c c_files/raycasting/ray_cast_threads_Loop.c \
+c_files/raycasting/ray_threads_tools.c
 
 RMAP_SRC	= rmap.c
 SRC			= main.c

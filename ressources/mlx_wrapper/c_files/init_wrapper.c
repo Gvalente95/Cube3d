@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 12:54:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 20:38:35 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 13:43:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:10:51 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

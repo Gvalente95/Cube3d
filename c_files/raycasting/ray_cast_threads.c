@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_threads.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 16:09:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:55:46 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 	ray->angle = dir_val.z;
 }
 
-static int	cast_thread_ray(t_md *md, t_ray *ray)
+int	cast_thread_ray(t_md *md, t_ray *ray)
 {
 	t_hit_data		*hit_data;
 
-	update_ray_data(md, ray, md->ray_manager.dir_vals[ray->index]);
-	ray_move(md, ray, md->ray_manager.ray_visu_offset);
+	update_ray_data(md, ray, md->threads_manager.dir_vals[ray->index]);
+	ray_move(md, ray, md->threads_manager.ray_visu_offset);
 	if (!md->prm.ray_mode)
 		return (1);
 	if (!ray->check_hit && ray->wall_hit)
@@ -94,9 +94,9 @@ void	init_ray_threads(t_md *md)
 {
 	int				i;
 	int				threads_amount;
-	t_ray_manager	*mon;
+	t_threads_manager	*mon;
 
-	mon = &md->ray_manager;
+	mon = &md->threads_manager;
 	mon->ents_to_draw = NULL;
 	mon->e_distances = NULL;
 	i = -1;
@@ -118,11 +118,11 @@ void	init_ray_threads(t_md *md)
 
 void	cast_ray_threads(t_md *md)
 {
-	t_ray_manager	*mon;
+	t_threads_manager	*mon;
 	int				i;
 
 	md->hud.new_floor_start = md->win_sz.y;
-	mon = &md->ray_manager;
+	mon = &md->threads_manager;
 	mon->ray_visu_offset = get_2d_ray_pos(md);
 	compute_ray_directions(md, mon->dir_vals, md->win_sz.x);
 	i = -1;

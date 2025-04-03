@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:29:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 22:32:27 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	render(t_md *md)
 	if (md->timer.time > 3)
 	{
 		if (md->prm.use_thrd)
-			cast_ray_threads(md);
+			cast_ray_threads_lp(md);
 		else
 			cast_rays(md, md->cam_pos);
 	}
@@ -115,7 +115,8 @@ void	render(t_md *md)
 		render_hud_elements(md, &md->hud);
 	if (md->mmap.active)
 		render_minimap(md, &md->mmap);
-	show_update_information(md);
+	if (md->prm.debug_mode)
+		show_update_information(md);
 	show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
 	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);

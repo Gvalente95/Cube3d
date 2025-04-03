@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_minimap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 14:48:25 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:00:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 20:45:25 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	init_minimap(t_md *md, t_mmap *mmap)
 {
 	int	ic_len;
 
-	ic_len = 5;
+	ic_len = max(4, md->win_sz.x / 125);
 	mmap->ic_scl = ic_len;
 	mmap->comps_scl = md->win_sz.x / 150;
 	mmap->cmps = 1;

@@ -18,6 +18,9 @@
 		"tuple": "c",
 		"cube.h": "c",
 		"__threading_support": "c",
-		"math.h": "c"
+		"math.h": "c",
+		"get_next_line.h": "c",
+		"libft.h": "c",
+		"audio.h": "c"
 	}
 }

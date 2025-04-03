@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:25:57 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/03 21:33:48 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void	sort_ent_list_by_distance(t_dblst **lst)
 	free(ent_array);
 }
 
-void	draw_found_ents(t_md *md, t_ray_manager *mon)
+void	draw_found_ents(t_md *md, t_threads_manager *mon)
 {
 	t_dblst	*node;
 	t_ent	*e;

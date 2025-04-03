@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_menu_elements.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 16:10:12 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 21:04:46 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	init_sliders(t_md *md, t_menu *menu, \
 	inisld(md, "Player Height", get_v4f(0, 5, md->t_len, 100), &pm->height);
 	inisld(md, "cam zoom", get_v4f(1, pm->zoom, 500, 100), &pm->zoom);
 	inisld(md, "fov", get_v4f(0, 60, 600, 100), &pm->fov);
-	inisld(md, "floor_fov", get_v4f(0, .5, 1, 100), &pm->floor_fov);
+	inisld(md, "floor_fov", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
 	inisld(md, "grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
 	inisld(md, "grass speed", get_v4f(0, .2, 3, 100), &pm->fe_speed);
 	inisld(md, "win wth", get_v4f(300, md->win_sz.x, 1600, 100), &pm->win_x);
