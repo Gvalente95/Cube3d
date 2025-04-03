@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_plr_movement.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 08:52:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 20:25:21 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	set_plr_z(t_md *md, t_ent *plr)
 {
 	if (!md->prm.fly_cam)
 	{
-		if (plr->pos.z + md->prm.height < 0 && !md->key_prs[R_KEY])
+		if (plr->pos.z + md->prm.height < 0 && !md->key_prs[NUM_R_KEY])
 			plr->mov.z += GRAVITY;
 		else if (plr->pos.z + md->prm.height > 0)
 		{

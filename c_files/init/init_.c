@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 12:31:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 20:27:19 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	prm->use_grass = 1;
 	prm->use_bob = 1;
 	prm->use_sky = 1;
-	prm->au_on = 1;
+	prm->au_on = !md->is_linux;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)

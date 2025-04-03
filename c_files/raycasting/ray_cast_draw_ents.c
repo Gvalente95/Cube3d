@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_draw_ents.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 15:07:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/03 20:25:57 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	get_ent_screen_x(t_md *md, t_ent *e)
 	float	fov_scale;
 	t_vec3f	cam;
 
-	dist = sqrtf(to_ent.x * to_ent.x + to_ent.y * to_ent.y);
+	dist = sqrtf(e->pos.x * e->pos.x + e->pos.y * e->pos.y);
 	to_ent = get_v2f(e->pos.x - md->plr.pos.x, e->pos.y - md->plr.pos.y);
 	to_ent.x /= dist;
 	to_ent.y /= dist;
