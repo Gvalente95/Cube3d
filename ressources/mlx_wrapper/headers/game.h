@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 09:59:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/05 18:27:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_time_handler
 	double	delta_time;
 	double	prev_time;
 	double	cur_tm;
+	double	fps_tm;
 	double	tm_anim;
 	double	tm_level;
 	double	tm_fe;
@@ -37,11 +38,13 @@ typedef struct s_time_handler
 	int		is_game_running;
 	int		time;
 	int		fps;
+	float	avrg_fps;
+	float	avrg_fps_prev;
 	int		trig_anim;
 	int		trig_fe;
 	int		trig_walk;
 	int		prv_fps;
-	int		avrg_fps;
+	int		frm_cnt;
 }	t_timer;
 
 typedef struct s_map
@@ -64,6 +67,7 @@ typedef struct s_slider
 	t_vec2		pos;
 	char		label[50];
 	float		*value;
+	int			index;
 	int			point;
 	int			steps;
 	int			active;

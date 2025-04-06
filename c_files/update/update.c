@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:08:47 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 18:42:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ double	update_time(t_md *md, t_timer *tm)
 
 	tm->cur_tm = get_time_in_seconds();
 	md->timer.fps++;
+	if (md->timer.fps > 50)
+		reset_fps_timer(tm);
+	tm->avrg_fps = (float)(++tm->frm_cnt) / (tm->cur_tm - tm->fps_tm);
 	if (tm->cur_tm - tm->elapsed_pause >= 1)
 	{
 		tm->elapsed_pause = tm->cur_tm;
@@ -35,13 +38,6 @@ double	update_time(t_md *md, t_timer *tm)
 	tm->time++;
 	md->timer.fe_time += md->prm.fe_speed;
 	return (tm->delta_time);
-}
-
-void	reset_mapped_end(t_md *md, t_ent *e)
-{
-	if (e->map_index > 0 && e->map_index <= md->map.len - 1 && \
-		md->mapped_ents[e->map_index] == e)
-		md->mapped_ents[e->map_index] = NULL;
 }
 
 int	set_menu_mode(t_md *md, t_menu *menu, int mode)
@@ -73,12 +69,39 @@ void	update_audio(t_md *md, t_au_manager *au)
 	if (!md->prm.au_on)
 		return ;
 	if (md->timer.trig_walk && !md->prm.fly_cam && md->plr.grounded && \
-		!cmp_vec3f(md->input_mov, v3f(0), .01))
+		!cmp_vec3f(md->cam.input_mov, v3f(0), .01))
 		play_random_sound(md, AU_WALK_GRASS, 8);
+}
+
+static void	update_portals(t_md *md, t_ent *e, t_vec2 out_pos)
+{
+	t_portal	*p;
+	int			index;
+
+	p = &md->portal;
+	if (!md->portal.found)
+		return ;
+	if (!p->ends[0].e)
+		p->ends[0].e = e;
+	else if (!p->ends[1].e)
+		p->ends[1].e = e;
+	else
+	{
+		index = p->last_shot_index;
+		p = &md->portal;
+		free_image_data(md, p->ends[index].e->overlay);
+		p->ends[index].e->overlay = NULL;
+		p->ends[index].e = e;
+		p->ends[index].dir = e->overlay_dir;
+		p->ends[index].out = out_pos;
+		p->last_shot_index = !p->last_shot_index;
+	}
+	p->found = NULL;
 }
 
 int	update_and_render(t_md *md)
 {
+	update_portals(md, md->portal.found, md->portal.out_pos);
 	update_audio(md, &md->au);
 	if (md->menu.active)
 		return (update_menu(md, &md->menu));

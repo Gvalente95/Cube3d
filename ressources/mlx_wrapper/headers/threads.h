@@ -3,12 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   threads.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:31:39 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 22:26:15 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 17:59:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef THREADS_H
+# define THREADS_H
 
 # include "../mlx_utils.h"
 
@@ -40,7 +43,7 @@ typedef struct s_thread_worker
 	pthread_t		thread;
 }	t_thread_worker;
 
-typedef struct s_threads_manager
+typedef struct s_thrd_manager
 {
 	int				threads_amount;
 	t_dblst			*ents_to_draw;
@@ -50,15 +53,16 @@ typedef struct s_threads_manager
 	t_thread_data	thrdlp[MAX_RAYS];
 	t_vec3f			dir_vals[MAX_RAYS];
 	t_soft_barrier	barrier;
-}	t_threads_manager;
+}	t_thrd_manager;
 
 void	soft_barrier_init(t_soft_barrier *b, int total);
 void	soft_barrier_wait(t_soft_barrier *b);
 void	soft_barrier_destroy(t_soft_barrier *b);
 void	*cast_thread_loop(void *arg);
 void	init_thread_pool(t_md *md, int thread_count);
-void	trigger_threads(t_md *md);
 void	cleanup_thread_pool(t_md *md);
 
-int		cast_thread_ray(t_md *md, t_ray *ray);
+int		cast_thread_ray(t_md *md, int ray_index);
 void	cast_ray_threads_lp(t_md *md);
+
+#endif

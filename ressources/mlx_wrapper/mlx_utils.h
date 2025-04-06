@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 21:33:48 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:27:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ typedef struct s_hud
 	t_image		*base_sky;
 	t_image		*sky;
 	t_image		*sky_flipy;
-	t_image		*base_floor;
 	t_image		*floor;
+	t_image		*wall;
+	t_image		*ceiling;
 	t_image		*floor2d;
 	t_image		*lock_x_icon;
 	t_image		*lock_y_icon;
@@ -88,13 +89,13 @@ typedef struct s_hud
 	t_image		*key_icon;
 	t_image		*key2_icon;
 	t_image		*hp_icon;
+	t_image		*center;
 	int			unlocked_weapons[WEAPON_TYPE_LEN];
 	int			bgr_color;
 	int			floor_color;
 	int			sky_color;
 	int			floor_start;
 	int			new_floor_start;
-	int			active_bgr;
 	int			wpn_index;
 	int			weapon_frame;
 	int			ammo;
@@ -125,15 +126,16 @@ typedef struct s_parameters
 {
 	int				resolution;
 	int				show_rays;
-	int				ray_mode;
+	int				view_2d;
 	int				debug_mode;
 	int				use_thrd;
 	int				fly_cam;
 	int				ent_mode;
 	int				au_on;
 	int				use_grass;
-	int				use_bob;
-	int				use_sky;
+	int				use_ceiling;
+	int				use_floor;
+	float			bob_amount;
 	float			sun_x;
 	float			sun_y;
 	float			grass_w;
@@ -145,6 +147,7 @@ typedef struct s_parameters
 	float			res_value;
 	float			txt_sc;
 	float			zoom;
+	float			floor_glide;
 	float			fov;
 	float			win_x;
 	float			floor_fov;
@@ -170,10 +173,25 @@ typedef struct s_mouse
 	int				hide;
 }	t_mouse;
 
+typedef struct s_cam
+{
+	t_vec3f			input_mov;
+	t_vec2			input_offst;
+	t_vec3f			rot;
+	t_vec3f			pos;
+	t_vec3f			ofst;
+	t_vec3f			wrd_mv_offst;
+	t_vec3f			plr_wrd_mv;
+	float			bob_time;
+
+}	t_cam;
+
 typedef struct s_md
 {
 	void			*mlx;
 	void			*win;
+	t_image			*screen;
+	t_vec2			win_sz;
 	t_ent			plr;
 	t_ent			**mapped_ents;
 	t_dblst			*entities;
@@ -187,32 +205,20 @@ typedef struct s_md
 	t_mouse			mouse;
 	t_ray			rays[MAX_RAYS];
 	t_texture_data	txd;
+	t_cam			cam;
 	t_parameters	prm;
-	t_threads_manager	threads_manager;
+	t_thrd_manager	thrd_manager;
 	t_au_manager	au;
 	t_env_manager	env;
-	t_image			*screen;
-	t_image			*center;
-	t_vec3f			cam_ofst;
-	t_vec3f			wrd_mv_offst;
-	t_vec3f			plr_wrd_mv;
-	t_vec2			win_sz;
-	t_vec3f			input_mov;
-	t_vec2			input_offst;
-	t_vec3f			plr_rot;
-	t_vec3f			cam_pos;
-	void			*var_;
-	const char		*dir_labels[4];
 	char			base_map_path[50];
-	float			bob_time;
 	unsigned int	r_seed;
 	int				key_prs[65536];
 	int				key_clicked;
-	int				check_steps;
+	int				last_key;
+	int				init_steps;
 	int				rgb[20];
 	int				t_len;
 	int				var;
-	int				init_steps;
 	int				score;
 	int				is_linux;
 	int				(*mlx_put)(void *mlx, void *win, void *img, int x, int y);
@@ -255,16 +261,15 @@ int				free_void(void *elem);
 int				free_md(t_md *md, int quit);
 int				free_and_quit(t_md *d, const char *msg, const char *attribute);
 
-//		var/time2.c
+//		time/time.c
 void			stop_timer(t_timer *timer);
 void			resume_timer(t_timer *timer);
 double			get_total_time(t_timer *timer);
-
-//		var/time.c
 double			get_time_in_seconds(void);
 double			check_timer(double timer);
 void			start_timer(double *timer);
 void			init_timer(t_md *md, t_timer *timer);
+void			reset_fps_timer(t_timer *timer);
 
 //		math/math_tools_3.c
 int				r_range_seed(unsigned int *g_seed, int min, int max);
@@ -316,7 +321,9 @@ void			update_fe(t_md *md, t_vec2 start, \
 	t_fe *fe, t_floor_draw_d d);
 
 //				camera.c
-void			update_cam(t_md *md);
-t_vec3f			update_fly_cam(t_md *md, float spd);
+void			update_cam(t_md *md, t_cam *cam);
+t_vec3f			update_fly_cam(t_md *md, t_cam *cam, float spd);
+int				color_diff(int c1, int c2);
+void			clean_img(t_image *img);
 
 #endif

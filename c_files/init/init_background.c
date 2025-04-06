@@ -6,19 +6,19 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:19:07 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 15:29:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 16:42:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	init_clouds(t_md *md, t_image *sky, t_vec2 win_sz)
+void	init_clouds(t_image *sky, t_vec2 win_sz)
 {
 	int		base_color;
 	int		i;
 	t_vec2	r_pos;
 
-	base_color = md->rgb[RGB_WHITE];
+	base_color = _WHITE;
 	i = -1;
 	while (++i < 50)
 	{
@@ -97,7 +97,7 @@ static void	init_sky(t_md *md, t_hud *hud, t_vec2 win_sz)
 		draw_sphere(md->hud.sky, r_pos, v2(rad), \
 			get_v3(base_color, r_range(0, 2), 1));
 		draw_pixel(md->hud.sky, get_v2(r_pos.x + rad / 2, r_pos.y + rad / 2), \
-			md->rgb[RGB_WHITE], f_range(0.3, 1));
+			_WHITE, f_range(0.3, 1));
 	}
 	hud->sky_flipy = copy_image(md, hud->sky, v2(-1), -1);
 	flipy_image_data(hud->sky_flipy);
@@ -105,9 +105,10 @@ static void	init_sky(t_md *md, t_hud *hud, t_vec2 win_sz)
 
 void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz)
 {
-	hud->base_floor = init_img(md, win_sz, NULL, hud->floor_color);
-	hud->floor = init_img(md, win_sz, "utils/ground.xpm", -1);
-	hud->floor2d = copy_image(md, hud->floor, v2(md->txd.size_2d), -1);
-	flush_img(hud->floor, hud->floor_color, 0.5, md->rgb[RGB_BLACK]);
+	hud->ceiling = init_img(md, v2(md->t_len), "utils/ceiling.xpm", -1);
+	hud->floor = init_img(md, v2(md->t_len), "utils/floor.xpm", -1);
+	hud->wall = init_img(md, v2(md->t_len), "utils/wall.xpm", -1);
+	hud->floor2d = copy_image(md, hud->wall, v2(md->txd.size_2d), -1);
+	flush_img(hud->wall, hud->floor_color, 0.5, _BLACK);
 	init_sky(md, hud, win_sz);
 }

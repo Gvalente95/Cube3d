@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:28:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:21:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 13:02:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	ray_can_stop(t_ray *ray, t_ent *hit)
 {
 	if (hit && ray->check_hit && ray->check_hit == hit)
 		return (1);
-	if (ray->check_hit && ray->steps > ray->check_steps + 2)
+	if (ray->check_hit && ray->steps > ray->init_steps + 2)
 		return (1);
 	return (0);
 }
@@ -69,7 +69,7 @@ int	ray_move(t_md *md, t_ray *ray, t_vec2 visu_offset)
 		ray->distance++;
 		ray->pos = add_vec3f(ray->pos, ray->dir);
 		on_grid = update_ray_grid_pos(md, ray);
-		if (!md->prm.ray_mode && md->prm.show_rays)
+		if (md->prm.view_2d && md->prm.show_rays)
 			set_ray_color(md, ray);
 		if (!ray_can_look(md, ray, on_grid))
 			continue ;

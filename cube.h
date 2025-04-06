@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 22:39:35 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 18:17:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,17 @@
 //# include <X11/X.h>
 
 # define IMG_PATH			"ressources/xpm/"
-# define RESOLUTION		25
+# define RESOLUTION		35
 //		SCREEN
-# define SCRN_W			3000
-# define SCRN_H			1600
+# define SCRN_W			1300
+# define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
 # define PLRSPD			800
 # define ACCSPD			0.4
 # define HEIGHT			0
-# define BOB_AMOUNT		.6
+# define BOB_AMOUNT		.2
 # define BOB_SPD		7
 # define PLR_JUMPPOW	3
 # define GRAVITY		.015
@@ -49,8 +49,8 @@
 # define ENNEMY_SPEED	.1
 # define RAY_ZOOM		25
 
-# define THREADS_BATCH	256
-# define FLOOR_WORKERS	16
+# define THREADS_BATCH	16
+# define FLOOR_WORKERS	4
 
 # define FE_PER_TILE	64
 # define REVEAL_DISTANCE 5
@@ -86,8 +86,7 @@ void	init_minimap(t_md *md, t_mmap *mmap);
 void	init_action_labels(t_texture_data *td);
 void	init_weapon_labels(t_texture_data *td);
 void	init_ents_labels(t_texture_data *td);
-void	init_dir_labels(t_md *md);
-void	init_labels(t_md *md, t_texture_data *txd);
+void	init_labels(t_texture_data *txd);
 
 //	init/init_frames.c
 void	init_weapon_frames(t_md *md, t_texture_data *td);
@@ -131,7 +130,7 @@ int		compute_row_start(t_md *md, t_ent *e, float ray_dst);
 int		cast_check_ray(t_md *md, t_ray *ray, t_vec3f start_pos, t_ent *check);
 int		cast_ray(t_md *md, t_ray *ray, t_vec2 visu_offset);
 void	compute_ray_directions(t_md *md, t_vec3f *dir_vals, int rays_amount);
-void	cast_rays(t_md *md, t_vec3f start);
+void	cast_rays(t_md *md);
 
 //	raycasting/draw_sprite_column.c
 void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord);
@@ -156,7 +155,6 @@ int		ray_move(t_md *md, t_ray *ray, t_vec2 visu_offset);
 
 //	raycasting/draw_wall_column.c
 int		draw_wall_line(t_md *md, float dist, t_ent *wall, t_ray *ray);
-void	draw_floor(t_md *md, t_ray *ray, int y_start, t_vec2f pn);
 
 //	raycasting/ray_tools.c
 void	draw_blood(t_md *md, t_image *img, t_vec2 pos, int color);
@@ -215,7 +213,6 @@ int		update_player(t_md *md, t_ent *plr);
 
 //	update/update_input.c
 void	update_input(t_md *md);
-int		update_menu_input(t_md *md, t_menu *menu);
 
 //	update/update.c
 double	update_time(t_md *md, t_timer *timer);
@@ -298,7 +295,7 @@ void	apply_dithering(t_image *img, float dither_strength, \
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist);
 void	draw_sprite_thread(t_md *md, t_ent *e, float fogalpha);
 int		is_in_list(t_dblst *lst, t_ent *e);
-void	draw_found_ents(t_md *md, t_threads_manager *mon);
+void	draw_found_ents(t_md *md, t_thrd_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
 void	reset_grass(t_md *md, t_fe *fe);
@@ -306,7 +303,15 @@ void	reset_grass(t_md *md, t_fe *fe);
 void	draw_stored_fe(t_md *md);
 int		render_fe(t_md *md, t_fe *fe, int width);
 
-int		update_key_input(t_md *md, unsigned int c);
+int		update_key_input(t_md *md, t_menu *menu, unsigned int c);
 void	show_revealed_perc(t_md *md, int scale, t_vec2 pos);
+int		rnd_fast_txt(t_md *md, t_vec4 data, const char *format, ...);
+void	init_fonts(t_md *md);
+
+int		draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray);
+int		ray_move_dda(t_md *md, t_ray *ray);
+int		update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe);
+void	draw_raycast_background(t_md *md, t_ray *ray);
+void	draw_ceiling(t_md *md, t_floor_draw_d d);
 
 #endif

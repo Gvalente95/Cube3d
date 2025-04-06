@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 21:57:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 12:59:00 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ int	cast_check_ray(t_md *md, t_ray *ray, t_vec3f start_pos, t_ent *check)
 	new_ray = &md->rays[ray->index + 1];
 	new_ray->index = ray->index + 1;
 	new_ray->check_hit = check;
-	new_ray->check_steps = ray->steps + 1;
+	new_ray->init_steps = ray->steps + 1;
 	new_ray->pos = start_pos;
 	new_ray->had_door = ray->had_door;
-	yaw = (md->plr_rot.x) * (M_PI / 180.0f);
+	yaw = (md->cam.rot.x) * (M_PI / 180.0f);
 	if (yaw < -M_PI)
 		yaw += 2 * M_PI;
 	else if (yaw >= M_PI)
@@ -50,8 +50,6 @@ int	cast_ray(t_md *md, t_ray *ray, t_vec2 visu_offset)
 	ray->hits_len = 0;
 	ray->vertical_hit = 0;
 	wall_collision = ray_move(md, ray, visu_offset);
-	if (!md->prm.ray_mode)
-		return (0);
 	if (ray->wall_hit)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
 	while (ray->hits_len > 0 && \
@@ -77,7 +75,7 @@ void	compute_ray_directions(t_md *md, t_vec3f *dir_vals, int rays_amount)
 	int		i;
 	float	ray_yaw;
 
-	yaw = md->plr_rot.x * (M_PI / 180.0f);
+	yaw = md->cam.rot.x * (M_PI / 180.0f);
 	if (yaw < -M_PI)
 		yaw += 2 * M_PI;
 	else if (yaw >= M_PI)
@@ -94,28 +92,22 @@ void	compute_ray_directions(t_md *md, t_vec3f *dir_vals, int rays_amount)
 	}
 }
 
-void	cast_rays(t_md *md, t_vec3f start)
+void	cast_rays(t_md *md)
 {
-	t_vec3f	dir_vals[MAX_RAYS];
-	t_vec2	center_ray_visu_pos;
-	int		i;
-	int		wall_hits;
+	t_thrd_manager			*rm;
+	int						i;
 
+	rm = &md->thrd_manager;
 	md->hud.new_floor_start = md->win_sz.y;
-	wall_hits = 0;
-	center_ray_visu_pos = get_2d_ray_pos(md);
-	compute_ray_directions(md, dir_vals, md->win_sz.x);
+	rm->ray_visu_offset = get_2d_ray_pos(md);
+	md->hud.new_floor_start = md->win_sz.y;
+	compute_ray_directions(md, rm->dir_vals, md->win_sz.x);
 	i = -1;
 	while (++i < md->win_sz.x)
-	{
-		init_base_ray(&md->rays[i], i, start, 0);
-		md->rays[i].dir = get_v3f(dir_vals[i].x, dir_vals[i].y, 0);
-		md->rays[i].angle = dir_vals[i].z;
-		wall_hits += cast_ray(md, &md->rays[i], center_ray_visu_pos);
-	}
-	if (wall_hits)
-		md->hud.floor_start = \
-			minmax(0, md->win_sz.x, md->hud.new_floor_start);
+		cast_thread_ray(md, i);
+	md->hud.floor_start = minmax(0, md->win_sz.x, md->hud.new_floor_start);
+	if (rm->ents_to_draw)
+		draw_found_ents(md, rm);
 }
 
 int	is_in_list(t_dblst *lst, t_ent *e)

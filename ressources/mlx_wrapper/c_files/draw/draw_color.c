@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 10:42:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:50:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 14:06:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,29 @@ void	remove_img_color(t_image *img, int remove_color)
 	}
 }
 
-int	blend_color(int color_a, int color_b, float opacity)
+int	blend_color(int a, int b, float o)
 {
 	t_vec4	rgb_a;
 	t_vec4	rgb_b;
-	t_vec4	b;
-	int		result;
+	t_vec4	ab;
 
-	if (opacity < 0.0f)
-		opacity = 0.0f;
-	if (opacity > 1.0f)
-		opacity = 1.0f;
-	rgb_a.a = (color_a >> 24) & 0xFF;
-	rgb_a.r = (color_a >> 16) & 0xFF;
-	rgb_a.g = (color_a >> 8) & 0xFF;
-	rgb_a.b = color_a & 0xFF;
-	rgb_b.a = (color_b >> 24) & 0xFF;
-	rgb_b.r = (color_b >> 16) & 0xFF;
-	rgb_b.g = (color_b >> 8) & 0xFF;
-	rgb_b.b = color_b & 0xFF;
-	if (opacity == 0.0f)
-		opacity = 1.0f - ((float)rgb_b.a / 255.0f);
-	b.r = (rgb_a.r * (1.0f - opacity)) + (rgb_b.r * opacity);
-	b.g = (rgb_a.g * (1.0f - opacity)) + (rgb_b.g * opacity);
-	b.b = (rgb_a.b * (1.0f - opacity)) + (rgb_b.b * opacity);
-	b.a = (rgb_a.a * (1.0f - opacity)) + (rgb_b.a * opacity);
-	result = ((int)b.a << 24) | ((int)b.r << 16) | ((int)b.g << 8) | (int)b.b;
-	return (result);
+	if (o <= 0.0f)
+		return (a);
+	if (o >= 1.0f)
+		return (b);
+	rgb_a.a = (a >> 24) & 0xFF;
+	rgb_a.r = (a >> 16) & 0xFF;
+	rgb_a.g = (a >> 8) & 0xFF;
+	rgb_a.b = a & 0xFF;
+	rgb_b.a = (b >> 24) & 0xFF;
+	rgb_b.r = (b >> 16) & 0xFF;
+	rgb_b.g = (b >> 8) & 0xFF;
+	rgb_b.b = b & 0xFF;
+	ab.r = rgb_a.r * (1.0f - o) + rgb_b.r * o;
+	ab.g = rgb_a.g * (1.0f - o) + rgb_b.g * o;
+	ab.b = rgb_a.b * (1.0f - o) + rgb_b.b * o;
+	ab.a = rgb_a.a * (1.0f - o) + rgb_b.a * o;
+	return ((ab.a << 24) | (ab.r << 16) | (ab.g << 8) | ab.b);
 }
 
 //		color_d: x = colr - y = thickness
@@ -89,5 +85,55 @@ void	draw_line(t_image *onto, t_vec2 start, t_vec2 end, t_vec2 color_d)
 		else
 			draw_pixel(onto, start, color_d.x, get_alpha(color_d.x));
 		pos = add_vec2f(pos, step);
+	}
+}
+
+void	draw_random_pixel(t_image *img, int scale, int base_color, float rand)
+{
+	t_vec2	pos;
+	t_vec4	clr;
+	int		rand_amount;
+	int		rand_rescale;
+
+	pos.x = r_range(0, img->size.x);
+	pos.y = r_range(0, img->size.y);
+	if (rand > 0)
+	{
+		rand_amount = (int)(rand * 100);
+		clr = color_to_v4(base_color);
+		clr.r = minmax(0, 255, clr.r + r_range(-rand_amount, rand_amount));
+		clr.g = minmax(0, 255, clr.g + r_range(-rand_amount, rand_amount));
+		clr.b = minmax(0, 255, clr.b + r_range(-rand_amount, rand_amount));
+		clr.a = 125;
+		base_color = v4_to_color(clr.r, clr.g, clr.b, clr.a);
+		rand_rescale = scale - (int)(scale * rand);
+		scale += r_range(-rand_rescale, rand_rescale);
+	}
+	draw_pixels(img, pos, v2(scale), base_color);
+}
+
+void	draw_alpha_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp)
+{
+	t_draw_d	draw_d;
+	t_vec2		draw_pos;
+
+	if (!src || !dst || !src->src || !dst->src)
+		return ;
+	draw_d.src = src;
+	draw_d.dst = dst;
+	draw_pos = get_v2(-1, -1);
+	while (++draw_pos.y < src->size.y)
+	{
+		draw_d.src_pos.y = draw_pos.y;
+		draw_d.dst_pos.y = pos.y + draw_pos.y;
+		if (draw_d.dst_pos.y < 0 || draw_d.dst_pos.y >= dst->size.y)
+			continue ;
+		draw_pos.x = -1;
+		while (++draw_pos.x < src->size.x)
+		{
+			draw_d.src_pos.x = draw_pos.x;
+			draw_d.dst_pos.x = pos.x + draw_pos.x;
+			put_pxl_if_vis(&draw_d, -1, 1, trnsp);
+		}
 	}
 }

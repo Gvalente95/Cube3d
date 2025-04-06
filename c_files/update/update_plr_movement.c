@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_plr_movement.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:25:21 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:42:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	}
 	else if (md->key_prs[NUM_R_KEY] == 1)
 		mov.z = -(PLR_JUMPPOW * .2);
-	md->input_mov = get_v3f(\
+	md->cam.input_mov = get_v3f(\
 		mv_lft - mv_rght, mv_for - mv_back, \
 		md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY] == 1);
 	return (mov);
@@ -74,7 +74,7 @@ static t_vec3f	set_input_mov(t_md *md)
 	if (md->key_prs[SHIFT_KEY])
 		spd *= 2;
 	if (md->prm.fly_cam)
-		return (update_fly_cam(md, spd));
+		return (update_fly_cam(md, &md->cam, spd));
 	for_dir.x = md->plr.dir.x;
 	for_dir.y = md->plr.dir.y;
 	rgt_dir.x = cosf(md->plr.angle - M_PI_2);
@@ -113,9 +113,9 @@ int	update_player_mov(t_md *md, t_ent *plr)
 	for_dir = plr->dir;
 	rgt_dir = get_v3f(cosf(plr->angle - M_PI_2), \
 		sinf(plr->angle - M_PI_2), 0);
-	md->plr_wrd_mv.x = new_mov.x * rgt_dir.x + new_mov.y * rgt_dir.y;
-	md->plr_wrd_mv.y = -(new_mov.x * for_dir.x + new_mov.y * for_dir.y);
-	md->plr_wrd_mv.z = new_mov.z;
+	md->cam.plr_wrd_mv.x = new_mov.x * rgt_dir.x + new_mov.y * rgt_dir.y;
+	md->cam.plr_wrd_mv.y = -(new_mov.x * for_dir.x + new_mov.y * for_dir.y);
+	md->cam.plr_wrd_mv.z = new_mov.z;
 	plr->mov.x += new_mov.x * md->timer.delta_time;
 	plr->mov.y += new_mov.y * md->timer.delta_time;
 	if (md->prm.fly_cam)

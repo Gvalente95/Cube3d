@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 22:32:27 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:41:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ void	render_2d_entities(t_md *md)
 	t_vec2	centr;
 
 	centr = get_v2((md->win_sz.x * .5 - md->txd.size_2d * 2 - \
-		(md->cam_ofst.x / md->t_len * md->txd.size_2d)), \
+		(md->cam.ofst.x / md->t_len * md->txd.size_2d)), \
 		md->win_sz.y * .5 - md->txd.size_2d * 2 - \
-		((md->cam_ofst.y / md->t_len) * md->txd.size_2d));
+		((md->cam.ofst.y / md->t_len) * md->txd.size_2d));
 	node = md->entities;
 	while (node)
 	{
@@ -100,16 +100,16 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 
 void	render(t_md *md)
 {
-	flush_img(md->screen, md->hud.bgr_color, -1, 0);
+	render_background(md);
+	print_vec2(md->cam.input_offst, "INPUT OFFST");
 	if (md->timer.time > 3)
 	{
 		if (md->prm.use_thrd)
 			cast_ray_threads_lp(md);
 		else
-			cast_rays(md, md->cam_pos);
+			cast_rays(md);
 	}
-	render_background(md);
-	if (!md->prm.ray_mode)
+	if (md->prm.view_2d)
 		render_2d_entities(md);
 	else
 		render_hud_elements(md, &md->hud);

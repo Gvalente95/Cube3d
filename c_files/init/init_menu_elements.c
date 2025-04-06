@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_menu_elements.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:04:46 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:27:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	inisld(t_md *md, char *label, t_vec4f data, float *value)
 	t_vec2		fill_end;
 	t_vec3f		slider_limits;
 
-	sld = &md->menu.sliders[md->menu.slider_index++];
+	sld = &md->menu.sliders[md->menu.slider_index];
+	sld->index = md->menu.slider_index++;
 	sld->steps = (int)data.a;
 	slider_limits = get_v3f(data.r, data.g, data.b);
 	ft_strlcpy(sld->label, label, 50);
@@ -41,30 +42,28 @@ static void	init_sliders(t_md *md, t_menu *menu, \
 	t_parameters *pm, t_fx_data *fx)
 {
 	menu->slider_index = 0;
-	inisld(md, "player spd", \
-		get_v4f(PLRSPD / 2, PLRSPD, PLRSPD * 2, 100), &pm->plr_speed);
-	inisld(md, "Mouse spd", get_v4f(.01, .5, 1, 10), &pm->rot_speed);
-	inisld(md, "Player Height", get_v4f(0, 5, md->t_len, 100), &pm->height);
-	inisld(md, "cam zoom", get_v4f(1, pm->zoom, 500, 100), &pm->zoom);
+	inisld(md, "Move speed", get_v4f(200, 800, 4000, 100), &pm->plr_speed);
+	inisld(md, "Rotation speed", get_v4f(.01, MOUSESPD, 1, 10), &pm->rot_speed);
+	inisld(md, "Camera Height", get_v4f(0, 0, md->t_len, 100), &pm->height);
+	inisld(md, "Camera bob", get_v4f(0, BOB_AMOUNT, 1, 100), &pm->bob_amount);
 	inisld(md, "fov", get_v4f(0, 60, 600, 100), &pm->fov);
-	inisld(md, "floor_fov", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
-	inisld(md, "grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
-	inisld(md, "grass speed", get_v4f(0, .2, 3, 100), &pm->fe_speed);
-	inisld(md, "win wth", get_v4f(300, md->win_sz.x, 1600, 100), &pm->win_x);
-	inisld(md, "win hght", get_v4f(300, md->win_sz.y, 1400, 100), &pm->win_y);
-	inisld(md, "txt scale", get_v4f(10, pm->txt_sc, 30, 20), &pm->txt_sc);
+	inisld(md, "fov floor", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
+	inisld(md, "floor glide", get_v4f(0, .5, 3, 100), &pm->floor_glide);
+	inisld(md, "Grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
+	inisld(md, "Grass speed", get_v4f(0, .2, 3, 100), &pm->fe_speed);
+	inisld(md, "text size", get_v4f(10, pm->txt_sc, 30, 20), &pm->txt_sc);
 	inisld(md, "ray depth", \
 		get_v4f(0, pm->ray_depth, pm->ray_depth * 2, 100), &pm->ray_depth);
-	inisld(md, "Fog", get_v4f(0, 1, 2, 100), &md->fx.fog);
-	inisld(md, "red", get_v4f(0, 1, 2, 100), &fx->hue.r);
-	inisld(md, "green", get_v4f(0, 1, 2, 100), &fx->hue.g);
-	inisld(md, "blue", get_v4f(0, 1, 2, 100), &fx->hue.b);
+	inisld(md, "Fog", get_v4f(0, .4, 3, 100), &md->fx.fog);
 	inisld(md, "noise", get_v4f(0, 0, 1, 100), &fx->noise);
-	inisld(md, "scanlines", get_v4f(0, 0, 1, 100), &fx->scanlines);
-	inisld(md, "dithering", get_v4f(0, 0, 1, 100), &fx->dithering);
-	inisld(md, "barrel", get_v4f(0, 0, 5, 100), &fx->barrel_amount);
-	inisld(md, "Clr band", get_v4f(0, 0, 1, 100), &fx->color_band);
-	inisld(md, "glow", get_v4f(0, 0, 1, 100), &fx->bloom_threshold);
+	inisld(md, "scanlines fx", get_v4f(0, 0, 1, 100), &fx->scanlines);
+	inisld(md, "dithering fx", get_v4f(0, 0, 1, 100), &fx->dithering);
+	inisld(md, "barrel fx", get_v4f(0, 0, 5, 100), &fx->barrel_amount);
+	inisld(md, "Color band", get_v4f(0, 0, 1, 100), &fx->color_band);
+	inisld(md, "Glow fx", get_v4f(0, 0, 1, 100), &fx->bloom_threshold);
+	inisld(md, "r", get_v4f(0, 1, 2, 100), &fx->hue.r);
+	inisld(md, "g", get_v4f(0, 1, 2, 100), &fx->hue.g);
+	inisld(md, "b", get_v4f(0, 1, 2, 100), &fx->hue.b);
 	menu->sliders[menu->slider_index].active = 0;
 }
 
@@ -92,18 +91,17 @@ static void	init_buttons(t_md *md, t_menu *menu, t_parameters *prm)
 	int	i;
 
 	i = 0;
-	inibut(&menu->buttons[i++], &prm->ray_mode, "1_raycast mode", NUM_1_KEY);
-	inibut(&menu->buttons[i++], &prm->debug_mode, "2_debug mode", NUM_2_KEY);
+	inibut(&menu->buttons[i++], &prm->debug_mode, "1_debug mode", NUM_1_KEY);
+	inibut(&menu->buttons[i++], &prm->view_2d, "2_Show Grid", NUM_2_KEY);
 	inibut(&menu->buttons[i++], &prm->show_rays, "3_show rays", NUM_3_KEY);
-	inibut(&menu->buttons[i++], &prm->use_sky, "4_Show sky", NUM_4_KEY);
-	inibut(&menu->buttons[i++], &md->hud.active_bgr, "B_Show floor", NUM_B_KEY);
+	inibut(&menu->buttons[i++], &prm->use_ceiling, "4_Show sky", NUM_4_KEY);
+	inibut(&menu->buttons[i++], &prm->use_floor, "B_Show floor", NUM_B_KEY);
 	inibut(&menu->buttons[i++], &prm->ent_mode, "E_Show sprites", NUM_E_KEY);
 	inibut(&menu->buttons[i++], &prm->use_grass, "G_Show grass", NUM_G_KEY);
 	inibut(&menu->buttons[i++], &prm->fly_cam, "F_Fly cam", NUM_F_KEY);
 	inibut(&menu->buttons[i++], &prm->use_thrd, "T_Use Threads", NUM_T_KEY);
 	inibut(&menu->buttons[i++], &prm->au_on, "U_audio", NUM_U_KEY);
 	inibut(&menu->buttons[i++], &md->mmap.cmps, "N_Show compass", NUM_N_KEY);
-	inibut(&menu->buttons[i++], &md->prm.use_bob, "P_Cam bob", NUM_P_KEY);
 	inibut(&menu->buttons[i++], &md->mmap.active, "M_Show minmap", NUM_M_KEY);
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.x, "X_x_mouse", NUM_X_KEY);
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.y, "Y_y_mouse", NUM_Y_KEY);
@@ -117,8 +115,8 @@ void	init_menu_elements(t_md *md, t_menu *menu)
 	md->menu.slider_hov = -1;
 	md->menu.button_hov = -1;
 	menu->selected_slider = NULL;
-	menu->slider_bgr_clr = md->rgb[RGB_BLACK];
-	menu->slider_fill_clr = md->rgb[RGB_RED];
+	menu->slider_bgr_clr = _BLACK;
+	menu->slider_fill_clr = _RED;
 	init_sliders(md, menu, &md->prm, &md->fx);
 	init_buttons(md, menu, &md->prm);
 }

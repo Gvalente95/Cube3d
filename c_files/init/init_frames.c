@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 20:28:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 15:16:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_env_frames(t_md *md, t_texture_data *td)
 
 void	init_ents_data(t_md *md, t_texture_data *txd)
 {
-	init_labels(md, txd);
+	init_labels(txd);
 	store_entities_sizes(txd, v2(md->t_len));
 	init_weapon_frames(md, txd);
 	init_pickup_frames(md, txd);

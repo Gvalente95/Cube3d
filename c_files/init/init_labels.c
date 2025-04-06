@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 20:14:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:14:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,9 @@ void	init_ents_labels(t_texture_data *td)
 	td->mob_names[Mecha_Meister] = "Mecha Meister";
 }
 
-void	init_dir_labels(t_md *md)
-{
-	md->dir_labels[NORTH] = "north";
-	md->dir_labels[SOUTH] = "south";
-	md->dir_labels[WEST] = "west";
-	md->dir_labels[EAST] = "east";
-}
-
-void	init_labels(t_md *md, t_texture_data *txd)
+void	init_labels(t_texture_data *txd)
 {
 	init_weapon_labels(txd);
 	init_ents_labels(txd);
 	init_action_labels(txd);
-	init_dir_labels(md);
 }

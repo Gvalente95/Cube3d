@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 11:26:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/05 18:06:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ int	draw_pixel(t_image *texture, t_vec2 pos, int color, float opacity)
 	if (pos.x < 0 || pos.x >= texture->size.x || \
 		pos.y < 0 || pos.y >= texture->size.y)
 		return (0);
-	if ((texture->size_line / 4) != texture->size.x)
-		return (printf("Warning: size_line / 4 != size.x\n"), 0);
 	index = pos.y * (texture->size_line / 4) + pos.x;
-	if (opacity < 0)
+	if (opacity < 0.0f)
 		texture->src[index] = color;
 	else
 		texture->src[index] = blend_color(texture->src[index], color, opacity);
@@ -62,30 +60,31 @@ int	draw_pixel(t_image *texture, t_vec2 pos, int color, float opacity)
 
 int	draw_pixels(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 {
-	t_vec2	draw_pos;
-	t_vec2	end_coord;
-	int		draw_count;
+	int		idx;
+	int		line_size;
+	t_vec2	p;
+	t_vec2	limit;
 	float	alpha;
 
-	if (!txtr || !txtr->src || pos.x < 0 || pos.y < 0)
+	if (pos.x < 0 || pos.y < 0)
 		return (0);
+	line_size = txtr->size_line / 4;
 	alpha = 1.0f - ((float)((color >> 24) & 0xFF) / 255.0f);
 	if (alpha < 0.2f)
 		alpha = 0.2f;
-	end_coord = get_v2(pos.x + draw_size.x, pos.y + draw_size.y);
-	draw_count = 0;
-	draw_pos = pos;
-	while (draw_pos.y < end_coord.y)
+	limit.x = min(txtr->size.x, pos.x + draw_size.x);
+	limit.y = min(txtr->size.y, pos.y + draw_size.y);
+	p.y = pos.y - 1;
+	while (++p.y < limit.y)
 	{
-		draw_pos.x = pos.x;
-		while (draw_pos.x < end_coord.x)
+		p.x = pos.x - 1;
+		while (++p.x < limit.x)
 		{
-			draw_count += draw_pixel(txtr, draw_pos, color, alpha);
-			draw_pos.x++;
+			idx = p.y * line_size + p.x;
+			txtr->src[idx] = blend_color(txtr->src[idx], color, alpha);
 		}
-		draw_pos.y++;
 	}
-	return (draw_count);
+	return (1);
 }
 
 //		clr_ign.x = color | clr_ign.y = drawover

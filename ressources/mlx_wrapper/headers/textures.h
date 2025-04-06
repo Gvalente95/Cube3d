@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:27:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 15:14:00 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ typedef struct s_texture_data
 	t_image			**bush_txtr;
 	t_image			**tree_txtr;
 	t_image			*door_txtr_mini;
+	t_image			*font[256];
+	t_image			*floor;
+	t_image			*ceiling;
 	const char		*ents_tp_map[ENT_TYPE_LEN];
 	const char		*ents_types_names[ENT_TYPE_LEN];
 	const char		*weapons_names[WEAPON_TYPE_LEN];

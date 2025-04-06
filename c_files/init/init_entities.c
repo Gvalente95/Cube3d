@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:24:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:38:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,17 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 	set_ent_values(md, &md->plr, c, pos);
 	md->plr.map_index = map_index;
 	md->mapped_ents[map_index] = &md->plr;
-	md->plr_rot.x = -90;
+	md->cam.rot.x = -90;
 	if (base_c == 'S')
-		md->plr_rot.x = 90;
+		md->cam.rot.x = 90;
 	if (base_c == 'E')
-		md->plr_rot.x = 0;
+		md->cam.rot.x = 0;
 	else if (base_c == 'W')
-		md->plr_rot.x = 180;
-	md->plr.angle = md->plr_rot.x * (M_PI / 180.0f);
+		md->cam.rot.x = 180;
+	md->plr.angle = md->cam.rot.x * (M_PI / 180.0f);
 	md->plr.size = get_v2(md->t_len / 2, md->t_len / 2);
 	md->plr.pos.z = 0;
-	md->cam_pos = md->plr.pos;
+	md->cam.pos = md->plr.pos;
 }
 
 t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)

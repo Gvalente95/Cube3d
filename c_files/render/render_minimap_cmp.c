@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:54:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:51:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:00:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ static void	show_mmap_ent(t_md *md, t_ent *e, t_vec3f cosin, t_vec2 center)
 	draw_color = (md->rgb[e->type] & 0x00FFFFFF) | \
 	((int)((minmaxf(0.0f, 1.0f, dist / (cosin.z * md->t_len)) * 255)) << 24);
 	if (e == md->portal.ends[0].e)
-		draw_color = md->rgb[RGB_VIOLET];
+		draw_color = _VIOLET;
 	else if (e == md->portal.ends[1].e)
-		draw_color = md->rgb[RGB_ORANGE];
+		draw_color = _ORANGE;
 	relp = sub_vec3f(e->pos, md->plr.pos);
-	rotp.x = (relp.x * cosin.x - relp.y * cosin.y - md->cam_ofst.x / md->t_len);
-	rotp.y = (relp.x * cosin.y + relp.y * cosin.x - md->cam_ofst.y / md->t_len);
+	rotp.x = (relp.x * cosin.x - relp.y * cosin.y - md->cam.ofst.x / md->t_len);
+	rotp.y = (relp.x * cosin.y + relp.y * cosin.x - md->cam.ofst.y / md->t_len);
 	pos.x = center.x + ((rotp.x / md->t_len) * md->mmap.comps_scl);
 	pos.y = center.y + ((rotp.y / md->t_len) * md->mmap.comps_scl);
 	draw_sphere(md->screen,
@@ -72,7 +72,7 @@ static void	show_mmap_dir(t_md *md, t_vec3f cosin, t_vec2 psz, t_vec2 map_p)
 		rot.y = ((relp[i].x - cnt.x) * cosin.y + (relp[i].y - cnt.y) * cosin.x);
 		rot.x += cnt.x;
 		rot.y += cnt.y;
-		rnd_abs_txt(md, get_v4(rot.x, rot.y, -1, md->prm.txt_sc), str[i]);
+		rnd_fast_txt(md, get_v4(rot.x, rot.y, -1, md->prm.txt_sc), str[i]);
 	}
 }
 

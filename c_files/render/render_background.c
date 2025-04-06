@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 16:42:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 15:22:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static void	draw_sky(t_md *md, t_image *bufr, t_vec3 *sky_pos)
 		to_draw = md->hud.sky;
 		if (sky_pos[i].z)
 			to_draw = md->hud.sky_flipy;
+		draw_img(to_draw, md->screen, pos, -1);
+		continue ;
 		draw_trimmed(to_draw, bufr, pos, trimm);
 	}
 }
@@ -48,8 +50,8 @@ static int	render_sky(t_md *md, t_image *bufr)
 	win_sz = md->win_sz;
 	offst.x = win_sz.x * speed.x;
 	offst.y = win_sz.y * speed.y;
-	scrl.x = fmod((((md->plr_rot.x + 180.0)) / 360.0) * offst.x, win_sz.x);
-	scrl.y = fmod((((md->plr_rot.y + 90.0)) / 180.0) * offst.y, win_sz.y);
+	scrl.x = fmod((((md->cam.rot.x + 180.0)) / 360.0) * offst.x, win_sz.x);
+	scrl.y = fmod((((md->cam.rot.y + 90.0)) / 180.0) * offst.y, win_sz.y);
 	sky_pos[0] = get_v3(-scrl.x, -scrl.y, 0);
 	sky_pos[1] = get_v3(-scrl.x, win_sz.y - scrl.y, 1);
 	sky_pos[2] = get_v3(win_sz.x - scrl.x, -scrl.y, 0);
@@ -69,7 +71,7 @@ void	render_2d_floor(t_md *md)
 	int		i;
 
 	win_sz = get_v2(md->win_sz.x * .5, md->win_sz.y * .5);
-	cam = get_v3f(md->cam_ofst.x / md->t_len, md->cam_ofst.y / md->t_len, 0);
+	cam = get_v3f(md->cam.ofst.x / md->t_len, md->cam.ofst.y / md->t_len, 0);
 	centr.x = fmod(win_sz.x - md->txd.size_2d - (cam.x * md->txd.size_2d), \
 		md->win_sz.x);
 	centr.y = fmod(win_sz.y - md->txd.size_2d - (cam.y * md->txd.size_2d), \
@@ -91,23 +93,16 @@ void	render_2d_floor(t_md *md)
 
 void	render_background(t_md *md)
 {
-	if (!md->prm.use_sky)
-		return ;
-	if (md->cam_pos.z < -30)
-		md->hud.floor_start = md->win_sz.y;
-	if (!md->prm.ray_mode)
+	t_hud	*hud;
+
+	hud = &md->hud;
+	if (md->cam.pos.z < -30)
+		hud->floor_start = md->win_sz.y;
+	if (md->prm.view_2d)
 		render_2d_floor(md);
-	else if (!md->hud.active_bgr)
-	{
-		draw_trimmed(md->hud.base_sky, md->screen, get_v2(0, 0), \
-		get_v3(md->win_sz.x, md->hud.floor_start, md->hud.bgr_color));
-		if (md->prm.height < 10)
-			draw_img(md->hud.base_floor, md->screen, \
-				get_v2(0, md->hud.floor_start), md->hud.bgr_color);
-	}
-	else if (!md->prm.use_sky)
-		draw_trimmed(md->hud.base_sky, md->screen, get_v2(0, 0), \
-			get_v3(md->win_sz.x, md->hud.floor_start, md->hud.bgr_color));
-	else
+	if (!md->prm.use_floor)
+		draw_pixels(md->screen, \
+			get_v2(0, hud->floor_start), md->win_sz, hud->floor_color);
+	if (!md->prm.use_ceiling)
 		render_sky(md, md->screen);
 }

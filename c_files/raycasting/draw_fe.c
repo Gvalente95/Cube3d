@@ -6,17 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:24:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:32:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/05 18:03:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-void	reset_grass(t_md *md, t_fe *fe)
-{
-	fe->cut_len = fe->size.y + (fe->growth_factor * md->timer.fe_time);
-	fe->age = 0;
-}
 
 int	render_fe(t_md *md, t_fe *fe, int width)
 {
@@ -84,4 +78,32 @@ void	update_fe(t_md *md, t_vec2 start, \
 	fe->height = height;
 	if (md->mouse.click && d.rwd < 1)
 		reset_grass(md, fe);
+}
+
+int	update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe)
+{
+	t_vec2				local;
+	t_vec2f				rel;
+	t_fe				*fe;
+	const t_env_manager	*env = &md->env;
+
+	if ((int)d.flr.x >= md->map.size.x - 1 || (int)d.flr.x < 0 || \
+	(int)d.flr.y >= md->map.size.y - 1 || (int)d.flr.y < 0)
+		return (1);
+	rel.x = d.flr.x * (md->t_len / md->prm.grass_w);
+	rel.y = d.flr.y * (md->t_len / md->prm.grass_w);
+	local.x = minmax(0, safe_mod((int)rel.x, md->t_len), md->t_len - 1);
+	local.y = minmax(0, safe_mod((int)rel.y, md->t_len), md->t_len - 1);
+	fe = &env->grass[(int)d.flr.y][(int)d.flr.x][local.y][local.x];
+	if (!fe->active)
+		return (1);
+	update_fe(md, d.win, fe, d);
+	render_fe(md, fe, 1);
+	return (*prv_fe = fe, 1);
+}
+
+void	reset_grass(t_md *md, t_fe *fe)
+{
+	fe->cut_len = fe->size.y + (fe->growth_factor * md->timer.fe_time);
+	fe->age = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:38:35 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:37:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ int	init_md(t_md *md)
 	while (++i < 65536)
 		md->key_prs[i] = 0;
 	md->win_sz = v2(0);
-	md->cam_ofst = v3f(0);
-	md->input_mov = v3f(0);
-	md->wrd_mv_offst = v3f(0);
-	md->plr_wrd_mv = v3f(0);
-	md->input_mov = v3f(0);
+	md->cam.ofst = v3f(0);
+	md->cam.input_mov = v3f(0);
+	md->cam.wrd_mv_offst = v3f(0);
+	md->cam.plr_wrd_mv = v3f(0);
+	md->cam.input_mov = v3f(0);
 	md->mlx = mlx_init();
 	md->win = NULL;
 	md->txd.wall_img = NULL;

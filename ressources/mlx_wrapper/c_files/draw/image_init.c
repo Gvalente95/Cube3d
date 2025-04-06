@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   images_data.c                                      :+:      :+:    :+:   */
+/*   image_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/29 12:39:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:08:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,18 +89,30 @@ t_image	**init_images(t_md *md, t_vec2 size, char *path)
 	return (img_data);
 }
 
-t_image	*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_size, int keep_ratio)
+void	*get_image_copy(t_md *md, void *src, t_vec2 src_size)
 {
-	if (keep_ratio)
-		imgd->img = scale_img_keep_ratio(md, imgd->img, &imgd->size, new_size);
-	else
-		imgd->img = resize_img(md, imgd->img, &imgd->size, new_size);
-	imgd->addr = mlx_get_data_addr(imgd->img, &imgd->bpp, \
-		&imgd->size_line, &imgd->endian);
-	if (!imgd->addr)
-		return (printf("ERR: Failed to get image data address\n"), imgd);
-	imgd->src = (int *)imgd->addr;
-	if (!imgd->src)
-		return (printf("ERR: Failed to get src data\n"), imgd);
-	return (imgd);
+	t_image	imgd;
+	t_vec2	src_pos;
+	t_vec2	dst_pos;
+	int		*dst_data;
+
+	imgd.img = mlx_new_image(md->mlx, src_size.x, src_size.y);
+	if (imgd.img == NULL)
+		return (NULL);
+	imgd.src = (int *)mlx_get_data_addr(src, &imgd.bpp, &src_pos.x, \
+		&imgd.endian);
+	dst_data = (int *)mlx_get_data_addr(imgd.img, &imgd.bpp, &dst_pos.x, \
+		&imgd.endian);
+	imgd.pos.y = -1;
+	while (++imgd.pos.y < src_size.y)
+	{
+		imgd.pos.x = -1;
+		while (++imgd.pos.x < src_size.x)
+		{
+			src_pos.y = (imgd.pos.y * src_pos.x / 4) + imgd.pos.x;
+			dst_pos.y = (imgd.pos.y * dst_pos.x / 4) + imgd.pos.x;
+			dst_data[dst_pos.y] = imgd.src[src_pos.y];
+		}
+	}
+	return (imgd.img);
 }

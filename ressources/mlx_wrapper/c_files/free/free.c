@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:14:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/01 12:15:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:41:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	free_md(t_md *md, int quit)
 	return (fa);
 }
 
-int	free_and_quit(t_md *d, const char *msg, const char *attribute)
+int	free_and_quit(t_md *md, const char *msg, const char *attribute)
 {
 	if (msg)
 	{
@@ -82,8 +82,10 @@ int	free_and_quit(t_md *d, const char *msg, const char *attribute)
 			printf(": %s", attribute);
 		printf("\n");
 	}
-	stop_sound(d->au.wind_pid);
-	stop_sound(d->au.mus_pid);
-	free_md(d, 1);
+	stop_sound(md->au.wind_pid);
+	stop_sound(md->au.mus_pid);
+	cleanup_thread_pool(md);
+	free_md(md, 1);
 	exit(0);
+	return (1);
 }

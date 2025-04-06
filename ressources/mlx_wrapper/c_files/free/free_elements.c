@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 04:04:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 15:22:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	free_hud(t_md *md, t_hud *hud)
 	fa += free_image_data(md, hud->base_sky);
 	fa += free_image_data(md, hud->sky);
 	fa += free_image_data(md, hud->sky_flipy);
-	fa += free_image_data(md, hud->base_floor);
 	fa += free_image_data(md, hud->floor);
 	fa += free_image_data(md, hud->lock_x_icon);
 	fa += free_image_data(md, hud->lock_y_icon);
@@ -68,7 +67,7 @@ int	free_var(t_md *md, t_mmap *mmap, t_fx_data *fx, t_mouse *mouse)
 
 	fa = 0;
 	fa += free_image_data(md, md->screen);
-	fa += free_image_data(md, md->center);
+	fa += free_image_data(md, md->hud.center);
 	fa += safe_free(md->map.buffer);
 	fa += free_image_data(md, mmap->bg);
 	fa += free_image_data(md, mmap->img);

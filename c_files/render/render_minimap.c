@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:26:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:03:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	render_minimap_ray(t_md *md)
 	int	i;
 	int	color;
 
-	color = md->rgb[RGB_GREEN];
+	color = _GREEN;
 	color = set_alpha(color, 0.975);
 	i = -1;
 	while (++i < md->win_sz.x)
 		render_mmap_ray(md, i, color);
-	color = md->rgb[RGB_BLUE];
+	color = _BLUE;
 	color = set_alpha(color, 0.65);
 	render_mmap_ray(md, md->win_sz.x / 2, color);
 }
@@ -111,8 +111,8 @@ void	render_minimap(t_md *md, t_mmap *mp)
 		show_cmps_mmap(md, center, view_len);
 		return ;
 	}
-	flush_img(mp->img, md->rgb[RGB_RED], 1, 0);
-	remove_img_color(mp->img, md->rgb[RGB_RED]);
+	flush_img(mp->img, _RED, 1, 0);
+	remove_img_color(mp->img, _RED);
 	draw_alpha_img(mp->bg, mp->img, v2(0), 1);
 	render_minimap_ray(md);
 	show_minimap_entity(md, &md->plr, mp->img, 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_key.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 20:29:24 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:54:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	handle_key_press(int keycode, t_md *md)
 
 int	handle_key_release(int keycode, t_md *md)
 {
-	printf("%d\n", keycode);
 	if (keycode >= 0 && keycode < 65536)
 		md->key_prs[keycode] = 0;
 	md->key_clicked = -1;

@@ -6,35 +6,28 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:16:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 15:23:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	skip_pxl(t_md *md, t_ray_draw_d *d, int pxl_color)
+static int	skip_pxl(t_md *md, t_ray_draw_d *d)
 {
-	t_ray			*ray;
 	int				rgb;
 	int				is_transparent;
 	int				is_portal_color;
-	int				portal_index;
 
-	is_transparent = ((pxl_color >> 24) != 0x00);
+	is_transparent = ((d->pxl_clr >> 24) != 0x00);
 	if (is_transparent)
 		return (1);
-	rgb = pxl_color & 0x00FFFFFF;
+	if (!md->portal.ends[0].e || !md->portal.ends[1].e)
+		return (0);
+	rgb = d->pxl_clr & 0x00FFFFFF;
 	is_portal_color = (rgb == 0x0000FF || rgb == 0xFF0000);
-	ray = d->ray;
 	if (is_portal_color)
 	{
-		portal_index = get_portal_index(md, ray, ray->wall_hit);
-		if (portal_index == -1)
-			return (0);
-		if (d->pass == 0)
-			d->has_portal++;
-		else
-			return (translate_ray(md, ray, ray->wall_hit, portal_index), 0);
+		d->has_portal = 1;
 		return (1);
 	}
 	return (0);
@@ -47,19 +40,16 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 	d->pxl_i = ((int)d->win_y * (d->img->size_line / 4)) + (int)d->txd_crd.x;
 	d->pxl_clr = *(d->img->src + d->pxl_i);
 	win_p.x = d->win_start.x;
-	win_p.y = d->y_start + d->win_start.y - md->cam_pos.z;
+	win_p.y = d->y_start + d->win_start.y - md->cam.pos.z;
 	if (win_p.y > win_sz.y)
 		return (0);
 	if (win_p.y < 0 || win_p.x < 0 || win_p.x > win_sz.x)
 		return (1);
-	if (skip_pxl(md, d, d->pxl_clr))
+	if (skip_pxl(md, d))
 		return (1);
-	if (d->ray->wall_hit->angle)
-		draw_pixel(md->screen, win_p, d->pxl_clr, d->ray->wall_hit->angle);
-	else
-		draw_pixel(md->screen, win_p, d->pxl_clr, -1);
+	draw_pixel(md->screen, win_p, d->pxl_clr, -1);
 	if (md->fx.fog)
-		draw_pixel(md->screen, win_p, md->rgb[RGB_BLACK], \
+		draw_pixel(md->screen, win_p, _BLACK, \
 	minmaxf(0, .95, ((d->ray->distance / md->t_len) / 10) * md->fx.fog));
 	if (md->plr.shot && !d->ray->had_door && \
 		d->win_start.x == win_sz.x / 2 && \
@@ -71,6 +61,7 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 {
 	const t_vec2	win_sz = md->win_sz;
+	float			dist;
 
 	d->pass = pass;
 	d->y_start = (win_sz.y / 2 - d->txd_crd.y / 2) - 1;
@@ -82,10 +73,16 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 			continue ;
 		if (!pxl_draw(md, d, win_sz))
 			return ;
-		if (d->has_portal && pass == 0)
-			return ;
 	}
-	d->y_max = d->y_start + d->win_start.y - md->cam_pos.z;
+	d->y_max = d->y_start + d->win_start.y - md->cam.pos.z;
+	if (d->has_portal && d->ray->teleported_once < 1)
+	{
+		dist = d->ray->distance;
+		translate_ray(md, d->ray, d->ray->wall_hit, \
+			(d->ray->wall_hit == md->portal.ends[1].e));
+		d->ray->distance = dist;
+		draw_strip(md, d, 0, step);
+	}
 }
 
 static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
@@ -110,8 +107,6 @@ static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
 		screen_p, screen_p, 0, 0, txtr_crd, 0, 0, 0, 9999, 0, 0, 0};
 	step = draw_d.img->size.y / draw_d.txd_crd.y;
 	draw_strip(md, &draw_d, 0, step);
-	if (draw_d.has_portal)
-		draw_strip(md, &draw_d, 1, step);
 	md->hud.new_floor_start = minf(md->hud.new_floor_start, draw_d.y_max);
 	ray->flr_y = min(draw_d.y_max, ray->flr_y);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 05:11:14 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/02 15:51:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 12:04:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,29 @@ unsigned char	get_b(int trgb);
 # define RGB_ORANGE	18
 # define RGB_NULL	19
 
-# define COLOR_RED        		0xFFFF0000  // Fully opaque red
-# define COLOR_GREEN      		0xFF00FF00  // Fully opaque green
-# define COLOR_BLUE       		0xFF0000FF  // Fully opaque blue
-# define COLOR_YELLOW     		0xFFFFFF00  // Fully opaque yellow
-# define COLOR_CYAN      		0xFF00FFFF  // Fully opaque cyan
-# define COLOR_MAGENTA    		0xFFFF00FF  // Fully opaque magenta
-# define COLOR_WHITE      		0xFFFFFFFF  // Fully opaque white
-# define COLOR_BLACK			0xFF000000  // Fully opaque black
-
 # define PORTAL_START			0xFF111111  // Fully opaque black
 # define PORTAL_ENT				0xFF222222  // Fully opaque black
 
-# define COLOR_TRANSP_RED      0x80FF0000  // 50% transparent red
-# define COLOR_TRANSP_GREEN    0x8000FF00  // 50% transparent green
-# define COLOR_TRANSP_BLUE     0x800000FF  // 50% transparent blue
-# define COLOR_TRANSP_YELLOW   0x20FFFFFF  // 50% transparent yellow
-# define COLOR_TRANSP_CYAN     0x8000FFFF  // 50% transparent cyan
-# define COLOR_TRANSP_MAGENTA  0x80FF00FF  // 50% transparent magenta
-# define COLOR_TRANSP_WHITE    0x80FFFFFF  // 50% transparent white
-# define COLOR_TRANSP_BLACK    0x80000000  // 50% transparent black
+# define _RED					0x00FF0000
+# define _GREEN					0x0000FF00
+# define _BLUE					0x000000FF
+# define _CYAN					0x0000FFFF
+# define _MAGENT				0x00FF00FF
+# define _GRAY					0x00A9A9A9
+# define _BROWN					0x008B4513
+# define _TEAL					0x00008080
+# define _LIME					0x0000FF00
+# define _GOLD					0x00FFD700
+# define _SILVER				0x00C0C0C0
+# define _TURQ					0x0040E0D0
+# define _INDIGO				0x004B0082
+# define _VIOLET				0x00EE82EE
+# define _CORAL					0x00FF8050
+# define _WHITE					0x00FFFFFF
+# define _BLACK					0x00000000
+# define _YELLOW				0x00FFFF00
+# define _ORANGE				0x00FFA500
+# define _NULL					0x00000000
 
 # define COLOR_TXT_RED				"\033[31m"
 # define COLOR_TXT_RESET			"\033[0m"

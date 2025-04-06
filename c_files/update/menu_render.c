@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:30:53 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 13:25:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/05 18:28:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha)
 
 	draw_alpha_img(sldr->img, screen, sldr->pos, alpha);
 	txt_d.a = md->prm.txt_sc;
-	txt_d.b = md->rgb[RGB_BLACK];
-	if (alpha == 1)
-		txt_d.b = md->rgb[RGB_WHITE];
+	txt_d.b = _BLACK;
+	if (md->menu.slider_hov == sldr->index)
+		txt_d.b = _WHITE;
 	txt_d.r = sldr->pos.x - (txt_d.a) * ft_strlen(sldr->label) - 30;
 	txt_d.g = sldr->pos.y + sldr->img->size.y / 2 - md->prm.txt_sc / 2;
-	rnd_abs_txt(md, txt_d, "%s", sldr->label);
-	if (!md->prm.debug_mode && md->menu.selected_slider != sldr)
+	rnd_fast_txt(md, txt_d, "%s", sldr->label);
+	if (md->menu.slider_hov != sldr->index)
 		return ;
-	txt_d.r = sldr->pos.x + sldr->img->size.x - md->prm.txt_sc * 5;
-	rnd_abs_txt(md, txt_d, "%.1f", *sldr->value);
+	txt_d.r = sldr->pos.x + sldr->img->size.x - md->prm.txt_sc * 10;
+	rnd_fast_txt(md, txt_d, "%.1f", *sldr->value);
 }
 
 void	render_sliders(t_md *md, t_menu *menu, t_image *screen)
@@ -62,12 +62,12 @@ void	render_buttons(t_md *md, t_menu *menu)
 		txt_data.b = md->rgb[RGB_RED + (*but->value == 1)];
 		if (menu->button_hov == i)
 			txt_data.b += 500;
-		rnd_abs_txt(md, txt_data, "%s", but->label);
+		rnd_fast_txt(md, txt_data, "%s", but->label);
 		txt_data.r -= 15;
-		txt_data.b = md->rgb[RGB_BLUE];
+		txt_data.b = _BLUE;
 		txt_data.a *= .75;
 		if (but->key_show[0])
-			rnd_abs_txt(md, txt_data, "%s", but->key_show);
+			rnd_fast_txt(md, txt_data, "%s", but->key_show);
 	}
 }
 
@@ -75,7 +75,7 @@ void	center_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name)
 {
 	const t_vec2	win_cntr = (t_vec2){md->win_sz.x / 2, md->win_sz.y / 2};
 	t_vec2			pos;
-	const int		title_color = md->rgb[RGB_WHITE];
+	const int		title_color = _WHITE;
 	t_vec4			txt_data;
 
 	pos.x = win_cntr.x - scale * (ft_strlen(name) / 2) + pos_ofst.x;
@@ -93,7 +93,7 @@ void	render_menu(t_md *md, t_menu *menu)
 		if (menu->freeze_frame)
 			free_image_data(md, menu->freeze_frame);
 		menu->freeze_frame = copy_image(md, md->screen, get_v2(-1, -1), -1);
-		apply_vignette(menu->freeze_frame, 0.5, md->rgb[RGB_BLACK]);
+		apply_vignette(menu->freeze_frame, 0.5, _BLACK);
 		menu->refresh_bg = 0;
 	}
 	if (menu->refresh_ui)

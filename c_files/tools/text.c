@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/30 14:52:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:37:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ int	render_text(t_md *md, t_vec4 data, const char *format, ...)
 
 	if (data.b == -1)
 		data.b = -1;
-	data = get_v4(data.r + md->cam_ofst.x, data.g + \
-		md->cam_ofst.y, data.b, data.a);
+	data = get_v4(data.r + md->cam.ofst.x, data.g + \
+		md->cam.ofst.y, data.b, data.a);
 	va_start(args, format);
 	vsnprintf(buff, sizeof(buff), format, args);
 	va_end(args);

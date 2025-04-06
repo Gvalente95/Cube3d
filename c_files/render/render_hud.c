@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:50:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 20:07:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:58:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	draw_game_info(t_md *md, t_hud *hud, t_vec2 winsz)
 	if (md->hud.ammo < md->hud.wpn_index)
 		rnd_abs_txt(md, get_v4(md->win_sz.x / 2 - \
 			md->prm.txt_sc * 10, md->win_sz.y * .4, \
-			md->rgb[RGB_RED], md->prm.txt_sc * 2), "Not enough ammo!");
+			_RED, md->prm.txt_sc * 2), "Not enough ammo!");
 }
 
 void	draw_hud_weapon(t_md *md, t_hud *hud, t_vec2 winsz)
@@ -76,7 +76,7 @@ void	draw_hud_weapon(t_md *md, t_hud *hud, t_vec2 winsz)
 	gun_image = md->hud.rgun;
 	gun_sz = gun_image->size;
 	pos.x = winsz.x - gun_sz.x * .8;
-	pos.y = winsz.y - gun_sz.y / 2 - md->cam_pos.z * 3 + md->plr.pos.z * 2.8;
+	pos.y = winsz.y - gun_sz.y / 2 - md->cam.pos.z * 3 + md->plr.pos.z * 2.8;
 	draw_img(gun_image, md->screen, pos, -1);
 	return ;
 	td = &md->txd;
@@ -95,7 +95,7 @@ void	render_hud_elements(t_md *md, t_hud *hud)
 
 	winsz = md->win_sz;
 	cross_pos = (t_vec2){winsz.x / 2 - 5, winsz.y / 2 - 5};
-	draw_img(md->center, md->screen, cross_pos, -1);
+	draw_img(hud->center, md->screen, cross_pos, -1);
 	if (0)
 		draw_hud_weapon(md, hud, winsz);
 	if (!md->prm.ent_mode)

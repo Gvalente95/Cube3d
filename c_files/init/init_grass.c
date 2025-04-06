@@ -59,7 +59,7 @@ void	init_fe(t_md *md, t_fe *fe)
 	fe->height_max = md->win_sz.y * .25;
 	if (fe->type != fe_grass)
 	{
-		fe->base_color = md->rgb[RGB_TURQ];
+		fe->base_color = _TURQ;
 		fe->height_max = md->win_sz.y * .1;
 		fe->growth_factor = f_range(.3, .6);
 		fe->size = get_v2(10, 5);

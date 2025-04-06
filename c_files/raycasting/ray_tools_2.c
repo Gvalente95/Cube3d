@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:04:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:14:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:59:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	set_ray_color(t_md *md, t_ray *ray)
 	ray->color = md->rgb[RGB_GREEN + ray->hits_len] + \
 	(350 * (ray->vertical_hit));
 	if (ray->check_hit != NULL)
-		ray->color = md->rgb[RGB_GOLD];
+		ray->color = _GOLD;
 }
 
 int	update_ray_grid_pos(t_md *md, t_ray *ray)
@@ -57,7 +57,7 @@ int	correct_fisheye(t_md *md, t_ray *ray, t_ent *e, float dist)
 	float	fisheye_corrector;
 
 	fov_correction_factor = 60.0f / (float)md->prm.fov;
-	height_factor = md->t_len / (md->t_len + 0.3f * (e->pos.z - md->cam_pos.z));
+	height_factor = md->t_len / (md->t_len + 0.3f * (e->pos.z - md->cam.pos.z));
 	plane_proj_height = md->win_sz.y * e->size.y * height_factor;
 	angle_diff = (ray->angle - md->plr.angle) * fov_correction_factor;
 	fisheye_corrector = plane_proj_height / (dist * fabsf(cosf(angle_diff)));
@@ -86,8 +86,8 @@ int	compute_row_start(t_md *md, t_ent *e, float ray_dst)
 	float	vertical_offset;
 
 	(void)e;
-	pitch_factor = tanf(md->plr_rot.y * (M_PI / 180.0f));
-	vertical_offset = (md->cam_pos.z * md->win_sz.y) / (ray_dst + 1.0f);
+	pitch_factor = tanf(md->cam.rot.y * (M_PI / 180.0f));
+	vertical_offset = (md->cam.pos.z * md->win_sz.y) / (ray_dst + 1.0f);
 	pitch_offset = (-pitch_factor * md->win_sz.y / 2) - vertical_offset;
 	return (pitch_offset);
 }

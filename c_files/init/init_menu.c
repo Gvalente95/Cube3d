@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:39:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:58:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	set_menu_pos(t_md *md, t_menu *menu, \
 
 void	init_menu_overlay(t_md *md, t_menu *menu)
 {
-	menu->bgr_color = md->rgb[RGB_BLACK];
+	menu->bgr_color = _BLACK;
 	menu->overlay = init_img(md, md->win_sz, NULL, menu->bgr_color);
 	apply_dithering(menu->overlay, 10, \
 		md->fx.palette, md->fx.palette_size);

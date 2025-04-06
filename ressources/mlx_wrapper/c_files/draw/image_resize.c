@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   images_a.c                                         :+:      :+:    :+:   */
+/*   img_resize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 10:43:24 by giuliovalen      ###   ########.fr       */
+/*   Created: 2025/04/04 10:17:46 by giuliovalen       #+#    #+#             */
+/*   Updated: 2025/04/04 10:18:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,35 +86,18 @@ void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
 	return (q.img);
 }
 
-void	replace_image(t_md *md, t_image **dst, t_image *src)
+t_image	*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_size, int keep_ratio)
 {
-	if (!md || !dst || !src)
-		return ;
-	if (*dst)
-		free_image_data(md, *dst);
-	*dst = copy_image(md, src, src->size, -1);
-}
-
-void	draw_random_pixel(t_image *img, int scale, int base_color, float rand)
-{
-	t_vec2	pos;
-	t_vec4	clr;
-	int		rand_amount;
-	int		rand_rescale;
-
-	pos.x = r_range(0, img->size.x);
-	pos.y = r_range(0, img->size.y);
-	if (rand > 0)
-	{
-		rand_amount = (int)(rand * 100);
-		clr = color_to_v4(base_color);
-		clr.r = minmax(0, 255, clr.r + r_range(-rand_amount, rand_amount));
-		clr.g = minmax(0, 255, clr.g + r_range(-rand_amount, rand_amount));
-		clr.b = minmax(0, 255, clr.b + r_range(-rand_amount, rand_amount));
-		clr.a = 125;
-		base_color = v4_to_color(clr.r, clr.g, clr.b, clr.a);
-		rand_rescale = scale - (int)(scale * rand);
-		scale += r_range(-rand_rescale, rand_rescale);
-	}
-	draw_pixels(img, pos, v2(scale), base_color);
+	if (keep_ratio)
+		imgd->img = scale_img_keep_ratio(md, imgd->img, &imgd->size, new_size);
+	else
+		imgd->img = resize_img(md, imgd->img, &imgd->size, new_size);
+	imgd->addr = mlx_get_data_addr(imgd->img, &imgd->bpp, \
+		&imgd->size_line, &imgd->endian);
+	if (!imgd->addr)
+		return (printf("ERR: Failed to get image data address\n"), imgd);
+	imgd->src = (int *)imgd->addr;
+	if (!imgd->src)
+		return (printf("ERR: Failed to get src data\n"), imgd);
+	return (imgd);
 }

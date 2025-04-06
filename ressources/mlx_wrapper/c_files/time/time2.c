@@ -6,11 +6,18 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:42:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:51:09 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 00:20:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
+
+void	reset_fps_timer(t_timer *timer)
+{
+	timer->frm_cnt = 0;
+	timer->fps_tm = timer->cur_tm;
+	timer->avrg_fps_prev = timer->avrg_fps;
+}
 
 void	resume_timer(t_timer *timer)
 {

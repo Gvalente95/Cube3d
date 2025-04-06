@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:33:32 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:34:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ t_vec2	get_2d_ray_pos(t_md *md)
 
 	cam_2d_ofs.x = md->win_sz.x / 2 - md->txd.size_2d * 2;
 	cam_2d_ofs.y = md->win_sz.y / 2 - md->txd.size_2d * 2;
-	center_ofs.x = (md->cam_ofst.x / md->t_len * md->txd.size_2d);
-	center_ofs.y = ((md->cam_ofst.y / md->t_len) * md->txd.size_2d);
+	center_ofs.x = (md->cam.ofst.x / md->t_len * md->txd.size_2d);
+	center_ofs.y = ((md->cam.ofst.y / md->t_len) * md->txd.size_2d);
 	centr = get_v2(cam_2d_ofs.x - center_ofs.x, cam_2d_ofs.y - center_ofs.y);
 	return (centr);
 }
@@ -42,7 +42,7 @@ int	render_ray(t_md *md, t_ray *ray, t_vec2 visu_offset)
 {
 	t_vec2	_2d_pos;
 
-	if (md->prm.ray_mode || !md->prm.show_rays)
+	if (!md->prm.view_2d || !md->prm.show_rays)
 		return (0);
 	_2d_pos.x = visu_offset.x + (ray->pos.x / md->t_len) * md->txd.size_2d;
 	_2d_pos.y = visu_offset.y + (ray->pos.y / md->t_len) * md->txd.size_2d;
@@ -57,11 +57,15 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->index = index;
 	ray->check_hit = NULL;
 	ray->had_door = 0;
-	ray->check_steps = 0;
-	ray->color = -1;
+	ray->init_steps = 0;
+	ray->color = _BLACK;
 	ray->steps = -1;
 	ray->start = start_pos;
+	ray->delta = v2f(0);
+	ray->side_dist = v2f(0);
 	ray->pos = start_pos;
+	ray->step = v2(0);
+	ray->dda_dist = 0;
 	ray->distance = distance;
 	ray->flr_y = 9999;
 	ray->teleported_once = 0;
@@ -79,15 +83,15 @@ int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type)
 		return (0);
 	if (type == nt_pickup && !ent->is_active)
 		return (0);
-	if (md->prm.use_thrd && ent->type != nt_door)
+	if (ent->type != nt_door)
 	{
-		if (!md->prm.ray_mode || is_in_list(md->threads_manager.ents_to_draw, ent))
+		if (is_in_list(md->thrd_manager.ents_to_draw, ent))
 			return (0);
 		if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
 	(t_vec2f){ent->pos.x + (float)(md->t_len / 2), \
 	ent->pos.y + (float)(md->t_len / 2)}, .49))
 			return (0);
-		dblst_add_back(&md->threads_manager.ents_to_draw, dblst_new((t_ent *)ent));
+		dblst_add_back(&md->thrd_manager.ents_to_draw, dblst_new((t_ent *)ent));
 		return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);
 	}
 	else if (!v3f_bounds(ray->pos, v3f(0), \

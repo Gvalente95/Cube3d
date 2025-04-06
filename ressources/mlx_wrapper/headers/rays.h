@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:34:06 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:14:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ typedef struct s_portal_wall
 typedef struct s_portal
 {
 	t_portal_wall	ends[2];
+	t_vec2			out_pos;
+	t_ent			*found;
 	int				last_shot_index;
 }	t_portal;
 
@@ -86,7 +88,12 @@ typedef struct s_ray
 	t_ent		*check_hit;
 	t_vec3f		pos;
 	t_vec3f		start;
+	t_vec2		cord;
+	t_vec2		step;
 	t_vec3f		dir;
+	t_vec2f		delta;
+	t_vec2f		side_dist;
+	float		dda_dist;
 	float		distance;
 	float		sprite_distance;
 	float		angle;
@@ -97,7 +104,7 @@ typedef struct s_ray
 	int			had_door;
 	int			is_floor_worker;
 	int			steps;
-	int			check_steps;
+	int			init_steps;
 	int			flr_y;
 	int			teleported_once;
 }	t_ray;

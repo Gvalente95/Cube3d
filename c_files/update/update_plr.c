@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 12:17:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:42:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,23 @@ void	set_weapon_index(t_md *md)
 static void	update_player_rot(t_md *md)
 {
 	float		speed;
-	const float	pitch = md->plr_rot.y * (M_PI / 180.0f);
+	const float	pitch = md->cam.rot.y * (M_PI / 180.0f);
 
 	speed = md->prm.rot_speed;
 	if (!md->mouse.lock_rot.x && md->mouse.delta.x && md->mouse.focus)
-		md->plr_rot.x += (md->mouse.delta.x * speed);
-	if (md->plr_rot.x < -180.0f)
-		md->plr_rot.x += 360.0f;
-	else if (md->plr_rot.x > 180.0f)
-		md->plr_rot.x -= 360.0f;
+		md->cam.rot.x += (md->mouse.delta.x * speed);
+	if (md->cam.rot.x < -180.0f)
+		md->cam.rot.x += 360.0f;
+	else if (md->cam.rot.x > 180.0f)
+		md->cam.rot.x -= 360.0f;
 	if (!md->mouse.lock_rot.y && md->mouse.delta.y && md->mouse.focus)
-		md->plr_rot.y += (md->mouse.delta.y * speed);
+		md->cam.rot.y += (md->mouse.delta.y * speed);
 	if (md->prm.fly_cam)
-		md->plr_rot.y = minmaxf(-140, 140, md->plr_rot.y);
+		md->cam.rot.y = minmaxf(-140, 140, md->cam.rot.y);
 	else
-		md->plr_rot.y = minmaxf(-80, 80, md->plr_rot.y);
-	md->plr_rot.z = 0;
-	md->plr.angle = (md->plr_rot.x) * (M_PI / 180.0f);
+		md->cam.rot.y = minmaxf(-80, 80, md->cam.rot.y);
+	md->cam.rot.z = 0;
+	md->plr.angle = (md->cam.rot.x) * (M_PI / 180.0f);
 	md->plr.dir.x = cosf(md->plr.angle);
 	md->plr.dir.y = sinf(md->plr.angle);
 	md->plr.dir.z = sinf(pitch) * .05;
@@ -56,9 +56,9 @@ static void	update_player_action(t_md *md, t_ent *plr)
 		set_collisions(md, plr, get_v2(plr->size.x, plr->size.y));
 		md->plr.action = m_walk;
 		if (!plr->mov.x)
-			md->plr_wrd_mv.x = 0;
+			md->cam.plr_wrd_mv.x = 0;
 		if (!plr->mov.y)
-			md->plr_wrd_mv.y = 0;
+			md->cam.plr_wrd_mv.y = 0;
 		move_player(md, plr);
 	}
 	else if (md->plr.shot)
@@ -84,7 +84,7 @@ int	update_player(t_md *md, t_ent *plr)
 	update_player_rot(md);
 	update_player_mov(md, plr);
 	update_player_action(md, plr);
-	update_cam(md);
+	update_cam(md, &md->cam);
 	md->plr.pos.z = minmaxf(-md->t_len * 3, 0, md->plr.pos.z);
 	return (1);
 }

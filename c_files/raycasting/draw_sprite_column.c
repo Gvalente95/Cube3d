@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/02 15:53:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:58:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord)
 		while (e->anim[action_index][++frame_index])
 		{
 			img = e->anim[action_index][frame_index];
-			draw_blood(md, img, txtr_coord, md->rgb[RGB_RED]);
+			draw_blood(md, img, txtr_coord, _RED);
 		}
 	}
 	e->was_hit = 1;
@@ -47,8 +47,8 @@ int	get_prspctive_offset(t_md *md, float ray_dst, t_ent *e)
 	int		pitch_offset;
 	float	vrt_offst;
 
-	pitch_factor = tanf(md->plr_rot.y * (M_PI / 180.0f));
-	vrt_offst = (md->cam_pos.z - e->pos.z) * md->win_sz.y / (ray_dst + 1.0f);
+	pitch_factor = tanf(md->cam.rot.y * (M_PI / 180.0f));
+	vrt_offst = (md->cam.pos.z - e->pos.z) * md->win_sz.y / (ray_dst + 1.0f);
 	pitch_offset = (-pitch_factor * md->win_sz.y / 2) - vrt_offst;
 	return (pitch_offset);
 }
@@ -71,14 +71,14 @@ void	draw_sprite_slice(t_md *md, t_ent *ent, t_vec2 winp, t_vec3f crd)
 		pxl.y = (img_y * (ent->frame->size_line / 4)) + (int)crd.x;
 		pxl.x = *(ent->frame->src + pxl.y);
 		if (md->var && winp.x == wins.x / 2 && \
-			y.x + winp.y - md->cam_pos.z == wins.y / 2)
+			y.x + winp.y - md->cam.pos.z == wins.y / 2)
 			paint_ent(md, ent, get_v2((int)crd.x, (int)crd.x));
 		if ((pxl.x >> 24) != 0x00)
 			continue ;
 		if (ent->was_hit == 2)
-			pxl.x = md->rgb[RGB_RED];
+			pxl.x = _RED;
 		draw_pixel(md->screen, \
-			get_v2(winp.x, y.x + winp.y - md->cam_pos.z), pxl.x, -1);
+			get_v2(winp.x, y.x + winp.y - md->cam.pos.z), pxl.x, -1);
 	}
 }
 

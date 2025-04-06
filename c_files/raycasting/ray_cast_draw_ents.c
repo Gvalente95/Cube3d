@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_draw_ents.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:33:48 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:16:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,9 @@ void	draw_sprite_thread(t_md *md, t_ent *e, float fogalpha)
 	dist = (maxf(0.1, e->hit_dist) / 2) * scale_factor;
 	scale = (md->win_sz.y * e->frame->size.y) / dist;
 	draw_pos.x = e->ray_hit_index - scale / 2;
-	draw_pos.y = md->win_sz.y / 2 \
-		- (md->cam_pos.z * 5) \
-		- md->plr_rot.y * 8 \
-		- scale / 2 + 10;
+	draw_pos.y = (md->win_sz.y / 2 - (md->plr.pos.z * 5) - md->cam.rot.y * 7);
 	img = copy_image(md, e->frame, v2(scale), -1);
-	flush_img(img, md->rgb[RGB_BLACK], fogalpha, 1);
+	flush_img(img, _BLACK, fogalpha, 1);
 	draw_img(img, md->screen, draw_pos, -1);
 	free_image_data(md, img);
 	e->in_screen = 1;
@@ -101,7 +98,7 @@ static void	sort_ent_list_by_distance(t_dblst **lst)
 	free(ent_array);
 }
 
-void	draw_found_ents(t_md *md, t_threads_manager *mon)
+void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 {
 	t_dblst	*node;
 	t_ent	*e;

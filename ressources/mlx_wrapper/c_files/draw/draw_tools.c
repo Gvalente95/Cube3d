@@ -1,16 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_alpha.c                                       :+:      :+:    :+:   */
+/*   draw_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 17:51:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/29 12:39:52 by giuliovalen      ###   ########.fr       */
+/*   Created: 2025/04/04 10:16:08 by giuliovalen       #+#    #+#             */
+/*   Updated: 2025/04/04 10:23:34 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
+
+void	init_draw_d(t_draw_d *draw_d, t_image *src, t_image *dst, \
+	t_vec2 src_pos)
+{
+	draw_d->src = src;
+	draw_d->dst = dst;
+	draw_d->src_pos = src_pos;
+}
+
+int	color_diff(int c1, int c2)
+{
+	t_vec4	delta_;
+
+	delta_.r = ((c1 >> 16) & 0xFF) - ((c2 >> 16) & 0xFF);
+	delta_.g = ((c1 >> 8) & 0xFF) - ((c2 >> 8) & 0xFF);
+	delta_.b = (c1 & 0xFF) - (c2 & 0xFF);
+	return (delta_.r * delta_.r + delta_.g * delta_.g + delta_.b * delta_.b);
+}
 
 int	set_alpha(int color, float new_alpha)
 {
@@ -53,38 +71,4 @@ void	fill_transparency(t_image *src, int color)
 			continue ;
 		img_data[i] = color;
 	}
-}
-
-void	draw_alpha_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp)
-{
-	t_draw_d	draw_d;
-	t_vec2		draw_pos;
-
-	if (!src || !dst || !src->src || !dst->src)
-		return ;
-	draw_d.src = src;
-	draw_d.dst = dst;
-	draw_pos = get_v2(-1, -1);
-	while (++draw_pos.y < src->size.y)
-	{
-		draw_d.src_pos.y = draw_pos.y;
-		draw_d.dst_pos.y = pos.y + draw_pos.y;
-		if (draw_d.dst_pos.y < 0 || draw_d.dst_pos.y >= dst->size.y)
-			continue ;
-		draw_pos.x = -1;
-		while (++draw_pos.x < src->size.x)
-		{
-			draw_d.src_pos.x = draw_pos.x;
-			draw_d.dst_pos.x = pos.x + draw_pos.x;
-			put_pxl_if_vis(&draw_d, -1, 1, trnsp);
-		}
-	}
-}
-
-void	init_draw_d(t_draw_d *draw_d, t_image *src, t_image *dst, \
-	t_vec2 src_pos)
-{
-	draw_d->src = src;
-	draw_d->dst = dst;
-	draw_d->src_pos = src_pos;
 }

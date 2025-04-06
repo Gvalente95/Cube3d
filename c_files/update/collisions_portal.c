@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:52:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:03:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/04 11:38:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ static void	set_pos_and_angle(t_md *md, t_wrd_dir start_dir, \
 
 	plr = &md->plr;
 	angle_diff = get_portal_angle_offset(start_dir, end_dir);
-	new_angle = md->plr_rot.x + angle_diff;
+	new_angle = md->cam.rot.x + angle_diff;
 	if (new_angle < 180.0)
 		new_angle += 360;
 	if (new_angle > 180)
 		new_angle -= 360;
-	md->plr_rot.x = new_angle;
+	md->cam.rot.x = new_angle;
 	plr->angle = (new_angle) * (M_PI / 180.0f);
 	plr->dir.x = cosf(plr->angle);
 	plr->dir.y = sinf(plr->angle);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_threads_Loop.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:26:11 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 22:36:10 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:40:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	*cast_thread_loop(void *arg)
 {
 	t_thread_data	*data;
 	int				x;
-	t_ray			ray;
 
 	data = (t_thread_data *)arg;
 	while (1)
@@ -27,26 +26,24 @@ void	*cast_thread_loop(void *arg)
 		if (data->should_exit)
 		{
 			pthread_mutex_unlock(&data->mutex);
-			break;
+			break ;
 		}
 		data->should_work = 0;
 		pthread_mutex_unlock(&data->mutex);
 		x = data->start_x - 1;
 		while (++x < data->end_x)
-		{
-			ray.index = x;
-			cast_thread_ray(data->md, &ray);
-		}
-		soft_barrier_wait(&data->md->threads_manager.barrier);
+			cast_thread_ray(data->md, x);
+		soft_barrier_wait(&data->md->thrd_manager.barrier);
 	}
 	return (NULL);
 }
 
-void	trigger_threads(t_md *md)
+static void	trigger_threads(t_md *md)
 {
-	t_threads_manager	*rm = &md->threads_manager;
+	t_thrd_manager	*rm;
 	int				i;
 
+	rm = &md->thrd_manager;
 	i = -1;
 	while (++i < rm->threads_amount)
 	{
@@ -60,8 +57,9 @@ void	trigger_threads(t_md *md)
 
 void	cast_ray_threads_lp(t_md *md)
 {
-	t_threads_manager *rm = &md->threads_manager;
+	t_thrd_manager	*rm;
 
+	rm = &md->thrd_manager;
 	md->hud.new_floor_start = md->win_sz.y;
 	rm->ray_visu_offset = get_2d_ray_pos(md);
 	compute_ray_directions(md, rm->dir_vals, md->win_sz.x);
@@ -71,34 +69,12 @@ void	cast_ray_threads_lp(t_md *md)
 		draw_found_ents(md, rm);
 }
 
-void	init_thread_pool(t_md *md, int thread_count)
-{
-	t_threads_manager	*rm = &md->threads_manager;
-	int					width = md->win_sz.x;
-	int					i;
-
-	soft_barrier_init(&rm->barrier, thread_count + 1);
-	rm->threads_amount = thread_count;
-	i = -1;
-	while (++i < thread_count)
-	{
-		rm->thrdlp[i].md = md;
-		rm->thrdlp[i].thread_id = i;
-		rm->thrdlp[i].start_x = (width * i) / thread_count;
-		rm->thrdlp[i].end_x = (width * (i + 1)) / thread_count;
-		rm->thrdlp[i].should_work = 0;
-		rm->thrdlp[i].should_exit = 0;
-		pthread_mutex_init(&rm->thrdlp[i].mutex, NULL);
-		pthread_cond_init(&rm->thrdlp[i].cond, NULL);
-		pthread_create(&rm->thrdlp[i].thread, NULL, cast_thread_loop, &rm->thrdlp[i]);
-	}
-}
-
 void	cleanup_thread_pool(t_md *md)
 {
-	t_threads_manager	*rm = &md->threads_manager;
+	t_thrd_manager	*rm;
 	int				i;
 
+	rm = &md->thrd_manager;
 	i = -1;
 	while (++i < rm->threads_amount)
 	{

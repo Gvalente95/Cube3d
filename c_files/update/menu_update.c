@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:33:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 13:35:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/05 18:53:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	update_slider(t_md *md, t_slider *sld)
 	end = get_v2((sz.x * sld->point) / (sld->steps - 1), sz.y);
 	draw_pixels(sld->img, v2(0), end, md->menu.slider_fill_clr);
 	md->plr.pos.z = -md->prm.height;
-	md->cam_pos.z = md->plr.pos.z - md->prm.height;
+	md->cam.pos.z = md->plr.pos.z - md->prm.height;
 	if (!ft_strncmp(sld->label, "win", 3))
 		return (replace_window(md, md->prm.win_x, md->prm.win_y));
 	render(md);
@@ -65,9 +65,9 @@ void	update_sliders(t_md *md, t_menu *menu, t_vec2 sz)
 		cur_hov = i;
 		if (menu->slider_hov != cur_hov)
 		{
-			play_sound(md, AU_MOUSE_RELEASE);
 			menu->slider_hov = i;
 			menu->refresh_ui = 1;
+			menu->refresh_bg = 1;
 		}
 		if (md->mouse.pressed == MOUSE_PRESS)
 			menu->selected_slider = sld;
@@ -76,7 +76,7 @@ void	update_sliders(t_md *md, t_menu *menu, t_vec2 sz)
 	update_end(menu, &menu->slider_hov, cur_hov);
 }
 
-void	update_buttons(t_md *md, t_menu *menu, t_vec2 size, int txt_sc)
+void	update_buttons(t_md *md, t_menu *menu, t_vec2 size)
 {
 	t_button			*but;
 	int					cur_hov;
@@ -87,7 +87,7 @@ void	update_buttons(t_md *md, t_menu *menu, t_vec2 size, int txt_sc)
 	while (menu->buttons[++i].active)
 	{
 		but = &menu->buttons[i];
-		if (!v2_bounds(md->mouse.real, but->pos, scale_vec2(size, txt_sc)))
+		if (!v2_bounds(md->mouse.real, but->pos, size))
 			continue ;
 		cur_hov = i;
 		if (cur_hov != menu->button_hov)
@@ -95,7 +95,7 @@ void	update_buttons(t_md *md, t_menu *menu, t_vec2 size, int txt_sc)
 			menu->button_hov = cur_hov;
 			menu->refresh_ui = 1;
 		}
-		if (!md->mouse.click)
+		if (md->mouse.click != MOUSE_PRESS)
 			continue ;
 		*but->value = !(*but->value);
 		render(md);
@@ -111,7 +111,7 @@ int	update_menu(t_md *md, t_menu *menu)
 		play_sound(md, AU_MOUSE_CLICK);
 	if (md->mouse.click == MOUSE_RELEASE)
 		play_sound(md, AU_MOUSE_RELEASE);
-	update_key_input(md, md->key_clicked);
+	update_input(md);
 	if (!menu->selected_slider)
 		update_sliders(md, menu, menu->sliders[0].img->size);
 	if (menu->selected_slider)
@@ -125,7 +125,8 @@ int	update_menu(t_md *md, t_menu *menu)
 			menu->refresh_bg = update_slider(md, menu->selected_slider);
 	}
 	else
-		update_buttons(md, menu, get_v2(10, 2), md->prm.txt_sc);
+		update_buttons(md, menu, \
+			get_v2(md->prm.txt_sc * 15, md->prm.txt_sc + 10));
 	render_menu(md, menu);
 	reset_mlx_values(md);
 	return (1);
