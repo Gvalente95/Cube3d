@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:26:11 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/04 12:40:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 15:26:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,9 @@ void	cast_ray_threads_lp(t_md *md)
 	t_thrd_manager	*rm;
 
 	rm = &md->thrd_manager;
-	md->hud.new_floor_start = md->win_sz.y;
 	rm->ray_visu_offset = get_2d_ray_pos(md);
 	compute_ray_directions(md, rm->dir_vals, md->win_sz.x);
 	trigger_threads(md);
-	md->hud.floor_start = minmax(0, md->win_sz.x, md->hud.new_floor_start);
 	if (rm->ents_to_draw)
 		draw_found_ents(md, rm);
 }

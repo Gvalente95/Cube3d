@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:31:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:44:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 22:47:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,12 @@ int	draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray)
 
 t_ent	*check_segment_at(t_md *md, t_ray *ray, t_vec2 cord)
 {
-	int			index;
 	t_ent_type	type;
 	t_ent		*ent;
 
-	index = cord.x + ((md->map.size.x + 1) * cord.y);
-	if (index <= 0 || index >= md->map.len || !md->mapped_ents[index])
+	ent = get_mapped_at_cord(md, cord);
+	if (!ent)
 		return (NULL);
-	ent = md->mapped_ents[index];
 	if (!ent->revealed && ray->distance < md->t_len * REVEAL_DISTANCE)
 		show_minimap_entity(md, ent, md->mmap.bg, 1);
 	type = ent->type;

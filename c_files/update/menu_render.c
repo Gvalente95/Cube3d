@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:30:53 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:28:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 03:19:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha)
 {
-	t_vec4		txt_d;
+	t_txtd	txt_d;
 
 	draw_alpha_img(sldr->img, screen, sldr->pos, alpha);
-	txt_d.a = md->prm.txt_sc;
-	txt_d.b = _BLACK;
+	txt_d.scale = md->prm.txt_sc;
+	txt_d.color = _WHITE;
 	if (md->menu.slider_hov == sldr->index)
-		txt_d.b = _WHITE;
-	txt_d.r = sldr->pos.x - (txt_d.a) * ft_strlen(sldr->label) - 30;
-	txt_d.g = sldr->pos.y + sldr->img->size.y / 2 - md->prm.txt_sc / 2;
+		txt_d.color = _YELLOW;
+	txt_d.x = sldr->pos.x - (txt_d.scale) * ft_strlen(sldr->label) - 30;
+	txt_d.y = sldr->pos.y + sldr->img->size.y / 2 - md->prm.txt_sc / 2;
+	txt_d.onto = screen;
 	rnd_fast_txt(md, txt_d, "%s", sldr->label);
 	if (md->menu.slider_hov != sldr->index)
 		return ;
-	txt_d.r = sldr->pos.x + sldr->img->size.x - md->prm.txt_sc * 10;
+	txt_d.x = sldr->pos.x + sldr->img->size.x - md->prm.txt_sc * 10;
 	rnd_fast_txt(md, txt_d, "%.1f", *sldr->value);
 }
 
@@ -49,23 +50,24 @@ void	render_sliders(t_md *md, t_menu *menu, t_image *screen)
 void	render_buttons(t_md *md, t_menu *menu)
 {
 	t_button	*but;
-	t_vec4		txt_data;
+	t_txtd		txt_data;
 	int			i;
 
 	i = -1;
 	while (menu->buttons[++i].active)
 	{
 		but = &menu->buttons[i];
-		txt_data.a = md->prm.txt_sc;
-		txt_data.r = but->pos.x;
-		txt_data.g = but->pos.y;
-		txt_data.b = md->rgb[RGB_RED + (*but->value == 1)];
+		txt_data.scale = md->prm.txt_sc;
+		txt_data.x = but->pos.x;
+		txt_data.y = but->pos.y;
+		txt_data.color = md->rgb[RGB_RED + (*but->value == 1)];
+		txt_data.onto = menu->freeze_frame;
 		if (menu->button_hov == i)
-			txt_data.b += 500;
+			txt_data.color += 500;
 		rnd_fast_txt(md, txt_data, "%s", but->label);
-		txt_data.r -= 15;
-		txt_data.b = _BLUE;
-		txt_data.a *= .75;
+		txt_data.x -= md->prm.txt_sc * 2;
+		txt_data.color = -1;
+		txt_data.scale *= .75;
 		if (but->key_show[0])
 			rnd_fast_txt(md, txt_data, "%s", but->key_show);
 	}
@@ -75,13 +77,13 @@ void	center_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name)
 {
 	const t_vec2	win_cntr = (t_vec2){md->win_sz.x / 2, md->win_sz.y / 2};
 	t_vec2			pos;
-	const int		title_color = _WHITE;
-	t_vec4			txt_data;
+	const int		title_color = -1;
+	t_txtd			txt_data;
 
 	pos.x = win_cntr.x - scale * (ft_strlen(name) / 2) + pos_ofst.x;
 	pos.y = win_cntr.y - scale / 2 + pos_ofst.y;
-	txt_data = get_v4(pos.x, pos.y, title_color, scale);
-	rnd_abs_txt(md, txt_data, name);
+	txt_data = (t_txtd){pos.x, pos.y, title_color, scale, NULL};
+	rnd_fast_txt(md, txt_data, name);
 }
 
 void	render_menu(t_md *md, t_menu *menu)

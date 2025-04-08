@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 14:48:25 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 16:04:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 14:13:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	init_minimap(t_md *md, t_mmap *mmap)
 
 	ic_len = max(4, md->win_sz.x / 200);
 	mmap->ic_scl = ic_len;
-	mmap->comps_scl = md->win_sz.x / 150;
+	mmap->comps_scl = md->win_sz.x / 200;
 	mmap->cmps = 1;
 	mmap->mray_len = 0;
 	mmap->revealed_cur = 0;

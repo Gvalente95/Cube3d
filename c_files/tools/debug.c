@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:38:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:33:00 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,37 @@
 
 void	show_init_information(t_md *md)
 {
-	int	i;
+	t_vec2	pos;
+	t_ent	*e;
 
 	print_vec2(md->map.size, "map size");
 	print_vec3f(md->plr.pos, "plr pos");
 	print_vec3f(md->cam.rot, "plr rot");
 	print_vec3(md->plr.coord, "plr coord");
 	printf("map name: %s\nmap content: \n", md->map.name);
-	i = -1;
-	while (md->map.buffer[++i])
+	pos = v2(-1);
+	while (++pos.y < md->map.size.y)
 	{
-		if (md->map.buffer[i] == '\n')
-			printf("n\n");
-		else
-			printf("%c", md->map.buffer[i]);
+		pos.x = -1;
+		while (++pos.x < md->map.size.x)
+		{
+			e = get_mapped_at_cord(md, pos);
+			if (e)
+				printf("%c", e->character);
+			else
+				printf(" ");
+		}
+		printf("\n");
 	}
+	printf("\n");
+}
+
+void	show_debug_time(t_md *md, t_txtd txt_data)
+{
+	txt_data.y -= md->prm.txt_sc * 1.5;
+	rnd_fast_txt(md, txt_data, "g_time: %d", md->timer.time);
+	txt_data.y -= md->prm.txt_sc * 1.5;
+	rnd_fast_txt(md, txt_data, "delta:	%.3f", md->timer.delta_time);
 }
 
 void	show_fps(t_md *md, t_vec2 pos)
@@ -37,27 +53,26 @@ void	show_fps(t_md *md, t_vec2 pos)
 		RGB_GREEN, RGB_BLUE};
 	int			color_index;
 	int			color;
-	t_vec4		txt_data;
+	t_txtd		txt_data;
 	float		fps_gain;
 
 	color_index = minmaxf(0, 4, md->timer.prv_fps / 10);
 	color = md->rgb[colors[color_index]];
-	txt_data = get_v4(pos.x, pos.y, color, md->prm.txt_sc);
+	txt_data = (t_txtd){pos.x, pos.y, color, md->prm.txt_sc, NULL};
 	rnd_fast_txt(md, txt_data, "fps %d", md->timer.prv_fps);
-	txt_data.g -= md->prm.txt_sc * 1.5;
+	txt_data.y -= md->prm.txt_sc * 1.5;
 	fps_gain = md->timer.avrg_fps_prev - md->timer.avrg_fps;
-	txt_data.b = md->rgb[colors[(fps_gain < 0) * 3]];
+	txt_data.color = md->rgb[colors[(fps_gain < 0) * 3]];
 	if (fps_gain > 0)
 		rnd_fast_txt(md, txt_data, "+%.1f", fps_gain);
 	else
 		rnd_fast_txt(md, txt_data, "%.1f", fps_gain);
-	if (!md->prm.debug_mode)
-		return ;
-	txt_data.b = -1;
-	txt_data.g -= md->prm.txt_sc * 1.5;
-	rnd_fast_txt(md, txt_data, "g_time: %d", md->timer.time);
-	txt_data.g -= md->prm.txt_sc * 1.5;
-	rnd_fast_txt(md, txt_data, "delta:	%.3f", md->timer.delta_time);
+	txt_data.color = -1;
+	txt_data.y -= md->prm.txt_sc * 1.5;
+	if (md->prm.use_thrd)
+		rnd_fast_txt(md, txt_data, "T-on");
+	if (md->prm.debug_mode)
+		show_debug_time(md, txt_data);
 }
 
 void	show_update_information(t_md *md)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:42:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 19:52:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,9 @@ int	update_player(t_md *md, t_ent *plr)
 	update_player_mov(md, plr);
 	update_player_action(md, plr);
 	update_cam(md, &md->cam);
-	md->plr.pos.z = minmaxf(-md->t_len * 3, 0, md->plr.pos.z);
+	md->plr.pos.z = minmaxf(-md->t_len * 10, 0, md->plr.pos.z);
+	md->hud.floor_start = md->win_sz.y / 2 - md->cam.rot.y * 8 + 1;
+	if (md->hud.floor_start < 0)
+		md->hud.floor_start = 0;
 	return (1);
 }

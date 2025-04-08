@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:56:16 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:01:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 22:59:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,4 @@ void	plr_shoot(t_md *md)
 	md->hud.weapon_frame = 1;
 	if (md->hud.wpn_index == Knife)
 		play_sound(md, AU_SLICE);
-}
-
-void	reset_mapped_end(t_md *md, t_ent *e)
-{
-	if (e->map_index > 0 && e->map_index <= md->map.len - 1 && \
-		md->mapped_ents[e->map_index] == e)
-		md->mapped_ents[e->map_index] = NULL;
 }

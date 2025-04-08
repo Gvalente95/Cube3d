@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:12:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 10:19:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 13:47:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	clean_img(t_image *img)
 		if ((color & 0xFF000000) != 0x00000000)
 			continue ;
 		rgb = color_to_v4(color);
-		if (rgb.r > 210 && rgb.g > 210 && rgb.b > 210)
+		if (rgb.r > 200 && rgb.g > 200 && rgb.b > 200)
 			continue ;
 		color = v4_to_color(0, 0, 0, 255);
 		img->src[i] = color;

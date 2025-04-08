@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:15:02 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 19:14:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	update_cam(t_md *md, t_cam *cam)
 {
 	t_vec3f	pos;
 	t_ent	*plr;
+	int		prv_is_moving;
 
 	plr = &md->plr;
 	pos = plr->pos;
@@ -61,6 +62,10 @@ void	update_cam(t_md *md, t_cam *cam)
 	md->plr.coord.x = pos.x / md->t_len;
 	md->plr.coord.y = pos.y / md->t_len;
 	md->plr.coord.z = pos.z / md->t_len;
+	prv_is_moving = md->cam.is_moving;
+	md->cam.is_moving = !cmp_vec3f(md->cam.input_mov, v3f(0), .01);
+	if (prv_is_moving != md->cam.is_moving)
+		md->timer.tm_walk = 0;
 	update_plr_offsets(md, cam);
 	if (md->prm.bob_amount > 0)
 		update_cam_bob(md, plr);

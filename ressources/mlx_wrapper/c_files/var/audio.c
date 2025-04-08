@@ -6,15 +6,14 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 10:50:54 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:56:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
 
-pid_t	play_random_sound(t_md *md, const char *path, int len)
+int	play_rand_sound(t_md *md, const char *path, int len, int last_index)
 {
-	pid_t	sound;
 	char	*with_index;
 	char	*fullpath;
 	char	*index_str;
@@ -23,14 +22,16 @@ pid_t	play_random_sound(t_md *md, const char *path, int len)
 	if (!md->prm.au_on)
 		return (0);
 	index = r_range(0, len - 1);
+	while (index == last_index)
+		index = r_range(0, len - 1);
 	index_str = ft_itoa(index);
 	with_index = ft_strjoin(path, index_str);
 	free(index_str);
 	fullpath = ft_strjoin(with_index, ".mp3");
 	free(with_index);
-	sound = play_sound(md, fullpath);
+	play_sound(md, fullpath);
 	free(fullpath);
-	return (sound);
+	return (index);
 }
 
 pid_t	play_sound(t_md *md, const char *filename)
@@ -74,7 +75,7 @@ int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
 {
 	if (!pid)
 		return (printf("called play_loop_au with no pid"), 0);
-	if (!depend)
+	if (!depend || !md->prm.au_on)
 	{
 		stop_sound(*pid);
 		return (0);

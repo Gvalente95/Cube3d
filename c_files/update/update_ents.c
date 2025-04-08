@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_ents.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 21:06:15 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/08 02:44:02 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ int	update_ents(t_md *md)
 	t_dblst	*next;
 	int		upd_render;
 
-	if (!md->prm.fe_speed)
-		return (0);
 	upd_render = 0;
 	node = md->entities;
 	while (node)

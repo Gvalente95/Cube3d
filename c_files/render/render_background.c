@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/06 15:22:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 17:14:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,17 @@ void	render_background(t_md *md)
 	t_hud	*hud;
 
 	hud = &md->hud;
-	if (md->cam.pos.z < -30)
-		hud->floor_start = md->win_sz.y;
 	if (md->prm.view_2d)
 		render_2d_floor(md);
+	if (!md->prm.use_ceiling)
+	{
+		if (md->prm.use_sky)
+			render_sky(md, md->screen);
+		else
+			draw_pixels(md->screen, \
+	v2(0), get_v2(md->win_sz.x, hud->floor_start + 1), hud->sky_color);
+	}
 	if (!md->prm.use_floor)
 		draw_pixels(md->screen, \
 			get_v2(0, hud->floor_start), md->win_sz, hud->floor_color);
-	if (!md->prm.use_ceiling)
-		render_sky(md, md->screen);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:38:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 13:22:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:30:31 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define AU_RELOAD			"ressources/audio/reload/0.mp3"
 # define AU_SLICE			"ressources/audio/shoot/0.mp3"
 # define AU_OPEN			"ressources/audio/open.mp3"
+# define AU_CLOSE			"ressources/audio/close.mp3"
 # define AU_PORTAL_SHOOT	"ressources/audio/portal_shoot.mp3"
 # define AU_WIND			"ressources/audio/wind.mp3"
 # define AU_MUS				"ressources/audio/music.mp3"
@@ -35,10 +36,12 @@ typedef struct s_au_manager
 	pid_t	wind_pid;
 	pid_t	amb_pid;
 	pid_t	mus_pid;
+	int		walk_index;
 }	t_au_manager;
 
 //		var/audio.c
-pid_t			play_random_sound(t_md *md, const char *path, int len);
+int				play_rand_sound(t_md *md, const char *path, \
+	int len, int last_index);
 pid_t			play_sound(t_md *md, const char *filename);
 pid_t			play_index(t_md *md, const char *filepath, int index);
 void			stop_sound(pid_t pid);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 20:41:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 19:43:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,11 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 void	render(t_md *md)
 {
 	render_background(md);
-	print_vec2(md->cam.input_offst, "INPUT OFFST");
-	if (md->timer.time > 3)
-	{
-		if (md->prm.use_thrd)
-			cast_ray_threads_lp(md);
-		else
-			cast_rays(md);
-	}
+	md->cam.pointed = NULL;
+	if (md->prm.use_thrd)
+		cast_ray_threads_lp(md);
+	else
+		cast_rays(md);
 	if (md->prm.view_2d)
 		render_2d_entities(md);
 	else
@@ -117,7 +114,8 @@ void	render(t_md *md)
 		render_minimap(md, &md->mmap);
 	if (md->prm.debug_mode)
 		show_update_information(md);
-	show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
+	if (md->prm.show_fps)
+		show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
 	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

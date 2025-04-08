@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/04 12:08:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 20:27:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_image	*init_abs_img(t_md *md, t_vec2 img_size, char *path)
 	img_data = malloc(sizeof(t_image));
 	if (!img_data)
 		return (printf("ERR: alloc for img_data\n"), NULL);
-	img_data->img = ld_txtr(md, img_size, path, get_v2(0, 0));
+	img_data->img = ld_txtr(md, &img_size, path, get_v2(0, 0));
 	if (!img_data->img)
 		return (printf("ERR: Failed to set image\n"), img_data);
 	img_data->size = get_v2(img_size.x, img_size.y);
@@ -43,7 +43,7 @@ t_image	*init_img(t_md *md, t_vec2 img_size, char *path, int color)
 
 	img_data = md_malloc(md, sizeof(t_image));
 	if (path)
-		img_data->img = ld_txtr(md, img_size, path, get_v2(0, 1));
+		img_data->img = ld_txtr(md, &img_size, path, get_v2(0, 1));
 	else
 		img_data->img = mlx_new_image(md->mlx, img_size.x, img_size.y);
 	if (!img_data->img)

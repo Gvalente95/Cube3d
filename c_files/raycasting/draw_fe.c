@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:24:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:03:48 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 00:52:06 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe)
 		return (1);
 	update_fe(md, d.win, fe, d);
 	render_fe(md, fe, 1);
-	return (*prv_fe = fe, 1);
+	return (*prv_fe = NULL, 1);
 }
 
 void	reset_grass(t_md *md, t_fe *fe)

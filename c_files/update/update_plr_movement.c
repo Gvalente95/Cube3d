@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:42:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 03:09:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 		md->plr.pos.z + md->prm.height >= -EPSILON)
 	{
 		mov.z = -PLR_JUMPPOW;
-		play_random_sound(md, AU_WALK_METAL, 6);
+		play_rand_sound(md, AU_WALK_GRASS, 6, -1);
 	}
 	else if (md->key_prs[NUM_R_KEY] == 1)
 		mov.z = -(PLR_JUMPPOW * .2);
@@ -87,7 +87,11 @@ void	set_plr_z(t_md *md, t_ent *plr)
 	if (!md->prm.fly_cam)
 	{
 		if (plr->pos.z + md->prm.height < 0 && !md->key_prs[NUM_R_KEY])
+		{
 			plr->mov.z += GRAVITY;
+			if (plr->pos.z + md->prm.height >= -1)
+				play_sound(md, AU_CLOSE);
+		}
 		else if (plr->pos.z + md->prm.height > 0)
 		{
 			plr->pos.z = -md->prm.height;

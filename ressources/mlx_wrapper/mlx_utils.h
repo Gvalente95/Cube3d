@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/05 20:27:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 22:52:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@
 # endif
 
 # define MOUSE_SENSITIVITY .2
+# define MAPPED_ENT_MAX	100
 
 typedef struct s_mmap
 {
@@ -94,8 +95,8 @@ typedef struct s_hud
 	int			bgr_color;
 	int			floor_color;
 	int			sky_color;
+	int			fog_color;
 	int			floor_start;
-	int			new_floor_start;
 	int			wpn_index;
 	int			weapon_frame;
 	int			ammo;
@@ -129,12 +130,16 @@ typedef struct s_parameters
 	int				view_2d;
 	int				debug_mode;
 	int				use_thrd;
+	int				show_fps;
 	int				fly_cam;
 	int				ent_mode;
+	int				max_view_sprite;
 	int				au_on;
 	int				use_grass;
 	int				use_ceiling;
 	int				use_floor;
+	int				super_view;
+	int				use_sky;
 	float			bob_amount;
 	float			sun_x;
 	float			sun_y;
@@ -182,9 +187,21 @@ typedef struct s_cam
 	t_vec3f			ofst;
 	t_vec3f			wrd_mv_offst;
 	t_vec3f			plr_wrd_mv;
+	t_ent			*pointed;
 	float			bob_time;
+	int				is_moving;
+	int				x_dir_start;
 
 }	t_cam;
+
+typedef struct s_text_data
+{
+	int		x;
+	int		y;
+	int		color;
+	int		scale;
+	t_image	*onto;
+}	t_txtd;
 
 typedef struct s_md
 {
@@ -193,13 +210,14 @@ typedef struct s_md
 	t_image			*screen;
 	t_vec2			win_sz;
 	t_ent			plr;
-	t_ent			**mapped_ents;
+	t_ent			*map_ents[MAPPED_ENT_MAX][MAPPED_ENT_MAX];
 	t_dblst			*entities;
 	t_hud			hud;
 	t_menu			menu;
 	t_map			map;
 	t_portal		portal;
 	t_mmap			mmap;
+	t_autocam		autocam;
 	t_timer			timer;
 	t_fx_data		fx;
 	t_mouse			mouse;

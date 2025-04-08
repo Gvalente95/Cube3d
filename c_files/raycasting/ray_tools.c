@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 16:34:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:10:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 void	draw_blood(t_md *md, t_image *img, t_vec2 pos, int color)
 {
-	t_vec2	r_size;
+	int		radius;
 	t_vec2	start_draw;
 	t_vec3	sphere_data;
 
-	r_size = v2((md->t_len / 30) * md->hud.wpn_index);
-	start_draw = get_v2((int)pos.x - r_size.x / 2, (int)pos.y - r_size.y / 2);
+	(void)pos;
+	(void)md;
+	radius = (img->size.x / 6);
+	start_draw = pos;
 	sphere_data = get_v3(color, 10, 0);
-	draw_sphere(img, start_draw, r_size, sphere_data);
+	draw_sphere(img, start_draw, v2(radius), sphere_data);
 }
 
 t_vec2	get_2d_ray_pos(t_md *md)
@@ -67,35 +69,33 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->step = v2(0);
 	ray->dda_dist = 0;
 	ray->distance = distance;
-	ray->flr_y = 9999;
 	ray->teleported_once = 0;
 }
 
 int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type)
 {
-	if (type == nt_empty || type == nt_plr || ray->hits_len >= MAX_RAY_SPRITE)
+	if (type == nt_empty || type == nt_plr)
 		return (0);
-	if (!md->prm.ent_mode && type != nt_door)
+	if (!md->prm.ent_mode && (type != nt_door && type != nt_wall))
 		return (0);
-	if (ray->hits_len > 0 && ray->hit_data[ray->hits_len - 1].hit == ent)
+	if (ray->hits_len > 0 && \
+		ray->hit_data[ray->hits_len - 1].hit == ent && !md->prm.super_view)
 		return (0);
 	if (ray->check_hit && ray->check_hit != ent)
 		return (0);
 	if (type == nt_pickup && !ent->is_active)
 		return (0);
-	if (ent->type != nt_door)
+	if (type != nt_door && type != nt_wall)
 	{
 		if (is_in_list(md->thrd_manager.ents_to_draw, ent))
 			return (0);
 		if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
-	(t_vec2f){ent->pos.x + (float)(md->t_len / 2), \
-	ent->pos.y + (float)(md->t_len / 2)}, .49))
+	(t_vec2f){ent->pos.x + ent->size.x / 2, \
+	ent->pos.y + ent->size.y / 2}, .49))
 			return (0);
 		dblst_add_back(&md->thrd_manager.ents_to_draw, dblst_new((t_ent *)ent));
 		return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);
 	}
-	else if (!v3f_bounds(ray->pos, v3f(0), \
-		ent->pos, get_v3f(ent->frame->size.x + 1, ent->frame->size.y, 0)))
-		return (0);
-	return (1);
+	return ((v3f_bounds(ray->pos, v3f(0), \
+		ent->pos, get_v3f(ent->frame->size.x + 1, ent->frame->size.y, 0))));
 }

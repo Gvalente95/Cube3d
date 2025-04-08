@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:58:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:41:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,24 @@
 
 void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord)
 {
-	int			action_index;
-	int			frame_index;
-	t_image		*img;
+	int			action;
+	int			frame_i;
 	int			dmg;
 
 	if (e->type != nt_mob)
 		return ;
 	dmg = md->hud.wpn_index + 1 * (1 + (txtr_coord.y < e->frame->size.y / 2));
-	txtr_coord = get_v2(r_range(-30, 30), r_range(-10, 10));
-	action_index = -1;
-	while (++action_index < ENT_ACTION_LEN)
+	txtr_coord = get_v2(\
+		e->frame->size.x / 2 + r_range(-5, 5), \
+		r_range(20, e->frame->size.y - 20));
+	action = -1;
+	while (++action < ENT_ACTION_LEN)
 	{
-		if (action_index == m_death)
+		if (action == m_death)
 			txtr_coord.y += e->frame->size.y * .5;
-		frame_index = -1;
-		while (e->anim[action_index][++frame_index])
-		{
-			img = e->anim[action_index][frame_index];
-			draw_blood(md, img, txtr_coord, _RED);
-		}
+		frame_i = -1;
+		while (e->anim[action][++frame_i])
+			draw_blood(md, e->anim[action][frame_i], txtr_coord, _RED);
 	}
 	e->was_hit = 1;
 	e->hp -= dmg;
@@ -116,7 +114,7 @@ void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data)
 	nrm_dst = (hit_data.dist_at_e / 2) * scale_factor;
 	sprt_scrn_width = (md->win_sz.y * sprite->frame->size.y) / nrm_dst;
 	sprt_scrn_width = maxf(1, sprt_scrn_width);
-	if (hit_data.hit->type == nt_door)
+	if (hit_data.hit->type == nt_door || hit_data.hit->type == nt_wall)
 		draw_wall_line(md, hit_data.dist_at_e, hit_data.hit, ray);
 	else if (!ray->check_hit)
 		draw_sprite_pxl(md, ray, sprite, sprt_scrn_width);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:31:39 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/05 17:59:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 13:59:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct s_thrd_manager
 	t_dblst			*ents_to_draw;
 	t_dblst			*e_distances;
 	t_vec2			ray_visu_offset;
-	t_thread_worker	threads[MAX_RAYS];
 	t_thread_data	thrdlp[MAX_RAYS];
 	t_vec3f			dir_vals[MAX_RAYS];
 	t_soft_barrier	barrier;

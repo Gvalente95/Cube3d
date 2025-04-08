@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 12:54:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 20:30:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_mobs_frames(t_md *md, t_image ****frames, \
 	while (++action < ENT_ACTION_LEN)
 	{
 		path = ft_megajoin(base_path, td->ents_act_names[action], "/", NULL);
-		(*frames)[action] = init_images(md, md->txd.e_sizes[nt_mob], path);
+		(*frames)[action] = init_images(md, v2(-1), path);
 		(*mini)[action] = init_images(md, md->txd.e_sizes2d[nt_mob], path);
 		free(path);
 	}
@@ -58,7 +58,7 @@ void	init_mobs_frames(t_md *md)
 t_image	**init_mini(t_md *md, t_image ***mini, char *path)
 {
 	*mini = init_images(md, md->txd.e_sizes2d[0], path);
-	return (init_images(md, md->txd.e_sizes[0], path));
+	return (init_images(md, v2(-1), path));
 }
 
 t_image	**init_weapon(t_md *md, t_image ***mini, char *path)

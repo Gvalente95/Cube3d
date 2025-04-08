@@ -6,73 +6,84 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 00:37:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 12:13:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 13:39:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	display_quick_letter(t_md *md, char c, t_vec4 data)
+int	display_quick_letter(t_md *md, char c, t_txtd data)
 {
 	t_image	*l;
-	t_image	*screen;
+	t_image	*font_c;
+	int		is_rescaled;
 
-	l = md->txd.font[(unsigned char)c];
+	is_rescaled = 0;
+	c = ft_toupper(c);
+	font_c = md->txd.font[(unsigned char)c];
+	l = font_c;
 	if (!l || !l->img)
-		return (printf("Error\n%c not found\n", c), data.g);
-	screen = md->screen;
-	if (md->menu.active && md->menu.freeze_frame)
-		screen = md->menu.freeze_frame;
-	if (data.b != -1)
-		draw_clr_img(l, screen, get_v2(data.r, data.g), \
-		get_v3(data.b, 3, data.z));
+		return (printf("Error\n%c not found\n", c), data.y);
+	if (data.scale <= 0)
+		data.scale = md->prm.txt_sc;
+	else if (data.scale != md->prm.txt_sc)
+	{
+		l = copy_image(md, font_c, v2(data.scale), data.color);
+		is_rescaled = 1;
+	}
+	if (data.color != -1)
+		draw_clr_img(l, data.onto, get_v2(data.x, data.y), \
+		get_v3(data.color, 3, _BLACK));
 	else
-		draw_img(l, screen, get_v2(data.r, data.g), -1);
-	return (data.a);
+		draw_img(l, data.onto, get_v2(data.x, data.y), -1);
+	if (is_rescaled)
+		free_image_data(md, l);
+	return (data.scale);
 }
 
-static int	display_quick_text(t_md *md, char *text, t_vec4 data)
+static int	display_line(t_md *md, char *text, t_txtd data)
 {
 	int		i;
-	t_vec4	cur_pos;
+	t_txtd	cur_pos;
 	int		total_width;
 
 	i = -1;
-	cur_pos = get_v4(data.r, data.g, data.b, data.a);
+	cur_pos = data;
 	total_width = 0;
 	while (text[++i])
 	{
 		if (text[i] == '\n')
 		{
-			cur_pos.r = data.r;
-			cur_pos.g += data.a * 2 + 10;
+			cur_pos.x = data.x;
+			cur_pos.y += data.scale * 2 + 10;
 			continue ;
 		}
 		if (text[i] == '	')
 		{
-			cur_pos.r += data.a * 2;
+			cur_pos.x += data.scale * 2;
 			continue ;
 		}
-		cur_pos.r += display_quick_letter(md, ft_toupper(text[i]), cur_pos);
+		cur_pos.x += display_quick_letter(md, text[i], cur_pos);
 		total_width += md->prm.txt_sc * 1.5;
 	}
 	return (total_width);
 }
 
 //	DATA = (x pos, y pos, text color, text scale) return: text width
-int	rnd_fast_txt(t_md *md, t_vec4 data, const char *format, ...)
+int	rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...)
 {
 	char	buff[256];
 	va_list	args;
 	int		txt_width;
 
-	if (data.b == -1)
-		data.b = -1;
-	data = get_v4(data.r, data.g, data.b, data.a);
 	va_start(args, format);
 	vsnprintf(buff, sizeof(buff), format, args);
 	va_end(args);
-	txt_width = display_quick_text(md, buff, data);
+	if (!data.onto && md->menu.active && md->menu.freeze_frame)
+		data.onto = md->menu.freeze_frame;
+	if (!data.onto)
+		data.onto = md->screen;
+	txt_width = display_line(md, buff, data);
 	return (txt_width);
 }
 

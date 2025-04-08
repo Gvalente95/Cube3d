@@ -6,54 +6,27 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:09:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 01:12:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-int	update_map_index(t_md *md, t_ent *e)
-{
-	int		new_index;
-	char	cur_char;
-
-	new_index = e->coord.x + ((md->map.size.x + 1) * e->coord.y);
-	if (new_index == e->map_index)
-		return (0);
-	if (e->map_index < 0 || e->map_index >= md->map.len)
-		return (0);
-	md->mapped_ents[e->map_index] = NULL;
-	if (md->mapped_ents[e->map_index] == e)
-		md->mapped_ents[e->map_index] = NULL;
-	else if (md->mapped_ents[e->map_index])
-		return (0);
-	cur_char = md->map.buffer[e->map_index];
-	if (cur_char == '0' || cur_char == e->character)
-		md->map.buffer[e->map_index] = '0';
-	cur_char = md->map.buffer[new_index];
-	if (char_in_str(cur_char, "\n1"))
-		return (0);
-	md->map.buffer[new_index] = e->character;
-	e->map_index = new_index;
-	md->mapped_ents[e->map_index] = e;
-	return (1);
-}
-
 static int	get_valid_moves(t_md *md, t_vec3 cord, \
 	const t_vec2 *moves, int **val_mvs)
 {
 	int				i;
-	int				nw_indx;
-	t_vec3			new_cord;
+	t_vec2			new_cord;
 	int				valid_indexes;
+	t_ent			*ent_at_pos;
 
 	valid_indexes = 0;
 	i = -1;
 	while (++i < 4)
 	{
-		new_cord = (t_vec3){cord.x + moves[i].x, cord.y + moves[i].y, cord.z};
-		nw_indx = new_cord.x + ((md->map.size.x + 1) * new_cord.y);
-		if (nw_indx < 0 || nw_indx >= md->map.len || md->mapped_ents[nw_indx])
+		new_cord = (t_vec2){cord.x + moves[i].x, cord.y + moves[i].y};
+		ent_at_pos = get_mapped_at_cord(md, new_cord);
+		if (ent_at_pos && ent_at_pos->type != nt_empty)
 			continue ;
 		(*val_mvs)[valid_indexes++] = i;
 	}
@@ -66,20 +39,29 @@ static void	set_ent_target_pos(t_md *md, t_ent *e)
 	int				*valid_moves;
 	int				valid_amount;
 	int				move_dir;
+	t_vec2			new_tile;
 
 	valid_moves = malloc(sizeof(int) * 4);
 	valid_amount = get_valid_moves(md, e->coord, moves, &valid_moves);
 	if (!valid_amount)
+	{
+		free(valid_moves);
 		return ;
+	}
 	move_dir = valid_moves[r_range_seed(&md->r_seed, 0, valid_amount - 1)];
-	e->target_pos = (t_vec3f){e->pos.x + moves[move_dir].x * md->t_len, \
-		e->pos.y + moves[move_dir].y * md->t_len, e->pos.z};
+	free(valid_moves);
+	new_tile = (t_vec2){e->coord.x + moves[move_dir].x,
+		e->coord.y + moves[move_dir].y};
+	e->target_pos = get_v3f(\
+		new_tile.x * md->t_len + (md->t_len - e->size.x) * 0.5f, \
+		new_tile.y * md->t_len + (md->t_len - e->size.y) * 0.5f, \
+		0);
 }
 
 void	move_ent_to_target(t_md *md, t_ent *e, t_vec3f target_p)
 {
 	t_vec3f			dir;
-	t_vec3			new_cord;
+	t_vec2			new_cord;
 
 	e->action = m_walk;
 	dir = normalize_vec3f(sub_vec3f(target_p, e->pos));
@@ -87,13 +69,11 @@ void	move_ent_to_target(t_md *md, t_ent *e, t_vec3f target_p)
 	if (cmp_vec3f(e->pos, target_p, 1))
 	{
 		e->pos = get_v3f((int)target_p.x, (int)target_p.y, (int)target_p.z);
-		new_cord = get_v3(e->pos.x / md->t_len, \
-			e->pos.y / md->t_len, e->pos.z / md->t_len);
+		new_cord = get_v2(e->pos.x / md->t_len, \
+			e->pos.y / md->t_len);
 		e->target_pos.x = -999;
-		e->coord = new_cord;
-		md->mapped_ents[e->map_index] = NULL;
-		e->map_index = new_cord.x + ((md->map.size.x + 1) * new_cord.y);
-		md->mapped_ents[e->map_index] = e;
+		add_ent_at_cord(md, e, new_cord);
+		e->coord = (t_vec3){new_cord.x, new_cord.y, 0};
 	}
 }
 
@@ -107,16 +87,16 @@ void	update_mob_actions(t_md *md, t_ent *e)
 		e->action = m_atk;
 		if (!md->timer.trig_anim || e->frame_index > 1 || md->plr.was_hit)
 			return ;
-		else
-			e->target_pos = md->plr.pos;
 	}
-	if (e->target_pos.x != -999 && 0)
-		move_ent_to_target(md, e, e->target_pos);
-	else if (md->timer.time % 20 == 0 && 0)
-		set_ent_target_pos(md, e);
+	if (0)
+	{
+		if (e->target_pos.x != -999)
+			move_ent_to_target(md, e, e->target_pos);
+		else if (md->timer.time % 200 == 0)
+			set_ent_target_pos(md, e);
+	}
 	else
 		e->action = m_idle;
 	if (e->action != prev_action)
 		e->frame_index = 0;
-	e->in_screen = 0;
 }

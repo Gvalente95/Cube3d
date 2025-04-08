@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 15:22:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 23:16:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ int	free_ents(t_md *md)
 	int		i;
 
 	fa = 0;
-	fa += safe_free(md->mapped_ents);
 	node = dblst_first(md->entities);
 	if (!node)
 		return (fa);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 16:16:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:32:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,25 @@ void	draw_sprite_thread(t_md *md, t_ent *e, float fogalpha)
 {
 	t_image	*img;
 	int		scale;
-	t_vec2	draw_pos;
+	t_vec2	draw_p;
 	float	dist;
 	float	scale_factor;
 
 	scale_factor = e->frame->size.y / md->txd.e_sizes[nt_mob].y;
 	dist = (maxf(0.1, e->hit_dist) / 2) * scale_factor;
-	scale = (md->win_sz.y * e->frame->size.y) / dist;
-	draw_pos.x = e->ray_hit_index - scale / 2;
-	draw_pos.y = (md->win_sz.y / 2 - (md->plr.pos.z * 5) - md->cam.rot.y * 7);
+	scale = maxf(5, (md->win_sz.y * e->frame->size.y) / dist);
+	draw_p.x = e->ray_hit_index - scale / 2;
+	draw_p.y = (md->win_sz.y / 2 - (scale / 2) - \
+		(md->plr.pos.z * 5) - (md->cam.rot.y * 7));
+	if (e->hp > 0 && (!md->cam.pointed || md->cam.pointed->type != nt_door || \
+		!md->cam.pointed->hp) && v2_bounds(draw_p, \
+		get_v2(md->win_sz.x / 2 - scale, md->win_sz.y / 2 - scale), \
+		v2(scale * 2)))
+		md->cam.pointed = e;
 	img = copy_image(md, e->frame, v2(scale), -1);
-	flush_img(img, _BLACK, fogalpha, 1);
-	draw_img(img, md->screen, draw_pos, -1);
+	if (fogalpha < .95)
+		flush_img(img, md->hud.sky_color, fogalpha, 1);
+	draw_img(img, md->screen, draw_p, -1);
 	free_image_data(md, img);
 	e->in_screen = 1;
 }
@@ -109,7 +116,7 @@ void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 	while (node)
 	{
 		e = (t_ent *)node->content;
-		fogalpha = 1 - minmaxf(0, .95, (e->hit_dist / 1000.0f) * md->fx.fog);
+		fogalpha = 1 - minmaxf(0, .95, (e->hit_dist / 500.0f) * md->fx.fog);
 		draw_sprite_thread(md, e, fogalpha);
 		node = node->next;
 	}

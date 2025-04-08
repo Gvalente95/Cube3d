@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:24:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 19:42:27 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,22 @@ static void	init_colors(t_md *md)
 	md->rgb[RGB_NULL] = _NULL;
 }
 
-static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
+static void	init_portal_data(t_md *md)
 {
 	md->portal.ends[0].e = NULL;
 	md->portal.ends[1].e = NULL;
 	md->portal.found = NULL;
+	md->portal.last_shot_index = 0;
 	md->portal.out_pos = v2(90);
+}
+
+static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
+{
 	md->mouse.lock_rot = v2(0);
 	md->cam.bob_time = 0.0f;
+	md->cam.pointed = NULL;
 	md->txd.size_2d = 40;
 	md->plr.was_hit = 0;
-	md->portal.last_shot_index = 0;
 	prm->debug_mode = start_debug;
 	prm->view_2d = 0;
 	prm->show_rays = prm->debug_mode;
@@ -84,7 +89,11 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	prm->use_thrd = 1;
 	prm->use_grass = 0;
 	prm->use_floor = 1;
+	prm->show_fps = 1;
+	prm->super_view = 0;
+	prm->max_view_sprite = MAX_RAY_SPRITE;
 	prm->use_ceiling = 1;
+	md->autocam.active = 1;
 	prm->au_on = !md->is_linux;
 }
 
@@ -92,6 +101,7 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 {
 	init_colors(md);
 	init_game_params(md, &md->prm, start_debug);
+	init_portal_data(md);
 	init_fonts(md);
 	init_ents_data(md, &md->txd);
 	init_map(md, file_arg);

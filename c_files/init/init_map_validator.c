@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map_validator.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 02:32:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/25 18:41:21 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/07 15:58:31 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ void	print_unvalid_flood(char *flooded_map)
 	i = -1;
 	while (flooded_map[++i])
 	{
-		if (flooded_map[i] == '!')
+		if (flooded_map[i] == '\n')
+			printf("n\n");
+		else if (flooded_map[i] == '!')
 			printf("%s!%s", COLOR_TXT_RED, COLOR_TXT_RESET);
 		else if (flooded_map[i] == '*')
 			printf("%s*%s", COLOR_TXT_GREEN, COLOR_TXT_RESET);

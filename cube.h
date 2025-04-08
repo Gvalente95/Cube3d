@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:17:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 03:16:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@
 # define RAY_DEPTH		50
 //		PLR
 # define PLRSPD			800
-# define ACCSPD			0.4
+# define ACCSPD			0.3
 # define HEIGHT			0
 # define BOB_AMOUNT		.2
 # define BOB_SPD		7
-# define PLR_JUMPPOW	3
-# define GRAVITY		.015
+# define PLR_JUMPPOW	5
+# define GRAVITY		.005
 # define ARROW_ROT_SPEED 2
-# define MOUSESPD		.05
+# define MOUSESPD		.5
 # define START_HP		10
 # define SHOOT_REFRESH	.1
-# define WALK_REFRESH	.75
+# define WALK_REFRESH	.5
 
 # define MAX_AMMO		50
 # define MAX_KEY		3
@@ -166,8 +166,6 @@ int		validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type);
 //	raycasting/ray_cast_threads.c
 void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val);
 void	*cast_thread_batch(void *content);
-void	init_ray_threads(t_md *md);
-void	cast_ray_threads(t_md *md);
 
 //	tools/map_gen.c
 char	*get_cmps_map(t_vec2 size, int rects_amount, int i);
@@ -197,8 +195,7 @@ void	close_map(char *map, t_vec2 size, int len);
 
 //	tools/text.c
 char	*get_img_path(char c);
-int		render_text(t_md *md, t_vec4 data, const char *format, ...);
-int		rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...);
+int		rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...);
 
 //	tools/image_tools.c
 void	color_img(void *frame, t_vec2 size, int col, t_vec4 d);
@@ -305,7 +302,6 @@ int		render_fe(t_md *md, t_fe *fe, int width);
 
 int		update_key_input(t_md *md, t_menu *menu, unsigned int c);
 void	show_revealed_perc(t_md *md, int scale, t_vec2 pos);
-int		rnd_fast_txt(t_md *md, t_vec4 data, const char *format, ...);
 void	init_fonts(t_md *md);
 
 int		draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray);
@@ -313,5 +309,18 @@ int		ray_move_dda(t_md *md, t_ray *ray);
 int		update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe);
 void	draw_raycast_background(t_md *md, t_ray *ray);
 void	draw_ceiling(t_md *md, t_floor_draw_d d);
+int		draw_stored_sprite_hits(t_md *md, t_ray *ray);
+int		display_quick_letter(t_md *md, char c, t_txtd data);
+int		update_autocam(t_md *md, t_autocam *autocam);
+void	update_audio(t_md *md, t_au_manager *au);
+void	init_fade_intro(t_md *md, double duration);
+void	render_autocam_text(t_md *md, float t);
+int		add_ent_at_cord(t_md *md, t_ent *e, t_vec2 new_cord);
+
+//		map_ents
+void	init_mapped_ent(t_md *md);
+int		remove_ent_at_cord(t_md *md, t_vec2 cord);
+t_ent	*get_mapped_at_cord(t_md *md, t_vec2 cord);
+t_ent	*get_mapped_at_pos(t_md *md, t_vec2f pos);
 
 #endif

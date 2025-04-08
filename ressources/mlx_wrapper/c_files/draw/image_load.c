@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:00:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 16:00:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 20:27:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**get_frames(t_md *md, char *dir, int *amount, int max)
 }
 
 //	data.x = ratio | data.y = add IMG_PATH
-void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, t_vec2 data)
+void	*ld_txtr(t_md *md, t_vec2 *final_size, char *path, t_vec2 data)
 {
 	t_vec2	txt_size;
 	void	*texture;
@@ -60,10 +60,12 @@ void	*ld_txtr(t_md *md, t_vec2 final_size, char *path, t_vec2 data)
 	free(full_path);
 	if (!texture)
 		return (printf("\"%s\" can't make txtr\n", path), NULL);
-	if (data.x)
-		texture = scale_img_keep_ratio(md, texture, &txt_size, final_size);
+	if (final_size->x <= 0 || final_size->y <= 0)
+		*final_size = get_v2(txt_size.x, txt_size.y);
+	else if (data.x)
+		texture = scale_img_keep_ratio(md, texture, &txt_size, *final_size);
 	else
-		texture = resize_img(md, texture, &txt_size, final_size);
+		texture = resize_img(md, texture, &txt_size, *final_size);
 	if (!texture)
 		return (printf("\"%s\" can't scale txtr\n", path), NULL);
 	return (texture);

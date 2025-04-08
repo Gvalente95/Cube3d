@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:44:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 14:53:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 01:37:58 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ void	init_hud(t_md *md, t_hud *hud)
 	hud->weapon_frame = 0;
 	hud->wpn_index = 1;
 	md->hud.hp = 100;
-	md->hud.keys = 10;
-	md->prm.use_floor = 1;
-	md->prm.use_ceiling = 1;
+	md->hud.keys = 1;
 	hud->bgr_color = md->hud.sky_color;
 	md->screen = init_img(md, md->win_sz, NULL, hud->bgr_color);
 	hud->overlay = init_img(md, md->win_sz, NULL, -1);
@@ -56,7 +54,8 @@ void	init_hud(t_md *md, t_hud *hud)
 	hud->amm2_icon = init_img(md, v2(20), "hud/icons/amm2.xpm", -1);
 	hud->key_icon = init_img(md, v2(20), "hud/icons/key.xpm", -1);
 	hud->key2_icon = init_img(md, v2(20), "hud/icons/key2.xpm", -1);
-	md->hud.center = init_img(md, v2(10), "hud/center.xpm", _WHITE);
+	md->hud.center = \
+		init_img(md, v2(10), "hud/center.xpm", v4_to_color(150, 100, 150, 255));
 	hud->rgun = init_img(md, get_v2(400, 400), "hud/rgun.xpm", -1);
 	init_background(md, hud, md->win_sz);
 	init_fx(md, &md->fx);

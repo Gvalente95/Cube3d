@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:37:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 21:34:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_img_path(char c)
 	return (path);
 }
 
-static int	display_letter(t_md *md, char c, t_vec4 data)
+int	display_letter(t_md *md, char c, t_txtd data)
 {
 	t_image	*l;
 	char	*path;
@@ -43,71 +43,50 @@ static int	display_letter(t_md *md, char c, t_vec4 data)
 	path = get_img_path(c);
 	if (!path)
 		return (printf("font not found: %c\n", c), 0);
-	l = init_img(md, get_v2(data.a, data.a), path, -1);
+	l = init_img(md, v2(data.scale), path, -1);
 	if (!l || !l->img)
-		return (printf("Error\nImg letter not found %s", path), data.g);
-	if (data.b != -1)
-		flush_img(l, data.b, .75, 1);
+		return (printf("Error\nImg letter not found %s", path), data.scale);
+	if (data.color != -1)
+		flush_img(l, data.color, .75, 1);
 	free(path);
 	if (l->img)
 	{
-		if (md->menu.active && md->menu.freeze_frame)
-			draw_img(l, md->menu.freeze_frame, get_v2(data.r, data.g), -1);
-		else
-			draw_img(l, md->screen, get_v2(data.r, data.g), -1);
+		draw_img(l, data.onto, get_v2(data.x, data.y), -1);
 		free_image_data(md, l);
 	}
-	return (data.a);
+	return (data.scale);
 }
 
-static int	display_text(t_md *md, char *text, t_vec4 data)
+static int	display_text(t_md *md, char *text, t_txtd data)
 {
-	int		i;
-	t_vec4	cur_pos;
-	int		total_width;
+	int			i;
+	t_txtd		cur_pos;
+	int			total_width;
 
 	i = -1;
-	cur_pos = get_v4(data.r, data.g, data.b, data.a);
+	cur_pos = data;
 	total_width = 0;
 	while (text[++i])
 	{
 		if (text[i] == '\n')
 		{
-			cur_pos.r = data.r;
-			cur_pos.g += data.a * 2 + 10;
+			cur_pos.x = data.x;
+			cur_pos.y += data.scale * 2 + 10;
 			continue ;
 		}
 		if (text[i] == '	')
 		{
-			cur_pos.r += data.a * 2;
+			cur_pos.x += data.scale * 2;
 			continue ;
 		}
-		cur_pos.r += display_letter(md, text[i], cur_pos);
+		cur_pos.x += display_letter(md, text[i], cur_pos);
 		total_width += md->prm.txt_sc * 1.5;
 	}
 	return (total_width);
 }
 
 //	DATA = (x pos, y pos, text color, text scale) return: text width
-int	render_text(t_md *md, t_vec4 data, const char *format, ...)
-{
-	char	buff[256];
-	va_list	args;
-	int		txt_width;
-
-	if (data.b == -1)
-		data.b = -1;
-	data = get_v4(data.r + md->cam.ofst.x, data.g + \
-		md->cam.ofst.y, data.b, data.a);
-	va_start(args, format);
-	vsnprintf(buff, sizeof(buff), format, args);
-	va_end(args);
-	txt_width = display_text(md, buff, data);
-	return (txt_width);
-}
-
-//	DATA = (x pos, y pos, text color, text scale) return: text width
-int	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...)
+int	render_text(t_md *md, t_txtd data, const char *format, ...)
 {
 	char	buff[256];
 	va_list	args;
@@ -116,6 +95,10 @@ int	rnd_abs_txt(t_md *md, t_vec4 data, const char *format, ...)
 	va_start(args, format);
 	vsnprintf(buff, sizeof(buff), format, args);
 	va_end(args);
+	if (!data.onto && md->menu.active && md->menu.freeze_frame)
+		data.onto = md->menu.freeze_frame;
+	if (!data.onto)
+		data.onto = md->screen;
 	txt_width = display_text(md, buff, data);
 	return (txt_width);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 17:56:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 20:25:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 03:31:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 static int	draw_ceiling_pxl(t_md *md, t_floor_draw_d d)
 {
-	const t_vec2	fog_clr_d = (t_vec2){_BLACK, md->hud.bgr_color};
+	const int	fog_clr = md->hud.fog_color;
 
 	d.fogalpha = -1;
 	if (md->fx.fog > 0)
 		d.fogalpha = minmaxf(0, 1, (d.rwd / 10.0f) * md->fx.fog);
 	if (d.fogalpha >= 1)
-		return (draw_pixel(md->screen, d.win, fog_clr_d.x, d.fogalpha), 1);
+		return (draw_pixel(md->screen, d.win, fog_clr, d.fogalpha), 1);
 	draw_pixel(md->screen, d.win, d.clr, 1);
 	if (d.fogalpha > 0)
-		draw_pixel(md->screen, d.win, fog_clr_d.x, d.fogalpha);
+		draw_pixel(md->screen, d.win, fog_clr, d.fogalpha);
 	return (1);
 }
 
@@ -47,7 +47,7 @@ void	draw_ceiling(t_md *md, t_floor_draw_d d)
 {
 	const t_vec2	winsz = md->win_sz;
 
-	while (--d.win.y >= 0)
+	while (d.win.y-- > 0)
 	{
 		d.p = (winsz.y / 2 - md->cam.rot.y * 8) - d.win.y;
 		if (d.p == 0)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/06 15:23:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 19:55:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@ static int	skip_pxl(t_md *md, t_ray_draw_d *d)
 	int				rgb;
 	int				is_transparent;
 	int				is_portal_color;
+	const t_ent		*hit = d->ray->wall_hit;
 
+	if (!hit->hp && d->txd_crd.x > md->t_len * .1 && \
+		d->txd_crd.x < md->t_len * .9)
+		return (1);
 	is_transparent = ((d->pxl_clr >> 24) != 0x00);
 	if (is_transparent)
 		return (1);
@@ -45,16 +49,15 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 		return (0);
 	if (win_p.y < 0 || win_p.x < 0 || win_p.x > win_sz.x)
 		return (1);
+	if (win_p.x == md->win_sz.x / 2 && \
+		win_p.y == md->win_sz.y / 2)
+		md->cam.pointed = d->ray->wall_hit;
 	if (skip_pxl(md, d))
 		return (1);
 	draw_pixel(md->screen, win_p, d->pxl_clr, -1);
 	if (md->fx.fog)
-		draw_pixel(md->screen, win_p, _BLACK, \
+		draw_pixel(md->screen, win_p, md->hud.fog_color, \
 	minmaxf(0, .95, ((d->ray->distance / md->t_len) / 10) * md->fx.fog));
-	if (md->plr.shot && !d->ray->had_door && \
-		d->win_start.x == win_sz.x / 2 && \
-		d->y_start + d->win_start.y - md->plr.pos.z == win_sz.y / 2)
-		draw_portal(md, d->ray->wall_hit, get_v2((int)d->txd_crd.x, d->win_y));
 	return (1);
 }
 
@@ -66,6 +69,9 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 	d->pass = pass;
 	d->y_start = (win_sz.y / 2 - d->txd_crd.y / 2) - 1;
 	d->y_end = (win_sz.y / 2 + d->txd_crd.y / 2);
+	if (md->key_clicked == NUM_C_KEY && !d->ray->had_door && \
+		d->win_start.x == win_sz.x / 2)
+		draw_portal(md, d->ray->wall_hit, get_v2((int)d->txd_crd.x, d->win_y));
 	while (++d->y_start < d->y_end)
 	{
 		d->win_y = (d->y_start - (win_sz.y / 2 - d->txd_crd.y / 2)) * step;
@@ -74,7 +80,6 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 		if (!pxl_draw(md, d, win_sz))
 			return ;
 	}
-	d->y_max = d->y_start + d->win_start.y - md->cam.pos.z;
 	if (d->has_portal && d->ray->teleported_once < 1)
 	{
 		dist = d->ray->distance;
@@ -85,7 +90,8 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 	}
 }
 
-static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
+static int	render_strip(t_md *md, t_ray *ray, \
+	t_vec3f txtr_crd, t_vec3 screen_p)
 {
 	t_image			*img;
 	t_wrd_dir		dir;
@@ -107,8 +113,6 @@ static int	draw_pxl(t_md *md, t_ray *ray, t_vec3f txtr_crd, t_vec3 screen_p)
 		screen_p, screen_p, 0, 0, txtr_crd, 0, 0, 0, 9999, 0, 0, 0};
 	step = draw_d.img->size.y / draw_d.txd_crd.y;
 	draw_strip(md, &draw_d, 0, step);
-	md->hud.new_floor_start = minf(md->hud.new_floor_start, draw_d.y_max);
-	ray->flr_y = min(draw_d.y_max, ray->flr_y);
 	return (1);
 }
 
@@ -119,7 +123,6 @@ int	draw_wall_line(t_md *md, float dist, t_ent *hit, t_ray *ray)
 
 	ray->wall_hit = hit;
 	ray->distance = maxf(5, dist);
-	hit->hp = ray->distance > md->t_len * 2;
 	txtr_cord.y = correct_fisheye(md, ray, hit, dist);
 	if (ray->vertical_hit)
 		txtr_cord.x = (int)fmod(ray->pos.y, hit->size.y);
@@ -128,6 +131,6 @@ int	draw_wall_line(t_md *md, float dist, t_ent *hit, t_ray *ray)
 	screen_pos.x = ray->index;
 	screen_pos.y = compute_row_start(md, hit, ray->distance);
 	screen_pos.z = ray->hits_len > 0;
-	draw_pxl(md, ray, txtr_cord, screen_pos);
+	render_strip(md, ray, txtr_cord, screen_pos);
 	return (1);
 }

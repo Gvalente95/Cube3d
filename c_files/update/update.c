@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:42:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 03:20:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,16 @@ int	set_menu_mode(t_md *md, t_menu *menu, int mode)
 
 void	update_audio(t_md *md, t_au_manager *au)
 {
-	play_loop(md, &au->mus_pid, AU_MUS, md->prm.au_on);
-	play_loop(md, &au->wind_pid, AU_WIND, md->prm.fly_cam);
+	play_loop(md, &au->mus_pid, AU_MUS, 1);
+	play_loop(md, &au->wind_pid, AU_WIND, !md->menu.active && md->prm.fly_cam);
 	if (!md->prm.au_on)
 		return ;
+	if (md->cam.pos.z + md->prm.height < -.5)
+		return ;
 	if (md->timer.trig_walk && !md->prm.fly_cam && md->plr.grounded && \
-		!cmp_vec3f(md->cam.input_mov, v3f(0), .01))
-		play_random_sound(md, AU_WALK_GRASS, 8);
+		md->cam.is_moving && !cmp_vec3f(md->plr.mov, v3f(0), .01))
+		md->au.walk_index = \
+			play_rand_sound(md, AU_WALK_GRASS, 8, md->au.walk_index);
 }
 
 static void	update_portals(t_md *md, t_ent *e, t_vec2 out_pos)
@@ -101,6 +104,8 @@ static void	update_portals(t_md *md, t_ent *e, t_vec2 out_pos)
 
 int	update_and_render(t_md *md)
 {
+	if (md->autocam.active)
+		return (update_autocam(md, &md->autocam));
 	update_portals(md, md->portal.found, md->portal.out_pos);
 	update_audio(md, &md->au);
 	if (md->menu.active)
@@ -108,7 +113,8 @@ int	update_and_render(t_md *md)
 	update_time(md, &md->timer);
 	update_input(md);
 	update_mouse(md);
-	update_player(md, &md->plr);
+	if (md->timer.time > 5)
+		update_player(md, &md->plr);
 	update_ents(md);
 	render(md);
 	reset_mlx_values(md);

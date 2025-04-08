@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 14:21:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 12:56:43 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,17 @@ void	set_characters(char *map, int difficulty)
 	int	space;
 	int	len;
 
+	(void)difficulty;
 	len = ft_strlen(map);
 	if (!contains(map, 'N'))
 		set_character('N', 1, map, len);
 	space = get_char_amount(map, '0');
-	mobs_amount = minmax(1, 30, (space / (10 - difficulty)));
+	mobs_amount = minmax(1, 30, space / 10);
 	space = get_char_amount(map, '0');
-	pickup_amount = minmax(1, 30, (space / (10 + difficulty)));
-	set_character('T', pickup_amount, map, len);
-	set_character('B', mobs_amount, map, len);
+	pickup_amount = minmax(1, 30, space / 10);
+	set_character('P', pickup_amount, map, len);
+	set_character('M', mobs_amount / 3, map, len);
+	set_character('B', mobs_amount / 3, map, len);
 	door_amount = len / 20;
 	set_doors(map, door_amount);
 }
@@ -83,11 +85,11 @@ void	set_characters(char *map, int difficulty)
 char	*set_map_with_base(char *map)
 {
 	const char	data_info[6][50] = {
-		"NO ressources/xpm/utils/ground.xpm\n", \
-		"SO ressources/xpm/utils/ground.xpm\n", \
-		"WE ressources/xpm/utils/ground.xpm\n", \
-		"EA ressources/xpm/utils/ground.xpm\n", \
-		"F 96,64,32\n", "C 0,0,0\n"
+		"NO ressources/xpm/utils/wall.xpm\n", \
+		"SO ressources/xpm/utils/wall.xpm\n", \
+		"WE ressources/xpm/utils/wall.xpm\n", \
+		"EA ressources/xpm/utils/wall.xpm\n", \
+		"F 96,64,32\n", "C 150,150,150\n"
 	};
 	int			i;
 	char		*full_data;

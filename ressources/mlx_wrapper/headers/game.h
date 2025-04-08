@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:27:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 18:07:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,18 @@ typedef struct s_menu
 	int				button_hov;
 	int				active;
 }	t_menu;
+
+typedef struct s_auto_screen_data
+{
+	t_vec2	center;
+	float	map_w;
+	float	map_h;
+	float	map_diag;
+	t_vec3f	start_plr_pos;
+	int		start_cam_x;
+	int		fade;
+	int		active;
+	int		quitting;
+}	t_autocam;
 
 #endif

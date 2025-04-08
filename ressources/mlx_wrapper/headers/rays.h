@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 17:14:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 15:31:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "../mlx_utils.h"
 # include <pthread.h>
 
-# define MAX_RAY_SPRITE		10
-# define MAX_RAYS 			10000
+# define MAX_RAY_SPRITE		70
+# define MAX_RAYS 			3000
 
 typedef struct s_md		t_md;
 typedef struct s_ray	t_ray;
@@ -105,7 +105,6 @@ typedef struct s_ray
 	int			is_floor_worker;
 	int			steps;
 	int			init_steps;
-	int			flr_y;
 	int			teleported_once;
 }	t_ray;
 

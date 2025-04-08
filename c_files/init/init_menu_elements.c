@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 20:27:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:40:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ static void	init_sliders(t_md *md, t_menu *menu, \
 	inisld(md, "Rotation speed", get_v4f(.01, MOUSESPD, 1, 10), &pm->rot_speed);
 	inisld(md, "Camera Height", get_v4f(0, 0, md->t_len, 100), &pm->height);
 	inisld(md, "Camera bob", get_v4f(0, BOB_AMOUNT, 1, 100), &pm->bob_amount);
-	inisld(md, "fov", get_v4f(0, 60, 600, 100), &pm->fov);
+	inisld(md, "fov", get_v4f(1, 60, 600, 599), &pm->fov);
 	inisld(md, "fov floor", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
-	inisld(md, "floor glide", get_v4f(0, .5, 3, 100), &pm->floor_glide);
+	inisld(md, "floor glide", get_v4f(0, 3, 3, 100), &pm->floor_glide);
 	inisld(md, "Grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
-	inisld(md, "Grass speed", get_v4f(0, .2, 3, 100), &pm->fe_speed);
+	inisld(md, "Grass speed", get_v4f(0, 0, 3, 100), &pm->fe_speed);
 	inisld(md, "text size", get_v4f(10, pm->txt_sc, 30, 20), &pm->txt_sc);
 	inisld(md, "ray depth", \
 		get_v4f(0, pm->ray_depth, pm->ray_depth * 2, 100), &pm->ray_depth);
@@ -94,15 +94,18 @@ static void	init_buttons(t_md *md, t_menu *menu, t_parameters *prm)
 	inibut(&menu->buttons[i++], &prm->debug_mode, "1_debug mode", NUM_1_KEY);
 	inibut(&menu->buttons[i++], &prm->view_2d, "2_Show Grid", NUM_2_KEY);
 	inibut(&menu->buttons[i++], &prm->show_rays, "3_show rays", NUM_3_KEY);
-	inibut(&menu->buttons[i++], &prm->use_ceiling, "4_Show sky", NUM_4_KEY);
+	inibut(&menu->buttons[i++], &prm->use_ceiling, "4_Show ceiling", NUM_4_KEY);
+	inibut(&menu->buttons[i++], &prm->use_sky, "5_Show sky", NUM_5_KEY);
+	inibut(&menu->buttons[i++], &prm->show_fps, "6_Show FPS", NUM_6_KEY);
 	inibut(&menu->buttons[i++], &prm->use_floor, "B_Show floor", NUM_B_KEY);
 	inibut(&menu->buttons[i++], &prm->ent_mode, "E_Show sprites", NUM_E_KEY);
 	inibut(&menu->buttons[i++], &prm->use_grass, "G_Show grass", NUM_G_KEY);
 	inibut(&menu->buttons[i++], &prm->fly_cam, "F_Fly cam", NUM_F_KEY);
 	inibut(&menu->buttons[i++], &prm->use_thrd, "T_Use Threads", NUM_T_KEY);
 	inibut(&menu->buttons[i++], &prm->au_on, "U_audio", NUM_U_KEY);
-	inibut(&menu->buttons[i++], &md->mmap.cmps, "N_Show compass", NUM_N_KEY);
+	inibut(&menu->buttons[i++], &prm->super_view, "V_Super view", NUM_V_KEY);
 	inibut(&menu->buttons[i++], &md->mmap.active, "M_Show minmap", NUM_M_KEY);
+	inibut(&menu->buttons[i++], &md->mmap.cmps, "N_Change minimap", NUM_N_KEY);
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.x, "X_x_mouse", NUM_X_KEY);
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.y, "Y_y_mouse", NUM_Y_KEY);
 	inibut(&menu->buttons[i++], &md->fx.anti_alias, "aliasing", -1);

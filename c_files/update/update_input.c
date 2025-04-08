@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:52:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:40:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,25 @@ int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
 	return (0);
 }
 
-static void	update_mouse_input(t_md *md)
+static int	update_mouse_input(t_md *md)
 {
-	if (md->plr.shot)
-		md->plr.shot--;
-	if (md->mouse.click != MOUSE_NOPRESS && !md->mouse.locked)
-		set_mouse_lock(md, 1);
-	if (!md->prm.view_2d)
-		return ;
-	if (md->mouse.pressed == MOUSE_PRESS)
+	if (md->mouse.click != MOUSE_PRESS || !md->cam.pointed)
+		return (0);
+	if (md->cam.pointed->type == nt_door)
 	{
-		md->plr.pos.x -= (md->plr.pos.x - md->mouse.world.x) * .06f;
-		md->plr.pos.y -= (md->plr.pos.y - md->mouse.world.y) * .06f;
+		if (!md->hud.keys && md->cam.pointed->hp)
+			return (play_sound(md, AU_MENU_OFF), 0);
+		md->cam.pointed->hp = !md->cam.pointed->hp;
+		if (!md->cam.pointed->hp)
+			return (play_sound(md, AU_OPEN), md->hud.keys--, 1);
+		return (play_sound(md, AU_CLOSE), md->hud.keys++, 1);
 	}
-	if (md->mouse.click == MOUSE_DPRESS)
-		md->plr.pos = get_v3f(md->mouse.world.x, \
-				md->mouse.world.y, md->plr.pos.z);
+	if (md->cam.pointed->type != nt_mob)
+		return (0);
+	paint_ent(md, md->cam.pointed, v2(0));
+	play_sound(md, AU_PORTAL_SHOOT);
+	md->cam.pointed->hp--;
+	return (1);
 }
 
 void	update_input(t_md *md)

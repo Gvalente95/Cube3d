@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 12:46:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 16:21:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,17 +128,17 @@ int	init_map(t_md *md, char *file_name)
 	md->map.name = file_name;
 	md->map.buffer = get_map(file_name);
 	if (!md->map.buffer)
-		free_and_quit(md, "map data not found", md->map.buffer);
+		free_and_quit(md, "map file not found", file_name);
 	md->map.len = ft_strlen(md->map.buffer);
 	init_map_data(md);
 	md->map.size = get_map_size(md->map.buffer);
+	md->map.buffer = redimension_map(md->map.buffer, md->map.size);
+	md->map.len = ft_strlen(md->map.buffer);
 	plr_index = get_to_find_index(md->map.buffer, "NSEW");
 	if (plr_index < 0)
 		free_and_quit(md, "No player", NULL);
 	if (find_breach(md->map.buffer, md->map.size.x, md->map.len, plr_index))
 		free_and_quit(md, "Unclosed map\n", NULL);
-	md->map.buffer = redimension_map(md->map.buffer, md->map.size);
-	md->map.len = ft_strlen(md->map.buffer);
 	if (!validate_map(md, md->map.buffer))
 		free_and_quit(md, NULL, NULL);
 	md->map.size.x--;

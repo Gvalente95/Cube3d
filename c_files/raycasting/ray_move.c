@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:28:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 13:02:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 23:34:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,16 @@
 
 t_ent	*search_in_grid(t_md *md, t_ray *ray, float distance)
 {
-	int			index;
 	t_ent_type	type;
 	t_ent		*ent;
 
-	index = (int)(ray->pos.x / md->t_len) + \
-		((md->map.size.x + 1) * (int)(ray->pos.y / md->t_len));
-	if (index <= 0 || index >= md->map.len || !md->mapped_ents[index])
+	ent = get_mapped_at_pos(md, get_v2f(ray->pos.x, ray->pos.y));
+	if (!ent)
 		return (NULL);
-	ent = md->mapped_ents[index];
 	if (!ent->revealed && ray->distance < md->t_len * REVEAL_DISTANCE)
 		show_minimap_entity(md, ent, md->mmap.bg, 1);
 	type = ent->type;
-	if (type == nt_wall)
+	if (type == nt_wall && (!md->prm.super_view || !md->prm.fly_cam))
 		return (ent);
 	if (!validate_check_hit(md, ray, ent, type))
 		return (NULL);
@@ -50,12 +47,24 @@ static int	ray_can_look(t_md *md, t_ray *ray, int on_grid)
 	return (1);
 }
 
-static int	ray_can_stop(t_ray *ray, t_ent *hit)
+static int	ray_can_stop(t_md *md, t_ray *ray, t_ent *hit)
 {
+	if (ray->hits_len >= md->prm.max_view_sprite)
+		return (1);
 	if (hit && ray->check_hit && ray->check_hit == hit)
 		return (1);
 	if (ray->check_hit && ray->steps > ray->init_steps + 2)
 		return (1);
+	if (ray->start.x >= -md->t_len && \
+		ray->start.x < md->map.size.x * md->t_len && \
+		ray->start.y >= -md->t_len && \
+		ray->start.y < md->map.size.y * md->t_len)
+	{
+		if (ray->pos.x < -md->t_len || ray->pos.x > md->t_len * md->map.size.x)
+			return (1);
+		if (ray->pos.y < -md->t_len || ray->pos.y > md->t_len * md->map.size.y)
+			return (1);
+	}
 	return (0);
 }
 
@@ -75,7 +84,7 @@ int	ray_move(t_md *md, t_ray *ray, t_vec2 visu_offset)
 			continue ;
 		hit = search_in_grid(md, ray, ray->steps);
 		render_ray(md, ray, visu_offset);
-		if (ray_can_stop(ray, hit))
+		if (ray_can_stop(md, ray, hit))
 			return (-1);
 		if (hit && hit->type == nt_wall && !ray->check_hit)
 			return (ray->wall_hit = hit, ray->steps);

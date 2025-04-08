@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:58:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/06 21:20:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	init_menu_overlay(t_md *md, t_menu *menu)
 	apply_dithering(menu->overlay, 10, \
 		md->fx.palette, md->fx.palette_size);
 	apply_scanlines(menu->overlay, 10);
-	rnd_abs_txt(md, get_v4(50, 50, -1, md->prm.txt_sc * 10), "CUBE3d");
 }
 
 void	init_menu(t_md *md, t_menu *menu)

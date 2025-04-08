@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 12:03:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 02:41:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,6 @@ void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 	e->revealed = 1;
 }
 
-void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center)
-{
-	const int		portal[2] = {md->rgb[RGB_INDIGO], md->rgb[RGB_ORANGE]};
-	int				i;
-	t_vec2			pos;
-	t_vec2			out;
-
-	i = -1;
-	while (md->map.buffer[++i])
-		if (md->mapped_ents[i] && md->mapped_ents[i]->type != nt_plr)
-			show_minimap_entity(md, md->mapped_ents[i], mp->bg, 1);
-	render_minimap_ray(md);
-	i = -1;
-	while (++i < 2)
-	{
-		if (md->portal.ends[i].e == NULL)
-			continue ;
-		out = md->portal.ends[i].out;
-		pos.x = center.x + 1 + (out.x / (md->t_len / 4)) * mp->ic_scl / 4;
-		pos.y = center.y + 1 + (out.y / (md->t_len / 4)) * mp->ic_scl / 4;
-		draw_pixels(mp->img, pos, v2(mp->ic_scl / 4), portal[i] + 1000);
-	}
-}
-
 void	render_minimap(t_md *md, t_mmap *mp)
 {
 	t_vec2			center;
@@ -107,7 +83,7 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	{
 		view_len = 10;
 		width = mp->comps_scl * view_len;
-		center = get_v2(md->win_sz.x - width * 1.5, width);
+		center = get_v2(md->win_sz.x - width * 2, md->win_sz.y - width * 2);
 		show_cmps_mmap(md, center, view_len);
 		return ;
 	}
@@ -116,8 +92,9 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	draw_alpha_img(mp->bg, mp->img, v2(0), 1);
 	render_minimap_ray(md);
 	show_minimap_entity(md, &md->plr, mp->img, 0);
-	center = get_v2(md->win_sz.x - mp->img->size.x, 0);
+	center = get_v2(md->win_sz.x - mp->img->size.x, \
+		md->win_sz.y - mp->img->size.y);
 	txp = get_v2(center.x + mp->img->size.x / 2, mp->img->size.y);
 	show_revealed_perc(md, txsc, txp);
-	draw_alpha_img(mp->img, md->screen, center, 0.75);
+	draw_alpha_img(mp->img, md->screen, center, 0.5);
 }

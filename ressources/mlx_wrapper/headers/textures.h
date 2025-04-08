@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 15:14:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 20:27:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ t_image			*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_sz, int aspect);
 
 //		draw/images_load.c
 char			**get_frames(t_md *md, char *dir, int *amount, int max);
-void			*ld_txtr(t_md *md, t_vec2 end_sz, char *path, t_vec2 data);
+void			*ld_txtr(t_md *md, t_vec2 *end_sz, char *path, t_vec2 data);
 void			**ld_txtrs(t_md *md, t_vec2 end_sz, char *path, int aspect);
 void			copy_image_src(t_md *md, t_image *new_img, t_image *src_img);
 t_image			*copy_image(t_md *md, t_image *src_img, t_vec2 size, int color);

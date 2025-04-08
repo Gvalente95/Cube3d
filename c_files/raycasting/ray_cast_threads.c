@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/05 18:24:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/07 14:00:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ int	cast_thread_ray(t_md *md, int index)
 	ray_move(md, ray, md->thrd_manager.ray_visu_offset);
 	if (!ray->check_hit && ray->wall_hit)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
-	if (!ray->wall_hit || ray->distance >= md->prm.ray_depth)
-		ray->flr_y = md->win_sz.y * .5 - md->cam.rot.y * 8 - md->cam.pos.z;
 	if (ray->hits_len > 0)
 		return (draw_stored_sprite_hits(md, ray));
 	return (1);
@@ -80,25 +78,4 @@ void	*cast_thread_batch(void *content)
 			break ;
 	}
 	return (NULL);
-}
-
-void	cast_ray_threads(t_md *md)
-{
-	t_thrd_manager	*mon;
-	int				i;
-
-	md->hud.new_floor_start = md->win_sz.y;
-	mon = &md->thrd_manager;
-	mon->ray_visu_offset = get_2d_ray_pos(md);
-	compute_ray_directions(md, mon->dir_vals, md->win_sz.x);
-	i = -1;
-	while (++i < mon->threads_amount)
-		pthread_create(&mon->threads[i].thread, NULL, \
-			cast_thread_batch, &mon->threads[i]);
-	i = -1;
-	while (++i < mon->threads_amount)
-		pthread_join(mon->threads[i].thread, NULL);
-	if (mon->ents_to_draw)
-		draw_found_ents(md, mon);
-	md->hud.floor_start = minmax(0, md->win_sz.x, md->hud.new_floor_start);
 }

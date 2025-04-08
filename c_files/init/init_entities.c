@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:38:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 00:25:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 	e->pos.z = 0;
 	e->target_pos = e->pos;
 	e->start_pos = e->pos;
-	e->coord = get_v3(pos.x, pos.y, 0);
+	e->coord = get_v3(e->pos.x / md->t_len, e->pos.y / md->t_len, 0);
 	e->mov = get_v3f(0, 0, 0);
 	e->dir = get_v3f(0, 0, 0);
 	e->shot = 0;
@@ -63,12 +63,13 @@ static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 {
 	char	base_c;
+	t_ent	*e;
 
+	e = &md->plr;
 	base_c = c;
 	c = '*';
 	set_ent_values(md, &md->plr, c, pos);
-	md->plr.map_index = map_index;
-	md->mapped_ents[map_index] = &md->plr;
+	e->map_index = map_index;
 	md->cam.rot.x = -90;
 	if (base_c == 'S')
 		md->cam.rot.x = 90;
@@ -76,21 +77,24 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 		md->cam.rot.x = 0;
 	else if (base_c == 'W')
 		md->cam.rot.x = 180;
-	md->plr.angle = md->cam.rot.x * (M_PI / 180.0f);
-	md->plr.size = get_v2(md->t_len / 2, md->t_len / 2);
-	md->plr.pos.z = 0;
-	md->cam.pos = md->plr.pos;
+	md->cam.x_dir_start = md->cam.rot.x;
+	e->angle = md->cam.rot.x * (M_PI / 180.0f);
+	e->size = get_v2(md->t_len / 2, md->t_len / 2);
+	e->pos.z = 0;
+	md->cam.pos = e->pos;
+	add_ent_at_cord(md, e, pos);
 }
 
 t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)
 {
 	t_ent	*e;
 
+	(void)map_index;
 	e = malloc(sizeof(t_ent));
 	set_ent_values(md, e, c, pos);
 	e->map_index = map_index;
-	md->mapped_ents[map_index] = e;
 	set_type_specifics(md, e, e->type);
+	add_ent_at_cord(md, e, pos);
 	return (e);
 }
 
@@ -100,7 +104,7 @@ void	init_entities(t_md *md, t_vec2 pos)
 	t_dblst		*ents;
 	char		c;
 
-	md->mapped_ents = ft_calloc(md->map.len + 1, sizeof(t_ent *));
+	init_mapped_ent(md);
 	ents = NULL;
 	pos = get_v2(0, 0);
 	i = -1;
