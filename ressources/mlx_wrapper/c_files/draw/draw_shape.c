@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_shape.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 22:04:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 13:44:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:13:19 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ void	draw_sphere(t_image *dst, t_vec2 pos, t_vec2 sz, t_vec3 data)
 		dd.pos.x = pos.x - 1;
 		while (++dd.pos.x <= end_crd.x)
 		{
-			rdp = (t_vec3f){(dd.pos.x - cnt.x) / r.x, \
-	(dd.pos.y - cnt.y) / r.y, 1.0f - sqrt(rdp.x * rdp.x + rdp.y * rdp.y)};
+			rdp.x = (dd.pos.x - cnt.x) / r.x;
+			rdp.y = (dd.pos.y - cnt.y) / r.y;
+			rdp.z = 1.0f - sqrt(rdp.x * rdp.x + rdp.y * rdp.y);
 			if (!(rdp.z > 0 && (data.z || r_range(0, 20) < rdp.z * 50)))
 				continue ;
 			dd.dst_pos = dd.pos;

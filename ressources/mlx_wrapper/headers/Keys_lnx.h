@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Keys_lnx.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/03/29 12:42:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:07:01 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,5 @@
 # define MOUSE_SCRL_L     7
 # define MOUSE_SCRL_R     6
 # define MOUSE_RELEASE    4
-
-# define KEY_PRESS        KeyPress
-# define KEY_RELEASE      KeyRelease
 
 #endif

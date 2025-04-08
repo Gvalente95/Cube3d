@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   text_fast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 00:37:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 13:39:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:08:26 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,11 @@ static char	*get_font_path(t_md *md, const char *base_path, char c)
 	else
 	{
 		letter = md_malloc(md, 2);
-		letter[0] = c;
+		letter[0] = ft_toupper(c);
 		letter[1] = '\0';
 	}
 	path = ft_megajoin(base_path, letter, ".xpm", NULL);
+	free(letter);
 	return (path);
 }
 

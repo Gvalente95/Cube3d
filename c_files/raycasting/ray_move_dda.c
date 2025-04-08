@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_move_dda.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:31:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 22:47:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 16:28:58 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray)
 {
 	t_vec3f	txtr_cord;
-	t_vec3	screen_pos;
 	float	wall_x;
 
 	ray->wall_hit = hit;
@@ -31,9 +30,6 @@ int	draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray)
 		(ray->vertical_hit == 1 && ray->dir.y < 0))
 		txtr_cord.x = hit->size.x - txtr_cord.x - 1;
 	txtr_cord.y = correct_fisheye(md, ray, hit, ray->distance);
-	screen_pos.x = ray->index;
-	screen_pos.y = compute_row_start(md, hit, ray->distance);
-	screen_pos.z = ray->hits_len > 0;
 	return (1);
 }
 

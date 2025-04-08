@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   audio.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:56:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:16:50 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
 {
 	if (!pid)
 		return (printf("called play_loop_au with no pid"), 0);
-	if (!depend || !md->prm.au_on)
+	if (!depend || !md->prm.au_on && pid)
 	{
 		stop_sound(*pid);
 		return (0);

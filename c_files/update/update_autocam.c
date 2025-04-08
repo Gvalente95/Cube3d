@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_autocam.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 22:58:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 20:59:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 16:46:41 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	init_autocam(t_md *md, t_autocam *autocam)
 	md->cam.rot.y = 55;
 	md->fx.fog = maxf(.3, 10 / md->map.size.y);
 	md->prm.super_view = 1;
-	md->hud.floor_start = md->win_sz.y * .1;
+	md->hud.floor_start = md->win_sz.y * .25;
 	md->timer.time = 10;
 }
 
@@ -83,11 +83,11 @@ void	update_player_orbit(t_md *md, t_autocam *aut)
 int	move_cam_to_start(t_md *md)
 {
 	if (fabsf(md->plr.pos.x - md->plr.start_pos.x) > EPSILON)
-		md->plr.pos.x += (md->plr.start_pos.x - md->plr.pos.x) * .1;
+		md->plr.pos.x += (md->plr.start_pos.x - md->plr.pos.x) * .15;
 	if (fabsf(md->plr.pos.y - md->plr.start_pos.y) > EPSILON)
-		md->plr.pos.y += (md->plr.start_pos.y - md->plr.pos.y) * .1;
+		md->plr.pos.y += (md->plr.start_pos.y - md->plr.pos.y) * .15;
 	if (fabsf(md->plr.pos.z - md->plr.start_pos.z) > EPSILON)
-		md->plr.pos.z += (md->plr.start_pos.z - md->plr.pos.z) * .1;
+		md->plr.pos.z += (md->plr.start_pos.z - md->plr.pos.z) * .15;
 	if (fabsf(md->cam.rot.x - md->cam.x_dir_start) > EPSILON)
 		md->cam.rot.x += (md->cam.x_dir_start - md->cam.rot.x) * 0.1f;
 	else
@@ -102,9 +102,9 @@ int	move_cam_to_start(t_md *md)
 	md->hud.floor_start = md->win_sz.y / 2 - (md->cam.rot.y * 8) + 1;
 	render_background(md);
 	update_cam(md, &md->cam);
-	if (fabsf(md->plr.pos.x - md->plr.start_pos.x) < 1 && \
-		fabsf(md->plr.pos.y - md->plr.start_pos.y) < 1 && \
-		fabsf(md->plr.pos.z - md->plr.start_pos.z) < 1)
+	if (fabsf(md->plr.pos.x - md->plr.start_pos.x) < 10 && \
+		fabsf(md->plr.pos.y - md->plr.start_pos.y) < 10 && \
+		fabsf(md->plr.pos.z - md->plr.start_pos.z) < 10)
 		return (1);
 	return (0);
 }
@@ -123,10 +123,11 @@ int	update_autocam(t_md *md, t_autocam *autocam)
 		update_player_orbit(md, autocam);
 	play_loop(md, &md->au.mus_pid, AU_MUS, !autocam->quitting);
 	play_loop(md, &md->au.wind_pid, AU_WIND, autocam->quitting);
+	render_background(md);
 	cast_ray_threads_lp(md);
 	if (!autocam->quitting)
 		render_autocam_text(md, 0);
-	if (autocam->fade)
+	if (autocam->fade && 0)
 		init_fade_intro(md, 2.0f);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 	reset_mlx_values(md);

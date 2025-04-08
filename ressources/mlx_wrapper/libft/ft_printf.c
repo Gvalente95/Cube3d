@@ -20,7 +20,9 @@ int	ft_convert_and_print(unsigned int num, int to_upper)
 	int		len;
 	char	*hexdigits;
 
-	len = 0;
+	len = 8;
+	while (len >= 0)
+		str[len--] = '\0';
 	if (to_upper)
 		hexdigits = "0123456789ABCDEF";
 	else

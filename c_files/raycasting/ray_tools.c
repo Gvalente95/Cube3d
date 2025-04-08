@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:10:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:36:10 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->step = v2(0);
 	ray->dda_dist = 0;
 	ray->distance = distance;
+	ray->vertical_hit = 0;
 	ray->teleported_once = 0;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:40:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:06:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
 		return (1);
 	if (c == TAB_KEY)
 		set_weapon_index(md);
-	else if (c == ESC_KEY)
-		set_menu_mode(md, &md->menu, !menu->active);
 	else if (c == NUM_Q_KEY)
+		set_menu_mode(md, &md->menu, !menu->active);
+	else if (c == ESC_KEY)
 		free_and_quit(md, NULL, NULL);
 	else if (c == SHIFT_KEY)
 		md->timer.tm_walk = md->timer.cur_tm - 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 19:42:27 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:32:11 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,22 +79,28 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	md->txd.size_2d = 40;
 	md->plr.was_hit = 0;
 	prm->debug_mode = start_debug;
-	prm->view_2d = 0;
 	prm->show_rays = prm->debug_mode;
 	prm->ray_depth = md->t_len * RAY_DEPTH;
 	prm->resolution = RESOLUTION;
 	prm->fly_cam = 0;
 	prm->zoom = md->t_len / 2;
 	prm->ent_mode = 0;
+	md->cam.is_moving = 0;
 	prm->use_thrd = 1;
+	md->plr.grounded = 0;
 	prm->use_grass = 0;
+	prm->view_2d = 0;
+	prm->use_ceiling = 1;
 	prm->use_floor = 1;
+	prm->use_sky = 0;
 	prm->show_fps = 1;
 	prm->super_view = 0;
 	prm->max_view_sprite = MAX_RAY_SPRITE;
-	prm->use_ceiling = 1;
 	md->autocam.active = 1;
 	prm->au_on = !md->is_linux;
+	md->au.mus_pid = 0;
+	md->au.wind_pid = 0;
+	md->au.walk_index = 0;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)

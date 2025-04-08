@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_menu.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/06 21:20:48 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:21:01 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ void	init_menu_overlay(t_md *md, t_menu *menu)
 {
 	menu->bgr_color = _BLACK;
 	menu->overlay = init_img(md, md->win_sz, NULL, menu->bgr_color);
-	apply_dithering(menu->overlay, 10, \
-		md->fx.palette, md->fx.palette_size);
-	apply_scanlines(menu->overlay, 10);
 }
 
 void	init_menu(t_md *md, t_menu *menu)

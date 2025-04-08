@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_sprite_column.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:41:03 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:29:04 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,4 @@ void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data)
 		draw_wall_line(md, hit_data.dist_at_e, hit_data.hit, ray);
 	else if (!ray->check_hit)
 		draw_sprite_pxl(md, ray, sprite, sprt_scrn_width);
-	hit_data.hit->tex_accumulator += sprite->size.x / sprt_scrn_width;
-	while (hit_data.hit->tex_accumulator >= 1.0f)
-	{
-		hit_data.hit->row_draw_index += 1;
-		hit_data.hit->tex_accumulator -= 1.0f;
-	}
 }

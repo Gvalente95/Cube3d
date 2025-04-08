@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_threads.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 14:00:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:36:45 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 {
 	ray->hit_data[0].hit = NULL;
 	ray->hits_len = 0;
-	ray->vertical_hit = 0;
 	init_base_ray(ray, ray->index, md->cam.pos, 0);
 	ray->dir = get_v3f(dir_val.x, dir_val.y, 0);
 	ray->angle = dir_val.z;
+	ray->check_hit = NULL;
+	ray->wall_hit = NULL;
 }
 
 int	draw_stored_sprite_hits(t_md *md, t_ray *ray)
@@ -49,7 +50,7 @@ int	cast_thread_ray(t_md *md, int index)
 	update_ray_data(md, ray, md->thrd_manager.dir_vals[ray->index]);
 	draw_raycast_background(md, ray);
 	ray_move(md, ray, md->thrd_manager.ray_visu_offset);
-	if (!ray->check_hit && ray->wall_hit)
+	if (!ray->check_hit && ray->wall_hit != NULL)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
 	if (ray->hits_len > 0)
 		return (draw_stored_sprite_hits(md, ray));

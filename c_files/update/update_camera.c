@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_camera.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 19:14:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/08 17:15:12 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,12 @@ t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd)
 		mov = add_vec3f(mov, scale_vec3f(cam_right, spd));
 	if (md->key_prs[NUM_A_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_right, -spd));
-	if (md->key_prs[NUM_E_KEY])
-		mov = add_vec3f(mov, scale_vec3f(cam_up, -spd));
-	if (md->key_prs[NUM_Q_KEY])
-		mov = add_vec3f(mov, scale_vec3f(cam_up, spd));
-	if (md->key_prs[NUM_R_KEY])
-		mov.z -= spd * .05;
+	if (md->key_prs[SPACE_KEY])
+		mov = add_vec3f(mov, scale_vec3f(cam_up, spd * .05f));
+	if (md->key_prs[NUM_Y_KEY])
+		mov = add_vec3f(mov, scale_vec3f(cam_up, -spd * .05f));
 	cam->input_mov.x = md->key_prs[NUM_A_KEY] - md->key_prs[NUM_D_KEY];
 	cam->input_mov.y = md->key_prs[NUM_W_KEY] - md->key_prs[NUM_S_KEY];
-	cam->input_mov.z = md->key_prs[NUM_E_KEY] - md->key_prs[NUM_Q_KEY];
+	cam->input_mov.z = md->key_prs[SPACE_KEY] - md->key_prs[NUM_Y_KEY];
 	return (mov);
 }
