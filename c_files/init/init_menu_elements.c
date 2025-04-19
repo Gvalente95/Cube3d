@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:40:16 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 14:10:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static void	init_sliders(t_md *md, t_menu *menu, \
 	inisld(md, "Move speed", get_v4f(200, 800, 4000, 100), &pm->plr_speed);
 	inisld(md, "Rotation speed", get_v4f(.01, MOUSESPD, 1, 10), &pm->rot_speed);
 	inisld(md, "Camera Height", get_v4f(0, 0, md->t_len, 100), &pm->height);
+	inisld(md, "Camera Zoom", get_v4f(0, 0, 3, 100), &pm->zoom);
 	inisld(md, "Camera bob", get_v4f(0, BOB_AMOUNT, 1, 100), &pm->bob_amount);
 	inisld(md, "fov", get_v4f(1, 60, 600, 599), &pm->fov);
 	inisld(md, "fov floor", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
@@ -109,7 +110,7 @@ static void	init_buttons(t_md *md, t_menu *menu, t_parameters *prm)
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.x, "X_x_mouse", NUM_X_KEY);
 	inibut(&menu->buttons[i++], &md->mouse.lock_rot.y, "Y_y_mouse", NUM_Y_KEY);
 	inibut(&menu->buttons[i++], &md->fx.anti_alias, "aliasing", -1);
-	inibut(&menu->buttons[i++], &menu->active, "ESC_back", -1);
+	inibut(&menu->buttons[i++], &menu->active, "Q_back", -1);
 	menu->buttons[i].active = 0;
 }
 

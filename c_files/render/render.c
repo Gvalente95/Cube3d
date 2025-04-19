@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 19:43:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 16:25:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ void	render_2d_entities(t_md *md)
 
 void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 {
+	if (fx->barrel_amount > 0)
+		apply_barrel_fx(screen, screen->size, \
+			div_v2(md->win_sz, 2), fx->barrel_amount);
 	if (fx->anti_alias)
 		apply_antialiasing(screen);
 	if (fx->scanlines > 0)
@@ -89,18 +92,15 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 			fx->palette, fx->palette_size);
 	if (fx->bloom_threshold > 0)
 		apply_bloom(screen, fx->bloom_threshold);
-	if (fx->barrel_amount > 0)
-		apply_barrel_distortion(screen, fx->barrel_amount);
 	if (fx->color_band > 0)
 		apply_color_banding(screen, fx->color_band);
 	if (fx->noise > 0)
-		apply_noise(md, md->screen, fx->noise, 1);
+		apply_noise(md, screen, fx->noise, 1);
 	return ;
 }
 
 void	render(t_md *md)
 {
-	render_background(md);
 	md->cam.pointed = NULL;
 	if (md->prm.use_thrd)
 		cast_ray_threads_lp(md);
@@ -110,8 +110,7 @@ void	render(t_md *md)
 		render_2d_entities(md);
 	else
 		render_hud_elements(md, &md->hud);
-	if (md->mmap.active)
-		render_minimap(md, &md->mmap);
+	render_minimap(md, &md->mmap);
 	if (md->prm.debug_mode)
 		show_update_information(md);
 	if (md->prm.show_fps)

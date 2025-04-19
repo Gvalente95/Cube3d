@@ -6,11 +6,23 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:41:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 12:12:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
+
+void	show_revl_done(t_md *md, t_vec2 pos)
+{
+	float		revealed_perc_;
+	int			color;
+	t_txtd		data;
+
+	revealed_perc_ = (100.0f / md->mmap.revealed_len) * md->mmap.revealed_cur;
+	color = -1;
+	data = (t_txtd){pos.x, pos.y, color, md->prm.txt_sc, NULL};
+	rnd_fast_txt(md, data, "%.1f/", revealed_perc_);
+}
 
 void	render_mmap_ray(t_md *md, int ray_index, int color)
 {
@@ -38,7 +50,7 @@ void	render_minimap_ray(t_md *md)
 	while (++i < md->win_sz.x)
 		render_mmap_ray(md, i, color);
 	color = _BLUE;
-	color = set_alpha(color, 0.65);
+	color = set_alpha(color, 1);
 	render_mmap_ray(md, md->win_sz.x / 2, color);
 }
 
@@ -46,26 +58,26 @@ void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 {
 	int				draw_clr;
 	t_vec2			pos;
-	int				psz;
-	int				offset;
+	int				icsz;
 
 	if (!e || (no_redraw && e->revealed))
 		return ;
 	draw_clr = md->rgb[e->type];
+	icsz = md->mmap.ic_scl;
+	pos = (t_vec2){1 + e->coord.x * icsz, 1 + e->coord.y * icsz};
 	if (e->type == nt_plr)
-		draw_clr = md->rgb[RGB_GOLD];
-	psz = max(1, md->mmap.ic_scl);
-	offset = (md->mmap.ic_scl - psz) / 2;
-	pos.x = 1 + (e->pos.x / (md->t_len)) * psz - offset;
-	pos.y = 1 + (e->pos.y / (md->t_len)) * psz - offset;
+	{
+		pos.x = 1 + (e->pos.x / md->t_len) * icsz;
+		pos.y = 1 + (e->pos.y / md->t_len) * icsz;
+		icsz /= 2;
+	}
 	if (e->type == nt_empty)
 	{
-		psz++;
+		icsz++;
 		pos = sub_vec2(pos, v2(1));
 	}
-	set_alpha(draw_clr, .5);
-	draw_safe_pxls(screen, sub_vec2(pos, v2(1)), v2(psz + 1), md->rgb[16]);
-	draw_pixels(screen, pos, v2(psz - 1), draw_clr);
+	draw_pixels(screen, sub_vec2(pos, v2(1)), v2(icsz + 1), _BLACK);
+	draw_pixels(screen, pos, v2(icsz - 1), draw_clr);
 	if (!e->revealed && e->type != nt_plr)
 		md->mmap.revealed_cur++;
 	e->revealed = 1;
@@ -73,18 +85,20 @@ void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 
 void	render_minimap(t_md *md, t_mmap *mp)
 {
-	t_vec2			center;
-	int				view_len;
+	t_vec2			cntr;
 	int				width;
-	t_vec2			txp;
-	const int		txsc = md->prm.txt_sc * .5;
 
+	if (!mp->active)
+	{
+		rnd_fast_txt(md, (t_txtd){md->win_sz.x - 90, md->win_sz.y - 30, \
+			_BLUE, md->prm.txt_sc, md->screen}, "[M]");
+		return ;
+	}
 	if (mp->cmps)
 	{
-		view_len = 10;
-		width = mp->comps_scl * view_len;
-		center = get_v2(md->win_sz.x - width * 2, md->win_sz.y - width * 2);
-		show_cmps_mmap(md, center, view_len);
+		width = mp->comps_scl * (8 + 6);
+		cntr = get_v2(md->win_sz.x - width, md->win_sz.y - width);
+		show_cmps_mmap(md, cntr, 8);
 		return ;
 	}
 	flush_img(mp->img, _RED, 1, 0);
@@ -92,9 +106,8 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	draw_alpha_img(mp->bg, mp->img, v2(0), 1);
 	render_minimap_ray(md);
 	show_minimap_entity(md, &md->plr, mp->img, 0);
-	center = get_v2(md->win_sz.x - mp->img->size.x, \
-		md->win_sz.y - mp->img->size.y);
-	txp = get_v2(center.x + mp->img->size.x / 2, mp->img->size.y);
-	show_revealed_perc(md, txsc, txp);
-	draw_alpha_img(mp->img, md->screen, center, 0.5);
+	cntr = get_v2(md->win_sz.x - mp->img->size.x, \
+		0);
+	draw_alpha_img(mp->img, md->screen, cntr, 0.5);
+	show_revl_done(md, get_v2(cntr.x, mp->img->size.y - md->prm.txt_sc));
 }

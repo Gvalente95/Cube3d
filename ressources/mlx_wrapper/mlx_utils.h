@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/07 22:52:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 11:12:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,16 @@ typedef struct s_text_data
 	t_image	*onto;
 }	t_txtd;
 
+typedef struct s_cube_draw_data
+{
+	t_vec3f	cnt;
+	t_vec3f	angle;
+	t_vec3f	cube_pts[8];
+	int		faces[6][4];
+	t_vec2	projected[8];
+	int		color;
+}	t_cube_drawd;
+
 typedef struct s_md
 {
 	void			*mlx;
@@ -220,6 +230,7 @@ typedef struct s_md
 	t_autocam		autocam;
 	t_timer			timer;
 	t_fx_data		fx;
+	t_cube_drawd	cube_d;
 	t_mouse			mouse;
 	t_ray			rays[MAX_RAYS];
 	t_texture_data	txd;
@@ -244,104 +255,116 @@ typedef struct s_md
 }	t_md;
 
 //		input/input_tools.c
-void			wrap_mouse(t_md *md, int delta_x, int delta_y);
-void			set_mouse_lock(t_md *md, int lock);
+void	wrap_mouse(t_md *md, int delta_x, int delta_y);
+void	set_mouse_lock(t_md *md, int lock);
 
 //		input/input_mouse.c
-int				mouse_event_handler(int button, int x, int y, void *param);
-int				mouse_release_handler(int button, int x, int y, void *param);
-int				mouse_motion_handler(int x, int y, void *param);
-int				update_mouse(t_md *md);
+int		mouse_event_handler(int button, int x, int y, void *param);
+int		mouse_release_handler(int button, int x, int y, void *param);
+int		mouse_motion_handler(int x, int y, void *param);
+int		update_mouse(t_md *md);
 
 //		input/input.c
-int				handle_key_press(int keycode, t_md *md);
-int				handle_key_release(int keycode, t_md *md);
-void			reset_mlx_values(t_md *md);
-int				close_window(t_md *md);
+int		handle_key_press(int keycode, t_md *md);
+int		handle_key_release(int keycode, t_md *md);
+void	reset_mlx_values(t_md *md);
+int		close_window(t_md *md);
 
 //		free/free_image.c
-int				free_image_data(t_md *md, t_image *img_data);
-int				free_images_data(t_md *md, t_image **images, const char *label);
-int				free_images_array(t_md *md, t_image ***arr, const char *label);
-int				free_mob_images(t_md *md, t_ent *e, char *label);
+int		free_image_data(t_md *md, t_image *img_data);
+int		free_images_data(t_md *md, t_image **images, const char *label);
+int		free_images_array(t_md *md, t_image ***arr, const char *label);
+int		free_mob_images(t_md *md, t_ent *e, char *label);
 
 //		free/free_elements.c
-int				free_hud(t_md *md, t_hud *hud);
-int				free_txd(t_md *md, t_texture_data *txd);
-int				free_var(t_md *md, t_mmap *mmap, t_fx_data *fx, t_mouse *mouse);
-int				free_menu(t_md *md, t_menu *menu);
-int				free_ents(t_md *md);
+int		free_hud(t_md *md, t_hud *hud);
+int		free_txd(t_md *md, t_texture_data *txd);
+int		free_var(t_md *md, t_mmap *mmap, t_fx_data *fx, t_mouse *mouse);
+int		free_menu(t_md *md, t_menu *menu);
+int		free_ents(t_md *md);
 
 //		free/free.c
-int				safe_free(void *item);
-int				free_void_array(void **elements);
-int				free_void(void *elem);
-int				free_md(t_md *md, int quit);
-int				free_and_quit(t_md *d, const char *msg, const char *attribute);
+int		safe_free(void *item);
+int		free_void_array(void **elements);
+int		free_void(void *elem);
+int		free_md(t_md *md, int quit);
+int		free_and_quit(t_md *d, const char *msg, const char *attribute);
 
 //		time/time.c
-void			stop_timer(t_timer *timer);
-void			resume_timer(t_timer *timer);
-double			get_total_time(t_timer *timer);
-double			get_time_in_seconds(void);
-double			check_timer(double timer);
-void			start_timer(double *timer);
-void			init_timer(t_md *md, t_timer *timer);
-void			reset_fps_timer(t_timer *timer);
+void	stop_timer(t_timer *timer);
+void	resume_timer(t_timer *timer);
+double	get_total_time(t_timer *timer);
+double	get_time_in_seconds(void);
+double	check_timer(double timer);
+void	start_timer(double *timer);
+void	init_timer(t_md *md, t_timer *timer);
+void	reset_fps_timer(t_timer *timer);
 
 //		math/math_tools_3.c
-int				r_range_seed(unsigned int *g_seed, int min, int max);
-int				r_range(int min, int max);
-float			f_range(float min, float max);
+int		r_range_seed(unsigned int *g_seed, int min, int max);
+int		r_range(int min, int max);
+float	f_range(float min, float max);
 
 //		init_wrapper.c
-unsigned int	get_r_seed(void);
-int				init_screen(t_md *md, t_vec2 win_sz, int res, char *win_name);
-int				init_md(t_md *md);
-void			init_os_params(t_md *md);
-void			init_wrapper(t_md *md, t_vec2 win_sz, char *win_name, int res);
+void	init_wrapper(t_md *md, t_vec2 win_sz, char *win_name, int res);
 
 //		string/string_3.c
-int				same_str(const char *a, const char *b);
-int				char_in_str(char c, const char *txt);
-int				chr_amnt(const char *str, char c);
-int				get_arr_len(void **arr);
-char			*truncate_at_end(const char *str, char cut_letter);
+int		same_str(const char *a, const char *b);
+int		char_in_str(char c, const char *txt);
+int		chr_amnt(const char *str, char c);
+int		get_arr_len(void **arr);
+char	*truncate_at_end(const char *str, char cut_letter);
 
 //		string/string.c
-char			*md_strjoin(t_md *d, char const *s1, char const *s2);
-char			*md_strdup(t_md *d, const char *s1);
-void			*md_malloc(t_md *d, ssize_t size);
-void			*md_realloc(t_md *d, void *ptr, size_t new_size);
-char			*md_strndup(t_md *d, const char *s1, ssize_t n);
+char	*md_strjoin(t_md *d, char const *s1, char const *s2);
+char	*md_strdup(t_md *d, const char *s1);
+void	*md_malloc(t_md *d, ssize_t size);
+void	*md_realloc(t_md *d, void *ptr, size_t new_size);
+char	*md_strndup(t_md *d, const char *s1, ssize_t n);
 
 //		string/string_2.c
-void			setstr(char **str, char *new);
-int				only_contains(char *str, char *to_contain);
-char			*ft_megajoin(const char *a, const char *b, \
+void	setstr(char **str, char *new);
+int		only_contains(char *str, char *to_contain);
+char	*ft_megajoin(const char *a, const char *b, \
 	const char *c, const char *d);
-int				get_char_index(const char *str, char to_check);
-char			*ft_strndup(const char *s1, ssize_t n);
+int		get_char_index(const char *str, char to_check);
+char	*ft_strndup(const char *s1, ssize_t n);
 
-t_vec3			get_grid_posf(t_md *md, t_vec3f pos);
-t_vec3			get_grid_pos(t_md *md, t_vec3 pos);
+t_vec3	get_grid_posf(t_md *md, t_vec3f pos);
+t_vec3	get_grid_pos(t_md *md, t_vec3 pos);
 
-void			show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
-void			show_float(t_md *md, char *label, float value, t_vec2 pos);
-void			show_int(t_md *md, char *label, int value, t_vec2 pos);
-void			show_vec3f(t_md *md, char *label, t_vec3f vec, t_vec2 pos);
-void			show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
-void			show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
-int				is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
-int				ent_in_bounds(t_ent *ent, t_ent *bounds);
-void			upd_timer(double *tmr, double cur_tm, double incr, int *event);
-void			update_fe(t_md *md, t_vec2 start, \
+void	show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
+void	show_float(t_md *md, char *label, float value, t_vec2 pos);
+void	show_int(t_md *md, char *label, int value, t_vec2 pos);
+void	show_vec3f(t_md *md, char *label, t_vec3f vec, t_vec2 pos);
+void	show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
+void	show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
+int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
+void	upd_timer(double *tmr, double cur_tm, double incr, int *event);
+void	update_fe(t_md *md, t_vec2 start, \
 	t_fe *fe, t_floor_draw_d d);
 
 //				camera.c
-void			update_cam(t_md *md, t_cam *cam);
-t_vec3f			update_fly_cam(t_md *md, t_cam *cam, float spd);
-int				color_diff(int c1, int c2);
-void			clean_img(t_image *img);
+void	update_cam(t_md *md, t_cam *cam);
+t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd);
+int		color_diff(int c1, int c2);
+void	clean_img(t_image *img);
+
+void	swap_vec2(t_vec2 *a, t_vec2 *b);
+void	draw_quad(t_image *screen, t_vec2 p[4], int color, int contour_clr);
+void	draw_filled_triangle(t_image *img, t_vec2 v[3], int clr);
+void	draw_cube(t_image *screen, t_vec3 pos, t_vec2 size, t_vec3f rot);
+t_vec3f	rotate_vec3f(t_vec3f v, t_vec3f rot);
+t_vec2f	rotate_vec2f(t_vec2f v, float angle);
+t_vec2	project(t_vec3f p, t_vec2 origin);
+int		is_in_shape(t_vec2 z, t_vec2 tri[][3], int amount);
+t_vec3f	cross_vec3f(t_vec3f a, t_vec3f b);
+float	dist2(t_vec2 a, t_vec2 b);
+int		is_face_visible(t_vec3f a, t_vec3f b, t_vec3f c);
+float	dot_vec3f(t_vec3f a, t_vec3f b);
+void	draw_quad_contour(t_image *screen, t_vec2 p[4], int contour_clr);
+int		is_flat_tri(t_vec2 v[3], int treshold);
+void	hsv_to_rgb(float h, float s, float v, t_vec4f *rgb);
+void	set_wheel(t_clrp *w, t_vec2 mouse_pos, t_vec2 img_center);
 
 #endif

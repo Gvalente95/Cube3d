@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:21:44 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/07 18:58:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 12:06:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,19 @@ float	f_range(float min, float max)
 	return (min + scale * (max - min));
 }
 
-int	ent_in_bounds(t_ent *ent, t_ent *bounds)
+float	dot_vec3f(t_vec3f a, t_vec3f b)
 {
-	return (ent->pos.x >= bounds->pos.x + bounds->mov.x && \
-		ent->pos.x <= bounds->pos.x + bounds->mov.x + bounds->size.x && \
-		ent->pos.y >= bounds->pos.y + bounds->mov.y && \
-		ent->pos.y <= bounds->pos.y + bounds->mov.y + bounds->size.y);
+	return (a.x * b.x + a.y * b.y + a.z * b.z);
+}
+
+unsigned int	get_r_seed(void)
+{
+	int				fd;
+	unsigned int	seed;
+
+	fd = open("/dev/urandom", O_RDONLY);
+	if (fd < 0 || read(fd, &seed, sizeof(seed)) != sizeof(seed))
+		seed = (unsigned int)time(NULL);
+	close(fd);
+	return (seed);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 16:21:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 15:10:09 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	init_map(t_md *md, char *file_name)
 	plr_index = get_to_find_index(md->map.buffer, "NSEW");
 	if (plr_index < 0)
 		free_and_quit(md, "No player", NULL);
-	if (find_breach(md->map.buffer, md->map.size.x, md->map.len, plr_index))
+	if (find_breach(md->map.buffer, md->map.size.x, plr_index))
 		free_and_quit(md, "Unclosed map\n", NULL);
 	if (!validate_map(md, md->map.buffer))
 		free_and_quit(md, NULL, NULL);

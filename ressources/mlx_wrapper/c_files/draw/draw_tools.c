@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:16:08 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 10:23:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/09 20:19:09 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ float	get_alpha(int color)
 	int	alpha;
 
 	alpha = (color >> 24) & 0xFF;
-	return ((float)alpha / 255.0f);
+	return (255.0f - (float)alpha / 255.0f);
 }
 
 void	fill_transparency(t_image *src, int color)

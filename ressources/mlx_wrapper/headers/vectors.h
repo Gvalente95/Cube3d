@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:15 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:28:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 16:10:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ t_vec2	get_v2(int x, int y);
 t_vec2	v3_to_v2(t_vec3 vec);
 int		cmp_vec2(t_vec2 a, t_vec2 b);
 int		print_vec2(t_vec2 a, const char *label);
-t_vec2	center_pos(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size);
 int		v2_touch(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size);
 
 //		VECTOR_2f.c
@@ -142,6 +141,10 @@ t_vec3	sub_vec3(t_vec3 a, t_vec3 b);
 t_vec2f	sub_vec2f(t_vec2f a, t_vec2f b);
 t_vec2	sub_vec2(t_vec2 a, t_vec2 b);
 
+t_vec2	div_v2(t_vec2 a, int div);
+t_vec2f	div_v2f(t_vec2f a, float div);
+t_vec3	div_v3(t_vec3 a, int div);
+t_vec3f	div_v3f(t_vec3f a, float div);
 int		color_compare(int color, t_vec4 cmp);
 
 #endif

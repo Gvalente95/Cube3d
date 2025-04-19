@@ -6,39 +6,39 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:52:06 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/26 16:48:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 16:24:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	apply_barrel_distortion(t_image *img, float intensity)
+void	apply_barrel_fx(t_image *img, t_vec2 sz, t_vec2 c, float str)
 {
-	t_vec2	pos;
-	t_vec2	center;
-	t_vec2	n;
-	t_vec3f	norm;
-	t_vec3f	rad;
+	t_vec2			p;
+	t_vec2			n;
+	t_vec2f			m;
+	t_vec3f			rad;
+	uint32_t		*original;
 
-	rad.y = intensity * 0.3f;
-	center.x = img->size.x / 2;
-	center.y = img->size.y / 2;
-	pos.y = -1;
-	while (++pos.y < img->size.y)
+	rad = (t_vec3f){0, str * .3f, 1.0f / (1.0f + (str * .3f) * sqrtf(2.0f))};
+	original = malloc(sizeof(uint32_t) * sz.x * sz.y);
+	memcpy(original, img->src, sizeof(uint32_t) * sz.x * sz.y);
+	p.y = -1;
+	while (++p.y < sz.y)
 	{
-		pos.x = -1;
-		while (++pos.x < img->size.x)
+		p.x = -1;
+		while (++p.x < sz.x)
 		{
-			norm.x = (pos.x - center.x) / (float)center.x;
-			norm.y = (pos.y - center.y) / (float)center.y;
-			rad.x = sqrt(norm.x * norm.x + norm.y * norm.y);
-			n.x = center.x + norm.x * (1.0 + rad.y * rad.x) * center.x;
-			n.y = center.y + norm.y * (1.0 + rad.y * rad.x) * center.y;
-			if (n.x >= 0 && n.x < img->size.x && n.y >= 0 && n.y < img->size.y)
-				img->src[pos.y * img->size.x + pos.x] = \
-				img->src[n.y * img->size.x + n.x];
+			m = (t_vec2f){(p.x - c.x) / (float)c.x, (p.y - c.y) / (float)c.y};
+			rad.x = sqrtf(m.x * m.x + m.y * m.y);
+			n.x = c.x + m.x * rad.z * (1.0f + rad.y * rad.x) * c.x;
+			n.y = c.y + m.y * rad.z * (1.0f + rad.y * rad.x) * c.y;
+			if (n.x >= 0 && n.x < sz.x && n.y >= 0 && n.y < sz.y)
+				img->src[p.y * sz.x + p.x] = \
+					original[(int)n.y * sz.x + (int)n.x];
 		}
 	}
+	free(original);
 }
 
 void	apply_color_banding(t_image *img, float intensity)

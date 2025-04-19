@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 02:32:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 15:58:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 15:16:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,15 @@ void	print_unvalid_flood(char *flooded_map)
 	printf("\n");
 }
 
-int	find_breach(char *buffer, int width, int len, int plr_index)
+int	find_breach(char *buffer, int width, int plr_index)
 {
-	int		space_index;
-	char	*flooded_map;
-	int		found_breach;
+	int			space_index;
+	char		*flooded_map;
+	int			found_breach;
+	const int	len = ft_strlen(buffer);
 
 	flooded_map = ft_strdup(buffer);
+	printf("WOWWO %d %d %d\n", ft_strlen(flooded_map), len, plr_index);
 	flood_fill(flooded_map, plr_index, width, len);
 	if (contains(flooded_map, '!'))
 		return (print_unvalid_flood(flooded_map), free(flooded_map), 1);

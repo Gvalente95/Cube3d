@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:51:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:17:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 14:48:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,9 @@ int	v2f_touch(t_vec2f a, t_vec2f a_size, t_vec2f b, t_vec2f b_size)
 		a.y < b.y + b_size.y && \
 		a.y + a_size.y > b.y \
 	);
+}
+
+t_vec2f	div_v2f(t_vec2f a, float div)
+{
+	return ((t_vec2f){a.x / div, a.y / div});
 }

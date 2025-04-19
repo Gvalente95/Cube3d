@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_camera.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:15:12 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:26:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void	update_cam(t_md *md, t_cam *cam)
 
 	plr = &md->plr;
 	pos = plr->pos;
-	cam->pos.x = pos.x + plr->size.x / 2 - (plr->dir.x * md->prm.zoom);
-	cam->pos.y = pos.y + plr->size.y / 2 - (plr->dir.y * md->prm.zoom);
+	cam->pos.x = pos.x + md->t_len / 4 - (plr->dir.x * md->prm.zoom);
+	cam->pos.y = pos.y + md->t_len / 4 - (plr->dir.y * md->prm.zoom);
 	cam->pos.z = pos.z - md->prm.height;
 	md->plr.coord.x = pos.x / md->t_len;
 	md->plr.coord.y = pos.y / md->t_len;
@@ -95,4 +95,32 @@ t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd)
 	cam->input_mov.y = md->key_prs[NUM_W_KEY] - md->key_prs[NUM_S_KEY];
 	cam->input_mov.z = md->key_prs[SPACE_KEY] - md->key_prs[NUM_Y_KEY];
 	return (mov);
+}
+
+int	replace_window(t_md *md, int new_w, int new_h)
+{
+	mlx_destroy_window(md->mlx, md->win);
+	md->win_sz = get_v2(new_w, new_h);
+	md->win = mlx_new_window(md->mlx, new_w, new_h, "Cube3D");
+	if (md->is_linux)
+	{
+		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
+		mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
+		mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
+	}
+	else
+	{
+		mlx_hook(md->win, 2, 0, handle_key_press, md);
+		mlx_hook(md->win, 3, 0, handle_key_release, md);
+		mlx_hook(md->win, 17, 0, close_window, md);
+	}
+	mlx_mouse_hook(md->win, mouse_event_handler, md);
+	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
+	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
+	set_menu_pos(md, &md->menu, get_v3(-200, -200, 1), get_v3(300, -200, 5));
+	render(md);
+	md->menu.selected_slider = NULL;
+	md->mouse.click = MOUSE_NOPRESS;
+	md->mouse.pressed = MOUSE_NOPRESS;
+	return (md->menu.refresh_bg = 1, md->menu.refresh_ui = 1, -1);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 00:54:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 11:46:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,19 @@ void	draw_raycast_background(t_md *md, t_ray *ray)
 {
 	t_floor_draw_d	d;
 
-	init_floor_data(md, ray, &d);
-	md->env.stored_blades = NULL;
+	if (md->prm.use_ceiling || md->prm.use_floor)
+	{
+		init_floor_data(md, ray, &d);
+		md->env.stored_blades = NULL;
+	}
 	if (md->prm.use_ceiling)
 		draw_ceiling(md, d);
+	else
+		draw_pixels(md->screen, get_v2(ray->index, 0), \
+			get_v2(1, md->hud.floor_start + 1), md->hud.sky_color);
 	if (md->prm.use_floor)
 		draw_floor(md, d);
+	else
+		draw_pixels(md->screen, get_v2(ray->index, md->hud.floor_start - 1), \
+			get_v2(1, md->win_sz.y), md->hud.floor_color);
 }

@@ -49,6 +49,7 @@ t_fe_type	get_random_fe_type(void)
 void	init_fe(t_md *md, t_fe *fe)
 {
 	fe->active = r_range(0, FE_PER_TILE) == 0;
+	fe->active = r_range(0, 2);
 	if (!fe->active)
 		return ;
 	fe->type = get_random_fe_type();
@@ -68,23 +69,23 @@ void	init_fe(t_md *md, t_fe *fe)
 	fe->height = fe->size.y;
 }
 
-void	init_fes(t_md *md, t_env_manager *env)
+void	init_fes(t_md *md, t_env_manager *env, int tlen)
 {
 	const t_vec2	mapsz = md->map.size;
-	const int		tlen = md->t_len;
 	t_vec2			map;
 	t_vec2			cord;
 
-	env->grass = md_malloc(md, sizeof(t_fe ****) * mapsz.y);
+	env->stored_blades = NULL;
+	env->grass = md_malloc(md, sizeof(t_fe ***) * mapsz.y);
 	map.y = -1;
 	while (++map.y < mapsz.y)
 	{
-		env->grass[map.y] = md_malloc(md, sizeof(t_fe ***) * mapsz.x);
+		env->grass[map.y] = md_malloc(md, sizeof(t_fe **) * mapsz.x);
 		map.x = -1;
 		while (++map.x < mapsz.x)
 		{
 			cord.y = -1;
-			env->grass[map.y][map.x] = md_malloc(md, sizeof(t_fe **) * tlen);
+			env->grass[map.y][map.x] = md_malloc(md, sizeof(t_fe *) * tlen);
 			while (++cord.y < tlen)
 			{
 				env->grass[map.y][map.x][cord.y] = \
@@ -95,13 +96,4 @@ void	init_fes(t_md *md, t_env_manager *env)
 			}
 		}
 	}
-}
-
-void	init_env(t_md *md)
-{
-	t_env_manager	*env;
-
-	env = &md->env;
-	env->stored_blades = NULL;
-	init_fes(md, env);
 }

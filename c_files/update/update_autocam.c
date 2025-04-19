@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_autocam.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 22:58:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 16:46:41 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/17 11:55:10 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 static void	init_autocam(t_md *md, t_autocam *autocam)
 {
-	const t_vec2	center = {
-		md->map.size.x * md->t_len * 0.5f,
-		md->map.size.y * md->t_len * 0.5f
-	};
+	const t_vec2	center = {md->map.size.x * md->t_len * 0.5f,
+		md->map.size.y * md->t_len * 0.5f};
 	const float		map_w = minf(40, md->map.size.x) * md->t_len;
 	const float		map_h = minf(40, md->map.size.y) * md->t_len;
 	const float		map_diag = sqrtf(map_w * map_w + map_h * map_h);
+	float			desired_pitch_ratio;
 
 	autocam->fade = 1;
 	autocam->center = center;
@@ -33,11 +32,13 @@ static void	init_autocam(t_md *md, t_autocam *autocam)
 	md->prm.fly_cam = 1;
 	md->prm.use_ceiling = 0;
 	md->prm.ray_depth = md->t_len * md->map.size.y * 2;
-	md->cam.rot.y = 55;
 	md->fx.fog = maxf(.3, 10 / md->map.size.y);
 	md->prm.super_view = 1;
 	md->hud.floor_start = md->win_sz.y * .25;
 	md->timer.time = 10;
+	desired_pitch_ratio = -md->plr.pos.z / (md->t_len * md->map.size.y);
+	desired_pitch_ratio = minmaxf(0.0f, 1.0f, desired_pitch_ratio);
+	md->cam.rot.y = 30 + desired_pitch_ratio * (md->win_sz.y * 0.5f / 8.0f);
 }
 
 static int	exit_autocam(t_md *md, t_autocam *autocam)
@@ -57,6 +58,7 @@ static int	exit_autocam(t_md *md, t_autocam *autocam)
 	md->plr.dir.y = 0;
 	md->timer.time = 1;
 	md->key_clicked = -1;
+	md->prm.fe_speed = 1;
 	autocam->active = 0;
 	autocam->quitting = 0;
 	return (1);
@@ -102,9 +104,9 @@ int	move_cam_to_start(t_md *md)
 	md->hud.floor_start = md->win_sz.y / 2 - (md->cam.rot.y * 8) + 1;
 	render_background(md);
 	update_cam(md, &md->cam);
-	if (fabsf(md->plr.pos.x - md->plr.start_pos.x) < 10 && \
-		fabsf(md->plr.pos.y - md->plr.start_pos.y) < 10 && \
-		fabsf(md->plr.pos.z - md->plr.start_pos.z) < 10)
+	if (fabsf(md->plr.pos.x - md->plr.start_pos.x) < .1 && \
+		fabsf(md->plr.pos.y - md->plr.start_pos.y) < .1 && \
+		fabsf(md->plr.pos.z - md->plr.start_pos.z) < .1)
 		return (1);
 	return (0);
 }
@@ -113,8 +115,10 @@ int	update_autocam(t_md *md, t_autocam *autocam)
 {
 	if (md->timer.time <= 1)
 		init_autocam(md, autocam);
-	if (md->key_clicked == ESC_KEY)
+	if (md->key_clicked == Q_KEY)
 		return (exit_autocam(md, autocam));
+	else if (md->key_clicked == ESC_KEY)
+		free_and_quit(md, NULL, NULL);
 	if (md->key_clicked != -1)
 		autocam->quitting = 1;
 	else if (autocam->quitting && move_cam_to_start(md))

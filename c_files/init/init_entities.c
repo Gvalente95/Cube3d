@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 00:25:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/09 17:48:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 	e->angle = md->cam.rot.x * (M_PI / 180.0f);
 	e->size = get_v2(md->t_len / 2, md->t_len / 2);
 	e->pos.z = 0;
+	e->pos.x += md->t_len / 2;
+	e->start_pos.x = e->pos.x;
 	md->cam.pos = e->pos;
 	add_ent_at_cord(md, e, pos);
 }

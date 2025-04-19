@@ -6,25 +6,39 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 11:37:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 13:04:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mlx_utils.h"
 
-unsigned int	get_r_seed(void)
+static void	init_cursor(t_md *md)
 {
-	int				fd;
-	unsigned int	seed;
+	t_mouse			*msd;
+	const t_vec2	cursor_sz = v2(30);
 
-	fd = open("/dev/urandom", O_RDONLY);
-	if (fd < 0 || read(fd, &seed, sizeof(seed)) != sizeof(seed))
-		seed = (unsigned int)time(NULL);
-	close(fd);
-	return (seed);
+	msd = &md->mouse;
+	msd->cursor = init_img(md, cursor_sz, "utils/cursor/default.xpm", -1);
+	msd->curs_dtc = init_img(md, cursor_sz, "utils/cursor/hand_open.xpm", -1);
+	msd->curs_grb = init_img(md, cursor_sz, "utils/cursor/hand_closed.xpm", -1);
+	msd->pos = v3f(0);
+	msd->world = v2(0);
+	msd->real = v2(0);
+	md->cam.input_offst = v2(0);
+	msd->prev = v2(0);
+	msd->grid_pos = v2(0);
+	msd->delta = v2(0);
+	msd->focus = 0;
+	msd->pressed = 0;
+	msd->click = 0;
+	if (!LIN)
+		mlx_mouse_hide(md->mlx, md->win);
+	mlx_mouse_hook(md->win, mouse_event_handler, md);
+	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
+	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
 }
 
-int	init_screen(t_md *md, t_vec2 win_sz, int resolution, char *win_name)
+static int	init_screen(t_md *md, t_vec2 win_sz, int resolution, char *win_name)
 {
 	void	*screen_image;
 
@@ -35,7 +49,7 @@ int	init_screen(t_md *md, t_vec2 win_sz, int resolution, char *win_name)
 	return (1);
 }
 
-int	init_md(t_md *md)
+static int	init_md(t_md *md)
 {
 	int	i;
 
@@ -57,12 +71,12 @@ int	init_md(t_md *md)
 	md->key_clicked = -1;
 	md->t_len = 60;
 	md->init_steps = 0;
-	md->prm.txt_sc = 14;
+	md->prm.txt_sc = max(14, md->win_sz.x / 150);
 	md->mouse.hide = 1;
 	return (1);
 }
 
-void	init_os_params(t_md *md)
+static void	init_os_params(t_md *md)
 {
 	md->mlx_put = mlx_put_image_to_window;
 	md->mlx_make = mlx_xpm_file_to_image;
@@ -79,6 +93,7 @@ void	init_wrapper(t_md *md, t_vec2 win_sz, char *win_name, int resolution)
 	init_os_params(md);
 	start_timer(&md->timer.game_start);
 	init_screen(md, win_sz, resolution, win_name);
+	init_cursor(md);
 	init_timer(md, &md->timer);
 	if (md->is_linux)
 	{

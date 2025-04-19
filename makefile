@@ -9,7 +9,7 @@ c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/text.c c_files
 c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update.c c_files/update/mapped_ents.c \
 c_files/update/movement.c c_files/update/menu_update.c c_files/update/menu_render.c c_files/update/update_ents.c c_files/update/collisions.c \
 c_files/update/update_var.c c_files/update/update_plr_movement.c c_files/update/collisions_portal.c c_files/update/update_autocam_2.c \
-c_files/render/render_minimap.c c_files/render/filters.c c_files/render/render_hud.c c_files/render/render.c \
+c_files/render/render_minimap.c c_files/render/filters.c c_files/render/render_hud.c c_files/render/render.c c_files/update/menu_tools.c \
 c_files/render/filters_2.c c_files/render/render_background.c c_files/render/dithering.c c_files/render/render_minimap_cmp.c \
 c_files/raycasting/ray_cast_threads.c c_files/raycasting/draw_floor.c c_files/init/init_grass.c c_files/raycasting/ray_cast_draw_ents.c \
 c_files/raycasting/draw_fe.c c_files/init/init_minimap.c c_files/update/update_camera.c c_files/raycasting/ray_cast_threads_Loop.c \

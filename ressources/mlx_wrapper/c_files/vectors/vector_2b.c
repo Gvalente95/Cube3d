@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:13:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/29 12:39:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 14:48:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,6 @@
 t_vec2	v2_center(t_vec2 a, t_vec2 b)
 {
 	return (get_v2(a.x / 2 - b.x / 2, a.y / 2 - b.y / 2));
-}
-
-t_vec2	center_pos(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size)
-{
-	t_vec2	a_center;
-	t_vec2	b_center;
-	t_vec2	center;
-
-	a_center = v2_center(a, a_size);
-	b_center = v2_center(b, b_size);
-	center.x = a_center.x / 2 - b_center.x / 2;
-	center.y = a_center.y / 2 - b_center.y / 2;
-	return (center);
 }
 
 int	v2_bounds(t_vec2 a, t_vec2 bnd_pos, t_vec2 bnd_size)
@@ -50,4 +37,9 @@ int	v2_touch(t_vec2 a, t_vec2 a_size, t_vec2 b, t_vec2 b_size)
 		a.y < b.y + b_size.y && \
 		a.y + a_size.y > b.y \
 	);
+}
+
+t_vec2	div_v2(t_vec2 a, int div)
+{
+	return ((t_vec2){a.x / div, a.y / div});
 }

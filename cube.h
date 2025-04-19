@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:43:49 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/19 11:32:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 //# include <X11/X.h>
 
 # define IMG_PATH			"ressources/xpm/"
-# define RESOLUTION		35
+# define RESOLUTION		10
 //		SCREEN
-# define SCRN_W			2000
-# define SCRN_H			1200
+# define SCRN_W			1300
+# define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -33,7 +33,7 @@
 # define BOB_AMOUNT		.2
 # define BOB_SPD		7
 # define PLR_JUMPPOW	5
-# define GRAVITY		.005
+# define GRAVITY		.01
 # define ARROW_ROT_SPEED 2
 # define MOUSESPD		.5
 # define START_HP		10
@@ -47,12 +47,12 @@
 # define CROSS_SCALE	10
 //		ENNEMY
 # define ENNEMY_SPEED	.1
-# define RAY_ZOOM		25
+# define RAY_ZOOM		50
 
 # define THREADS_BATCH	16
 # define FLOOR_WORKERS	4
 
-# define FE_PER_TILE	64
+# define FE_PER_TILE	32
 # define REVEAL_DISTANCE 5
 
 //		init/init_menu.c
@@ -72,7 +72,7 @@ t_image	**init_weapon(t_md *md, t_image ***mini, char *path);
 //	init/init_hud.c
 void	init_fx(t_md *md, t_fx_data *fx);
 void	init_hud(t_md *md, t_hud *hud);
-void	init_env(t_md *md);
+void	init_fes(t_md *md, t_env_manager *env, int tlen);
 
 //	init/init_map.c
 char	*get_resized_line(char *buffer, int width, char replace_end_with);
@@ -109,7 +109,7 @@ void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz);
 //	init/init_map_validator.c
 int		flood_fill(char *str, int index, int map_width, int len);
 void	print_unvalid_flood(char *flooded_map);
-int		find_breach(char *buffer, int width, int len, int plr_index);
+int		find_breach(char *buffer, int width, int plr_index);
 int		validate_map(t_md *md, char *map);
 
 //	init/init_entities.c
@@ -267,12 +267,11 @@ void	render_hud_elements(t_md *md, t_hud *hud);
 //	render/render.c
 void	render_cursor(t_md *md, t_image *screen, int has_hov);
 void	render_2d_ent(t_md *md, t_ent *e, t_vec2 centr);
-void	render_entities(t_md *md);
 void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx);
 void	render(t_md *md);
 
 //	render/filters_2.c
-void	apply_barrel_distortion(t_image *img, float intensity);
+void	apply_barrel_fx(t_image *img, t_vec2 sz, t_vec2 c, float intensity);
 void	apply_color_banding(t_image *img, float intensity);
 void	apply_bloom(t_image *img, float intensity);
 void	apply_vignette(t_image *img, float intensity, int color);
@@ -322,5 +321,10 @@ void	init_mapped_ent(t_md *md);
 int		remove_ent_at_cord(t_md *md, t_vec2 cord);
 t_ent	*get_mapped_at_cord(t_md *md, t_vec2 cord);
 t_ent	*get_mapped_at_pos(t_md *md, t_vec2f pos);
+
+void	render_logo_cube(t_md *md, t_menu *menu);
+void	update_logo_cube(t_md *md, t_mouse mouse, t_menu *menu);
+void	update_menu_element_end(t_menu *menu, int *hov, int cur_hov);
+void	center_menu_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name);
 
 #endif

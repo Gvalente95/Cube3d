@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:30:53 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 03:19:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 16:30:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha)
 {
-	t_txtd	txt_d;
+	t_txtd		txt_d;
+	const int	end = sldr->img->size.x * sldr->point / (sldr->steps - 1);
+	int			bgr_clr;
 
-	draw_alpha_img(sldr->img, screen, sldr->pos, alpha);
+	bgr_clr = _WHITE;
+	bgr_clr = set_alpha(bgr_clr, alpha);
+	draw_pixels(screen, sldr->pos, get_v2(end, sldr->img->size.y), _RED);
+	draw_pixels(screen, \
+		get_v2(sldr->pos.x + end, sldr->pos.y), \
+		get_v2(sldr->img->size.x - end, sldr->img->size.y), bgr_clr);
 	txt_d.scale = md->prm.txt_sc;
 	txt_d.color = _WHITE;
 	if (md->menu.slider_hov == sldr->index)
@@ -41,9 +48,9 @@ void	render_sliders(t_md *md, t_menu *menu, t_image *screen)
 	{
 		slider = &menu->sliders[i];
 		if (menu->slider_hov == i)
-			render_slider(md, slider, screen, 1);
+			render_slider(md, slider, screen, .75);
 		else
-			render_slider(md, slider, screen, .5);
+			render_slider(md, slider, screen, .1);
 	}
 }
 
@@ -73,17 +80,33 @@ void	render_buttons(t_md *md, t_menu *menu)
 	}
 }
 
-void	center_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name)
+void	render_color_wheels(t_md *md, t_menu *menu, \
+	t_image *screen, int touch_sz)
 {
-	const t_vec2	win_cntr = (t_vec2){md->win_sz.x / 2, md->win_sz.y / 2};
-	t_vec2			pos;
-	const int		title_color = -1;
-	t_txtd			txt_data;
+	t_vec2	sphere_p;
+	int		i;
+	t_clrp	*w;
+	t_txtd	txtd;
+	t_vec3	sphere_d;
 
-	pos.x = win_cntr.x - scale * (ft_strlen(name) / 2) + pos_ofst.x;
-	pos.y = win_cntr.y - scale / 2 + pos_ofst.y;
-	txt_data = (t_txtd){pos.x, pos.y, title_color, scale, NULL};
-	rnd_fast_txt(md, txt_data, name);
+	txtd = (t_txtd){0, 0, -1, md->prm.txt_sc, screen};
+	sphere_d = (t_vec3){_BLACK, 50, 1};
+	i = -1;
+	while (++i < 3)
+	{
+		w = &menu->clrp[i];
+		draw_img(w->img, screen, w->pos, -1);
+		txtd.x = w->pos.x + w->size.x / 2 - \
+			(md->prm.txt_sc * (ft_strlen(w->label)) / 2);
+		txtd.y = w->pos.y + w->size.y + 5;
+		rnd_fast_txt(md, txtd, w->label);
+		if (w->mouse_touch.x == -1)
+			continue ;
+		sphere_p = sub_vec2(w->mouse_touch, v2(touch_sz / 2));
+		draw_sphere(screen, sphere_p, v2(touch_sz), sphere_d);
+		draw_sphere(screen, add_vec2(sphere_p, v2(2)), \
+			v2(touch_sz - 4), get_v3(*w->color, 50, 1));
+	}
 }
 
 void	render_menu(t_md *md, t_menu *menu)
@@ -100,10 +123,12 @@ void	render_menu(t_md *md, t_menu *menu)
 	}
 	if (menu->refresh_ui)
 	{
-		render_sliders(md, menu, menu->freeze_frame);
 		render_buttons(md, menu);
-		center_txt(md, get_v2(0, -win_sz.y * .4), win_sz.x / 20, "GRASS");
-		center_txt(md, get_v2(0, -win_sz.y * .3), win_sz.x / 60, "cube3D");
+		render_sliders(md, menu, menu->freeze_frame);
+		render_color_wheels(md, menu, menu->freeze_frame, 16);
+		render_logo_cube(md, menu);
+		center_menu_txt(md, get_v2(0, -win_sz.y * .4), win_sz.x / 20, "Menu");
+		center_menu_txt(md, get_v2(0, -win_sz.y * .3), win_sz.x / 60, "cube3d");
 		menu->refresh_ui = 0;
 	}
 	else if (menu->selected_slider)

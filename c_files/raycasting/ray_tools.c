@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:36:10 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/19 11:06:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,12 @@
 void	draw_blood(t_md *md, t_image *img, t_vec2 pos, int color)
 {
 	int		radius;
-	t_vec2	start_draw;
 	t_vec3	sphere_data;
 
-	(void)pos;
 	(void)md;
 	radius = (img->size.x / 6);
-	start_draw = pos;
 	sphere_data = get_v3(color, 10, 0);
-	draw_sphere(img, start_draw, v2(radius), sphere_data);
+	draw_sphere(img, pos, v2(radius), sphere_data);
 }
 
 t_vec2	get_2d_ray_pos(t_md *md)

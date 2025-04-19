@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 19:52:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 15:23:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ int	update_player(t_md *md, t_ent *plr)
 	md->hud.floor_start = md->win_sz.y / 2 - md->cam.rot.y * 8 + 1;
 	if (md->hud.floor_start < 0)
 		md->hud.floor_start = 0;
+	md->plr.grounded = fabsf(md->plr.mov.z) < EPSILON;
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 14:48:25 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 14:13:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 12:05:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ void	set_base_mmap_bg(t_md *md, t_mmap *mmap, int ic_len)
 
 void	init_minimap(t_md *md, t_mmap *mmap)
 {
-	int	ic_len;
+	int		ic_len;
+	t_vec2	plr_tile;
 
-	ic_len = max(4, md->win_sz.x / 200);
+	ic_len = minmax(6, 16, (md->win_sz.x / 2) / md->map.size.x);
 	mmap->ic_scl = ic_len;
-	mmap->comps_scl = md->win_sz.x / 200;
+	mmap->comps_scl = minmax(6, 8, (md->win_sz.x / 4) / md->map.size.x);
 	mmap->cmps = 1;
 	mmap->mray_len = 0;
 	mmap->revealed_cur = 0;
@@ -48,4 +49,7 @@ void	init_minimap(t_md *md, t_mmap *mmap)
 	mmap->size = get_v2(md->map.size.x * ic_len, md->map.size.y * ic_len);
 	mmap->img = init_img(md, mmap->size, NULL, md->rgb[RGB_NULL]);
 	mmap->bg = init_img(md, mmap->size, NULL, md->rgb[RGB_NULL]);
+	plr_tile.x = 1 + md->plr.coord.x * ic_len;
+	plr_tile.y = 1 + md->plr.coord.y * ic_len;
+	draw_pixels(mmap->bg, plr_tile, v2(ic_len - 1), _WHITE);
 }

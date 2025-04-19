@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 10:42:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 14:06:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 13:45:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	draw_line(t_image *onto, t_vec2 start, t_vec2 end, t_vec2 color_d)
 	{
 		start = (t_vec2){(int)(pos.x + 0.5f), (int)(pos.y + 0.5f)};
 		if (get_alpha(onto->src[start.y * \
-			(onto->size_line / 4) + start.x]) == 1)
+			(onto->size_line / 4) + start.x]) == 0)
 			break ;
 		if (color_d.y > 1)
 			draw_pixels(onto, start, v2(color_d.y), color_d.x);

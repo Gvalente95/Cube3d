@@ -6,51 +6,36 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:54:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 23:01:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 13:28:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	show_revealed_perc(t_md *md, int scale, t_vec2 pos)
-{
-	float		revealed_perc_;
-	int			color;
-	t_txtd		data;
-
-	revealed_perc_ = (100.0f / md->mmap.revealed_len) * md->mmap.revealed_cur;
-	color = -1;
-	data = (t_txtd){pos.x, pos.y, color, scale, NULL};
-	rnd_fast_txt(md, data, "%.1f/100", revealed_perc_);
-}
-
 static void	show_mmap_ent(t_md *md, t_ent *e, t_vec3f cosin, t_vec2 center)
 {
-	int		draw_color;
+	int		color;
 	t_vec3f	relp;
 	t_vec3f	rotp;
 	t_vec3f	pos;
 	int		dist;
 
-	if (e->type == nt_empty)
-		return ;
 	dist = hypotf(md->plr.pos.x - e->pos.x, md->plr.pos.y - e->pos.y);
 	if (dist > cosin.z * md->t_len)
 		return ;
-	draw_color = (md->rgb[e->type] & 0x00FFFFFF) | \
-	((int)((minmaxf(0.0f, 1.0f, dist / (cosin.z * md->t_len)) * 255)) << 24);
-	if (e == md->portal.ends[0].e)
-		draw_color = _VIOLET;
-	else if (e == md->portal.ends[1].e)
-		draw_color = _ORANGE;
+	color = (md->rgb[e->type]);
+	pos.z = minmaxf(0.0f, 1.0f, dist / (cosin.z * md->t_len));
+	pos.z = 1.0f - powf(1.0f - pos.z, 3.0f);
+	color = set_alpha(color, 1.0f - pos.z);
 	relp = sub_vec3f(e->pos, md->plr.pos);
+	if (e->type == nt_pickup || e->type == nt_mob)
+		relp = add_vec3f(relp, v3f(md->t_len / 2));
 	rotp.x = (relp.x * cosin.x - relp.y * cosin.y - md->cam.ofst.x / md->t_len);
 	rotp.y = (relp.x * cosin.y + relp.y * cosin.x - md->cam.ofst.y / md->t_len);
 	pos.x = center.x + ((rotp.x / md->t_len) * md->mmap.comps_scl);
 	pos.y = center.y + ((rotp.y / md->t_len) * md->mmap.comps_scl);
-	draw_sphere(md->screen,
-		get_v2(pos.x + 1 + cosin.z, pos.y + 1 + cosin.z), \
-		v2(md->mmap.comps_scl - 1), get_v3(draw_color, 10, 1));
+	draw_pixels(md->screen, get_v2(pos.x + cosin.z, pos.y + cosin.z), \
+		v2(md->mmap.comps_scl), color);
 }
 
 static void	show_mmap_dir(t_md *md, t_vec3f cosin, t_vec2 psz, t_vec2 map_p)
@@ -65,6 +50,8 @@ static void	show_mmap_dir(t_md *md, t_vec3f cosin, t_vec2 psz, t_vec2 map_p)
 	const t_vec2		cnt = get_v2(map_p.x + psz.x / 2, map_p.y + psz.y / 2);
 	int					i;
 
+	cosin.x *= 1.2;
+	cosin.y *= 1.2;
 	i = -1;
 	while (++i < 4)
 	{
@@ -88,13 +75,30 @@ void	show_ents(t_md *md, t_vec3f pdir, t_vec2 center)
 		while (++cord.x < md->map.size.x)
 		{
 			e = get_mapped_at_cord(md, cord);
-			if (e && e->type != nt_plr)
+			if (e && e->type != nt_plr && e->type != nt_empty)
 				show_mmap_ent(md, e, pdir, center);
 		}
 	}
-	e = get_mapped_at_cord(md, (t_vec2){md->plr.coord.x, md->plr.coord.y});
-	if (e)
-		show_mmap_ent(md, e, pdir, center);
+	show_mmap_ent(md, &md->plr, pdir, center);
+}
+
+void	draw_dir_line(t_md *md, t_vec2 p, t_vec2 psz)
+{
+	const float	rot = (md->plr.angle + M_PI_2);
+	t_vec2f		local_dir;
+	t_vec2		true_cntr;
+	int			color;
+
+	local_dir = rotate_vec2f(get_v2f(md->plr.dir.x, md->plr.dir.y), rot);
+	local_dir = scale_vec2f(local_dir, md->mmap.comps_scl * 2);
+	true_cntr = get_v2(p.x + psz.x / 2 + md->mmap.comps_scl / 4, \
+		p.y + psz.y / 2);
+	color = _BLACK;
+	color = set_alpha(color, .5);
+	draw_line(md->screen, true_cntr, \
+		add_vec2(true_cntr, \
+			get_v2((int)local_dir.x, (int)local_dir.y)), \
+			get_v2(color, 1));
 }
 
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist)
@@ -113,4 +117,5 @@ void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist)
 	show_mmap_dir(md, pdir, psz, p);
 	pdir.z = view_dist;
 	show_ents(md, pdir, center);
+	draw_dir_line(md, p, psz);
 }

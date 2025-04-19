@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 15:40:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:17:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/11 12:04:27 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,7 @@ static inline float	minf(float a, float b)
 		return (a);
 	return (b);
 }
+
+unsigned int	get_r_seed(void);
 
 #endif

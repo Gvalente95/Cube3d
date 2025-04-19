@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 18:07:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 14:21:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,18 @@ typedef struct s_map
 	int		difficulty;
 }	t_map;
 
+typedef struct s_colorPicker
+{
+	t_vec2		size;
+	t_vec2		pos;
+	t_vec2		mouse_touch;
+	t_image		*img;
+	t_vec4		picker_value;
+	const char	*label;
+	int			base_color;
+	int			*color;
+}	t_clrp;
+
 typedef struct s_slider
 {
 	t_image		*img;
@@ -91,6 +103,8 @@ typedef struct s_menu
 	t_button		buttons[20];
 	t_slider		sliders[50];
 	t_slider		*selected_slider;
+	t_clrp			clrp[3];
+	t_vec3f			cube_logo_rot;
 	int				slider_fill_clr;
 	int				slider_bgr_clr;
 	int				bgr_color;

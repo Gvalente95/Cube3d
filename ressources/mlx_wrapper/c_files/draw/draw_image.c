@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/04 10:55:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/17 15:23:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,28 @@ void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
 			*p = color;
 		p++;
 	}
+}
+
+void	hsv_to_rgb(float h, float s, float v, t_vec4f *rgb_v)
+{
+	const float	c = v * s;
+	const float	x = c * (1.0f - fabsf(fmodf(h * 6.0f, 2.0f) - 1.0f));
+	const float	m = v - c;
+	t_vec4f		rgb;
+
+	if (h < 1.0f / 6.0f)
+		rgb = (t_vec4f){c, x, 0, 1};
+	else if (h < 2.0f / 6.0f)
+		rgb = (t_vec4f){x, c, 0, 1};
+	else if (h < 3.0f / 6.0f)
+		rgb = (t_vec4f){0, c, x, 1};
+	else if (h < 4.0f / 6.0f)
+		rgb = (t_vec4f){0, x, c, 1};
+	else if (h < 5.0f / 6.0f)
+		rgb = (t_vec4f){x, 0, c, 1};
+	else
+		rgb = (t_vec4f){c, 0, x, 1};
+	rgb_v->r = rgb.r + m;
+	rgb_v->g = rgb.g + m;
+	rgb_v->b = rgb.b + m;
 }
