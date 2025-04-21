@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 15:09:03 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 15:00:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	draw_sky(t_md *md, t_image *bufr, t_vec3 *sky_pos)
 	}
 }
 
-static int	render_sky(t_md *md, t_image *bufr)
+int	render_sky(t_md *md, t_image *bufr)
 {
 	t_vec3	sky_pos[6];
 	t_vec3f	speed;
@@ -100,7 +100,7 @@ void	render_background(t_md *md)
 		render_2d_floor(md);
 	if (!md->prm.use_ceiling)
 	{
-		if (md->prm.use_sky)
+		if (md->prm.show_sky)
 			render_sky(md, md->screen);
 		else
 			draw_pixels(md->screen, \

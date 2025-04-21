@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:55:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 00:15:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 16:22:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,9 @@ double	get_time_in_seconds(void)
 	return (ts.tv_sec + (ts.tv_nsec / 1000000000.0));
 }
 
-double	check_timer(double timer)
-{
-	return (get_time_in_seconds() - timer);
-}
-
 void	start_timer(double *timer)
 {
 	*timer = get_time_in_seconds();
-}
-
-void	stop_timer(t_timer *timer)
-{
-	timer->tm_menu = get_time_in_seconds();
 }
 
 void	init_timer(t_md *md, t_timer *timer)
@@ -53,4 +43,23 @@ void	init_timer(t_md *md, t_timer *timer)
 	timer->prev_time = get_time_in_seconds();
 	timer->fps_tm = timer->game_start;
 	timer->game_start = timer->prev_time;
+}
+
+pid_t	play_index(t_md *md, const char *filepath, int index)
+{
+	pid_t	pid;
+	char	*index_txt;
+	char	*path_with_index;
+	char	*full_path;
+
+	if (!md->prm.au_on)
+		return (0);
+	index_txt = ft_itoa(index);
+	path_with_index = ft_strjoin(index_txt, ".mp3");
+	full_path = ft_strjoin(filepath, path_with_index);
+	pid = play_sound(md, full_path);
+	free(full_path);
+	free(path_with_index);
+	free(index_txt);
+	return (pid);
 }

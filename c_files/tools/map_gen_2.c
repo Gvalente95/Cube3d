@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 12:56:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 10:03:28 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	set_characters(char *map, int difficulty)
 	pickup_amount = minmax(1, 30, space / 10);
 	set_character('P', pickup_amount, map, len);
 	set_character('M', mobs_amount / 3, map, len);
-	set_character('B', mobs_amount / 3, map, len);
+	set_character('K', mobs_amount / 3, map, len);
 	door_amount = len / 20;
 	set_doors(map, door_amount);
 }
@@ -89,7 +89,7 @@ char	*set_map_with_base(char *map)
 		"SO ressources/xpm/utils/wall.xpm\n", \
 		"WE ressources/xpm/utils/wall.xpm\n", \
 		"EA ressources/xpm/utils/wall.xpm\n", \
-		"F 96,64,32\n", "C 150,150,150\n"
+		"F 96,64,32\n", "C 120,120,255\n"
 	};
 	int			i;
 	char		*full_data;

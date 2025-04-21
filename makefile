@@ -1,5 +1,5 @@
 SRC_UTILS	= \
-c_files/init/init_menu.c c_files/init/init_frames2.c c_files/init/init_hud.c c_files/init/init_map.c \
+c_files/init/init_menu.c c_files/init/init_frames2.c c_files/init/init_hud.c c_files/init/init_map.c c_files/raycasting/ray_cast_pointed.c \
 c_files/init/init_labels.c c_files/init/init_frames.c c_files/init/init_ent_frames.c c_files/init/init_menu_elements.c \
 c_files/init/init_map_data.c c_files/init/init_background.c c_files/init/init_map_validator.c c_files/init/init_entities.c \
 c_files/init/init_.c c_files/raycasting/ray_tools_2.c c_files/raycasting/ray_cast.c c_files/raycasting/draw_sprite_column.c \

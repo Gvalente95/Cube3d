@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 11:32:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 16:01:06 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@
 # define HEIGHT			0
 # define BOB_AMOUNT		.2
 # define BOB_SPD		7
-# define PLR_JUMPPOW	5
-# define GRAVITY		.01
+# define GRAVITY		.04
 # define ARROW_ROT_SPEED 2
 # define MOUSESPD		.5
 # define START_HP		10
 # define SHOOT_REFRESH	.1
 # define WALK_REFRESH	.5
+# define ANIM_REFRESH	.05
 
 # define MAX_AMMO		50
 # define MAX_KEY		3
@@ -52,8 +52,9 @@
 # define THREADS_BATCH	16
 # define FLOOR_WORKERS	4
 
-# define FE_PER_TILE	32
+# define FE_PER_TILE	100
 # define REVEAL_DISTANCE 5
+# define TARGET_FPS		100
 
 //		init/init_menu.c
 void	set_menu_pos(t_md *md, t_menu *menu, \
@@ -91,11 +92,11 @@ void	init_labels(t_texture_data *txd);
 //	init/init_frames.c
 void	init_weapon_frames(t_md *md, t_texture_data *td);
 void	init_pickup_frames(t_md *md, t_texture_data *td);
-void	store_entities_sizes(t_texture_data *td, t_vec2 base);
+void	store_entities_sizes(t_texture_data *td, int base);
 void	init_ents_data(t_md *md, t_texture_data *txd);
 
 //	init/init_ent_frames.c
-void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e);
+int		init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e);
 
 //	init/init_menu_elements.c
 void	init_menu_elements(t_md *md, t_menu *menu);
@@ -107,9 +108,9 @@ void	init_map_data(t_md *md);
 void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz);
 
 //	init/init_map_validator.c
-int		flood_fill(char *str, int index, int map_width, int len);
+int		flood_fill(t_map *map, char *str, int index, int depth);
 void	print_unvalid_flood(char *flooded_map);
-int		find_breach(char *buffer, int width, int plr_index);
+int		find_breach(t_md *md, t_map *map, int plr_index);
 int		validate_map(t_md *md, char *map);
 
 //	init/init_entities.c
@@ -289,7 +290,7 @@ void	apply_dithering(t_image *img, float dither_strength, \
 
 //	render/render_minimap_cmp.c
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist);
-void	draw_sprite_thread(t_md *md, t_ent *e, float fogalpha);
+void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha);
 int		is_in_list(t_dblst *lst, t_ent *e);
 void	draw_found_ents(t_md *md, t_thrd_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
@@ -300,7 +301,6 @@ void	draw_stored_fe(t_md *md);
 int		render_fe(t_md *md, t_fe *fe, int width);
 
 int		update_key_input(t_md *md, t_menu *menu, unsigned int c);
-void	show_revealed_perc(t_md *md, int scale, t_vec2 pos);
 void	init_fonts(t_md *md);
 
 int		draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray);
@@ -326,5 +326,9 @@ void	render_logo_cube(t_md *md, t_menu *menu);
 void	update_logo_cube(t_md *md, t_mouse mouse, t_menu *menu);
 void	update_menu_element_end(t_menu *menu, int *hov, int cur_hov);
 void	center_menu_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name);
+int		render_sky(t_md *md, t_image *bufr);
+void	cap_fps(t_timer *tm, double frame_duration);
+void	init_pokemon_frames(t_md *md, t_texture_data *txd);
+void	show_pointed_data(t_md *md, t_vec2 p, t_ent *e);
 
 #endif

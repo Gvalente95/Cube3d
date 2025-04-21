@@ -49,7 +49,6 @@ t_fe_type	get_random_fe_type(void)
 void	init_fe(t_md *md, t_fe *fe)
 {
 	fe->active = r_range(0, FE_PER_TILE) == 0;
-	fe->active = r_range(0, 2);
 	if (!fe->active)
 		return ;
 	fe->type = get_random_fe_type();

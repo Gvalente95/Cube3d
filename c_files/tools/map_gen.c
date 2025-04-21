@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 23:10:51 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 13:34:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 23:59:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	set_rect_cell(char *full, t_vec3 draw_p, t_vec3 full_sz, int is_border)
 		draw_p.y == 0 || draw_p.y == full_sz.y)
 		return (full[i] = '1', 0);
 	if ((is_border && (full[i] == ' ' || r_range(0, 25) > 3)) || \
-		r_range(0, 15) == 0)
+		r_range(0, 100) == 0)
 		full[i] = '1';
 	else
 		full[i] = '0';

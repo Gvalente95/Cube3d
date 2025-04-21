@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 14:21:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 17:43:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ typedef struct s_colorPicker
 
 typedef struct s_slider
 {
-	t_image		*img;
 	t_vec3f		limits;
 	t_vec2		pos;
 	char		label[50];
+	t_vec2		size;
 	float		*value;
 	int			index;
 	int			point;
@@ -100,7 +100,7 @@ typedef struct s_menu
 {
 	t_image			*overlay;
 	t_image			*freeze_frame;
-	t_button		buttons[20];
+	t_button		buttons[50];
 	t_slider		sliders[50];
 	t_slider		*selected_slider;
 	t_clrp			clrp[3];

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:06:18 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static int	update_mouse_input(t_md *md)
 			return (play_sound(md, AU_OPEN), md->hud.keys--, 1);
 		return (play_sound(md, AU_CLOSE), md->hud.keys++, 1);
 	}
+	if (md->cam.pointed->type == nt_pokemon)
+		play_sound(md, md->au.pokemon_cries[md->cam.pointed->mob_type]);
 	if (md->cam.pointed->type != nt_mob)
 		return (0);
 	paint_ent(md, md->cam.pointed, v2(0));
@@ -89,8 +91,8 @@ static int	update_mouse_input(t_md *md)
 
 void	update_input(t_md *md)
 {
-	if (md->key_clicked != -1)
-		update_key_input(md, &md->menu, (unsigned int)md->key_clicked);
+	if (md->key_click != -1)
+		update_key_input(md, &md->menu, (unsigned int)md->key_click);
 	if (md->menu.active)
 		return ;
 	update_arrow_rotation(md);

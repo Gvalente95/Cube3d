@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 14:28:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:18:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	set_menu_pos(t_md *md, t_menu *menu, \
 	{
 		slider = &menu->sliders[i];
 		pos.x = md->win_sz.x / 4 + sldr_offst.x;
-		pos.y = ((slider->img->size.y + sldr_offst.z) \
+		pos.y = ((slider->size.y + sldr_offst.z) \
 			* i) + win_sz.y * .2 + sldr_offst.y;
 		slider->pos = pos;
 	}
@@ -54,7 +54,7 @@ void	set_clr_pck(t_md *md, t_clrp *clrP, int *value, const char *lbl)
 
 	clrP->label = lbl;
 	clrP->color = value;
-	clrP->img = init_img(md, size, "utils/clr_w_rgb.xpm", -1);
+	clrP->img = init_img(md, size, "utils/clr_w_full.xpm", -1);
 	clrP->size = size;
 	clrP->pos = v2(0);
 	clrP->mouse_touch = v2(-1);
@@ -65,7 +65,8 @@ void	set_clr_pck(t_md *md, t_clrp *clrP, int *value, const char *lbl)
 void	set_color_pickers(t_md *md, t_menu *menu)
 {
 	const t_vec2	size = v2(75);
-	const t_vec2	base_p = (t_vec2){md->win_sz.x * .75, 0};
+	const t_vec2	winsz = md->win_sz;
+	const t_vec2	base_p = (t_vec2){winsz.x - size.x * 4, winsz.y * .05};
 	const int		spc = 10;
 
 	md->var = size.x;

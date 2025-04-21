@@ -6,69 +6,54 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 11:46:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 23:42:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	draw_floor_px(t_md *md, t_floor_draw_d d, \
+static int	draw_floor_px(t_md *md, t_floor_draw_d *d, \
 	t_fe **prv_fe, int has_flr)
 {
 	const int		fog_clr = md->hud.fog_color;
-	const t_vec2	clr_d = (t_vec2){d.clr, md->hud.bgr_color};
+	const t_vec2	clr_d = (t_vec2){d->clr, md->hud.bgr_color};
 
-	d.fogalpha = -1;
+	d->fogalpha = -1;
 	if (md->fx.fog > 0)
-		d.fogalpha = minmaxf(0, 1, (d.rwd / 10.0f) * md->fx.fog);
-	if (d.fogalpha >= 1)
-		return (draw_pixel(md->screen, d.win, fog_clr, d.fogalpha), 1);
+		d->fogalpha = minmaxf(0, 1, (d->rwd / 10.0f) * md->fx.fog);
+	if (d->fogalpha >= 1)
+		return (draw_pixel(md->screen, d->win, fog_clr, d->fogalpha), 1);
 	if (has_flr)
-		draw_pixel(md->screen, d.win, clr_d.x, 1);
+		draw_pixel(md->screen, d->win, clr_d.x, 1);
 	if (md->prm.use_grass)
-		update_and_render_fe(md, d, prv_fe);
-	if (d.fogalpha > 0)
-		draw_pixel(md->screen, d.win, fog_clr, d.fogalpha);
+		update_and_render_fe(md, *d, prv_fe);
+	if (d->fogalpha > 0)
+		draw_pixel(md->screen, d->win, fog_clr, d->fogalpha);
 	return (1);
 }
 
 int	set_floor_pxl(t_md *md, t_floor_draw_d *d, t_fe **prv_fe)
 {
 	const t_image	*img = md->hud.floor;
-	const t_vec2	img_sz = md->hud.floor->size;
-	t_vec2f			flr_tile;
+	const t_vec2	sz = md->hud.floor->size;
 
 	if (d->win.x < 0 || d->win.x >= md->win_sz.x)
 		return (0);
-	flr_tile.x = d->flr.x + d->rwd * d->dirl.x + d->stp.x * d->win.x;
-	flr_tile.y = d->flr.y + d->rwd * d->dirl.y + d->stp.y * d->win.x;
+	if (md->prm.use_grass)
+	{
+		d->flr.x = (d->plr.x / md->t_len) + d->rwd * d->dirl.x + \
+			d->stp.x * d->win.x;
+		d->flr.y = (d->plr.y / md->t_len) + d->rwd * d->dirl.y + \
+			d->stp.y * d->win.x;
+	}
 	if (d->win.y > md->win_sz.y && md->prm.use_grass)
-		return (draw_floor_px(md, *d, prv_fe, 0), 1);
-	d->txp.x = ((int)(flr_tile.x * img_sz.x) % img_sz.x + img_sz.x) % img_sz.x;
-	d->txp.y = ((int)(flr_tile.y * img_sz.y) % img_sz.y + img_sz.y) % img_sz.y;
+		return (draw_floor_px(md, d, prv_fe, 0), 1);
+	d->flr_t.x = d->flr.x + d->rwd * d->dirl.x + d->stp.x * d->win.x;
+	d->flr_t.y = d->flr.y + d->rwd * d->dirl.y + d->stp.y * d->win.x;
+	d->txp.x = ((int)(d->flr_t.x * sz.x) % sz.x + sz.x) % sz.x;
+	d->txp.y = ((int)(d->flr_t.y * sz.y) % sz.y + sz.y) % sz.y;
 	d->clr = img->src[d->txp.y * (img->size_line / 4) + d->txp.x];
-	return (draw_floor_px(md, *d, prv_fe, 1), 1);
-}
-
-void	init_floor_data(t_md *md, t_ray *ray, t_floor_draw_d *d)
-{
-	t_vec2f			pn;
-
-	pn.x = -md->plr.dir.y * (.66 + md->prm.floor_fov);
-	pn.y = md->plr.dir.x * (.66 + md->prm.floor_fov);
-	d->ray = ray;
-	d->win = (t_vec2){ray->index, md->hud.floor_start};
-	d->plr = md->plr.pos;
-	d->dirl = (t_vec2f){md->plr.dir.x - pn.x, md->plr.dir.y - pn.y};
-	d->dirr = (t_vec2f){md->plr.dir.x + pn.x, md->plr.dir.y + pn.y};
-	d->rwd = 0;
-	d->stp = v2f(0);
-	d->flr.x = (md->plr.pos.x / md->t_len);
-	d->flr.y = (md->plr.pos.y / md->t_len);
-	d->txp = v2(0);
-	d->clr = -1;
-	d->p = 0;
-	d->fogalpha = 0;
+	return (draw_floor_px(md, d, prv_fe, 1), 1);
 }
 
 void	draw_floor(t_md *md, t_floor_draw_d d)
@@ -76,6 +61,8 @@ void	draw_floor(t_md *md, t_floor_draw_d d)
 	const t_vec2	winsz = md->win_sz;
 	t_fe			*prv_fe;
 
+	md->env.stored_blades = NULL;
+	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.y};
 	prv_fe = NULL;
 	while (d.win.y++ < winsz.y + md->t_len)
 	{
@@ -90,23 +77,51 @@ void	draw_floor(t_md *md, t_floor_draw_d d)
 	}
 }
 
+void	init_floor_data(t_md *md, t_ray *ray, t_floor_draw_d *d)
+{
+	t_vec2f			pn;
+	const float		cam_scale = md->win_sz.x / (float)md->win_sz.y;
+
+	pn.x = -md->plr.dir.y * cam_scale * md->prm.floor_fov;
+	pn.y = md->plr.dir.x * cam_scale * md->prm.floor_fov;
+	d->ray = ray;
+	d->plr = md->plr.pos;
+	d->dirl = (t_vec2f){md->plr.dir.x - pn.x, md->plr.dir.y - pn.y};
+	d->dirr = (t_vec2f){md->plr.dir.x + pn.x, md->plr.dir.y + pn.y};
+	d->rwd = 0;
+	d->stp = v2f(0);
+	d->flr.x = (md->plr.pos.x / md->t_len);
+	d->flr.y = (md->plr.pos.y / md->t_len);
+	d->txp = v2(0);
+	d->clr = -1;
+	d->p = 0;
+	d->fogalpha = 0;
+}
+
 void	draw_raycast_background(t_md *md, t_ray *ray)
 {
 	t_floor_draw_d	d;
+	t_vec4			bgr_v4;
 
-	if (md->prm.use_ceiling || md->prm.use_floor)
+	if (!md->prm.show_walls)
 	{
-		init_floor_data(md, ray, &d);
-		md->env.stored_blades = NULL;
+		bgr_v4 = color_to_v4(_WHITE);
+		bgr_v4.r = minmax(0, 255, bgr_v4.r - ray->distance * .2);
+		bgr_v4.g = minmax(0, 255, bgr_v4.g - ray->distance * .2);
+		bgr_v4.b = minmax(0, 255, bgr_v4.b - ray->distance * .2);
+		draw_pixels(md->screen, get_v2(ray->index, 0), get_v2(1, md->win_sz.y), \
+			v4_to_color(bgr_v4.r, bgr_v4.g, bgr_v4.b, 255));
 	}
+	if (md->prm.use_ceiling || md->prm.use_floor)
+		init_floor_data(md, ray, &d);
 	if (md->prm.use_ceiling)
 		draw_ceiling(md, d);
-	else
+	else if (!md->prm.show_sky)
 		draw_pixels(md->screen, get_v2(ray->index, 0), \
-			get_v2(1, md->hud.floor_start + 1), md->hud.sky_color);
-	if (md->prm.use_floor)
+			get_v2(1, ray->wall_strip_pos.x), md->hud.sky_color);
+	if (md->prm.use_floor && ray->wall_strip_pos.y < md->win_sz.y)
 		draw_floor(md, d);
 	else
-		draw_pixels(md->screen, get_v2(ray->index, md->hud.floor_start - 1), \
+		draw_pixels(md->screen, get_v2(ray->index, ray->wall_strip_pos.y), \
 			get_v2(1, md->win_sz.y), md->hud.floor_color);
 }

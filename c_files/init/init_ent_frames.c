@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 21:42:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 11:17:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 16:00:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,30 +61,32 @@ static int	copy_anim_frames(t_md *md, t_ent *e)
 	return (1);
 }
 
-void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
+void	set_pickup_frame(t_md *md, t_texture_data *txd, t_ent *e)
+{
+	e->pckp_type = r_range_seed(&md->r_seed, 0, PCKP_TYPE_LEN - 1);
+	e->wpn_type = r_range(0, 3);
+	e->frame = txd->pickup_txtr[e->pckp_type][0];
+	if (e->pckp_type == Weapon)
+		e->frame = txd->pickup_txtr[4][e->wpn_type];
+}
+
+int	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
 {
 	e->pckp_type = -1;
 	e->action = 0;
 	e->frame_index = 0;
-	e->row_draw_index = 0;
 	if (e->type == nt_empty)
-		e->frame = md->hud.floor;
-	if (e->type == nt_bush)
-		e->frame = txd->bush_txtr[r_range(0, 4)];
-	else if (e->type == nt_tree)
-		e->frame = txd->tree_txtr[0];
+		return (e->frame = md->hud.floor, 1);
 	else if (e->type == nt_wall)
-		e->frame = txd->wall_img[0];
+		return (e->frame = txd->wall_img[0], 1);
 	else if (e->type == nt_mob)
-		copy_anim_frames(md, e);
+		return (copy_anim_frames(md, e), 1);
 	else if (e->type == nt_door)
-		e->frame = txd->door_txtr;
-	else
-	{
-		e->pckp_type = r_range_seed(&md->r_seed, 0, PCKP_TYPE_LEN - 1);
-		e->wpn_type = r_range(0, 3);
-		e->frame = txd->pickup_txtr[e->pckp_type][0];
-		if (e->pckp_type == Weapon)
-			e->frame = txd->pickup_txtr[4][e->wpn_type];
-	}
+		return (e->frame = txd->door_txtr, 1);
+	else if (e->type == nt_pickup)
+		return (set_pickup_frame(md, txd, e), 1);
+	e->mob_type = r_range_seed(&md->r_seed, 0, PKMN_TYPE_LEN - 1);
+	e->frames = copy_action_frames(md, md->txd.pkmn[e->mob_type]);
+	e->frame = e->frames[0];
+	return (1);
 }

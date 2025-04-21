@@ -6,11 +6,20 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 14:53:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:51:34 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
+
+void	update_pokemon_frame(t_ent *e)
+{
+	e->frame_index++;
+	if (!e->frames[e->frame_index])
+		e->frame_index = 0;
+	e->frame = e->frames[e->frame_index];
+	return ;
+}
 
 void	update_ent_frame(t_ent *e)
 {
@@ -37,18 +46,6 @@ void	update_ent_frame(t_ent *e)
 	}
 	e->frame = e->anim[e->action][e->frame_index];
 	e->size = e->frame->size;
-}
-
-static int	update_door(t_ent *e)
-{
-	const float	target = (e->hp > 0) + .3f;
-	const float	speed = 0.1;
-
-	if (e->angle < target)
-		e->angle = fmin(e->angle + speed, target);
-	else if (e->angle > target)
-		e->angle = fmax(e->angle - speed, target);
-	return (1);
 }
 
 static int	update_wall(t_md *md, t_ent *e)
@@ -82,16 +79,20 @@ static int	update_wall(t_md *md, t_ent *e)
 
 static int	update_ent(t_md *md, t_ent *e)
 {
-	e->row_draw_index = 0;
-	e->tex_accumulator = 0;
+	e->in_screen = 0;
 	if (e->type == nt_wall)
 		return (update_wall(md, e));
 	if (e->type == nt_door)
-		return (update_door(e));
+		return (1);
 	if (!md->prm.ent_mode)
 		return (1);
-	if (md->timer.trig_anim && e->is_active && e->type == nt_mob)
-		update_ent_frame(e);
+	if (md->timer.trig_anim && e->is_active)
+	{
+		if (e->type == nt_pokemon)
+			update_pokemon_frame(e);
+		else if (e->type == nt_mob)
+			update_ent_frame(e);
+	}
 	if (e->type != nt_mob || !e->is_active)
 		return (1);
 	if (e->hp > 0)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 20:27:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:12:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 # include "../mlx_utils.h"
 
-# define ENT_FRAMES_MAX		20
-# define ANIM_REFRESH		.1
+# define ENT_FRAMES_MAX	200
 
 typedef struct s_draw_d
 {
@@ -46,13 +45,15 @@ typedef struct s_image_data
 
 typedef struct s_texture_data
 {
-	t_vec2			e_sizes[ENT_TYPE_LEN];
+	int				e_scales[ENT_TYPE_LEN];
 	t_vec2			e_sizes2d[ENT_TYPE_LEN];
 	t_image			****mobs_txtrs;
 	t_image			****mobs_txtrs_mini;
 	t_image			***pickup_txtr;
 	t_image			***wpn_txtr;
 	t_image			***pickup_txtr_mini;
+	t_image			***pkmn;
+	t_image			**pkmns_mini;
 	t_image			***wpn_txtr_2d;
 	t_image			**wall_img;
 	t_image			**wall_img2d;
@@ -63,14 +64,20 @@ typedef struct s_texture_data
 	t_image			*font[256];
 	t_image			*floor;
 	t_image			*ceiling;
+	t_ent			*last_pointed;
+	t_vec2			last_pointed_screen_p;
 	const char		*ents_tp_map[ENT_TYPE_LEN];
 	const char		*ents_types_names[ENT_TYPE_LEN];
 	const char		*weapons_names[WEAPON_TYPE_LEN];
 	const char		*mob_names[MOB_TYPE_LEN];
 	const char		*pickup_names[PCKP_TYPE_LEN];
 	const char		*ents_act_names[ENT_ACTION_LEN];
+	const char		*pkmn_names[PKMN_TYPE_LEN];
 	const char		*plr_act_names[PLR_ACTION_LEN];
 	int				size_2d;
+	int				feet_offsets[PKMN_TYPE_LEN];
+	int				highest_pkmn;
+	int				opt_index;
 	float			texture_accumulator;
 }	t_texture_data;
 
@@ -151,7 +158,6 @@ int				draw_pixel(t_image *dst, t_vec2 pos, int color, float alpha);
 int				draw_pixels(t_image *dst, t_vec2 pos, t_vec2 draw_sz, int clr);
 void			draw_line(t_image *dst, t_vec2 start, t_vec2 end, t_vec2 clr_d);
 int				draw_safe_pxls(t_image *img, t_vec2 p, t_vec2 draw_sz, int clr);
-void			draw_random_pixel(t_image *img, int scale, int clr, float rand);
 int				draw_safe_pxl(t_image *img, t_vec2 p, t_vec2 ovrcl, float opct);
 
 //		draw/images_a.c

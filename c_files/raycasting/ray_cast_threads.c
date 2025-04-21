@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/09 17:44:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:47:47 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 	ray->hit_data[0].hit = NULL;
 	ray->hits_len = 0;
 	init_base_ray(ray, ray->index, md->cam.pos, 0);
+	ray->wall_strip_pos = v2(md->hud.floor_start);
 	ray->dir = get_v3f(dir_val.x, dir_val.y, 0);
 	ray->angle = dir_val.z;
 	ray->check_hit = NULL;
@@ -26,19 +27,27 @@ void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 int	draw_stored_sprite_hits(t_md *md, t_ray *ray)
 {
 	t_hit_data		*hit_data;
+	int				ret_val;
 
+	ret_val = 1;
 	while (ray->hits_len--)
 	{
 		hit_data = &ray->hit_data[ray->hits_len];
 		if (!hit_data->hit)
-			return (0);
+		{
+			ret_val = 0;
+			break ;
+		}
 		if (ray->check_hit && ray->check_hit->type == nt_door)
-			return (1);
+		{
+			ret_val = 1;
+			break ;
+		}
 		ray->vertical_hit = hit_data->vertical_hit_at_e;
 		ray->pos = hit_data->post_at_hit;
-		draw_sprite(md, ray, *hit_data);
+		draw_wall_line(md, hit_data->dist_at_e, hit_data->hit, ray);
 	}
-	return (1);
+	return (ret_val);
 }
 
 int	cast_thread_ray(t_md *md, int index)
@@ -48,10 +57,10 @@ int	cast_thread_ray(t_md *md, int index)
 	ray = &md->rays[index];
 	ray->index = index;
 	update_ray_data(md, ray, md->thrd_manager.dir_vals[ray->index]);
-	draw_raycast_background(md, ray);
 	ray_move(md, ray, md->thrd_manager.ray_visu_offset);
 	if (!ray->check_hit && ray->wall_hit != NULL)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
+	draw_raycast_background(md, ray);
 	if (ray->hits_len > 0)
 		return (draw_stored_sprite_hits(md, ray));
 	return (1);

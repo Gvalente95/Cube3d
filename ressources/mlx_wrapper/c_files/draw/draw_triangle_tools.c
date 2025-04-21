@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:58:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 13:22:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:10:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,6 @@ float	dist2(t_vec2 a, t_vec2 b)
 	const float	dy = b.y - a.y;
 
 	return (dx * dx + dy * dy);
-}
-
-int	is_face_visible(t_vec3f a, t_vec3f b, t_vec3f c)
-{
-	const t_vec3f	ab = sub_vec3f(b, a);
-	const t_vec3f	ac = sub_vec3f(c, a);
-	const t_vec3f	normal = cross_vec3f(ab, ac);
-	const t_vec3f	view_dir = {0, 0, -1};
-
-	return (dot_vec3f(normal, view_dir) < 0);
 }
 
 int	is_flat_tri(t_vec2 v[3], int treshold)

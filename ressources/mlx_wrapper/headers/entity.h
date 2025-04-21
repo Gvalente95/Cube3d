@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 15:07:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:59:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,30 @@ typedef enum e_weapon_types
 	WEAPON_TYPE_LEN
 }	t_weapon_types;
 
+typedef enum e_pokemon_types
+{
+	Arbok,
+	Blastoise,
+	Butterfree,
+	Chansey,
+	Charizard,
+	Dodrio,
+	Dragonite,
+	Dugtrio,
+	Exeggutor,
+	Gengar,
+	Golem,
+	Magneton,
+	Ninetales,
+	Persian,
+	Pidgeot,
+	Pikachu,
+	Poliwrath,
+	Snorlax,
+	Taurus,
+	PKMN_TYPE_LEN
+}	t_pokemon_types;
+
 typedef enum e_mob_types
 {
 	Rat,
@@ -82,6 +106,7 @@ typedef enum e_entity_types
 	nt_pickup,
 	nt_bush,
 	nt_tree,
+	nt_pokemon,
 	nt_empty,
 	ENT_TYPE_LEN
 }	t_ent_type;
@@ -142,7 +167,6 @@ typedef struct s_entity
 	int				frame_index;
 	int				in_screen;
 	int				revealed;
-	int				row_draw_index;
 }	t_ent;
 
 #endif

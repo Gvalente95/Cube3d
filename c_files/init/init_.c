@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 11:32:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 17:22:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	prm->view_2d = 0;
 	prm->use_ceiling = 1;
 	prm->use_floor = 1;
-	prm->use_sky = 0;
+	prm->show_walls = 1;
+	prm->show_sky = 0;
 	prm->show_fps = 1;
+	prm->show_hud = 1;
 	prm->super_view = 0;
 	prm->max_view_sprite = MAX_RAY_SPRITE;
 	prm->au_on = !md->is_linux;

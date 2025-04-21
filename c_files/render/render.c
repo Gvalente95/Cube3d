@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 16:25:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:55:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	render_2d_ent(t_md *md, t_ent *e, t_vec2 centr)
 		img = td->pickup_txtr_mini[e->pckp_type][0];
 	else if (e->type == nt_door)
 		img = td->door_txtr_mini;
+	else if (e->type == nt_pokemon)
+		img = td->pkmns_mini[e->mob_type];
 	else if (e->type == nt_plr)
 	{
 		ent_p.x = ent_p.x - td->e_sizes2d[nt_mob].x / 2;
@@ -102,13 +104,15 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 void	render(t_md *md)
 {
 	md->cam.pointed = NULL;
+	if (md->prm.show_sky && !md->prm.use_ceiling)
+		render_sky(md, md->screen);
 	if (md->prm.use_thrd)
 		cast_ray_threads_lp(md);
 	else
 		cast_rays(md);
 	if (md->prm.view_2d)
 		render_2d_entities(md);
-	else
+	if (md->prm.show_hud)
 		render_hud_elements(md, &md->hud);
 	render_minimap(md, &md->mmap);
 	if (md->prm.debug_mode)

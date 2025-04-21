@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:38:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:30:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 16:01:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@
 
 typedef struct s_au_manager
 {
-	pid_t	wind_pid;
-	pid_t	amb_pid;
-	pid_t	mus_pid;
-	int		walk_index;
+	pid_t		wind_pid;
+	pid_t		amb_pid;
+	pid_t		mus_pid;
+	int			walk_index;
+	char		pokemon_cries[PKMN_TYPE_LEN][50];
 }	t_au_manager;
 
 //		var/audio.c
@@ -45,7 +46,7 @@ int				play_rand_sound(t_md *md, const char *path, \
 pid_t			play_sound(t_md *md, const char *filename);
 pid_t			play_index(t_md *md, const char *filepath, int index);
 void			stop_sound(pid_t pid);
-int				is_audio_playing(t_md *md, pid_t pid);
 int				play_loop(t_md *md, pid_t *pid, char *filename, int depend);
+void			init_au(t_md *md, t_au_manager *au);
 
 #endif

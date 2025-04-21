@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/19 11:12:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:13:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@
 # endif
 
 # define MOUSE_SENSITIVITY .2
-# define MAPPED_ENT_MAX	100
+# define MAPPED_ENT_MAX	150
 
 typedef struct s_mmap
 {
@@ -136,10 +136,13 @@ typedef struct s_parameters
 	int				max_view_sprite;
 	int				au_on;
 	int				use_grass;
+	float			cap_fps;
 	int				use_ceiling;
 	int				use_floor;
 	int				super_view;
-	int				use_sky;
+	int				show_walls;
+	int				show_hud;
+	int				show_sky;
 	float			bob_amount;
 	float			sun_x;
 	float			sun_y;
@@ -242,7 +245,7 @@ typedef struct s_md
 	char			base_map_path[50];
 	unsigned int	r_seed;
 	int				key_prs[65536];
-	int				key_clicked;
+	int				key_click;
 	int				last_key;
 	int				init_steps;
 	int				rgb[20];
@@ -291,11 +294,9 @@ int		free_md(t_md *md, int quit);
 int		free_and_quit(t_md *d, const char *msg, const char *attribute);
 
 //		time/time.c
-void	stop_timer(t_timer *timer);
 void	resume_timer(t_timer *timer);
 double	get_total_time(t_timer *timer);
 double	get_time_in_seconds(void);
-double	check_timer(double timer);
 void	start_timer(double *timer);
 void	init_timer(t_md *md, t_timer *timer);
 void	reset_fps_timer(t_timer *timer);
@@ -360,11 +361,12 @@ t_vec2	project(t_vec3f p, t_vec2 origin);
 int		is_in_shape(t_vec2 z, t_vec2 tri[][3], int amount);
 t_vec3f	cross_vec3f(t_vec3f a, t_vec3f b);
 float	dist2(t_vec2 a, t_vec2 b);
-int		is_face_visible(t_vec3f a, t_vec3f b, t_vec3f c);
-float	dot_vec3f(t_vec3f a, t_vec3f b);
 void	draw_quad_contour(t_image *screen, t_vec2 p[4], int contour_clr);
 int		is_flat_tri(t_vec2 v[3], int treshold);
 void	hsv_to_rgb(float h, float s, float v, t_vec4f *rgb);
 void	set_wheel(t_clrp *w, t_vec2 mouse_pos, t_vec2 img_center);
+void	draw_quad(t_image *screen, t_vec2 p[4], int color, int contour_clr);
+void	draw_img_contour(t_md *md, t_image *src, t_vec2 pos, t_vec2 clr_thk);
+void	wrap_int(int *number, int min, int max, int increment);
 
 #endif

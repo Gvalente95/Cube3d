@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 10:42:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 13:45:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:12:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,30 +88,6 @@ void	draw_line(t_image *onto, t_vec2 start, t_vec2 end, t_vec2 color_d)
 	}
 }
 
-void	draw_random_pixel(t_image *img, int scale, int base_color, float rand)
-{
-	t_vec2	pos;
-	t_vec4	clr;
-	int		rand_amount;
-	int		rand_rescale;
-
-	pos.x = r_range(0, img->size.x);
-	pos.y = r_range(0, img->size.y);
-	if (rand > 0)
-	{
-		rand_amount = (int)(rand * 100);
-		clr = color_to_v4(base_color);
-		clr.r = minmax(0, 255, clr.r + r_range(-rand_amount, rand_amount));
-		clr.g = minmax(0, 255, clr.g + r_range(-rand_amount, rand_amount));
-		clr.b = minmax(0, 255, clr.b + r_range(-rand_amount, rand_amount));
-		clr.a = 125;
-		base_color = v4_to_color(clr.r, clr.g, clr.b, clr.a);
-		rand_rescale = scale - (int)(scale * rand);
-		scale += r_range(-rand_rescale, rand_rescale);
-	}
-	draw_pixels(img, pos, v2(scale), base_color);
-}
-
 void	draw_alpha_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp)
 {
 	t_draw_d	draw_d;
@@ -136,4 +112,28 @@ void	draw_alpha_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp)
 			put_pxl_if_vis(&draw_d, -1, 1, trnsp);
 		}
 	}
+}
+
+void	hsv_to_rgb(float h, float s, float v, t_vec4f *rgb_v)
+{
+	const float	c = v * s;
+	const float	x = c * (1.0f - fabsf(fmodf(h * 6.0f, 2.0f) - 1.0f));
+	const float	m = v - c;
+	t_vec4f		rgb;
+
+	if (h < 1.0f / 6.0f)
+		rgb = (t_vec4f){c, x, 0, 1};
+	else if (h < 2.0f / 6.0f)
+		rgb = (t_vec4f){x, c, 0, 1};
+	else if (h < 3.0f / 6.0f)
+		rgb = (t_vec4f){0, c, x, 1};
+	else if (h < 4.0f / 6.0f)
+		rgb = (t_vec4f){0, x, c, 1};
+	else if (h < 5.0f / 6.0f)
+		rgb = (t_vec4f){x, 0, c, 1};
+	else
+		rgb = (t_vec4f){c, 0, x, 1};
+	rgb_v->r = rgb.r + m;
+	rgb_v->g = rgb.g + m;
+	rgb_v->b = rgb.b + m;
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 14:10:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 17:44:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,39 +16,35 @@
 static void	inisld(t_md *md, char *label, t_vec4f data, float *value)
 {
 	t_slider	*sld;
-	t_vec2		fill_end;
 	t_vec3f		slider_limits;
 
 	sld = &md->menu.sliders[md->menu.slider_index];
-	sld->index = md->menu.slider_index++;
+	sld->size = get_v2(md->win_sz.x / 6, 20);
+	sld->index = md->menu.slider_index;
 	sld->steps = (int)data.a;
 	slider_limits = get_v3f(data.r, data.g, data.b);
 	ft_strlcpy(sld->label, label, 50);
-	sld->img = init_img(md, get_v2(md->win_sz.x / 6, 20), NULL, \
-	md->menu.slider_bgr_clr);
 	sld->point = minmax(0, sld->steps - 1, \
 	((data.g - data.r) / (data.b - data.r)) * (sld->steps - 1));
 	sld->base_point = sld->point;
-	fill_end = get_v2((sld->img->size.x * sld->point) / (sld->steps - 1), \
-		sld->img->size.y);
-	draw_pixels(sld->img, v2(0), fill_end, md->menu.slider_fill_clr);
 	*value = data.g;
 	sld->value = value;
 	sld->limits = slider_limits;
 	sld->active = 1;
+	md->menu.slider_index++;
 }
 
 static void	init_sliders(t_md *md, t_menu *menu, \
 	t_parameters *pm, t_fx_data *fx)
 {
-	menu->slider_index = 0;
-	inisld(md, "Move speed", get_v4f(200, 800, 4000, 100), &pm->plr_speed);
+	inisld(md, "Cap FPS", get_v4f(1, 100, 100, 100), &pm->cap_fps);
+	inisld(md, "Move speed", get_v4f(200, 800, 4000, 3801), &pm->plr_speed);
 	inisld(md, "Rotation speed", get_v4f(.01, MOUSESPD, 1, 10), &pm->rot_speed);
 	inisld(md, "Camera Height", get_v4f(0, 0, md->t_len, 100), &pm->height);
 	inisld(md, "Camera Zoom", get_v4f(0, 0, 3, 100), &pm->zoom);
 	inisld(md, "Camera bob", get_v4f(0, BOB_AMOUNT, 1, 100), &pm->bob_amount);
 	inisld(md, "fov", get_v4f(1, 60, 600, 599), &pm->fov);
-	inisld(md, "fov floor", get_v4f(.5, 1, 1.5, 100), &pm->floor_fov);
+	inisld(md, "fov floor", get_v4f(.1, .5, 1.5, 100), &pm->floor_fov);
 	inisld(md, "floor glide", get_v4f(0, 3, 3, 100), &pm->floor_glide);
 	inisld(md, "Grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
 	inisld(md, "Grass speed", get_v4f(0, 0, 3, 100), &pm->fe_speed);
@@ -95,9 +91,11 @@ static void	init_buttons(t_md *md, t_menu *menu, t_parameters *prm)
 	inibut(&menu->buttons[i++], &prm->debug_mode, "1_debug mode", NUM_1_KEY);
 	inibut(&menu->buttons[i++], &prm->view_2d, "2_Show Grid", NUM_2_KEY);
 	inibut(&menu->buttons[i++], &prm->show_rays, "3_show rays", NUM_3_KEY);
-	inibut(&menu->buttons[i++], &prm->use_ceiling, "4_Show ceiling", NUM_4_KEY);
-	inibut(&menu->buttons[i++], &prm->use_sky, "5_Show sky", NUM_5_KEY);
-	inibut(&menu->buttons[i++], &prm->show_fps, "6_Show FPS", NUM_6_KEY);
+	inibut(&menu->buttons[i++], &prm->show_walls, "4_show walls", NUM_4_KEY);
+	inibut(&menu->buttons[i++], &prm->use_ceiling, "5_Show ceiling", NUM_5_KEY);
+	inibut(&menu->buttons[i++], &prm->show_sky, "4_Show sky", NUM_6_KEY);
+	inibut(&menu->buttons[i++], &prm->show_fps, "5_Show FPS", NUM_7_KEY);
+	inibut(&menu->buttons[i++], &prm->show_hud, "H_Show HUD", NUM_H_KEY);
 	inibut(&menu->buttons[i++], &prm->use_floor, "B_Show floor", NUM_B_KEY);
 	inibut(&menu->buttons[i++], &prm->ent_mode, "E_Show sprites", NUM_E_KEY);
 	inibut(&menu->buttons[i++], &prm->use_grass, "G_Show grass", NUM_G_KEY);
@@ -121,6 +119,8 @@ void	init_menu_elements(t_md *md, t_menu *menu)
 	menu->selected_slider = NULL;
 	menu->slider_bgr_clr = _BLACK;
 	menu->slider_fill_clr = _RED;
+	menu->slider_index = 0;
 	init_sliders(md, menu, &md->prm, &md->fx);
 	init_buttons(md, menu, &md->prm);
+	return ;
 }

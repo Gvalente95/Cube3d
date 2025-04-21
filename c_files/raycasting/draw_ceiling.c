@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 17:56:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 11:12:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 23:37:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ static int	set_ceiling_pxl(t_md *md, t_floor_draw_d *d)
 {
 	const t_image	*img = md->hud.ceiling;
 	const t_vec2	img_sz = img->size;
-	t_vec2f			flr_tile;
+	t_vec2f			flr_t;
 
 	if (d->win.x < 0 || d->win.x >= md->win_sz.x)
 		return (0);
-	flr_tile.x = d->flr.x + d->rwd * d->dirl.x + d->stp.x * d->win.x;
-	flr_tile.y = d->flr.y + d->rwd * d->dirl.y + d->stp.y * d->win.x;
-	d->txp.x = ((int)(flr_tile.x * img_sz.x) % img_sz.x + img_sz.x) % img_sz.x;
-	d->txp.y = ((int)(flr_tile.y * img_sz.y) % img_sz.y + img_sz.y) % img_sz.y;
+	flr_t.x = d->flr.x + d->rwd * d->dirl.x + d->stp.x * d->win.x;
+	flr_t.y = d->flr.y + d->rwd * d->dirl.y + d->stp.y * d->win.x;
+	d->txp.x = ((int)(flr_t.x * img_sz.x) % img_sz.x + img_sz.x) % img_sz.x;
+	d->txp.y = ((int)(flr_t.y * img_sz.y) % img_sz.y + img_sz.y) % img_sz.y;
 	d->clr = img->src[d->txp.y * (img->size_line / 4) + d->txp.x];
 	return (draw_ceiling_pxl(md, *d));
 }
@@ -47,6 +47,7 @@ void	draw_ceiling(t_md *md, t_floor_draw_d d)
 {
 	const t_vec2	winsz = md->win_sz;
 
+	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.x};
 	while (d.win.y-- > 0)
 	{
 		d.p = (winsz.y / 2 - md->cam.rot.y * 8) - d.win.y;

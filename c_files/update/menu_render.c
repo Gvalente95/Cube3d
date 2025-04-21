@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:30:53 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 16:30:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 17:44:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,26 @@
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha)
 {
 	t_txtd		txt_d;
-	const int	end = sldr->img->size.x * sldr->point / (sldr->steps - 1);
+	const int	end = sldr->size.x * sldr->point / (sldr->steps - 1);
 	int			bgr_clr;
 
 	bgr_clr = _WHITE;
 	bgr_clr = set_alpha(bgr_clr, alpha);
-	draw_pixels(screen, sldr->pos, get_v2(end, sldr->img->size.y), _RED);
+	draw_pixels(screen, sldr->pos, get_v2(end, sldr->size.y), _RED);
 	draw_pixels(screen, \
 		get_v2(sldr->pos.x + end, sldr->pos.y), \
-		get_v2(sldr->img->size.x - end, sldr->img->size.y), bgr_clr);
+		get_v2(sldr->size.x - end, sldr->size.y), bgr_clr);
 	txt_d.scale = md->prm.txt_sc;
 	txt_d.color = _WHITE;
 	if (md->menu.slider_hov == sldr->index)
 		txt_d.color = _YELLOW;
 	txt_d.x = sldr->pos.x - (txt_d.scale) * ft_strlen(sldr->label) - 30;
-	txt_d.y = sldr->pos.y + sldr->img->size.y / 2 - md->prm.txt_sc / 2;
+	txt_d.y = sldr->pos.y + sldr->size.y / 2 - md->prm.txt_sc / 2;
 	txt_d.onto = screen;
 	rnd_fast_txt(md, txt_d, "%s", sldr->label);
 	if (md->menu.slider_hov != sldr->index)
 		return ;
-	txt_d.x = sldr->pos.x + sldr->img->size.x - md->prm.txt_sc * 10;
+	txt_d.x = sldr->pos.x + sldr->size.x - md->prm.txt_sc * 10;
 	rnd_fast_txt(md, txt_d, "%.1f", *sldr->value);
 }
 

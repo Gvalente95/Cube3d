@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 11:45:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 15:17:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,23 @@ static t_vec3f	set_input_mov_2(t_md *md, float spd, \
 	float	mv_rght;
 	float	mv_lft;
 
-	mov = get_v3f(0, 0, 0);
+	mov = v3f(0);
 	mv_for = ((md->key_prs[NUM_W_KEY]) * spd);
 	mv_back = ((md->key_prs[NUM_S_KEY]) * spd);
 	mv_rght = ((md->key_prs[NUM_D_KEY]) * spd);
 	mv_lft = ((md->key_prs[NUM_A_KEY]) * spd);
 	mov.x = (mv_for - mv_back) * for_dir.x + (mv_rght - mv_lft) * -rgt_dir.x;
 	mov.y = (mv_for - mv_back) * for_dir.y + (mv_rght - mv_lft) * -rgt_dir.y;
-	if (md->key_clicked == SPACE_KEY && \
+	if (md->key_click == SPACE_KEY && \
 		md->plr.pos.z + md->prm.height >= -EPSILON)
 	{
-		mov.z = -PLR_JUMPPOW;
+		mov.z = -spd * 5;
 		play_rand_sound(md, AU_WALK_GRASS, 6, -1);
 	}
 	else if (md->key_prs[NUM_R_KEY] == 1)
-		mov.z = -(PLR_JUMPPOW * .2);
-	md->cam.input_mov = get_v3f(\
-		mv_lft - mv_rght, mv_for - mv_back, \
-		md->key_clicked == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY] == 1);
+		mov.z = -(spd * .2);
+	md->cam.input_mov = get_v3f(mv_lft - mv_rght, mv_for - mv_back, \
+		md->key_click == SPACE_KEY || md->key_prs[NUM_LFTCMD_KEY] == 1);
 	return (mov);
 }
 

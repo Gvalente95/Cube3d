@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:50:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 14:24:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 13:44:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,10 @@ void	render_hud_elements(t_md *md, t_hud *hud)
 	t_vec2	winsz;
 
 	winsz = md->win_sz;
-	if (!md->menu.active)
-	{
-		cross_pos = (t_vec2){winsz.x / 2 - 5, winsz.y / 2 - 5};
-		draw_img(hud->center, md->screen, cross_pos, -1);
-	}
+	cross_pos = (t_vec2){winsz.x / 2 - 5, winsz.y / 2 - 5};
+	draw_img(hud->center, md->screen, cross_pos, -1);
 	if (0)
 		draw_hud_weapon(md, hud, winsz);
-	if (!md->prm.ent_mode)
-		return ;
 	draw_game_info(md, hud, winsz);
 	if (md->timer.time % 50 == 0)
 		md->hud.hp--;

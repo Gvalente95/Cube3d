@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 13:04:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	init_md(t_md *md)
 	md->mouse.locked = 1;
 	md->mouse.pressed = 0;
 	md->mouse.click = 0;
-	md->key_clicked = -1;
+	md->key_click = -1;
 	md->t_len = 60;
 	md->init_steps = 0;
 	md->prm.txt_sc = max(14, md->win_sz.x / 150);

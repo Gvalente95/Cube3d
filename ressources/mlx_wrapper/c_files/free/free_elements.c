@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 23:16:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 17:29:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	free_txd(t_md *md, t_texture_data *txd)
 	fa += free_images_array(md, txd->pickup_txtr_mini, "minipick tex");
 	fa += free_images_array(md, txd->wpn_txtr, "wpn tex");
 	fa += free_images_array(md, txd->wpn_txtr_2d, "wpn2d tex");
+	fa += free_images_array(md, txd->pkmn, "pokemon tex");
+	fa += free_images_data(md, txd->pkmns_mini, "pokemon_mini tex");
 	i = -1;
 	while (txd->mobs_txtrs && txd->mobs_txtrs[++i])
 		fa += free_images_array(md, txd->mobs_txtrs[i], "mob tex");
@@ -92,8 +94,8 @@ int	free_menu(t_md *md, t_menu *menu)
 	fa += free_image_data(md, menu->overlay);
 	fa += free_image_data(md, menu->freeze_frame);
 	i = -1;
-	while (menu->sliders[++i].active)
-		fa += free_image_data(md, menu->sliders[i].img);
+	while (++i < 3)
+		fa += free_image_data(md, menu->clrp[i].img);
 	printf("menu freed %d\n", fa);
 	return (fa);
 }

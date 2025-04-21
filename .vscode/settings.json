@@ -21,6 +21,9 @@
 		"math.h": "c",
 		"get_next_line.h": "c",
 		"libft.h": "c",
-		"audio.h": "c"
+		"audio.h": "c",
+		"__hash_table": "c",
+		"__split_buffer": "c",
+		"initializer_list": "c"
 	}
 }

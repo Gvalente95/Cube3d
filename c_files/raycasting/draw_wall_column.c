@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 19:55:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 16:01:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 	t_vec2	win_p;
 
 	d->pxl_i = ((int)d->win_y * (d->img->size_line / 4)) + (int)d->txd_crd.x;
+	if (d->pxl_i > d->img->size.y * d->img->size_line / 4 + d->img->size.x)
+		return (0);
 	d->pxl_clr = *(d->img->src + d->pxl_i);
 	win_p.x = d->win_start.x;
 	win_p.y = d->y_start + d->win_start.y - md->cam.pos.z;
@@ -49,10 +51,13 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 		return (0);
 	if (win_p.y < 0 || win_p.x < 0 || win_p.x > win_sz.x)
 		return (1);
-	if (win_p.x == md->win_sz.x / 2 && \
-		win_p.y == md->win_sz.y / 2)
+	if (win_p.x == md->win_sz.x / 2 && win_p.y == md->win_sz.y / 2)
 		md->cam.pointed = d->ray->wall_hit;
 	if (skip_pxl(md, d))
+		return (1);
+	if (d->ray->wall_strip_pos.x == md->hud.floor_start)
+		d->ray->wall_strip_pos.x = win_p.y;
+	if (!md->prm.show_walls)
 		return (1);
 	draw_pixel(md->screen, win_p, d->pxl_clr, -1);
 	if (md->fx.fog)
@@ -61,15 +66,14 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 	return (1);
 }
 
-static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
+static void	draw_strip(t_md *md, t_ray_draw_d *d, float step)
 {
 	const t_vec2	win_sz = md->win_sz;
 	float			dist;
 
-	d->pass = pass;
 	d->y_start = (win_sz.y / 2 - d->txd_crd.y / 2) - 1;
 	d->y_end = (win_sz.y / 2 + d->txd_crd.y / 2);
-	if (md->key_clicked == NUM_C_KEY && !d->ray->had_door && \
+	if (md->key_click == NUM_C_KEY && !d->ray->had_door && \
 		d->win_start.x == win_sz.x / 2)
 		draw_portal(md, d->ray->wall_hit, get_v2((int)d->txd_crd.x, d->win_y));
 	while (++d->y_start < d->y_end)
@@ -79,6 +83,7 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 			continue ;
 		if (!pxl_draw(md, d, win_sz))
 			return ;
+		d->ray->wall_strip_pos.y = d->y_start + d->win_start.y - md->cam.pos.z;
 	}
 	if (d->has_portal && d->ray->teleported_once < 1)
 	{
@@ -86,7 +91,7 @@ static void	draw_strip(t_md *md, t_ray_draw_d *d, int pass, float step)
 		translate_ray(md, d->ray, d->ray->wall_hit, \
 			(d->ray->wall_hit == md->portal.ends[1].e));
 		d->ray->distance = dist;
-		draw_strip(md, d, 0, step);
+		draw_strip(md, d, 0);
 	}
 }
 
@@ -112,7 +117,7 @@ static int	render_strip(t_md *md, t_ray *ray, \
 	draw_d = (t_ray_draw_d){ray, ray->wall_hit->frame, \
 		screen_p, screen_p, 0, 0, txtr_crd, 0, 0, 0, 9999, 0, 0, 0};
 	step = draw_d.img->size.y / draw_d.txd_crd.y;
-	draw_strip(md, &draw_d, 0, step);
+	draw_strip(md, &draw_d, step);
 	return (1);
 }
 

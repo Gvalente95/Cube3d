@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 02:33:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:15:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	show_init_information(t_md *md)
 	print_vec3f(md->cam.rot, "plr rot");
 	print_vec3(md->plr.coord, "plr coord");
 	printf("map name: %s\nmap content: \n", md->map.name);
+	return ;
 	pos = v2(-1);
 	while (++pos.y < md->map.size.y)
 	{
@@ -51,17 +52,17 @@ void	show_fps(t_md *md, t_vec2 pos)
 {
 	const int	colors[5] = {RGB_RED, RGB_ORANGE, RGB_YELLOW, \
 		RGB_GREEN, RGB_BLUE};
-	int			color_index;
-	int			color;
+	const int	color_index = minmaxf(0, 4, md->timer.prv_fps / 10);
+	const int	color = md->rgb[colors[color_index]];
 	t_txtd		txt_data;
 	float		fps_gain;
 
-	color_index = minmaxf(0, 4, md->timer.prv_fps / 10);
-	color = md->rgb[colors[color_index]];
 	txt_data = (t_txtd){pos.x, pos.y, color, md->prm.txt_sc, NULL};
 	rnd_fast_txt(md, txt_data, "fps %d", md->timer.prv_fps);
 	txt_data.y -= md->prm.txt_sc * 1.5;
 	fps_gain = md->timer.avrg_fps_prev - md->timer.avrg_fps;
+	if (isinf(fps_gain) || isnan(fps_gain))
+		fps_gain = 0;
 	txt_data.color = md->rgb[colors[(fps_gain < 0) * 3]];
 	if (fps_gain > 0)
 		rnd_fast_txt(md, txt_data, "+%.1f", fps_gain);
@@ -92,7 +93,7 @@ void	show_update_information(t_md *md)
 	show_vec3f(md, "mouse pos", md->mouse.pos, get_v2(0, y++));
 	show_vec2(md, "mouse delta", md->mouse.delta, get_v2(0, y++));
 	show_float(md, "cam z", md->cam.pos.z, get_v2(0, y++));
-	show_int(md, "key click", md->key_clicked, get_v2(0, y++));
+	show_int(md, "key click", md->last_key, get_v2(0, y++));
 }
 
 void	print_color(int color, const char *label)

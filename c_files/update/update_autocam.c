@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 22:58:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 11:55:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ static int	exit_autocam(t_md *md, t_autocam *autocam)
 	md->plr.dir.x = 0;
 	md->plr.dir.y = 0;
 	md->timer.time = 1;
-	md->key_clicked = -1;
+	md->key_click = -1;
 	md->prm.fe_speed = 1;
 	autocam->active = 0;
 	autocam->quitting = 0;
+	md->hud.fog_color = _WHITE;
 	return (1);
 }
 
@@ -115,11 +116,11 @@ int	update_autocam(t_md *md, t_autocam *autocam)
 {
 	if (md->timer.time <= 1)
 		init_autocam(md, autocam);
-	if (md->key_clicked == Q_KEY)
+	if (md->key_click == Q_KEY)
 		return (exit_autocam(md, autocam));
-	else if (md->key_clicked == ESC_KEY)
+	else if (md->key_click == ESC_KEY)
 		free_and_quit(md, NULL, NULL);
-	if (md->key_clicked != -1)
+	if (md->key_click != -1)
 		autocam->quitting = 1;
 	else if (autocam->quitting && move_cam_to_start(md))
 		return (exit_autocam(md, autocam));

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 11:06:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 15:32:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->dda_dist = 0;
 	ray->distance = distance;
 	ray->vertical_hit = 0;
+	ray->wall_strip_pos = v2(-1);
 	ray->teleported_once = 0;
 }
 
@@ -89,7 +90,7 @@ int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type)
 			return (0);
 		if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
 	(t_vec2f){ent->pos.x + ent->size.x / 2, \
-	ent->pos.y + ent->size.y / 2}, .49))
+	ent->pos.y + ent->size.y / 2}, 1))
 			return (0);
 		dblst_add_back(&md->thrd_manager.ents_to_draw, dblst_new((t_ent *)ent));
 		return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);

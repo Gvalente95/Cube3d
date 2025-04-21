@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:21:44 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/11 12:06:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 19:06:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,15 @@ float	f_range(float min, float max)
 	return (min + scale * (max - min));
 }
 
-float	dot_vec3f(t_vec3f a, t_vec3f b)
+void	wrap_int(int *number, int min, int max, int increment)
 {
-	return (a.x * b.x + a.y * b.y + a.z * b.z);
+	if (!increment)
+		return ;
+	*number += increment;
+	if (*number > max)
+		*number = min;
+	else if (*number < min)
+		*number = max;
 }
 
 unsigned int	get_r_seed(void)

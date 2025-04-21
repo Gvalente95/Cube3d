@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 12:14:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 16:09:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	init_weapon_labels(t_texture_data *td)
 
 void	init_ents_labels(t_texture_data *td)
 {
-	td->ents_tp_map[0] = "1*MDPBT0";
 	td->ents_types_names[nt_wall] = "Wall";
 	td->ents_types_names[nt_plr] = "Player";
 	td->ents_types_names[nt_mob] = "Mob";
@@ -45,6 +44,7 @@ void	init_ents_labels(t_texture_data *td)
 	td->ents_types_names[nt_pickup] = "Pickup";
 	td->ents_types_names[nt_bush] = "Bush";
 	td->ents_types_names[nt_tree] = "Tree";
+	td->ents_types_names[nt_pokemon] = "Pokemon";
 	td->ents_types_names[nt_empty] = "Empty";
 	td->pickup_names[Keys] = "Keys";
 	td->pickup_names[Score] = "Score";
@@ -59,8 +59,33 @@ void	init_ents_labels(t_texture_data *td)
 	td->mob_names[Mecha_Meister] = "Mecha Meister";
 }
 
+void	init_pkmn_labels(t_texture_data *td)
+{
+	td->pkmn_names[Arbok] = "Arbok";
+	td->pkmn_names[Blastoise] = "Blastoise";
+	td->pkmn_names[Butterfree] = "Butterfree";
+	td->pkmn_names[Chansey] = "Chansey";
+	td->pkmn_names[Charizard] = "Charizard";
+	td->pkmn_names[Dodrio] = "Dodrio";
+	td->pkmn_names[Dragonite] = "Dragonite";
+	td->pkmn_names[Dugtrio] = "Dugtrio";
+	td->pkmn_names[Exeggutor] = "Exeggutor";
+	td->pkmn_names[Gengar] = "Gengar";
+	td->pkmn_names[Golem] = "Golem";
+	td->pkmn_names[Magneton] = "Magneton";
+	td->pkmn_names[Ninetales] = "Ninetales";
+	td->pkmn_names[Persian] = "Persian";
+	td->pkmn_names[Pidgeot] = "Pidgeot";
+	td->pkmn_names[Pikachu] = "Pikachu";
+	td->pkmn_names[Poliwrath] = "Poliwrath";
+	td->pkmn_names[Snorlax] = "Snorlax";
+	td->pkmn_names[Taurus] = "Tauros";
+}
+
 void	init_labels(t_texture_data *txd)
 {
+	txd->ents_tp_map[0] = "1*MDPBTK0";
+	init_pkmn_labels(txd);
 	init_weapon_labels(txd);
 	init_ents_labels(txd);
 	init_action_labels(txd);

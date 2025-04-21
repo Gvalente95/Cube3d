@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   audio.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:16:50 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:09:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,10 @@ void	stop_sound(pid_t pid)
 		kill(pid, SIGTERM);
 }
 
-int	is_audio_playing(t_md *md, pid_t pid)
+int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
 {
 	int	status;
 
-	if (!md->prm.au_on)
-		return (1);
-	if (waitpid(pid, &status, WNOHANG) == 0)
-		return (1);
-	return (0);
-}
-
-int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
-{
 	if (!pid)
 		return (printf("called play_loop_au with no pid"), 0);
 	if (!depend || !md->prm.au_on && pid)
@@ -80,8 +71,25 @@ int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
 		stop_sound(*pid);
 		return (0);
 	}
-	if (is_audio_playing(md, *pid))
+	if (waitpid(*pid, &status, WNOHANG) == 0)
 		return (0);
 	*pid = play_sound(md, filename);
 	return (1);
+}
+
+void	init_au(t_md *md, t_au_manager *au)
+{
+	const char	path[] = "ressources/audio/pokemon/";
+	char		*full_path;
+	int			i;
+
+	i = -1;
+	while (++i < PKMN_TYPE_LEN)
+	{
+		full_path = ft_megajoin(path, md->txd.pkmn_names[i], ".mp3", NULL);
+		if (!full_path)
+			free_and_quit(md, "alloc in init_au", NULL);
+		ft_strlcpy(au->pokemon_cries[i], full_path, 50);
+		free(full_path);
+	}
 }

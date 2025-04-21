@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 15:31:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 23:37:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_floor_draw_d
 	t_vec3f	plr;
 	t_vec2f	dirl;
 	t_vec2f	dirr;
+	t_vec2f	flr_t;
 	float	rwd;
 	t_vec2f	stp;
 	t_vec2f	flr;
@@ -106,6 +107,7 @@ typedef struct s_ray
 	int			steps;
 	int			init_steps;
 	int			teleported_once;
+	t_vec2		wall_strip_pos;
 }	t_ray;
 
 #endif

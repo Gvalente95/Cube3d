@@ -6,11 +6,19 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:42:23 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 00:20:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 16:22:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
+
+void	cap_fps(t_timer *tm, double frame_duration)
+{
+	const double	sleep_time = frame_duration - tm->delta_time;
+
+	if (sleep_time > 0)
+		usleep((useconds_t)(sleep_time * 1e6));
+}
 
 void	reset_fps_timer(t_timer *timer)
 {
@@ -41,23 +49,4 @@ void	upd_timer(double *timer, double cur_tm, double incr, int *event)
 		*timer = cur_tm + incr;
 		*event = 1;
 	}
-}
-
-pid_t	play_index(t_md *md, const char *filepath, int index)
-{
-	pid_t	pid;
-	char	*index_txt;
-	char	*path_with_index;
-	char	*full_path;
-
-	if (!md->prm.au_on)
-		return (0);
-	index_txt = ft_itoa(index);
-	path_with_index = ft_strjoin(index_txt, ".mp3");
-	full_path = ft_strjoin(filepath, path_with_index);
-	pid = play_sound(md, full_path);
-	free(full_path);
-	free(path_with_index);
-	free(index_txt);
-	return (pid);
 }

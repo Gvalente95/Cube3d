@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:33:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 14:26:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 20:23:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	update_slider(t_md *md, t_slider *sld)
 	int		x_pos;
 	t_vec2	sz;
 
-	sz = sld->img->size;
+	sz = sld->size;
 	x_pos = sld->base_point;
 	if (!md->key_prs[CTRL_KEY])
 		x_pos = ((md->mouse.real.x - sld->pos.x) * (sld->steps - 1)) / sz.x;
@@ -124,7 +124,7 @@ int	update_menu(t_md *md, t_menu *menu)
 		play_sound(md, AU_MOUSE_RELEASE);
 	update_input(md);
 	if (!menu->selected_slider)
-		update_sliders(md, menu, menu->sliders[0].img->size);
+		update_sliders(md, menu, menu->sliders[0].size);
 	if (menu->selected_slider)
 	{
 		if (!md->mouse.pressed)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 20:32:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/20 19:44:34 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,21 @@ void	init_pickup_frames(t_md *md, t_texture_data *td)
 	td->pickup_txtr_mini[PCKP_TYPE_LEN] = NULL;
 }
 
-void	store_entities_sizes(t_texture_data *td, t_vec2 base)
+void	store_entities_sizes(t_texture_data *td, int base)
 {
 	int				i;
 
 	i = -1;
 	while (++i < ENT_TYPE_LEN)
 		td->e_sizes2d[i] = v2(td->size_2d);
-	td->e_sizes[nt_plr] = v2(base.x * .2);
-	td->e_sizes[nt_mob] = v2(base.x * .5);
-	td->e_sizes[nt_pickup] = v2(base.x * 10);
-	td->e_sizes[nt_door] = base;
-	td->e_sizes[nt_wall] = base;
-	td->e_sizes[nt_bush] = v2(base.x * 10);
-	td->e_sizes[nt_tree] = v2(base.x * 10);
+	td->e_scales[nt_plr] = base * .2;
+	td->e_scales[nt_mob] = base * .5;
+	td->e_scales[nt_pickup] = base * .15;
+	td->e_scales[nt_door] = base;
+	td->e_scales[nt_wall] = base;
+	td->e_scales[nt_bush] = base * .5;
+	td->e_scales[nt_tree] = base * .5;
+	td->e_scales[nt_pokemon] = base * .35;
 }
 
 void	init_env_frames(t_md *md, t_texture_data *td)
@@ -78,11 +79,16 @@ void	init_env_frames(t_md *md, t_texture_data *td)
 
 void	init_ents_data(t_md *md, t_texture_data *txd)
 {
+	txd->last_pointed = NULL;
+	txd->last_pointed_screen_p = v2(-1);
+	txd->opt_index = 0;
 	init_labels(txd);
-	store_entities_sizes(txd, v2(md->t_len));
+	init_au(md, &md->au);
+	store_entities_sizes(txd, md->t_len);
 	init_weapon_frames(md, txd);
 	init_pickup_frames(md, txd);
 	init_mobs_frames(md);
+	init_pokemon_frames(md, txd);
 	init_env_frames(md, txd);
 	txd->door_txtr = init_img(md, v2(md->t_len), "ent/door/0.xpm", -1);
 	txd->door_txtr_mini = \

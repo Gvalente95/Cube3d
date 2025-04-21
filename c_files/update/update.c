@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 03:20:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 22:47:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 double	update_time(t_md *md, t_timer *tm)
 {
-	double	walk_increment;
-
+	if (md->prm.cap_fps < 100)
+		cap_fps(&md->timer, 1.0f / md->prm.cap_fps);
 	tm->cur_tm = get_time_in_seconds();
 	md->timer.fps++;
 	if (md->timer.fps > 50)
@@ -29,10 +29,8 @@ double	update_time(t_md *md, t_timer *tm)
 	}
 	upd_timer(&tm->tm_fe, tm->cur_tm, .005 / md->prm.fe_speed, &tm->trig_fe);
 	upd_timer(&tm->tm_anim, tm->cur_tm, ANIM_REFRESH, &tm->trig_anim);
-	walk_increment = WALK_REFRESH;
-	if (md->key_prs[SHIFT_KEY])
-		walk_increment /= 2;
-	upd_timer(&tm->tm_walk, tm->cur_tm, walk_increment, &tm->trig_walk);
+	upd_timer(&tm->tm_walk, tm->cur_tm, \
+		WALK_REFRESH / (1 + (md->key_prs[SHIFT_KEY] == 1)), &tm->trig_walk);
 	tm->delta_time = (tm->cur_tm - tm->prev_time);
 	tm->prev_time = tm->cur_tm;
 	tm->time++;

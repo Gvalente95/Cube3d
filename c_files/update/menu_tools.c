@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 14:50:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 16:25:54 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/19 22:56:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 void	render_logo_cube(t_md *md, t_menu *menu)
 {
-	const t_vec2	pos = (t_vec2){100, 100};
-	const t_vec2	size = (t_vec2){100, 100};
-	const int		color = _NULL;
+	const t_vec2	pos = (t_vec2){400, 100};
+	const t_vec2	size = (t_vec2){50, 50};
+	int				color;
 
+	color = _NULL;
 	draw_cube(md->menu.freeze_frame, get_v3(pos.x, pos.y, color), size, \
 		menu->cube_logo_rot);
 }
@@ -25,13 +26,21 @@ void	render_logo_cube(t_md *md, t_menu *menu)
 void	update_logo_cube(t_md *md, t_mouse mouse, t_menu *menu)
 {
 	const t_vec2	size = (t_vec2){100, 100};
-	const t_vec2	mouse_p = (t_vec2){mouse.pos.x, mouse.pos.y};
+	const t_vec2	mouse_p = (t_vec2){mouse.real.x, mouse.real.y};
+	const t_vec2	pos = (t_vec2){350, 50};
 
 	(void)md;
-	if (mouse.pressed && v2_bounds(mouse_p, v2(1), size))
+	if (v2_bounds(mouse_p, pos, size))
 	{
 		menu->cube_logo_rot.x -= mouse.delta.x;
 		menu->cube_logo_rot.y += mouse.delta.y;
+		menu->refresh_ui = 1;
+		menu->refresh_bg = 1;
+	}
+	else
+	{
+		menu->cube_logo_rot.x += (md->timer.time % 10) * .3;
+		menu->cube_logo_rot.y += (md->timer.time % 20) * .3;
 		menu->refresh_ui = 1;
 		menu->refresh_bg = 1;
 	}
@@ -71,13 +80,18 @@ void	set_wheel(t_clrp *w, t_vec2 mouse_pos, t_vec2 img_center)
 	norm_dist = (sqrtf(dt.x * dt.x + dt.y * dt.y)) / (w->size.x / 2.0f);
 	if (norm_dist > 1.0f)
 		return ;
-	angle = atan2f(-dt.y, -dt.x);
-	if (angle < 0)
-		angle += 2 * M_PI;
-	hu_st_v.x = angle / (2 * M_PI);
-	hu_st_v.y = norm_dist;
-	hu_st_v.z = 1.0f;
-	hsv_to_rgb(hu_st_v.x, hu_st_v.y, hu_st_v.z, &rgb);
-	*w->color = v4_to_color(rgb.r * 255, rgb.g * 255, rgb.b * 255, 255);
+	if (norm_dist > .8)
+		*w->color = _BLACK;
+	else
+	{
+		angle = atan2f(-dt.y, -dt.x);
+		if (angle < 0)
+			angle += 2 * M_PI;
+		hu_st_v.x = angle / (2 * M_PI);
+		hu_st_v.y = norm_dist;
+		hu_st_v.z = 1.0f;
+		hsv_to_rgb(hu_st_v.x, hu_st_v.y, hu_st_v.z, &rgb);
+		*w->color = v4_to_color(rgb.r * 255, rgb.g * 255, rgb.b * 255, 255);
+	}
 	w->mouse_touch = mouse_pos;
 }
