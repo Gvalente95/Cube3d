@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:11:19 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 23:37:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:04:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,9 @@ typedef struct s_floor_draw_d
 	t_vec3f	plr;
 	t_vec2f	dirl;
 	t_vec2f	dirr;
+	int		door_y_start;
 	t_vec2f	flr_t;
+	int		has_grass;
 	float	rwd;
 	t_vec2f	stp;
 	t_vec2f	flr;
@@ -87,6 +89,7 @@ typedef struct s_ray
 	int			hits_len;
 	t_ent		*wall_hit;
 	t_ent		*check_hit;
+	t_ent		*door;
 	t_vec3f		pos;
 	t_vec3f		start;
 	t_vec2		cord;
@@ -103,7 +106,9 @@ typedef struct s_ray
 	int			index;
 	int			color;
 	int			had_door;
+	float		dist_at_door;
 	int			is_floor_worker;
+	int			active;
 	int			steps;
 	int			init_steps;
 	int			teleported_once;

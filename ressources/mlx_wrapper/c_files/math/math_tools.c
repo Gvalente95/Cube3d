@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:21:44 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/20 19:06:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 17:00:27 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,16 @@ float	f_range(float min, float max)
 	return (min + scale * (max - min));
 }
 
-void	wrap_int(int *number, int min, int max, int increment)
+int	wrap_int(int *number, int min, int max, int increment)
 {
 	if (!increment)
-		return ;
+		return (0);
 	*number += increment;
 	if (*number > max)
 		*number = min;
 	else if (*number < min)
 		*number = max;
+	return (1);
 }
 
 unsigned int	get_r_seed(void)

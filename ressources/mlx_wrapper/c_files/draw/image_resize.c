@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   img_resize.c                                       :+:      :+:    :+:   */
+/*   image_resize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:17:46 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 10:18:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 21:16:31 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,23 @@ t_image	*scale_imgd(t_md *md, t_image *imgd, t_vec2 new_size, int keep_ratio)
 	if (!imgd->src)
 		return (printf("ERR: Failed to get src data\n"), imgd);
 	return (imgd);
+}
+
+int	get_feet_offset(t_image *img)
+{
+	t_vec2		pos;
+	uint32_t	pixel;
+
+	pos = v2(-1);
+	while (++pos.y < img->size.y - 1)
+	{
+		pos.x = -1;
+		while (++pos.x < img->size.x)
+		{
+			pixel = img->src[pos.y * img->size.x + pos.x];
+			if ((pixel >> 24) & 0xFF)
+				return (img->size.y - 1 - pos.y);
+		}
+	}
+	return (0);
 }

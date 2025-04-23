@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:09:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 17:39:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 23:05:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,27 @@ void	draw_portal(t_md *md, t_ent *e, t_vec2 pos)
 	draw_pixels(e->overlay, draw_p, draw_sz, _BLUE);
 	md->portal.found = e;
 	md->portal.out_pos = out_pos;
+}
+
+void	update_door_sel(t_md *md, t_ray *ray, t_ent *e, t_vec2 draw_limits)
+{
+	const t_vec2	center = div_v2(md->win_sz, 2);
+	const int		draw_start = draw_limits.x;
+	const int		draw_end = draw_limits.y;
+	t_cam			*cam;
+
+	cam = &md->cam;
+	if (ray->index != center.x)
+		return ;
+	if (center.y > draw_start && center.y < draw_end)
+	{
+		cam->pointed = e;
+		if (e->type == nt_door)
+		{
+			if (!cam->pointed_door || !cam->prv_door)
+				cam->pointed_door = cam->pointed;
+			if (cam->prv_door == cam->pointed_door && cam->pointed_door->hp)
+				cam->pointed_door = cam->pointed;
+		}
+	}
 }

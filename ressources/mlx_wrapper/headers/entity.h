@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:59:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 11:29:00 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ typedef enum e_mob_types
 
 typedef enum e_pckp_types
 {
-	Ammo,
+	Pokeball,
 	Health,
 	Keys,
-	Score,
+	HM,
 	Weapon,
 	PCKP_TYPE_LEN
 }	t_pckp_types;
@@ -100,6 +100,9 @@ typedef enum e_pckp_types
 typedef enum e_entity_types
 {
 	nt_wall,
+	nt_ext_wall,
+	nt_interior,
+	nt_grass,
 	nt_plr,
 	nt_mob,
 	nt_door,
@@ -150,12 +153,14 @@ typedef struct s_entity
 	t_image			***anim;
 	t_image			*overlay;
 	t_wrd_dir		overlay_dir;
+	const char		*label;
 	double			shot_timer;
 	float			angle;
 	char			character;
 	float			hit_dist;
 	t_vec2			crp_pxl;
 	int				ray_hit_index;
+	int				caught;
 	int				was_hit;
 	int				shot;
 	int				can_shoot;

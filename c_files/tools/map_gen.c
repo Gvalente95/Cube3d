@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 23:10:51 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 23:59:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 01:42:35 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,28 @@
 
 int	set_rect_cell(char *full, t_vec3 draw_p, t_vec3 full_sz, int is_border)
 {
-	int	i;
+	int			i;
+	const int	is_house = full_sz.x * full_sz.y < ft_strlen(full) / 5;
+	int			brd_c;
 
+	brd_c = '1';
+	if (is_house == 0)
+		brd_c = '2';
 	i = (full_sz.x * draw_p.y + draw_p.x);
 	if (i >= full_sz.z - 1 || i < 0 || full[i] == '\n')
 		return (0);
 	if (draw_p.x <= 1 || draw_p.x == full_sz.x || \
 		draw_p.y == 0 || draw_p.y == full_sz.y)
 		return (full[i] = '1', 0);
-	if ((is_border && (full[i] == ' ' || r_range(0, 25) > 3)) || \
-		r_range(0, 100) == 0)
-		full[i] = '1';
+	if (is_border && ((is_house || (full[i] == ' ' || r_range(0, 25) > 3)) || \
+		r_range(0, 100) == 0))
+		full[i] = brd_c;
 	else
 		full[i] = '0';
 	if (is_border && \
 		r_range(0, 50) == 0 && \
-		full[i - 1] == '1' && \
-		full[i - 2] == '1' && full[i - full_sz.x - 1] == '0' && \
+		full[i - 1] == brd_c && \
+		full[i - 2] == brd_c && full[i - full_sz.x - 1] == '0' && \
 		full[i + full_sz.x - 1] == '0')
 		full[i - 1] = 'D';
 	return (1);
@@ -50,18 +55,18 @@ int	set_rect_home(char *full, t_vec3 draw_p, t_vec3 full_sz, t_vec3 rect_pos)
 		return (0);
 	if (draw_p.x <= 1 || draw_p.x == full_sz.x || \
 		draw_p.y == 0 || draw_p.y == full_sz.y)
-		return (full[i] = '1', 0);
+		return (full[i] = '2', 0);
 	if (is_border && rect_pos.x == 3 && rect_pos.y == 0 + ((dir == down) * 6))
 	{
 		neigh_index = i - (full_sz.x * (1 - ((dir == down) * 2)));
-		if (full[neigh_index] == '1')
+		if (full[neigh_index] == '2')
 			full[neigh_index] = '0';
 		return (full[i] = 'D', 1);
 	}
 	else if (is_border)
-		return (full[i] = '1', 1);
+		return (full[i] = '2', 1);
 	if (dir == up && rect_pos.x == 3 && rect_pos.y == 3)
-		return (full[i] = 'N', 1);
+		return (full[i] = 'N', full[i - full_sz.x] = 'G', 1);
 	return (full[i] = 'P', 1);
 }
 

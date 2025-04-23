@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 16:01:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 13:37:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # define IMG_PATH			"ressources/xpm/"
 # define RESOLUTION		10
 //		SCREEN
-# define SCRN_W			1300
-# define SCRN_H			800
+# define SCRN_W			900
+# define SCRN_H			900
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -52,7 +52,7 @@
 # define THREADS_BATCH	16
 # define FLOOR_WORKERS	4
 
-# define FE_PER_TILE	100
+# define FE_PER_TILE	35
 # define REVEAL_DISTANCE 5
 # define TARGET_FPS		100
 
@@ -96,7 +96,7 @@ void	store_entities_sizes(t_texture_data *td, int base);
 void	init_ents_data(t_md *md, t_texture_data *txd);
 
 //	init/init_ent_frames.c
-int		init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e);
+void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e);
 
 //	init/init_menu_elements.c
 void	init_menu_elements(t_md *md, t_menu *menu);
@@ -132,14 +132,7 @@ int		cast_check_ray(t_md *md, t_ray *ray, t_vec3f start_pos, t_ent *check);
 int		cast_ray(t_md *md, t_ray *ray, t_vec2 visu_offset);
 void	compute_ray_directions(t_md *md, t_vec3f *dir_vals, int rays_amount);
 void	cast_rays(t_md *md);
-
-//	raycasting/draw_sprite_column.c
 void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord);
-int		get_prspctive_offset(t_md *md, float ray_dst, t_ent *e);
-void	draw_sprite_slice(t_md *md, t_ent *ent, t_vec2 winp, t_vec3f crd);
-void	draw_sprite_pxl(t_md *md, t_ray *ray, \
-	t_ent *sprite, float sprt_scrn_width);
-void	draw_sprite(t_md *md, t_ray *ray, t_hit_data hit_data);
 
 //	raycasting/portal_raycast.c
 int		dir_to_rotation(t_wrd_dir a, t_wrd_dir b);
@@ -218,7 +211,6 @@ int		set_menu_mode(t_md *md, t_menu *menu, int mode);
 int		update_and_render(t_md *md);
 
 //	update/movement.c
-int		update_map_index(t_md *md, t_ent *e);
 void	move_ent_to_target(t_md *md, t_ent *e, t_vec3f target_p);
 void	update_mob_actions(t_md *md, t_ent *e);
 
@@ -250,7 +242,6 @@ int		validate_portal_collision(t_md *md, t_ent *b);
 void	render_mmap_ray(t_md *md, int ray_index, int color);
 void	render_minimap_ray(t_md *md);
 void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw);
-void	render_minimap_entities(t_md *md, t_mmap *mp, t_vec2 center);
 void	render_minimap(t_md *md, t_mmap *mp);
 
 //	render/filters.c
@@ -282,12 +273,6 @@ void	set_hue(t_image *img, t_vec4f rgb_factors);
 void	render_2d_floor(t_md *md);
 void	render_background(t_md *md);
 
-//	render/dithering.c
-void	apply_error(t_image *img, t_vec2 pos, t_vec4 err_rgb, t_vec3f data);
-void	dither(t_image *img, t_vec3 pos, unsigned int *palette, float str);
-void	apply_dithering(t_image *img, float dither_strength, \
-	unsigned int *palette, int palette_size);
-
 //	render/render_minimap_cmp.c
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist);
 void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha);
@@ -295,9 +280,7 @@ int		is_in_list(t_dblst *lst, t_ent *e);
 void	draw_found_ents(t_md *md, t_thrd_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
-void	reset_grass(t_md *md, t_fe *fe);
 
-void	draw_stored_fe(t_md *md);
 int		render_fe(t_md *md, t_fe *fe, int width);
 
 int		update_key_input(t_md *md, t_menu *menu, unsigned int c);
@@ -326,9 +309,35 @@ void	render_logo_cube(t_md *md, t_menu *menu);
 void	update_logo_cube(t_md *md, t_mouse mouse, t_menu *menu);
 void	update_menu_element_end(t_menu *menu, int *hov, int cur_hov);
 void	center_menu_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name);
-int		render_sky(t_md *md, t_image *bufr);
+int		render_sky(t_md *md);
 void	cap_fps(t_timer *tm, double frame_duration);
 void	init_pokemon_frames(t_md *md, t_texture_data *txd);
 void	show_pointed_data(t_md *md, t_vec2 p, t_ent *e);
+
+//		INVENTORY
+void	collect_item(t_md *md, t_inventory *inv, t_ent *e);
+void	init_inventory(t_md *md, t_inventory *inv);
+int		use_item(t_md *md, t_inventory *inv, int item_index, int option);
+void	refresh_inv_bgr(t_md *md, t_inventory *inv);
+void	set_inventory(t_md *md, t_inventory *inv, int active);
+void	render_inventory(t_md *md, t_inventory *inv);
+void	refresh_inv_opt_bgr(t_md *md, t_inventory *inv);
+void	update_inventory(t_md *md, t_inventory *inv);
+
+int		rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...);
+void	render_pokeball(t_md *md, t_inventory *inv, double throw_dur);
+char	*get_out_map(char *map, int width, int len);
+void	render_world_map(t_md *md, t_floor_draw_d d, int y_size);
+void	apply_contrast(t_image *img, float contrast);
+void	show_debug(t_md *md, char *msg, int *value, char *attribute);
+int		ent_sort_cmp(void *a, void *b);
+void	update_door_sel(t_md *md, t_ray *ray, t_ent *e, t_vec2 draw_limits);
+void	capture_pokemon(t_md *md, t_inventory *inv, t_ent *e);
+int		throw_pokeball(t_md *md, t_inventory *inv, t_ent *pointed);
+void	show_debug_time(t_md *md, t_txtd txt_data);
+void	render_color_wheels(t_md *md, t_menu *menu, \
+	t_image *screen, int touch_sz);
+void	update_color_wheels(t_md *md, t_menu *menu);
+void	draw_strip(t_image *from, t_image *to, t_vec2 x, int stop_y);
 
 #endif

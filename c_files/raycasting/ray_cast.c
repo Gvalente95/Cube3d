@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/06 20:59:06 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:34:07 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,15 @@ void	cast_rays(t_md *md)
 {
 	t_thrd_manager			*rm;
 	int						i;
+	int						last_valid;
 
+	last_valid = -1;
 	rm = &md->thrd_manager;
 	rm->ray_visu_offset = get_2d_ray_pos(md);
 	compute_ray_directions(md, rm->dir_vals, md->win_sz.x);
 	i = -1;
 	while (++i < md->win_sz.x)
-		cast_thread_ray(md, i);
+		cast_thread_ray(md, i, &last_valid);
 	if (rm->ents_to_draw)
 		draw_found_ents(md, rm);
 }

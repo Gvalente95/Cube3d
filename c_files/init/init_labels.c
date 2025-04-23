@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 16:09:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 11:39:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ void	init_weapon_labels(t_texture_data *td)
 void	init_ents_labels(t_texture_data *td)
 {
 	td->ents_types_names[nt_wall] = "Wall";
+	td->ents_types_names[nt_ext_wall] = "ext_wall";
+	td->ents_types_names[nt_interior] = "interior";
+	td->ents_types_names[nt_grass] = "grass";
 	td->ents_types_names[nt_plr] = "Player";
 	td->ents_types_names[nt_mob] = "Mob";
 	td->ents_types_names[nt_door] = "Door";
@@ -47,10 +50,10 @@ void	init_ents_labels(t_texture_data *td)
 	td->ents_types_names[nt_pokemon] = "Pokemon";
 	td->ents_types_names[nt_empty] = "Empty";
 	td->pickup_names[Keys] = "Keys";
-	td->pickup_names[Score] = "Score";
-	td->pickup_names[Health] = "Health";
+	td->pickup_names[HM] = "HM";
+	td->pickup_names[Health] = "Super Potion";
 	td->pickup_names[Weapon] = "Weapn";
-	td->pickup_names[Ammo] = "Ammo";
+	td->pickup_names[Pokeball] = "Great Ball";
 	td->mob_names[Rat] = "Rat";
 	td->mob_names[Guard] = "Guard";
 	td->mob_names[Elite_Guard] = "Elite Guard";
@@ -84,7 +87,7 @@ void	init_pkmn_labels(t_texture_data *td)
 
 void	init_labels(t_texture_data *txd)
 {
-	txd->ents_tp_map[0] = "1*MDPBTK0";
+	txd->ents_tp_map[0] = "12IG*MDPBTK0";
 	init_pkmn_labels(txd);
 	init_weapon_labels(txd);
 	init_ents_labels(txd);

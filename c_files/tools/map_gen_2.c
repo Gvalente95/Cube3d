@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 10:03:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 01:41:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,30 @@
 static int	set_character(char c, int amount, char *buffer, int len)
 {
 	int	*free_indexes;
-	int	dispo_len;
+	int	free_len;
 	int	random_index;
 	int	set_amount;
 	int	i;
 
-	dispo_len = 0;
+	free_len = 0;
 	free_indexes = malloc(sizeof(int) * len);
 	i = -1;
 	while (buffer[++i])
 		if (buffer[i] == '0')
-			free_indexes[dispo_len++] = i;
-	if (dispo_len < 5)
+			free_indexes[free_len++] = i;
+	if (free_len < 5)
 		return (0);
-	if (amount > dispo_len)
-		amount = dispo_len;
+	if (amount > free_len)
+		amount = free_len;
 	set_amount = amount;
 	i = -1;
 	while (amount--)
 	{
-		random_index = r_range(0, dispo_len - 1);
+		random_index = r_range(0, free_len - 1);
 		if (buffer[free_indexes[random_index]] == '0')
 			buffer[free_indexes[random_index]] = c;
 	}
-	return (free(free_indexes), dispo_len - set_amount);
+	return (free(free_indexes), free_len - set_amount);
 }
 
 void	set_doors(char *map, int doors_amount)

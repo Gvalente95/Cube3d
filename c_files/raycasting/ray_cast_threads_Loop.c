@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:26:11 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/06 15:26:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:32:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void	*cast_thread_loop(void *arg)
 {
 	t_thread_data	*data;
 	int				x;
+	int				last_valid_ray;
 
+	last_valid_ray = -1;
 	data = (t_thread_data *)arg;
 	while (1)
 	{
@@ -32,7 +34,7 @@ void	*cast_thread_loop(void *arg)
 		pthread_mutex_unlock(&data->mutex);
 		x = data->start_x - 1;
 		while (++x < data->end_x)
-			cast_thread_ray(data->md, x);
+			cast_thread_ray(data->md, x, &last_valid_ray);
 		soft_barrier_wait(&data->md->thrd_manager.barrier);
 	}
 	return (NULL);

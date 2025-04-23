@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 14:26:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 18:35:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	update_cam(t_md *md, t_cam *cam)
 
 	plr = &md->plr;
 	pos = plr->pos;
+	md->cam.pointed = NULL;
+	md->cam.pointed_door = NULL;
 	cam->pos.x = pos.x + md->t_len / 4 - (plr->dir.x * md->prm.zoom);
 	cam->pos.y = pos.y + md->t_len / 4 - (plr->dir.y * md->prm.zoom);
 	cam->pos.z = pos.z - md->prm.height;
@@ -79,21 +81,21 @@ t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd)
 	const t_vec3f	cam_up = get_v3f(0, 0, -1);
 
 	mov = v3f(0);
-	if (md->key_prs[NUM_W_KEY])
+	if (md->key_prs[W_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_forward, spd));
-	if (md->key_prs[NUM_S_KEY])
+	if (md->key_prs[S_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_forward, -spd));
-	if (md->key_prs[NUM_D_KEY])
+	if (md->key_prs[D_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_right, spd));
-	if (md->key_prs[NUM_A_KEY])
+	if (md->key_prs[A_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_right, -spd));
 	if (md->key_prs[SPACE_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_up, spd * .05f));
-	if (md->key_prs[NUM_Y_KEY])
+	if (md->key_prs[Y_KEY])
 		mov = add_vec3f(mov, scale_vec3f(cam_up, -spd * .05f));
-	cam->input_mov.x = md->key_prs[NUM_A_KEY] - md->key_prs[NUM_D_KEY];
-	cam->input_mov.y = md->key_prs[NUM_W_KEY] - md->key_prs[NUM_S_KEY];
-	cam->input_mov.z = md->key_prs[SPACE_KEY] - md->key_prs[NUM_Y_KEY];
+	cam->input_mov.x = md->key_prs[A_KEY] - md->key_prs[D_KEY];
+	cam->input_mov.y = md->key_prs[W_KEY] - md->key_prs[S_KEY];
+	cam->input_mov.z = md->key_prs[SPACE_KEY] - md->key_prs[Y_KEY];
 	return (mov);
 }
 

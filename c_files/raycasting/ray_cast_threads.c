@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:47:47 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 13:13:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,49 @@ int	draw_stored_sprite_hits(t_md *md, t_ray *ray)
 	return (ret_val);
 }
 
-int	cast_thread_ray(t_md *md, int index)
+//	x = (from x index, to x index)
+void	draw_strip(t_image *from, t_image *to, t_vec2 x, int stop_y)
+{
+	t_vec2			pos;
+	int				clr;
+
+	if (x.x < 0)
+		x.x = x.y - 1;
+	pos = get_v2(x.x, 0);
+	while (++pos.y < stop_y)
+	{
+		clr = from->src[pos.y * from->size_line / 4 + x.x];
+		draw_pixel(to, get_v2(x.y, pos.y), clr, 1);
+	}
+}
+
+int	should_draw_alternate(t_md *md, int index)
+{
+	const int	mod = 2;
+	const int	is_even_frame = md->timer.time % 2 == 0;
+
+	return ((index % mod == 0) == is_even_frame);
+}
+
+int	cast_thread_ray(t_md *md, int index, int *last_valid)
 {
 	t_ray			*ray;
 
 	ray = &md->rays[index];
+	ray->active = 0;
+
+	if (md->prm.alternate_draw && !should_draw_alternate(md, index))
+		return (0);
+	if (md->prm.ray_mod >= 2.0f && index % (int)floorf(md->prm.ray_mod) != 0)
+		return (draw_strip(md->screen, md->screen, get_v2(index - 1, index), md->win_sz.y), 0);
+	ray->active = 1;
 	ray->index = index;
 	update_ray_data(md, ray, md->thrd_manager.dir_vals[ray->index]);
 	ray_move(md, ray, md->thrd_manager.ray_visu_offset);
 	if (!ray->check_hit && ray->wall_hit != NULL)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
 	draw_raycast_background(md, ray);
+	*last_valid = index;
 	if (ray->hits_len > 0)
 		return (draw_stored_sprite_hits(md, ray));
 	return (1);
@@ -84,7 +116,7 @@ void	*cast_thread_batch(void *content)
 			break ;
 		ray = &md->rays[thread->index + i];
 		ray->is_floor_worker = ((i + 1) % FLOOR_WORKERS == 0);
-		if (!cast_thread_ray(md, ray_index))
+		if (!cast_thread_ray(md, ray_index, NULL))
 			break ;
 	}
 	return (NULL);

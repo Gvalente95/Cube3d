@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 11:33:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 00:38:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,17 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir, int flip_x)
 		printf("%s texture[%d] correctly set\n", line + 3, dir);
 }
 
+int	contains_valid_character(char *line, const char *valid_characters)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+		if (line[i] != ' ' && char_in_str(line[i], valid_characters))
+			return (1);
+	return (0);
+}
+
 static int	parse_file_line(char *line, t_md *md)
 {
 	while (*line == ' ')
@@ -75,7 +86,7 @@ static int	parse_file_line(char *line, t_md *md)
 		md->hud.sky_color = str_to_color(line + 2);
 	else if (line[0] == 'F')
 		md->hud.floor_color = str_to_color(line + 2);
-	else if (char_in_str('1', line) || char_in_str('0', line))
+	else if (contains_valid_character(line, md->txd.ents_tp_map[0]))
 		return (0);
 	return (1);
 }

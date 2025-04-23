@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/06 21:34:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 20:31:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,25 @@ int	render_text(t_md *md, t_txtd data, const char *format, ...)
 		data.onto = md->menu.freeze_frame;
 	if (!data.onto)
 		data.onto = md->screen;
+	txt_width = display_text(md, buff, data);
+	return (txt_width);
+}
+
+int	rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...)
+{
+	char	buff[256];
+	va_list	args;
+	int		txt_width;
+	t_txtd	data;
+
+	va_start(args, format);
+	vsnprintf(buff, sizeof(buff), format, args);
+	va_end(args);
+	data.x = pos.x;
+	data.y = pos.y;
+	data.color = -1;
+	data.onto = md->screen;
+	data.scale = md->prm.txt_sc;
 	txt_width = display_text(md, buff, data);
 	return (txt_width);
 }

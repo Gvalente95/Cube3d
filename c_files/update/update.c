@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 22:47:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 23:43:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,13 @@ void	update_audio(t_md *md, t_au_manager *au)
 	play_loop(md, &au->wind_pid, AU_WIND, !md->menu.active && md->prm.fly_cam);
 	if (!md->prm.au_on)
 		return ;
+	if (!md->timer.trig_walk || md->prm.fly_cam || md->inv.active)
+		return ;
+	if (!md->plr.grounded || !md->cam.is_moving)
+		return ;
 	if (md->cam.pos.z + md->prm.height < -.5)
 		return ;
-	if (md->timer.trig_walk && !md->prm.fly_cam && md->plr.grounded && \
-		md->cam.is_moving && !cmp_vec3f(md->plr.mov, v3f(0), .01))
+	if (!cmp_vec3f(md->plr.mov, v3f(0), .01))
 		md->au.walk_index = \
 			play_rand_sound(md, AU_WALK_GRASS, 8, md->au.walk_index);
 }
@@ -111,6 +114,8 @@ int	update_and_render(t_md *md)
 	update_time(md, &md->timer);
 	update_input(md);
 	update_mouse(md);
+	if (md->inv.active)
+		update_inventory(md, &md->inv);
 	if (md->timer.time > 5)
 		update_player(md, &md->plr);
 	update_ents(md);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 17:43:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 23:56:43 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,33 @@ typedef struct s_menu_button
 	char			key_show[5];
 }	t_button;
 
+typedef struct s_inventory
+{
+	int		items[PCKP_TYPE_LEN];
+	int		active;
+	int		hov_index;
+	int		sel_i;
+	int		opt_i;
+	int		line_height;
+	int		hold_pkbl;
+	int		throwing_pokebal;
+	int		pkbl_set;
+	double	pokeball_timer;
+	t_image	*pkball;
+	float	pkbl_rot_z;
+	t_vec2	pkbl_p;
+	t_vec2	arc_origin;
+	t_vec2	pkbl_sz;
+	t_vec2	sz;
+	t_vec2	p;
+	t_vec2	opt_p;
+	t_vec2	opt_sz;
+	t_image	*img;
+	t_image	*opt_img;
+	int		update_opt;
+	int		update_img;
+}	t_inventory;
+
 typedef struct s_menu
 {
 	t_image			*overlay;
@@ -123,6 +150,7 @@ typedef struct s_auto_screen_data
 	float	map_w;
 	float	map_h;
 	float	map_diag;
+	float	acc_spd;
 	t_vec3f	start_plr_pos;
 	int		start_cam_x;
 	int		fade;

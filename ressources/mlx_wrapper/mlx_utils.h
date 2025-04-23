@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/21 15:13:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 13:10:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_hud
 	t_image		*base_sky;
 	t_image		*sky;
 	t_image		*sky_flipy;
+	t_image		*sky_buffer;
 	t_image		*floor;
 	t_image		*wall;
 	t_image		*ceiling;
@@ -108,14 +109,12 @@ typedef struct s_post_fx_data
 {
 	t_vec4f			hue;
 	t_image			*vignette;
-	unsigned int	palette[11];
-	int				palette_size;
 	float			rgb_distortion;
 	float			scanlines;
-	float			dithering;
 	float			bloom_threshold;
 	float			color_band;
 	float			chrom_amount;
+	float			contrast;
 	float			barrel_amount;
 	float			glow_intensity;
 	float			fog;
@@ -143,6 +142,8 @@ typedef struct s_parameters
 	int				show_walls;
 	int				show_hud;
 	int				show_sky;
+	int				alternate_draw;
+	float			ray_mod;
 	float			bob_amount;
 	float			sun_x;
 	float			sun_y;
@@ -191,8 +192,11 @@ typedef struct s_cam
 	t_vec3f			wrd_mv_offst;
 	t_vec3f			plr_wrd_mv;
 	t_ent			*pointed;
+	t_ent			*pointed_door;
 	float			bob_time;
 	int				is_moving;
+	t_ent			*prv_door;
+	int				plr_map_i;
 	int				x_dir_start;
 
 }	t_cam;
@@ -242,8 +246,13 @@ typedef struct s_md
 	t_thrd_manager	thrd_manager;
 	t_au_manager	au;
 	t_env_manager	env;
+	t_inventory		inv;
 	char			base_map_path[50];
+	char			*out_map;
 	unsigned int	r_seed;
+	int				plr_in_house;
+	int				switch_interior;
+	int				plr_was_on_door;
 	int				key_prs[65536];
 	int				key_click;
 	int				last_key;
@@ -367,6 +376,7 @@ void	hsv_to_rgb(float h, float s, float v, t_vec4f *rgb);
 void	set_wheel(t_clrp *w, t_vec2 mouse_pos, t_vec2 img_center);
 void	draw_quad(t_image *screen, t_vec2 p[4], int color, int contour_clr);
 void	draw_img_contour(t_md *md, t_image *src, t_vec2 pos, t_vec2 clr_thk);
-void	wrap_int(int *number, int min, int max, int increment);
+int		wrap_int(int *number, int min, int max, int increment);
+int		get_feet_offset(t_image *img);
 
 #endif

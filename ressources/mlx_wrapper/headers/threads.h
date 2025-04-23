@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:31:39 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/07 13:59:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:34:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_thread_worker
 {
 	t_md			*md;
 	int				index;
+	int				last_valid;
 	pthread_t		thread;
 }	t_thread_worker;
 
@@ -61,7 +62,7 @@ void	*cast_thread_loop(void *arg);
 void	init_thread_pool(t_md *md, int thread_count);
 void	cleanup_thread_pool(t_md *md);
 
-int		cast_thread_ray(t_md *md, int ray_index);
+int		cast_thread_ray(t_md *md, int ray_index, int *last_valid);
 void	cast_ray_threads_lp(t_md *md);
 
 #endif

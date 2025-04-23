@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:02:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/22 01:44:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 22:26:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,16 @@ int	str_to_color(const char *line)
 		rgba.b = minmax(0, 255, ft_atoi(splits[2]));
 	free_void_array((void **)splits);
 	return ((rgba.r << 16) | (rgba.g << 8) | rgba.b);
+}
+
+int	ent_sort_cmp(void *a, void *b)
+{
+	const t_ent	*ea = *(t_ent **)a;
+	const t_ent	*eb = *(t_ent **)b;
+
+	if (ea->hit_dist < eb->hit_dist)
+		return (1);
+	if (ea->hit_dist > eb->hit_dist)
+		return (-1);
+	return (0);
 }

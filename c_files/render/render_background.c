@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 15:00:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 10:55:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ static void	draw_sky(t_md *md, t_image *bufr, t_vec3 *sky_pos)
 		to_draw = md->hud.sky;
 		if (sky_pos[i].z)
 			to_draw = md->hud.sky_flipy;
-		draw_img(to_draw, md->screen, pos, -1);
+		draw_img(to_draw, bufr, pos, -1);
 		continue ;
 		draw_trimmed(to_draw, bufr, pos, trimm);
 	}
 }
 
-int	render_sky(t_md *md, t_image *bufr)
+int	render_sky(t_md *md)
 {
 	t_vec3	sky_pos[6];
 	t_vec3f	speed;
@@ -58,7 +58,7 @@ int	render_sky(t_md *md, t_image *bufr)
 	sky_pos[3] = get_v3(win_sz.x - scrl.x, -win_sz.y - scrl.y, 0);
 	sky_pos[4] = get_v3(-scrl.x, -scrl.y + win_sz.y, 1);
 	sky_pos[5] = get_v3(win_sz.x - scrl.x, -scrl.y + win_sz.y, 1);
-	draw_sky(md, bufr, sky_pos);
+	draw_sky(md, md->hud.sky_buffer, sky_pos);
 	return (1);
 }
 
@@ -101,7 +101,7 @@ void	render_background(t_md *md)
 	if (!md->prm.use_ceiling)
 	{
 		if (md->prm.show_sky)
-			render_sky(md, md->screen);
+			render_sky(md);
 		else
 			draw_pixels(md->screen, \
 	v2(0), get_v2(md->win_sz.x, hud->floor_start + 1), hud->sky_color);

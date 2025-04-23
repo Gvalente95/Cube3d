@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 22:44:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 01:37:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 10:48:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,8 @@ void	init_fx(t_md *md, t_fx_data *fx)
 	fx->vignette = init_img(md, md->win_sz, NULL, -1);
 	flush_img(fx->vignette, 0xFFFFFFFF, .2, 0);
 	apply_vignette(fx->vignette, 1, _WHITE);
-	fx->anti_alias = 0;
-	fx->palette[0] = 0x000000;
-	fx->palette[1] = 0x555555;
-	fx->palette[2] = 0xAAAAAA;
-	fx->palette[3] = 0xFFFFFF;
-	fx->palette[4] = 0xFF0000;
-	fx->palette[6] = 0x00FF00;
-	fx->palette[7] = 0x0000FF;
-	fx->palette[8] = 0xFFFF00;
-	fx->palette[9] = 0xFF00FF;
-	fx->palette[10] = 0x00FFFF;
 	fx->fog = .5;
 	fx->noise = 0.5;
-	fx->palette_size = sizeof(fx->palette) / sizeof(fx->palette[0]);
 }
 
 void	init_hud(t_md *md, t_hud *hud)

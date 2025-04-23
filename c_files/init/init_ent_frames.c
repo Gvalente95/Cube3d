@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 21:42:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 16:00:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 11:47:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,43 @@ void	set_pickup_frame(t_md *md, t_texture_data *txd, t_ent *e)
 		e->frame = txd->pickup_txtr[4][e->wpn_type];
 }
 
-int	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
+void	set_ent_label(t_texture_data *txd, t_ent *e, t_ent_type type)
+{
+	e->label = NULL;
+	if (type == nt_mob)
+		e->label = txd->mob_names[e->mob_type];
+	else if (type == nt_door)
+		e->label = "DOOR";
+	else if (type == nt_pokemon)
+		e->label = txd->pkmn_names[e->mob_type];
+	else if (type == nt_pickup)
+		e->label = txd->pickup_names[e->pckp_type];
+}
+
+void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
 {
 	e->pckp_type = -1;
 	e->action = 0;
 	e->frame_index = 0;
 	if (e->type == nt_empty)
-		return (e->frame = md->hud.floor, 1);
+		e->frame = md->hud.floor;
 	else if (e->type == nt_wall)
-		return (e->frame = txd->wall_img[0], 1);
+		e->frame = txd->wall_img[0];
 	else if (e->type == nt_mob)
-		return (copy_anim_frames(md, e), 1);
+		copy_anim_frames(md, e);
 	else if (e->type == nt_door)
-		return (e->frame = txd->door_txtr, 1);
+		e->frame = txd->door_txtr;
 	else if (e->type == nt_pickup)
-		return (set_pickup_frame(md, txd, e), 1);
-	e->mob_type = r_range_seed(&md->r_seed, 0, PKMN_TYPE_LEN - 1);
-	e->frames = copy_action_frames(md, md->txd.pkmn[e->mob_type]);
-	e->frame = e->frames[0];
-	return (1);
+		set_pickup_frame(md, txd, e);
+	else if (e->type == nt_ext_wall)
+		e->frame = txd->ext_wall;
+	else if (e->type == nt_grass)
+		e->frame = txd->grass_tile;
+	else
+	{
+		e->mob_type = r_range_seed(&md->r_seed, 0, PKMN_TYPE_LEN - 1);
+		e->frames = copy_action_frames(md, md->txd.pkmn[e->mob_type]);
+		e->frame = e->frames[0];
+	}
+	set_ent_label(txd, e, e->type);
 }

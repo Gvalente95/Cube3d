@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 19:44:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 16:07:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	init_pickup_frames(t_md *md, t_texture_data *td)
 	td->pickup_txtr_mini = malloc(sizeof(t_image **) * (PCKP_TYPE_LEN + 1));
 	if (!td->pickup_txtr || !td->pickup_txtr_mini)
 		return ;
-	td->pickup_txtr[Ammo] = init_mini(md, \
-		&td->pickup_txtr_mini[Ammo], "ent/Pickup/Ammo/");
+	td->pickup_txtr[Pokeball] = init_mini(md, \
+		&td->pickup_txtr_mini[Pokeball], "ent/Pickup/Ammo/");
 	td->pickup_txtr[Health] = init_mini(md, \
 		&td->pickup_txtr_mini[Health], "ent/Pickup/Health/");
 	td->pickup_txtr[Keys] = init_mini(md, \
 		&td->pickup_txtr_mini[Keys], "ent/Pickup/Keys/");
-	td->pickup_txtr[Score] = init_mini(md, \
-		&td->pickup_txtr_mini[Score], "ent/Pickup/Score/");
+	td->pickup_txtr[HM] = init_mini(md, \
+		&td->pickup_txtr_mini[HM], "ent/Pickup/Score/");
 	td->pickup_txtr[Weapon] = init_mini(md, \
 		&td->pickup_txtr_mini[Weapon], "ent/Pickup/Weapons/");
 	td->pickup_txtr[PCKP_TYPE_LEN] = NULL;
@@ -81,7 +81,7 @@ void	init_ents_data(t_md *md, t_texture_data *txd)
 {
 	txd->last_pointed = NULL;
 	txd->last_pointed_screen_p = v2(-1);
-	txd->opt_index = 0;
+	txd->opt_i = -1;
 	init_labels(txd);
 	init_au(md, &md->au);
 	store_entities_sizes(txd, md->t_len);
@@ -90,9 +90,12 @@ void	init_ents_data(t_md *md, t_texture_data *txd)
 	init_mobs_frames(md);
 	init_pokemon_frames(md, txd);
 	init_env_frames(md, txd);
+	txd->grass_tile = init_img(md, v2(md->t_len), NULL, _GREEN);
+	txd->grass_mini = copy_image(md, txd->grass_tile, v2(txd->size_2d), -1);
+	txd->ext_wall = init_img(md, v2(md->t_len), "utils/exterior.xpm", -1);
+	txd->ext_wall_mini = copy_image(md, txd->ext_wall, v2(txd->size_2d), -1);
 	txd->door_txtr = init_img(md, v2(md->t_len), "ent/door/0.xpm", -1);
-	txd->door_txtr_mini = \
-		init_img(md, get_v2(txd->size_2d, txd->size_2d), "ent/door/0.xpm", -1);
+	txd->door_txtr_mini = init_img(md, v2(txd->size_2d), "ent/door/0.xpm", -1);
 	if (!txd->door_txtr || !txd->door_txtr->img)
 		exit(0);
 }

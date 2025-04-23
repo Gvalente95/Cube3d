@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:19:07 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 13:38:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 10:48:38 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ static void	init_sky(t_md *md, t_hud *hud, t_vec2 win_sz)
 			_WHITE, f_range(0.3, 1));
 	}
 	hud->sky_flipy = copy_image(md, hud->sky, v2(-1), -1);
+	hud->sky_buffer = copy_image(md, hud->sky, v2(-1), -1);
 	flipy_image_data(hud->sky_flipy);
 }
 

@@ -46,8 +46,8 @@ t_ent	*get_mapped_at_cord(t_md *md, t_vec2 cord)
 {
 	t_ent	*found;
 
-	if (cord.x < 0 || cord.x > MAPPED_ENT_MAX || \
-		cord.y < 0 || cord.y > MAPPED_ENT_MAX)
+	if (cord.x < 0 || cord.x > md->map.size.x + 1 || \
+		cord.y < 0 || cord.y > md->map.size.y + 1)
 		return (NULL);
 	found = md->map_ents[cord.x][cord.y];
 	return (found);

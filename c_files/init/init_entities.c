@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 15:49:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 03:41:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type)
 		e->hp = ((int)(e->mob_type + 1) * 2);
 	if (e->type == nt_pickup)
 		e->pos.z += md->t_len;
+	e->caught = 0;
 }
 
 static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)

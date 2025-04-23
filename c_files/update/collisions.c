@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 00:27:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 23:54:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,43 +51,32 @@ int	is_collision(t_ent *a, t_ent *b, t_vec2 a_size)
 
 static int	handle_soft_collisions(t_md *md, t_ent *b)
 {
-	if (b->pckp_type == Ammo)
-		md->hud.ammo = minmax(0, MAX_AMMO, md->hud.ammo + 5);
-	else if (b->pckp_type == Keys)
-		md->hud.keys++;
-	else if (b->pckp_type == Health)
-		md->hud.hp += 5;
-	else if (b->pckp_type == Score)
-		md->score += 50;
-	remove_ent_at_cord(md, get_v2(b->coord.x, b->coord.y));
-	b->is_active = 0;
-	play_sound(md, AU_GRAB);
+	collect_item(md, &md->inv, b);
 	return (1);
 }
 
 static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 {
+	const int	btp = b->type;
+	const int	is_w = (btp == nt_wall || btp == nt_door || btp == nt_ext_wall);
+
 	if (!a || !b)
 		return (0);
-	if (b->type == nt_empty)
+	if (btp == nt_empty)
 		return (0);
-	if (b->type == nt_door && !b->hp)
+	if (btp == nt_door && !b->hp)
 		return (0);
 	if (!a->is_active || !b->is_active)
 		return (0);
-	if (!md->prm.ent_mode && b->type != nt_door && b->type != nt_wall)
+	if (!md->prm.ent_mode && !is_w)
 		return (0);
-	if (a->type == nt_plr && b->type == nt_pickup)
-	{
-		if (is_collision(a, b, v2(md->t_len * 2)))
-			handle_soft_collisions(md, b);
-		return (0);
-	}
-	if (b->type != nt_wall && b->type != nt_door)
+	if (btp == nt_pickup && is_collision(a, b, v2(md->t_len * 2)))
+		handle_soft_collisions(md, b);
+	if (!is_w)
 		return (0);
 	if (!is_collision(a, b, a_size))
 		return (0);
-	if (b->type == nt_wall && b->overlay)
+	if (btp == nt_wall && b->overlay)
 		return (validate_portal_collision(md, b));
 	return (1);
 }

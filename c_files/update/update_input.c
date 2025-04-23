@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 01:55:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,37 +55,41 @@ int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
 		return (1);
 	if (c == TAB_KEY)
 		set_weapon_index(md);
-	else if (c == NUM_Q_KEY)
+	else if (c == Q_KEY)
 		set_menu_mode(md, &md->menu, !menu->active);
+	else if (c == I_KEY && !md->inv.hold_pkbl)
+		set_inventory(md, &md->inv, !md->inv.active);
 	else if (c == ESC_KEY)
 		free_and_quit(md, NULL, NULL);
 	else if (c == SHIFT_KEY)
 		md->timer.tm_walk = md->timer.cur_tm - 1;
-	else if (c == NUM_C_KEY)
+	else if (c == C_KEY)
 		plr_shoot(md);
 	return (0);
 }
 
-static int	update_mouse_input(t_md *md)
+static int	update_mouse_input(t_md *md, t_ent *pointed, t_ent *door)
 {
+	if (md->mouse.click == MOUSE_PRESS && md->inv.hold_pkbl)
+		return (throw_pokeball(md, &md->inv, pointed));
 	if (md->mouse.click != MOUSE_PRESS || !md->cam.pointed)
 		return (0);
-	if (md->cam.pointed->type == nt_door)
+	if (door)
 	{
-		if (!md->hud.keys && md->cam.pointed->hp)
+		if (!md->inv.items[Keys] && door->hp)
 			return (play_sound(md, AU_MENU_OFF), 0);
-		md->cam.pointed->hp = !md->cam.pointed->hp;
-		if (!md->cam.pointed->hp)
-			return (play_sound(md, AU_OPEN), md->hud.keys--, 1);
-		return (play_sound(md, AU_CLOSE), md->hud.keys++, 1);
+		door->hp = !door->hp;
+		if (!door->hp)
+			md->cam.prv_door = door;
+		if (!door->hp)
+			return (play_sound(md, AU_OPEN), md->inv.items[Keys]--, 1);
+		return (play_sound(md, AU_CLOSE), md->inv.items[Keys]++, 1);
 	}
-	if (md->cam.pointed->type == nt_pokemon)
-		play_sound(md, md->au.pokemon_cries[md->cam.pointed->mob_type]);
-	if (md->cam.pointed->type != nt_mob)
+	if (pointed->type != nt_mob)
 		return (0);
-	paint_ent(md, md->cam.pointed, v2(0));
+	paint_ent(md, pointed, v2(0));
 	play_sound(md, AU_PORTAL_SHOOT);
-	md->cam.pointed->hp--;
+	pointed->hp--;
 	return (1);
 }
 
@@ -96,5 +100,6 @@ void	update_input(t_md *md)
 	if (md->menu.active)
 		return ;
 	update_arrow_rotation(md);
-	update_mouse_input(md);
+	if (!md->inv.active)
+		update_mouse_input(md, md->cam.pointed, md->cam.pointed_door);
 }

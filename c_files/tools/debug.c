@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:15:22 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 23:55:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,6 @@ void	show_debug_time(t_md *md, t_txtd txt_data)
 	rnd_fast_txt(md, txt_data, "delta:	%.3f", md->timer.delta_time);
 }
 
-void	show_fps(t_md *md, t_vec2 pos)
-{
-	const int	colors[5] = {RGB_RED, RGB_ORANGE, RGB_YELLOW, \
-		RGB_GREEN, RGB_BLUE};
-	const int	color_index = minmaxf(0, 4, md->timer.prv_fps / 10);
-	const int	color = md->rgb[colors[color_index]];
-	t_txtd		txt_data;
-	float		fps_gain;
-
-	txt_data = (t_txtd){pos.x, pos.y, color, md->prm.txt_sc, NULL};
-	rnd_fast_txt(md, txt_data, "fps %d", md->timer.prv_fps);
-	txt_data.y -= md->prm.txt_sc * 1.5;
-	fps_gain = md->timer.avrg_fps_prev - md->timer.avrg_fps;
-	if (isinf(fps_gain) || isnan(fps_gain))
-		fps_gain = 0;
-	txt_data.color = md->rgb[colors[(fps_gain < 0) * 3]];
-	if (fps_gain > 0)
-		rnd_fast_txt(md, txt_data, "+%.1f", fps_gain);
-	else
-		rnd_fast_txt(md, txt_data, "%.1f", fps_gain);
-	txt_data.color = -1;
-	txt_data.y -= md->prm.txt_sc * 1.5;
-	if (md->prm.use_thrd)
-		rnd_fast_txt(md, txt_data, "T-on");
-	if (md->prm.debug_mode)
-		show_debug_time(md, txt_data);
-}
-
 void	show_update_information(t_md *md)
 {
 	int	y;
@@ -94,6 +66,7 @@ void	show_update_information(t_md *md)
 	show_vec2(md, "mouse delta", md->mouse.delta, get_v2(0, y++));
 	show_float(md, "cam z", md->cam.pos.z, get_v2(0, y++));
 	show_int(md, "key click", md->last_key, get_v2(0, y++));
+	show_int(md, "plr in house", md->plr_in_house, get_v2(0, y++));
 }
 
 void	print_color(int color, const char *label)
@@ -105,4 +78,19 @@ void	print_color(int color, const char *label)
 		(color >> 8) & 0xFF, \
 		color & 0xFF, \
 		(color >> 24) & 0xFF);
+}
+
+void	show_debug(t_md *md, char *msg, int *value, char *attribute)
+{
+	const t_vec2	pos = div_v2(md->win_sz, 2);
+	const t_txtd	td = (t_txtd){pos.x, pos.y, -1, md->prm.txt_sc, md->screen};
+
+	if (value && attribute)
+		rnd_fast_txt(md, td, "%s: %d %s", msg, *value, attribute);
+	else if (value)
+		rnd_fast_txt(md, td, "%s: %d", msg, *value);
+	else if (attribute)
+		rnd_fast_txt(md, td, "%s: %s", msg, attribute);
+	else
+		rnd_fast_txt(md, td, "%s", msg);
 }

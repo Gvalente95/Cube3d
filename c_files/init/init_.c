@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 17:22:03 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 13:11:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	prm->use_floor = 1;
 	prm->show_walls = 1;
 	prm->show_sky = 0;
+	prm->alternate_draw = 1;
+	prm->ray_mod = 1;
 	prm->show_fps = 1;
 	prm->show_hud = 1;
 	prm->super_view = 0;
@@ -79,8 +81,14 @@ static void	init_var(t_md *md)
 	md->cam.bob_time = 0.0f;
 	md->cam.pointed = NULL;
 	md->au.mus_pid = 0;
+	md->plr_in_house = 1;
+	md->prm.show_hud = 0;
+	md->switch_interior = 0;
+	md->plr_in_house = 1;
 	md->au.wind_pid = 0;
 	md->au.walk_index = 0;
+	md->inv.active = 0;
+	md->cam.prv_door = NULL;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
@@ -92,12 +100,14 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_fonts(md);
 	init_ents_data(md, &md->txd);
 	init_map(md, file_arg);
+	init_inventory(md, &md->inv);
 	md->init_steps++;
 	init_hud(md, &md->hud);
 	init_entities(md, get_v2(0, 0));
 	init_minimap(md, &md->mmap);
 	init_menu(md, &md->menu);
 	init_fes(md, &md->env, md->t_len);
+	md->out_map = get_out_map(md->map.buffer, md->map.size.x + 1, md->map.len);
 	init_thread_pool(md, THREADS_BATCH);
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;

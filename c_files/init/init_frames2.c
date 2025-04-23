@@ -6,53 +6,35 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:43:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 21:23:31 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-int	get_feet_offset(t_image *img)
-{
-	t_vec2		pos;
-	uint32_t	pixel;
-
-	pos = v2(-1);
-	while (++pos.y < img->size.y - 1)
-	{
-		pos.x = -1;
-		while (++pos.x < img->size.x)
-		{
-			pixel = img->src[pos.y * img->size.x + pos.x];
-			if ((pixel >> 24) & 0xFF)
-				return (img->size.y - 1 - pos.y);
-		}
-	}
-	return (0);
-}
-
-void	init_pokemon_frames(t_md *md, t_texture_data *txd)
+void	init_pokemon_frames(t_md *md, t_texture_data *td)
 {
 	char			*path;
 	int				i;
 	t_vec2			size;
 
-	txd->pkmn = md_malloc(md, sizeof(t_image **) * (PKMN_TYPE_LEN + 1));
-	txd->pkmns_mini = md_malloc(md, sizeof(t_image *) * (PKMN_TYPE_LEN + 1));
+	td->pkmn = md_malloc(md, sizeof(t_image **) * (PKMN_TYPE_LEN + 1));
+	td->pkmns_mini = md_malloc(md, sizeof(t_image *) * (PKMN_TYPE_LEN + 1));
 	i = -1;
 	while (++i < PKMN_TYPE_LEN)
 	{
 		size = v2(-1);
 		if (i == Dugtrio || i == Taurus)
 			size = v2(64);
-		path = ft_megajoin("pokemons/", txd->pkmn_names[i], "/", NULL);
-		txd->pkmn[i] = init_images(md, size, path);
-		txd->pkmns_mini[i] = copy_image(md, txd->pkmn[i][0], txd->e_sizes2d[0], -1);
-		txd->feet_offsets[i] = get_feet_offset(txd->pkmn[i][0]);
+		path = ft_megajoin("pokemons/", td->pkmn_names[i], "/", NULL);
+		td->pkmn[i] = init_images(md, size, path);
+		td->pkmns_mini[i] = copy_image(md, \
+			td->pkmn[i][0], td->e_sizes2d[0], -1);
+		td->feet_offsets[i] = get_feet_offset(td->pkmn[i][0]);
 		free(path);
 	}
-	txd->pkmns_mini[PKMN_TYPE_LEN] = NULL;
-	txd->pkmn[PKMN_TYPE_LEN] = NULL;
+	td->pkmns_mini[PKMN_TYPE_LEN] = NULL;
+	td->pkmn[PKMN_TYPE_LEN] = NULL;
 }
 
 void	handle_mobs_frames(t_md *md, t_image ****frames, \

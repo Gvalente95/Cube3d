@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 15:23:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:23:24 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,20 @@ static void	update_player_weapon(t_md *md, t_ent *plr)
 
 int	update_player(t_md *md, t_ent *plr)
 {
+	t_vec2	plr_map;
+	int		map_i;
+
+	plr_map.x = minmax(0, md->map.size.x, (int)(plr->pos.x / md->t_len));
+	plr_map.y = minmax(0, md->map.size.y, (int)(plr->pos.y / md->t_len));
+	map_i = plr_map.y * (md->map.size.x + 1) + plr_map.x;
+	if (map_i < 0 || map_i > md->map.len)
+		md->plr_in_house = 0;
+	else if (md->out_map[map_i] != 'D')
+		md->plr_in_house = char_in_str(md->out_map[map_i], "I");
+	md->cam.plr_map_i = map_i;
 	update_player_weapon(md, plr);
-	update_player_rot(md);
+	if (!md->inv.active)
+		update_player_rot(md);
 	update_player_mov(md, plr);
 	update_player_action(md, plr);
 	update_cam(md, &md->cam);

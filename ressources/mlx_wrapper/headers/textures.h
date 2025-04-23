@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:12:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 11:47:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ typedef struct s_texture_data
 	t_image			**wall_img2d;
 	t_image			*door_txtr;
 	t_image			**bush_txtr;
+	t_image			*ext_wall;
+	t_image			*ext_wall_mini;
+	t_image			*grass_tile;
+	t_image			*grass_mini;
 	t_image			**tree_txtr;
 	t_image			*door_txtr_mini;
 	t_image			*font[256];
@@ -77,7 +81,7 @@ typedef struct s_texture_data
 	int				size_2d;
 	int				feet_offsets[PKMN_TYPE_LEN];
 	int				highest_pkmn;
-	int				opt_index;
+	int				opt_i;
 	float			texture_accumulator;
 }	t_texture_data;
 

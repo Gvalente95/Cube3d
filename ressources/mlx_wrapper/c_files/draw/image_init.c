@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/07 20:27:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/21 17:06:21 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,4 +115,22 @@ void	*get_image_copy(t_md *md, void *src, t_vec2 src_size)
 		}
 	}
 	return (imgd.img);
+}
+
+void	render_cursor(t_md *md, t_image *screen, int has_hov)
+{
+	t_vec2	pos;
+	t_image	*img;
+
+	pos = get_v2(md->mouse.real.x, md->mouse.real.y);
+	if (md->mouse.pressed == MOUSE_PRESS && has_hov)
+		img = md->mouse.curs_grb;
+	else if (has_hov)
+		img = md->mouse.curs_dtc;
+	else
+		img = md->mouse.cursor;
+	if (screen)
+		draw_img(img, screen, pos, -1);
+	else
+		mlx_put_image_to_window(md->mlx, md->win, img->img, pos.x, pos.y);
 }

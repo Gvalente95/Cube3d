@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 16:13:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 00:30:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ int	init_map(t_md *md, char *file_name)
 		free_and_quit(md, "Unclosed map\n", NULL);
 	if (!validate_map(md, md->map.buffer))
 		free_and_quit(md, NULL, NULL);
+	printf("%s\n", md->map.buffer);
 	md->map.size.x--;
 	return (1);
 }

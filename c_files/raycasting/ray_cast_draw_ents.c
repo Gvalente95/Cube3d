@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:34:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 22:57:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,28 @@ static int	get_scale_and_pos(t_md *md, t_ent *e, t_vec2 win_sz, t_vec2 *draw_p)
 	return (scale);
 }
 
+void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e)
+{
+	const t_vec2	sz = get_v2(sz_scale.x, sz_scale.y);
+	const int		scale = sz_scale.z;
+	const t_vec2	pkpos = md->inv.pkbl_p;
+	int				is_pointed;
+
+	is_pointed = 0;
+	if (!md->inv.hold_pkbl)
+		is_pointed = v2_bounds(draw_p, sub_vec2(div_v2(md->win_sz, 2), sz), sz);
+	else if (e->type == nt_pokemon)
+		is_pointed = v2_touch(draw_p, div_v2(sz, 2), pkpos, md->inv.pkbl_sz);
+	if (is_pointed)
+	{
+		md->cam.pointed = e;
+		if (md->mouse.click)
+			md->txd.last_pointed = e;
+	}
+	if (md->txd.last_pointed == e)
+		md->txd.last_pointed_screen_p = sub_vec2(draw_p, v2(scale * .2));
+}
+
 void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha)
 {
 	t_image		*img;
@@ -41,36 +63,19 @@ void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha)
 
 	img = copy_image(md, e->frame, v2(scale), -1);
 	sz = img->size;
-	if (e->hp > 0 && v2_bounds(draw_p, sub_vec2(div_v2(md->win_sz, 2), sz), sz))
-	{
-		md->cam.pointed = e;
-		if (md->mouse.click)
-			md->txd.last_pointed = e;
-	}
-	if (md->txd.last_pointed == e)
-		md->txd.last_pointed_screen_p = sub_vec2(draw_p, v2(scale * .2));
-	if (fogalpha < .95)
+	update_pointed(md, draw_p, get_v3(sz.x, sz.y, scale), e);
+	if (e->caught)
+		flush_img(img, _WHITE, 10, 1);
+	else if (fogalpha < .95)
 		flush_img(img, md->hud.fog_color, fogalpha, 1);
 	draw_sphere(md->screen, get_v2(draw_p.x, draw_p.y + sz.y * .8), \
 		get_v2(sz.x, sz.y * .25), get_v3(_BLACK, 3, 1));
-	if (md->cam.pointed == e)
+	if (md->cam.pointed == e && !e->caught)
 		draw_img_contour(md, img, draw_p, (t_vec2){_MAGENT, 8});
 	else
 		draw_img(img, md->screen, draw_p, -1);
 	free_image_data(md, img);
 	e->in_screen = 1;
-}
-
-static int	ent_sort_cmp(void *a, void *b)
-{
-	const t_ent	*ea = *(t_ent **)a;
-	const t_ent	*eb = *(t_ent **)b;
-
-	if (ea->hit_dist < eb->hit_dist)
-		return (1);
-	if (ea->hit_dist > eb->hit_dist)
-		return (-1);
-	return (0);
 }
 
 static void	sort_ent_list_by_distance(t_dblst **lst)
@@ -104,14 +109,18 @@ static void	sort_ent_list_by_distance(t_dblst **lst)
 
 void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 {
-	t_dblst	*node;
-	t_ent	*e;
-	float	fogalpha;
+	t_dblst					*node;
+	t_ent					*sel;
+	t_ent					*e;
+	float					fogalpha;
 
+	sel = md->txd.last_pointed;
 	sort_ent_list_by_distance(&mon->ents_to_draw);
 	node = dblst_first(mon->ents_to_draw);
-	if (md->mouse.click && md->txd.last_pointed)
+	if (md->mouse.click && sel)
 		md->txd.last_pointed = NULL;
+	if (!sel)
+		md->txd.opt_i = -1;
 	while (node)
 	{
 		e = (t_ent *)node->content;
@@ -119,8 +128,7 @@ void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 		draw_sprite_thread(md, e, md->win_sz, fogalpha);
 		node = node->next;
 	}
-	if (md->txd.last_pointed)
-		show_pointed_data(md, \
-			md->txd.last_pointed_screen_p, md->txd.last_pointed);
+	if (sel && sel->in_screen && !md->inv.hold_pkbl)
+		show_pointed_data(md, md->txd.last_pointed_screen_p, sel);
 	dblst_clear(&mon->ents_to_draw, NULL);
 }

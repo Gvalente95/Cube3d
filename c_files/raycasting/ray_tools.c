@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:32:36 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/22 22:12:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->init_steps = 0;
 	ray->color = _BLACK;
 	ray->steps = -1;
+	ray->door = NULL;
 	ray->start = start_pos;
 	ray->delta = v2f(0);
 	ray->side_dist = v2f(0);
@@ -71,30 +72,29 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->teleported_once = 0;
 }
 
-int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type type)
+int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type tp)
 {
-	if (type == nt_empty || type == nt_plr)
+	const int	is_wall = tp == nt_door || tp == nt_wall || tp == nt_ext_wall;
+
+	if (tp == nt_empty || tp == nt_plr || tp == nt_grass)
 		return (0);
-	if (!md->prm.ent_mode && (type != nt_door && type != nt_wall))
+	if (!md->prm.ent_mode && !is_wall)
 		return (0);
 	if (ray->hits_len > 0 && \
 		ray->hit_data[ray->hits_len - 1].hit == ent && !md->prm.super_view)
 		return (0);
 	if (ray->check_hit && ray->check_hit != ent)
 		return (0);
-	if (type == nt_pickup && !ent->is_active)
+	if (tp == nt_pickup && !ent->is_active)
 		return (0);
-	if (type != nt_door && type != nt_wall)
-	{
-		if (is_in_list(md->thrd_manager.ents_to_draw, ent))
-			return (0);
-		if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
-	(t_vec2f){ent->pos.x + ent->size.x / 2, \
-	ent->pos.y + ent->size.y / 2}, 1))
-			return (0);
-		dblst_add_back(&md->thrd_manager.ents_to_draw, dblst_new((t_ent *)ent));
-		return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);
-	}
-	return ((v3f_bounds(ray->pos, v3f(0), \
-		ent->pos, get_v3f(ent->frame->size.x + 1, ent->frame->size.y, 0))));
+	if (is_wall)
+		return ((v3f_bounds(ray->pos, v3f(0), \
+			ent->pos, get_v3f(ent->frame->size.x + 1, ent->frame->size.y, 0))));
+	if (is_in_list(md->thrd_manager.ents_to_draw, ent))
+		return (0);
+	if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \
+	(t_vec2f){ent->pos.x + ent->size.x / 2, ent->pos.y + ent->size.y / 2}, 1))
+		return (0);
+	dblst_add_back(&md->thrd_manager.ents_to_draw, dblst_new((t_ent *)ent));
+	return (ent->hit_dist = ray->steps, ent->ray_hit_index = ray->index, 0);
 }

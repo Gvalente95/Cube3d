@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 16:50:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 01:13:27 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ int	mouse_motion_handler(int x, int y, void *param)
 	t_mouse	*msd;
 
 	md = (t_md *)param;
-	if (md->autocam.active)
-		return (0);
 	msd = &md->mouse;
 	msd->real = get_v2(x, y);
 	msd->delta = get_v2(x - msd->prev.x, y - msd->prev.y);

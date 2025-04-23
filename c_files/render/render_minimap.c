@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 12:12:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/23 12:06:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,31 @@ void	render_minimap_ray(t_md *md)
 	color = set_alpha(color, 0.975);
 	i = -1;
 	while (++i < md->win_sz.x)
-		render_mmap_ray(md, i, color);
+		if (md->rays[i].active)
+			render_mmap_ray(md, i, color);
 	color = _BLUE;
 	color = set_alpha(color, 1);
 	render_mmap_ray(md, md->win_sz.x / 2, color);
+}
+
+void	show_if_interior(t_md *md, t_ent *e, t_vec2 draw_p, int scale)
+{
+	t_vec2	crd;
+	t_txtd	txd;
+	int		map_i;
+	char	c;
+
+	draw_p.x += 10;
+	crd.x = minmax(0, md->map.size.x, (int)(e->pos.x / md->t_len));
+	crd.y = minmax(0, md->map.size.y, (int)(e->pos.y / md->t_len));
+	map_i = crd.y * (md->map.size.x + 1) + crd.x;
+	if (map_i < 0 || map_i >= md->map.len)
+		return ;
+	c = md->out_map[map_i];
+	if (c == ' ')
+		c = 'E';
+	txd = (t_txtd){draw_p.x, draw_p.y, -1, scale, md->mmap.img};
+	rnd_fast_txt(md, txd, "%c", c);
 }
 
 void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
@@ -70,17 +91,17 @@ void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 		pos.x = 1 + (e->pos.x / md->t_len) * icsz;
 		pos.y = 1 + (e->pos.y / md->t_len) * icsz;
 		icsz /= 2;
+		draw_clr = md->rgb[RGB_BLUE + md->plr_in_house];
 	}
 	if (e->type == nt_empty)
-	{
-		icsz++;
 		pos = sub_vec2(pos, v2(1));
-	}
 	draw_pixels(screen, sub_vec2(pos, v2(1)), v2(icsz + 1), _BLACK);
 	draw_pixels(screen, pos, v2(icsz - 1), draw_clr);
 	if (!e->revealed && e->type != nt_plr)
 		md->mmap.revealed_cur++;
 	e->revealed = 1;
+	if (e->type == nt_plr)
+		show_if_interior(md, e, pos, -1);
 }
 
 void	render_minimap(t_md *md, t_mmap *mp)
@@ -91,7 +112,7 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	if (!mp->active)
 	{
 		rnd_fast_txt(md, (t_txtd){md->win_sz.x - 90, md->win_sz.y - 30, \
-			_BLUE, md->prm.txt_sc, md->screen}, "[M]");
+			_BLUE, md->prm.txt_sc, md->screen}, "M");
 		return ;
 	}
 	if (mp->cmps)
