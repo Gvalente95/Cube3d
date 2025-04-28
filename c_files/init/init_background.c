@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:19:07 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 10:48:38 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 11:21:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz)
 	hud->floor = init_img(md, v2(md->t_len), "utils/floor.xpm", -1);
 	hud->wall = init_img(md, v2(md->t_len), "utils/wall.xpm", -1);
 	hud->floor2d = copy_image(md, hud->wall, v2(md->txd.size_2d), -1);
-	flush_img(hud->wall, hud->floor_color, 0.5, _BLACK);
+	flush_img(hud->floor, hud->floor_color, 0.5, 0);
 	init_sky(md, hud, win_sz);
 	md->hud.fog_color = md->hud.sky_color;
 }

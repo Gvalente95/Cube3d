@@ -6,20 +6,24 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 01:13:27 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 00:59:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
 
-int	mouse_event_handler(int button, int x, int y, void *param)
+int	mouse_event_handler(int but, int x, int y, void *param)
 {
 	t_md	*md;
+	t_vec2	scroll;
 
 	md = (t_md *)param;
-	md->mouse.pressed = button;
+	md->mouse.pressed = but;
 	if (md->mouse.pressed == MOUSE_PRESS)
 		md->mouse.click = MOUSE_PRESS;
+	scroll.y += (but == MOUSE_SCRL_D) - (but == MOUSE_SCRL_UP);
+	scroll.x += (but == MOUSE_SCRL_L) - (but == MOUSE_SCRL_R);
+	md->mouse.scroll_raw = scroll;
 	return (0);
 }
 
@@ -41,11 +45,15 @@ int	mouse_motion_handler(int x, int y, void *param)
 	t_vec3	grid_pos;
 	t_md	*md;
 	t_mouse	*msd;
+	t_vec2	raw;
 
 	md = (t_md *)param;
 	msd = &md->mouse;
 	msd->real = get_v2(x, y);
-	msd->delta = get_v2(x - msd->prev.x, y - msd->prev.y);
+	raw = get_v2(x - msd->prev.x, y - msd->prev.y);
+	msd->delta_raw = raw;
+	msd->delta.x = raw.x * (1.0f - MOUSE_SMTH) + raw.x * MOUSE_SMTH;
+	msd->delta.y = raw.y * (1.0f - MOUSE_SMTH) + raw.y * MOUSE_SMTH;
 	msd->prev = get_v2(x, y);
 	msd->pos.x += msd->delta.x * MOUSE_SENSITIVITY;
 	msd->pos.y += msd->delta.y * MOUSE_SENSITIVITY;
@@ -54,7 +62,7 @@ int	mouse_motion_handler(int x, int y, void *param)
 		(grid_pos.y + md->cam.ofst.y) / md->t_len);
 	if (msd->locked && \
 		(x < 5 || x > md->win_sz.x - 5 || y < 5 || y > md->win_sz.y - 5))
-		wrap_mouse(md, msd->delta.x, msd->delta.y);
+		wrap_mouse(md, raw.x, raw.y);
 	return (msd->focus = 1, 0);
 }
 

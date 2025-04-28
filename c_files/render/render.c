@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 13:17:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 16:32:25 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 
 void	render(t_md *md)
 {
-	if (md->prm.show_sky && !cmp_vec2(md->mouse.delta, v2(0)))
+	if (md->prm.show_sky && !cmp_vec2(md->mouse.delta_raw, v2(0)))
 		render_sky(md);
 	if (md->prm.use_thrd)
 		cast_ray_threads_lp(md);
@@ -122,18 +122,19 @@ void	render(t_md *md)
 		render_2d_entities(md);
 	if (md->prm.show_hud)
 		render_hud_elements(md, &md->hud);
+	if (md->inv.held_index > -1)
+		render_held_item(md, &md->inv, md->inv.held_index);
 	if (md->inv.active)
 		render_inventory(md, &md->inv);
 	else
 		rnd_fast_txt(md, (t_txtd){md->win_sz.x - 100, md->win_sz.y - 30, \
 		_BLUE, md->prm.txt_sc, md->screen}, "I");
 	render_minimap(md, &md->mmap);
+	render_time_logs(md, &md->timer);
 	if (md->prm.debug_mode)
 		show_update_information(md);
 	if (md->prm.show_fps)
 		show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
-	if (md->inv.hold_pkbl)
-		render_pokeball(md, &md->inv, .5f);
 	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

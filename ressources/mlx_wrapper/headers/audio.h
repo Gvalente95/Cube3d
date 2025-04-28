@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:38:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 16:01:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 03:54:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 # define AU_GRAB			"ressources/audio/ui/hov.mp3"
 # define AU_MENU_IN			"ressources/audio/ui/menu_in.mp3"
 # define AU_MENU_OFF		"ressources/audio/ui/menu_off.mp3"
+# define AU_LOW_CLICK		"ressources/audio/ui/subby_clock.mp3"
+# define AU_BOP				"ressources/audio/ui/bop_3.mp3"
+# define AU_TUK				"ressources/audio/ui/tuk.mp3"
 
 typedef struct s_au_manager
 {

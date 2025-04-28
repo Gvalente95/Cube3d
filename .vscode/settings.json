@@ -24,6 +24,11 @@
 		"audio.h": "c",
 		"__hash_table": "c",
 		"__split_buffer": "c",
-		"initializer_list": "c"
+		"initializer_list": "c",
+		"__mutex_base": "c",
+		"optional": "c",
+		"ostream": "c",
+		"sstream": "c",
+		"streambuf": "c"
 	}
 }

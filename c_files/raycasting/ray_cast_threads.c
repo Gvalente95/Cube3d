@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 13:13:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 01:27:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,33 +66,26 @@ void	draw_strip(t_image *from, t_image *to, t_vec2 x, int stop_y)
 	}
 }
 
-int	should_draw_alternate(t_md *md, int index)
-{
-	const int	mod = 2;
-	const int	is_even_frame = md->timer.time % 2 == 0;
-
-	return ((index % mod == 0) == is_even_frame);
-}
-
-int	cast_thread_ray(t_md *md, int index, int *last_valid)
+int	cast_thread_ray(t_md *md, int x, int *last_valid)
 {
 	t_ray			*ray;
+	t_image			*scrn;
 
-	ray = &md->rays[index];
+	ray = &md->rays[x];
 	ray->active = 0;
-
-	if (md->prm.alternate_draw && !should_draw_alternate(md, index))
+	if (md->prm.alternate_draw && !((x % 2 == 0) == md->timer.time % 2 == 0))
 		return (0);
-	if (md->prm.ray_mod >= 2.0f && index % (int)floorf(md->prm.ray_mod) != 0)
-		return (draw_strip(md->screen, md->screen, get_v2(index - 1, index), md->win_sz.y), 0);
+	scrn = md->screen;
+	if (md->prm.ray_mod >= 2.0f && x % (int)floorf(md->prm.ray_mod) != 0)
+		return (draw_strip(scrn, scrn, get_v2(x - 1, x), md->win_sz.y), 0);
 	ray->active = 1;
-	ray->index = index;
+	ray->index = x;
 	update_ray_data(md, ray, md->thrd_manager.dir_vals[ray->index]);
 	ray_move(md, ray, md->thrd_manager.ray_visu_offset);
 	if (!ray->check_hit && ray->wall_hit != NULL)
 		draw_wall_line(md, ray->distance, ray->wall_hit, ray);
 	draw_raycast_background(md, ray);
-	*last_valid = index;
+	*last_valid = x;
 	if (ray->hits_len > 0)
 		return (draw_stored_sprite_hits(md, ray));
 	return (1);

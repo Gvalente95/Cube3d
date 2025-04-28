@@ -6,11 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 20:31:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:33:46 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../cube.h"
+#include "../../mlx_utils.h"
 
 char	*get_img_path(char c)
 {
@@ -47,7 +47,7 @@ int	display_letter(t_md *md, char c, t_txtd data)
 	if (!l || !l->img)
 		return (printf("Error\nImg letter not found %s", path), data.scale);
 	if (data.color != -1)
-		flush_img(l, data.color, .75, 1);
+		flush_img(l, data.color, get_alpha(data.color), 1);
 	free(path);
 	if (l->img)
 	{

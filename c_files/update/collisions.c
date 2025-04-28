@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 23:54:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 13:57:05 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 	const int	is_w = (btp == nt_wall || btp == nt_door || btp == nt_ext_wall);
 
 	if (!a || !b)
+		return (0);
+	if (btp == nt_pickup)
 		return (0);
 	if (btp == nt_empty)
 		return (0);

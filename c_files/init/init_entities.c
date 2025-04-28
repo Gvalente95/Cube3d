@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 03:41:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 17:24:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,10 @@ t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)
 	(void)map_index;
 	e = malloc(sizeof(t_ent));
 	set_ent_values(md, e, c, pos);
+	e->cam_distance = 99999;
 	e->map_index = map_index;
+	e->screen_p = v2(-1);
+	e->screen_sz = v2(-1);
 	set_type_specifics(md, e, e->type);
 	add_ent_at_cord(md, e, pos);
 	return (e);

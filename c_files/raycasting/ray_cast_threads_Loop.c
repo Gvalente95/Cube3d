@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:26:11 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/23 12:32:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:29:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,4 @@ void	cast_ray_threads_lp(t_md *md)
 	trigger_threads(md);
 	if (rm->ents_to_draw)
 		draw_found_ents(md, rm);
-}
-
-void	cleanup_thread_pool(t_md *md)
-{
-	t_thrd_manager	*rm;
-	int				i;
-
-	rm = &md->thrd_manager;
-	i = -1;
-	while (++i < rm->threads_amount)
-	{
-		pthread_mutex_lock(&rm->thrdlp[i].mutex);
-		rm->thrdlp[i].should_exit = 1;
-		pthread_cond_signal(&rm->thrdlp[i].cond);
-		pthread_mutex_unlock(&rm->thrdlp[i].mutex);
-	}
-	i = -1;
-	while (++i < rm->threads_amount)
-		pthread_join(rm->thrdlp[i].thread, NULL);
-	soft_barrier_destroy(&rm->barrier);
 }

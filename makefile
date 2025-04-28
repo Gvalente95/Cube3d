@@ -5,19 +5,21 @@ c_files/init/init_map_data.c c_files/init/init_background.c c_files/init/init_ma
 c_files/init/init_.c c_files/raycasting/ray_tools_2.c c_files/raycasting/ray_cast.c c_files/raycasting/draw_sprite_column.c c_files/tools/inventory.c \
 c_files/raycasting/portal_raycast.c c_files/raycasting/portal_draw.c c_files/raycasting/ray_move.c c_files/raycasting/draw_wall_column.c c_files/update/pokeball.c \
 c_files/raycasting/ray_tools.c c_files/tools/map_gen.c c_files/tools/parse_tools.c c_files/tools/map_gen_2.c c_files/raycasting/draw_ceiling.c \
-c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/text.c c_files/tools/image_tools.c c_files/update/update_autocam.c \
-c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update.c c_files/update/mapped_ents.c c_files/render/render_pokeball.c \
+c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/image_tools.c c_files/update/update_autocam.c \
+c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update.c c_files/update/mapped_ents.c c_files/render/render_held_item.c \
 c_files/update/movement.c c_files/update/menu_update.c c_files/update/menu_render.c c_files/update/update_ents.c c_files/update/collisions.c \
 c_files/update/update_var.c c_files/update/update_plr_movement.c c_files/update/collisions_portal.c c_files/update/update_autocam_2.c \
 c_files/render/render_minimap.c c_files/render/filters_0.c c_files/render/filters_1.c c_files/render/render_hud.c c_files/render/render.c c_files/update/menu_tools.c \
-c_files/render/render_background.c c_files/render/filters_2.c c_files/render/render_minimap_cmp.c \
-c_files/raycasting/ray_cast_threads.c c_files/raycasting/draw_floor.c c_files/init/init_grass.c c_files/raycasting/ray_cast_draw_ents.c \
+c_files/render/render_background.c c_files/render/filters_2.c c_files/render/render_minimap_cmp.c c_files/update/update_time_events.c \
+c_files/raycasting/ray_cast_threads.c c_files/raycasting/draw_floor.c c_files/init/init_grass.c c_files/raycasting/ray_cast_draw_ents.c c_files/render/render_inv_team.c \
 c_files/raycasting/draw_fe.c c_files/init/init_minimap.c c_files/update/update_camera.c c_files/raycasting/ray_cast_threads_Loop.c \
-c_files/raycasting/ray_threads_tools.c c_files/tools/text_fast.c c_files/raycasting/ray_move_dda.c c_files/init/init_threads.c
+c_files/raycasting/ray_move_dda.c c_files/init/init_threads.c c_files/init/init_inventory.c \
 
 RMAP_SRC	= rmap.c
 SRC			= main.c
 GAME_NAME	= cube
+GOF_SRC		= game_of_life.c
+PUZ_SRC		= puzzle.c
 
 GNL_DIR		= ressources/gnl/
 GNL			= $(GNL_DIR)get_next_line.a
@@ -74,6 +76,13 @@ rmap: $(RMAP_SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
 	$(CC) $(SAN) $(CFLAGS) $(RMAP_SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o map
 	@echo "map Generated on $(UNAME_S)"
 
+gof: $(GOF_SRC) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
+	$(CC) $(SAN) $(CFLAGS) $(GOF_SRC) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o gof
+
+puz: $(PUZ_SRC) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT)
+	$(CC) $(SAN) $(CFLAGS) $(PUZ_SRC) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o puz
+
+
 debug: $(GAME_NAME) $(MLX_WRAPPER) $(LISTS) $(GNL) $(LIBFT) $(SRC) $(SRC_UTILS)
 	$(CC) $(SAN) $(CFLAGS) $(SRC) $(SRC_UTILS) $(MLX_WRAPPER) $(MLXFLAGS) $(LISTS) $(GNL) $(LIBFT) -o $(GAME_NAME)
 	@echo "$(GAME_NAME) debug Generated"
@@ -102,4 +111,4 @@ fclean: quiet_clean
 
 re: fclean all
 
-phony: all re bonus clean fclean
+.PHONY: all re bonus clean fclean normall leaks debug rmap

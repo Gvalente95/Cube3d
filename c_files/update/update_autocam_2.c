@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:31:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 12:28:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 01:45:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,14 @@ void	render_part(t_md *md, t_vec2 base_p, t_txtd d, float t)
 	rnd_fast_txt(md, d, "Press any button to start");
 }
 
-
 void	render_autocam_text(t_md *md, float t)
 {
 	const char	*txt[] = {"C", "U", "B", "E", " ", "3", "D"};
-	int			scale;
+	const int	scale = 80;
 	t_vec2		base_p;
 	t_txtd		d;
 	int			i;
 
-	scale = 80;
 	base_p = (t_vec2){md->win_sz.x / 2 - (scale * 3), scale * 1.5};
 	d = (t_txtd){base_p.x, base_p.y, md->hud.fog_color, scale, NULL};
 	i = -1;

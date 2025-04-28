@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 18:35:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 16:12:42 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,42 +35,69 @@ void	update_plr_offsets(t_md *md, t_cam *cam)
 {
 	const t_vec2	win_sz = md->win_sz;
 	const t_vec2	plr_size = md->plr.size;
-	const t_vec3f	plr_pos = md->plr.pos;
+	const t_ent		*plr = &md->plr;
+	const t_vec3f	plr_p = plr->pos;
 	t_vec3f			dspl;
 
-	dspl.x = plr_pos.x - plr_size.x / 2 - win_sz.x / 2 + md->t_len / 2;
-	dspl.y = plr_pos.y - plr_size.y / 2 - win_sz.y / 2 + md->t_len / 2;
-	dspl.z = plr_pos.z;
+	dspl.x = plr_p.x - plr_size.x / 2 - win_sz.x / 2 + md->t_len / 2;
+	dspl.y = plr_p.y - plr_size.y / 2 - win_sz.y / 2 + md->t_len / 2;
+	dspl.z = plr_p.z;
 	cam->ofst = dspl;
 	cam->wrd_mv_offst.x += cam->plr_wrd_mv.x * 20;
 	cam->wrd_mv_offst.y += cam->plr_wrd_mv.y * 20;
 	cam->input_offst.x += (int)(cam->plr_wrd_mv.x);
 	cam->input_offst.y -= (int)(cam->plr_wrd_mv.y);
+	cam->pos.x = plr_p.x + md->t_len / 4 - (plr->dir.x * md->prm.zoom);
+	cam->pos.y = plr_p.y + md->t_len / 4 - (plr->dir.y * md->prm.zoom);
+	cam->pos.z = plr_p.z - md->prm.height;
+	md->plr.coord = div_v3((t_vec3){plr_p.x, plr_p.y, plr_p.z}, md->t_len);
+}
+
+int	get_center_valid_column(t_md *md, int center)
+{
+	const int	is_even_frame = md->timer.time % 2 == 0;
+	const int	ray_mod = (int)floorf(md->prm.ray_mod);
+	int			offset;
+	int			left;
+	int			right;
+
+	offset = -1;
+	while (++offset < md->win_sz.x / 2)
+	{
+		left = center - offset;
+		right = center + offset;
+		if (left >= 0 && \
+			left % ray_mod == 0 && \
+			((left % 2 == 0) == is_even_frame))
+			return (left);
+		if (right < md->win_sz.x && \
+			right % ray_mod == 0 && \
+			((right % 2 == 0) == is_even_frame))
+			return (right);
+	}
+	return (center);
 }
 
 void	update_cam(t_md *md, t_cam *cam)
 {
-	t_vec3f	pos;
-	t_ent	*plr;
-	int		prv_is_moving;
+	const int	prv_is_moving = md->cam.is_moving;
 
-	plr = &md->plr;
-	pos = plr->pos;
-	md->cam.pointed = NULL;
-	md->cam.pointed_door = NULL;
-	cam->pos.x = pos.x + md->t_len / 4 - (plr->dir.x * md->prm.zoom);
-	cam->pos.y = pos.y + md->t_len / 4 - (plr->dir.y * md->prm.zoom);
-	cam->pos.z = pos.z - md->prm.height;
-	md->plr.coord.x = pos.x / md->t_len;
-	md->plr.coord.y = pos.y / md->t_len;
-	md->plr.coord.z = pos.z / md->t_len;
-	prv_is_moving = md->cam.is_moving;
-	md->cam.is_moving = !cmp_vec3f(md->cam.input_mov, v3f(0), .01);
-	if (prv_is_moving != md->cam.is_moving)
+	md->cam.closest_x = get_center_valid_column(md, md->win_sz.x / 2);
+	cam->pointed_door = NULL;
+	if (cam->prv_pointed_ent)
+		cam->pointed_ent = md->cam.prv_pointed_ent;
+	md->cam.prv_pointed_ent = NULL;
+	if (md->cam.pointed_ent)
+		cam->pointed = NULL;
+	else if (cam->prv_pointed)
+		cam->pointed = cam->prv_pointed;
+	cam->prv_pointed = NULL;
+	cam->is_moving = !cmp_vec3f(cam->input_mov, v3f(0), .01);
+	if (prv_is_moving != cam->is_moving)
 		md->timer.tm_walk = 0;
 	update_plr_offsets(md, cam);
 	if (md->prm.bob_amount > 0)
-		update_cam_bob(md, plr);
+		update_cam_bob(md, &md->plr);
 }
 
 t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd)
@@ -97,32 +124,4 @@ t_vec3f	update_fly_cam(t_md *md, t_cam *cam, float spd)
 	cam->input_mov.y = md->key_prs[W_KEY] - md->key_prs[S_KEY];
 	cam->input_mov.z = md->key_prs[SPACE_KEY] - md->key_prs[Y_KEY];
 	return (mov);
-}
-
-int	replace_window(t_md *md, int new_w, int new_h)
-{
-	mlx_destroy_window(md->mlx, md->win);
-	md->win_sz = get_v2(new_w, new_h);
-	md->win = mlx_new_window(md->mlx, new_w, new_h, "Cube3D");
-	if (md->is_linux)
-	{
-		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
-		mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
-		mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
-	}
-	else
-	{
-		mlx_hook(md->win, 2, 0, handle_key_press, md);
-		mlx_hook(md->win, 3, 0, handle_key_release, md);
-		mlx_hook(md->win, 17, 0, close_window, md);
-	}
-	mlx_mouse_hook(md->win, mouse_event_handler, md);
-	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
-	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
-	set_menu_pos(md, &md->menu, get_v3(-200, -200, 1), get_v3(300, -200, 5));
-	render(md);
-	md->menu.selected_slider = NULL;
-	md->mouse.click = MOUSE_NOPRESS;
-	md->mouse.pressed = MOUSE_NOPRESS;
-	return (md->menu.refresh_bg = 1, md->menu.refresh_ui = 1, -1);
 }

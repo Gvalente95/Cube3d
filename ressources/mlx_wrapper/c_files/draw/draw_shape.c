@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_shape.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 22:04:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:13:19 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:50:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	draw_trimmed(t_image *src, t_image *dst, t_vec2 pos, t_vec3 draw_end)
 		{
 			draw_d.src_pos.x = draw_d.pos.x;
 			draw_d.dst_pos.x = pos.x + draw_d.pos.x;
-			put_pxl_if_vis(&draw_d, draw_end.z, 0, 0);
+			put_pxl_if_vis(&draw_d, -1, 0, 0);
 		}
 	}
 }

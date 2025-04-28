@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 12:06:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 01:26:29 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,35 +24,32 @@ void	show_revl_done(t_md *md, t_vec2 pos)
 	rnd_fast_txt(md, data, "%.1f/", revealed_perc_);
 }
 
-void	render_mmap_ray(t_md *md, int ray_index, int color)
+void	render_minimap_ray(t_md *md)
 {
+	int				i;
 	t_vec2			ray_start;
 	t_vec2			ray_end;
 	t_ray			*ray;
 	const t_mmap	*mp = &md->mmap;
 
-	ray = &md->rays[ray_index];
+	i = -1;
+	while (++i < md->win_sz.x)
+	{
+		if (!md->rays[i].active)
+			continue ;
+		ray = &md->rays[i];
+		ray_start.x = (ray->start.x / md->t_len) * mp->ic_scl;
+		ray_start.y = (ray->start.y / md->t_len) * mp->ic_scl;
+		ray_end.x = (ray->pos.x / md->t_len) * mp->ic_scl;
+		ray_end.y = (ray->pos.y / md->t_len) * mp->ic_scl;
+		draw_line(mp->img, ray_start, ray_end, get_v2(_GREEN, 1));
+	}
+	ray = &md->rays[md->win_sz.x / 2];
 	ray_start.x = (ray->start.x / md->t_len) * mp->ic_scl;
 	ray_start.y = (ray->start.y / md->t_len) * mp->ic_scl;
 	ray_end.x = (ray->pos.x / md->t_len) * mp->ic_scl;
 	ray_end.y = (ray->pos.y / md->t_len) * mp->ic_scl;
-	draw_line(mp->img, ray_start, ray_end, get_v2(color, 1));
-}
-
-void	render_minimap_ray(t_md *md)
-{
-	int	i;
-	int	color;
-
-	color = _GREEN;
-	color = set_alpha(color, 0.975);
-	i = -1;
-	while (++i < md->win_sz.x)
-		if (md->rays[i].active)
-			render_mmap_ray(md, i, color);
-	color = _BLUE;
-	color = set_alpha(color, 1);
-	render_mmap_ray(md, md->win_sz.x / 2, color);
+	draw_line(mp->img, ray_start, ray_end, get_v2(_BLUE, 1));
 }
 
 void	show_if_interior(t_md *md, t_ent *e, t_vec2 draw_p, int scale)

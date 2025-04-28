@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:55:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/19 16:22:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:35:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,29 @@ void	start_timer(double *timer)
 	*timer = get_time_in_seconds();
 }
 
-void	init_timer(t_md *md, t_timer *timer)
+void	init_timer(t_md *md, t_timer *tm)
 {
+	const t_vec2	win_sz = (t_vec2){md->win_sz.x, md->win_sz.y};
+
 	md->menu.menu_time = 0;
-	timer->time = 0;
-	timer->fps = 0;
-	timer->avrg_fps = 0;
-	timer->prv_fps = 0;
-	timer->delta_time = 0;
-	timer->tm_level = 0;
-	timer->shoot_timer = 0;
-	timer->tm_menu = 0;
-	timer->frm_cnt = 0;
-	timer->tm_anim = 0;
-	timer->tm_walk = 0;
-	timer->no_portal_cooldown = 0;
-	timer->prev_time = get_time_in_seconds();
-	timer->fps_tm = timer->game_start;
-	timer->game_start = timer->prev_time;
+	tm->time = 0;
+	tm->fps = 0;
+	tm->avrg_fps = 0;
+	tm->prv_fps = 0;
+	tm->delta_time = 0;
+	tm->tm_level = 0;
+	tm->shoot_timer = 0;
+	tm->tm_menu = 0;
+	tm->frm_cnt = 0;
+	tm->tm_anim = 0;
+	tm->tm_walk = 0;
+	tm->trig_anim = 0;
+	tm->logs_p = (t_vec2){win_sz.x * .8, win_sz.y * .5};
+	tm->no_portal_cooldown = 0;
+	tm->prev_time = get_time_in_seconds();
+	tm->fps_tm = tm->game_start;
+	tm->game_start = tm->prev_time;
+	tm->logs = NULL;
 }
 
 pid_t	play_index(t_md *md, const char *filepath, int index)

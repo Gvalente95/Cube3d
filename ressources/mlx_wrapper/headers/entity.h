@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 11:29:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 17:23:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ typedef struct s_entity
 	t_vec3f			dir;
 	t_vec3f			mov;
 	t_vec3f			pos;
+	t_vec2			screen_p;
+	t_vec2			screen_sz;
 	t_vec3f			start_pos;
 	t_vec3			coord;
 	t_vec3f			target_pos;
@@ -172,6 +174,7 @@ typedef struct s_entity
 	int				frame_index;
 	int				in_screen;
 	int				revealed;
+	float			cam_distance;
 }	t_ent;
 
 #endif

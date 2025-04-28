@@ -1,0 +1,16 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     puz
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _render_puz, symObjAddr: 0x0, symBinAddr: 0x100001D48, symSize: 0x6A4 }
+  - { offsetInCU: 0x3B, offset: 0x3B, size: 0x8, addend: 0x0, symName: _.str, symObjAddr: 0x60A0, symBinAddr: 0x1000186C0, symSize: 0x0 }
+  - { offsetInCU: 0x67, offset: 0x67, size: 0x8, addend: 0x0, symName: _.str.1, symObjAddr: 0x60C0, symBinAddr: 0x1000186E0, symSize: 0x0 }
+  - { offsetInCU: 0x352, offset: 0x352, size: 0x8, addend: 0x0, symName: _render_puz, symObjAddr: 0x0, symBinAddr: 0x100001D48, symSize: 0x6A4 }
+  - { offsetInCU: 0x3A0, offset: 0x3A0, size: 0x8, addend: 0x0, symName: _move_piece, symObjAddr: 0x6A4, symBinAddr: 0x1000023EC, symSize: 0x1280 }
+  - { offsetInCU: 0x417, offset: 0x417, size: 0x8, addend: 0x0, symName: _get_rand_node, symObjAddr: 0x1924, symBinAddr: 0x10000366C, symSize: 0x268 }
+  - { offsetInCU: 0x469, offset: 0x469, size: 0x8, addend: 0x0, symName: _shuffle_pieces, symObjAddr: 0x1B8C, symBinAddr: 0x1000038D4, symSize: 0x5F8 }
+  - { offsetInCU: 0x526, offset: 0x526, size: 0x8, addend: 0x0, symName: _update_puz, symObjAddr: 0x2184, symBinAddr: 0x100003ECC, symSize: 0xB04 }
+  - { offsetInCU: 0x570, offset: 0x570, size: 0x8, addend: 0x0, symName: _draw_split, symObjAddr: 0x2C88, symBinAddr: 0x1000049D0, symSize: 0x1034 }
+  - { offsetInCU: 0x61E, offset: 0x61E, size: 0x8, addend: 0x0, symName: _init_cell_data, symObjAddr: 0x3CBC, symBinAddr: 0x100005A04, symSize: 0x1870 }
+  - { offsetInCU: 0x6C8, offset: 0x6C8, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x552C, symBinAddr: 0x100007274, symSize: 0xA78 }
+...

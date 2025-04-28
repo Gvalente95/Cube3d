@@ -6,68 +6,89 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 21:31:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 17:28:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static void	render_options(t_md *md, const char **labels, t_txtd txtd)
+static int	display_options(t_md *md, t_ent *e, const char *lbl, t_txtd txtd)
 {
-	int	i;
-
+	rnd_fast_txt(md, txtd, e->label);
+	txtd.color = _WHITE;
 	txtd.y += md->prm.txt_sc;
-	i = -1;
-	while (++i < 3)
-	{
-		txtd.y += md->prm.txt_sc;
-		txtd.color = -1;
-		if (md->txd.opt_i == i)
-			txtd.color = _RED;
-		rnd_fast_txt(md, txtd, labels[i]);
-	}
-}
-
-static int	display_options(t_md *md, t_ent *e, const char **lbls, t_txtd txtd)
-{
-	render_options(md, lbls, txtd);
-	if (md->key_click != ENTER_KEY && \
-		(md->mouse.click != MOUSE_PRESS || md->txd.opt_i == -1))
+	rnd_fast_txt(md, txtd, lbl);
+	if (md->mouse.click != MOUSE_PRESS && md->mouse.pressed != MOUSE_PRESS)
 		return (0);
-	if (md->txd.opt_i == 2)
-		return (md->txd.last_pointed = NULL, 1);
 	if (e->type == nt_pickup)
 		collect_item(md, &md->inv, e);
-	if (md->txd.opt_i == 1)
-		return (0);
 	if (e->type == nt_pokemon)
-		use_item(md, &md->inv, Pokeball, 0);
-	else if (e->type == nt_pickup)
-		use_item(md, &md->inv, e->pckp_type, 0);
+		grab_item(md, &md->inv, Pokeball);
+	if (e->type != nt_pickup)
+		return (0);
+	if (e->pckp_type != nt_pokemon && e->pckp_type != Keys)
+		return (0);
+	grab_item(md, &md->inv, e->pckp_type);
 	return (1);
 }
 
 void	show_pointed_data(t_md *md, t_vec2 p, t_ent *e)
 {
-	const t_vec2	sz = (t_vec2){md->prm.txt_sc * 10, md->prm.txt_sc * 5};
+	const t_vec2	sz = (t_vec2){md->prm.txt_sc * 10, md->prm.txt_sc * 2};
 	const t_txtd	txt = (t_txtd){p.x, p.y, _BLUE, md->prm.txt_sc, md->screen};
-	const char		*pokemon_options[3] = {"Capture", "Attack", "Exit"};
-	const char		*pickup_options[3] = {"Use", "Take", "Exit"};
 
 	draw_pixels(md->screen, p, sz, set_alpha(_BLACK, .4));
-	wrap_int(&md->txd.opt_i, 0, 2, minmax(-1, 1, md->mouse.delta.y));
 	if (e->type == nt_pokemon)
 	{
 		rnd_fast_txt(md, txt, md->txd.pkmn_names[e->mob_type]);
-		display_options(md, e, pokemon_options, txt);
+		display_options(md, e, "Capture", txt);
 	}
 	else if (e->type == nt_pickup)
 	{
 		rnd_fast_txt(md, txt, md->txd.pickup_names[e->pckp_type]);
-		display_options(md, e, pickup_options, txt);
+		display_options(md, e, "Take", txt);
 	}
 	else if (e->type == nt_mob)
 		rnd_fast_txt(md, txt, md->txd.mob_names[e->mob_type]);
-	if (md->txd.opt_i == -1)
-		md->txd.opt_i++;
+}
+
+void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e)
+{
+	const t_vec2	sz = get_v2(sz_scale.x, sz_scale.y);
+	const int		scale = sz_scale.z;
+	const t_vec2	pkpos = md->inv.pkbl_p;
+	int				is_pointed;
+
+	is_pointed = 0;
+	if (md->inv.held_index == -1)
+		is_pointed = v2_bounds(draw_p, sub_vec2(div_v2(md->win_sz, 2), sz), sz);
+	else if (e->type == nt_pokemon)
+		is_pointed = v2_touch(draw_p, div_v2(sz, 2), pkpos, md->inv.held_sz);
+	if (is_pointed)
+		md->cam.prv_pointed_ent = e;
+	if (md->cam.pointed_ent == e)
+		md->cam.last_pointed_ent_pos = sub_vec2(draw_p, v2(scale * .2));
+}
+
+void	update_pointed_ent(t_md *md, t_ent *sel)
+{
+	t_vec2	last_p;
+
+	if (sel && sel->screen_p.x != -1)
+		last_p = sub_vec2(sel->screen_p, scale_vec2(sel->screen_sz, .2f));
+	else
+		last_p = md->cam.last_pointed_ent_pos;
+	if (md->prm.alternate_draw && md->timer.time % 2 != 0)
+		return ;
+	if (md->cam.pointed && !md->cam.pointed->in_screen)
+		md->cam.pointed_ent = NULL;
+	if (!md->inv.held_index)
+	{
+		if (!v2_touch(last_p, md->mouse.real, v2(2), v2(md->t_len)))
+			md->cam.pointed_ent = NULL;
+	}
+	if (sel)
+		md->cam.pointed_door = NULL;
+	if (sel && md->inv.held_index == -1)
+		show_pointed_data(md, last_p, sel);
 }

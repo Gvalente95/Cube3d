@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/23 13:10:19 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:27:23 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@
 #  include "headers/Keys_mac.h"
 # endif
 
-# define MOUSE_SENSITIVITY .2
-# define MAPPED_ENT_MAX	150
+# define MOUSE_SENSITIVITY	.2
+# define MAPPED_ENT_MAX		150
+# define MOUSE_SMTH			0.2f
 
 typedef struct s_mmap
 {
@@ -171,10 +172,13 @@ typedef struct s_mouse
 	t_vec3f			pos;
 	t_vec2			real;
 	t_vec2			prev;
-	t_vec2			delta;
+	t_vec2			delta_raw;
+	t_vec2f			delta;
 	t_vec2			world;
 	t_vec2			grid_pos;
 	t_vec2			lock_rot;
+	t_vec2f			scroll_delta;
+	t_vec2			scroll_raw;
 	int				focus;
 	int				pressed;
 	int				click;
@@ -192,10 +196,15 @@ typedef struct s_cam
 	t_vec3f			wrd_mv_offst;
 	t_vec3f			plr_wrd_mv;
 	t_ent			*pointed;
+	t_ent			*prv_pointed;
 	t_ent			*pointed_door;
+	t_ent			*prv_door;
+	t_ent			*pointed_ent;
+	t_ent			*prv_pointed_ent;
+	t_vec2			last_pointed_ent_pos;
 	float			bob_time;
 	int				is_moving;
-	t_ent			*prv_door;
+	int				closest_x;
 	int				plr_map_i;
 	int				x_dir_start;
 
@@ -209,6 +218,15 @@ typedef struct s_text_data
 	int		scale;
 	t_image	*onto;
 }	t_txtd;
+
+typedef struct s_logs
+{
+	int		*out_cond;
+	double	duration;
+	float	timer_start;
+	char	buffer[256];
+	t_txtd	txt_d;
+}	t_log;
 
 typedef struct s_cube_draw_data
 {
@@ -224,6 +242,7 @@ typedef struct s_md
 {
 	void			*mlx;
 	void			*win;
+	t_log			alert;
 	t_image			*screen;
 	t_vec2			win_sz;
 	t_ent			plr;
@@ -249,6 +268,7 @@ typedef struct s_md
 	t_inventory		inv;
 	char			base_map_path[50];
 	char			*out_map;
+	t_vec3			*cells;
 	unsigned int	r_seed;
 	int				plr_in_house;
 	int				switch_interior;
@@ -378,5 +398,8 @@ void	draw_quad(t_image *screen, t_vec2 p[4], int color, int contour_clr);
 void	draw_img_contour(t_md *md, t_image *src, t_vec2 pos, t_vec2 clr_thk);
 int		wrap_int(int *number, int min, int max, int increment);
 int		get_feet_offset(t_image *img);
+int		rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...);
+int		rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...);
+void	init_fonts(t_md *md);
 
 #endif

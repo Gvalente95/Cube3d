@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 11:00:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 11:55:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,16 @@ void	draw_floor(t_md *md, t_floor_draw_d d)
 {
 	const t_vec2	winsz = md->win_sz;
 	t_fe			*prv_fe;
+	float			pitch_scale;
 
+	pitch_scale = 8.0f / fmaxf(1.0f, -md->cam.pos.z / md->t_len);
 	md->env.stored_blades = NULL;
 	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.y};
 	prv_fe = NULL;
 	while (d.win.y++ < winsz.y + md->t_len)
 	{
-		d.p = d.win.y - (winsz.y / 2 - md->cam.rot.y * 8);
-		if (d.p == 0)
+		d.p = d.win.y - (winsz.y / 2 - (md->cam.rot.y * pitch_scale));
+		if (d.p <= 0)
 			d.p = 1;
 		d.rwd = ((0.5 - (md->cam.pos.z / md->t_len)) * winsz.y) / d.p;
 		d.stp.x = d.rwd * (d.dirr.x - d.dirl.x) / winsz.x;

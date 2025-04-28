@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/21 17:45:57 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 11:57:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
 	p = src->src;
 	end = src->src + total_pixels;
 	if (color == -1)
-		color = 0x000000;
+		color = _BLACK;
 	if (transp > 0)
 		transp = 1 - transp;
 	while (p < end)
@@ -108,7 +108,7 @@ void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
 			p++;
 			continue ;
 		}
-		if (transp >= 0)
+		if (transp >= 0 && color != _NULL)
 			*p = blend_color(*p, color, transp);
 		else
 			*p = color;

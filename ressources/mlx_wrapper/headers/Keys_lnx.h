@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/22 02:31:48 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 23:51:55 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,6 @@
 # define MOUSE_SCRL_D     5
 # define MOUSE_SCRL_L     7
 # define MOUSE_SCRL_R     6
-# define MOUSE_RELEASE    4
+# define MOUSE_RELEASE    9
 
 #endif

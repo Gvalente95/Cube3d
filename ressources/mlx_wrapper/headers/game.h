@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 23:56:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 16:51:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_image_data	t_image;
 
 typedef struct s_time_handler
 {
+	t_dblst	*logs;
 	double	game_start;
 	double	shoot_timer;
 	double	delta_time;
@@ -34,6 +35,7 @@ typedef struct s_time_handler
 	double	no_portal_cooldown;
 	double	trg[3];
 	double	fe_time;
+	t_vec2	logs_p;
 	int		stars;
 	int		is_game_running;
 	int		time;
@@ -99,28 +101,35 @@ typedef struct s_menu_button
 typedef struct s_inventory
 {
 	int		items[PCKP_TYPE_LEN];
+	int		num_items[3];
+	int		num_pages;
+	int		hov_indexes[3];
 	int		active;
-	int		hov_index;
 	int		sel_i;
 	int		opt_i;
 	int		line_height;
-	int		hold_pkbl;
-	int		throwing_pokebal;
-	int		pkbl_set;
+	int		held_index;
+	int		held_used;
+	int		held_set;
+	int		page;
 	double	pokeball_timer;
-	t_image	*pkball;
+	int		team_size;
+	t_ent	*pokemon_team[6];
+	t_image	*held_screen_img;
 	float	pkbl_rot_z;
 	t_vec2	pkbl_p;
 	t_vec2	arc_origin;
-	t_vec2	pkbl_sz;
+	t_vec2	held_sz;
 	t_vec2	sz;
 	t_vec2	p;
 	t_vec2	opt_p;
 	t_vec2	opt_sz;
 	t_image	*img;
 	t_image	*opt_img;
+	t_image	*inv_map;
 	int		update_opt;
 	int		update_img;
+	int		update_map;
 }	t_inventory;
 
 typedef struct s_menu
@@ -147,11 +156,12 @@ typedef struct s_menu
 typedef struct s_auto_screen_data
 {
 	t_vec2	center;
+	t_vec3f	start_plr_pos;
 	float	map_w;
 	float	map_h;
 	float	map_diag;
 	float	acc_spd;
-	t_vec3f	start_plr_pos;
+	float	base_y;
 	int		start_cam_x;
 	int		fade;
 	int		active;

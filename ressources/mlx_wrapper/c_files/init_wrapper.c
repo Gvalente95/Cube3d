@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 19:44:14 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:27:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	init_cursor(t_md *md)
 	md->cam.input_offst = v2(0);
 	msd->prev = v2(0);
 	msd->grid_pos = v2(0);
-	msd->delta = v2(0);
+	msd->delta = v2f(0);
 	msd->focus = 0;
 	msd->pressed = 0;
 	msd->click = 0;
@@ -80,9 +80,7 @@ static void	init_os_params(t_md *md)
 {
 	md->mlx_put = mlx_put_image_to_window;
 	md->mlx_make = mlx_xpm_file_to_image;
-	md->is_linux = 0;
-	if (LIN)
-		md->is_linux = 1;
+	md->is_linux = LIN;
 	ft_strlcpy(md->base_map_path, "Randomap.cub", 20);
 	printf("wrapper LIN = %d\n", LIN);
 }
@@ -91,6 +89,7 @@ void	init_wrapper(t_md *md, t_vec2 win_sz, char *win_name, int resolution)
 {
 	init_md(md);
 	init_os_params(md);
+	init_fonts(md);
 	start_timer(&md->timer.game_start);
 	init_screen(md, win_sz, resolution, win_name);
 	init_cursor(md);

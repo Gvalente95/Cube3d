@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 02:51:18 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/24 12:46:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 00:55:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,15 @@ int	get_to_find_index(char *str, char *to_find)
 		if (char_in_str(str[i], to_find))
 			return (i);
 	return (-1);
+}
+
+int	contains_valid_character(char *line, const char *valid_characters)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+		if (line[i] != ' ' && char_in_str(line[i], valid_characters))
+			return (1);
+	return (0);
 }

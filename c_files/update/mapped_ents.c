@@ -21,7 +21,8 @@ int	add_ent_at_cord(t_md *md, t_ent *e, t_vec2 new_cord)
 	prv_crd = (t_vec2){e->coord.x, e->coord.y};
 	prv = get_mapped_at_cord(md, prv_crd);
 	if (prv && prv == e)
-		remove_ent_at_cord(md, prv_crd);
+		remove_ent(md, prv);
+	e->is_active = 1;
 	if (new_cord.x >= 0 && new_cord.x <= limit.x && \
 	new_cord.y >= 0 && new_cord.y <= limit.y)
 		md->map_ents[new_cord.x][new_cord.y] = e;
@@ -61,11 +62,25 @@ t_ent	*get_mapped_at_pos(t_md *md, t_vec2f pos)
 	return (get_mapped_at_cord(md, cord));
 }
 
-int	remove_ent_at_cord(t_md *md, t_vec2 cord)
+int	remove_ent(t_md *md, t_ent *e)
 {
-	if (cord.x < 0 || cord.x > MAPPED_ENT_MAX || \
-		cord.y < 0 || cord.y > MAPPED_ENT_MAX)
+	if (!e)
 		return (0);
-	md->map_ents[cord.x][cord.y] = NULL;
+	if (e->coord.x < 0 || e->coord.x > MAPPED_ENT_MAX || \
+		e->coord.y < 0 || e->coord.y > MAPPED_ENT_MAX)
+		return (0);
+	if (md->cam.pointed == e)
+		md->cam.pointed = NULL;
+	if (md->cam.prv_pointed == e)
+		md->cam.prv_pointed = NULL;
+	if (md->cam.pointed_door == e)
+		md->cam.pointed_door = NULL;
+	if (md->cam.pointed_ent == e)
+		md->cam.pointed_ent = NULL;
+	if (md->cam.prv_pointed_ent == e)
+		md->cam.prv_pointed_ent = NULL;
+	if (md->cam.prv_door == e)
+		md->cam.prv_door = NULL;
+	md->map_ents[e->coord.x][e->coord.y] = NULL;
 	return (1);
 }

@@ -6,14 +6,14 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 13:11:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/26 16:49:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
 //data: r = min, data.g = current data.b = max data.a = (int)steps
-static void	inisld(t_md *md, char *label, t_vec4f data, float *value)
+void	inisld(t_md *md, char *label, t_vec4f data, float *value)
 {
 	t_slider	*sld;
 	t_vec3f		slider_limits;

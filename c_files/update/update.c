@@ -6,59 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 23:43:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 15:53:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-double	update_time(t_md *md, t_timer *tm)
-{
-	if (md->prm.cap_fps < 100)
-		cap_fps(&md->timer, 1.0f / md->prm.cap_fps);
-	tm->cur_tm = get_time_in_seconds();
-	md->timer.fps++;
-	if (md->timer.fps > 50)
-		reset_fps_timer(tm);
-	tm->avrg_fps = (float)(++tm->frm_cnt) / (tm->cur_tm - tm->fps_tm);
-	if (tm->cur_tm - tm->elapsed_pause >= 1)
-	{
-		tm->elapsed_pause = tm->cur_tm;
-		tm->prv_fps = tm->fps;
-		tm->fps = 0;
-	}
-	upd_timer(&tm->tm_fe, tm->cur_tm, .005 / md->prm.fe_speed, &tm->trig_fe);
-	upd_timer(&tm->tm_anim, tm->cur_tm, ANIM_REFRESH, &tm->trig_anim);
-	upd_timer(&tm->tm_walk, tm->cur_tm, \
-		WALK_REFRESH / (1 + (md->key_prs[SHIFT_KEY] == 1)), &tm->trig_walk);
-	tm->delta_time = (tm->cur_tm - tm->prev_time);
-	tm->prev_time = tm->cur_tm;
-	tm->time++;
-	md->timer.fe_time += md->prm.fe_speed;
-	return (tm->delta_time);
-}
-
-int	set_menu_mode(t_md *md, t_menu *menu, int mode)
-{
-	if (mode)
-		play_sound(md, AU_MENU_IN);
-	set_mouse_lock(md, !mode);
-	if (md->is_linux)
-	{
-		if (mode)
-			mlx_mouse_move(md->mlx, md->win, \
-				md->win_sz.x / 2, md->win_sz.y / 2);
-		else
-			mlx_mouse_move(md->mlx, md->win, \
-				md->mouse.prev.x, md->mouse.prev.y);
-	}
-	menu->active = mode;
-	menu->slider_hov = -1;
-	menu->button_hov = -1;
-	menu->refresh_bg = mode;
-	menu->refresh_ui = mode;
-	return (mode);
-}
 
 void	update_audio(t_md *md, t_au_manager *au)
 {
@@ -103,6 +55,28 @@ static void	update_portals(t_md *md, t_ent *e, t_vec2 out_pos)
 	p->found = NULL;
 }
 
+int	set_menu_mode(t_md *md, t_menu *menu, int mode)
+{
+	if (mode)
+		play_sound(md, AU_MENU_IN);
+	set_mouse_lock(md, !mode);
+	if (md->is_linux)
+	{
+		if (mode)
+			mlx_mouse_move(md->mlx, md->win, \
+				md->win_sz.x / 2, md->win_sz.y / 2);
+		else
+			mlx_mouse_move(md->mlx, md->win, \
+				md->mouse.prev.x, md->mouse.prev.y);
+	}
+	menu->active = mode;
+	menu->slider_hov = -1;
+	menu->button_hov = -1;
+	menu->refresh_bg = mode;
+	menu->refresh_ui = mode;
+	return (mode);
+}
+
 int	update_and_render(t_md *md)
 {
 	if (md->autocam.active)
@@ -111,7 +85,6 @@ int	update_and_render(t_md *md)
 	update_audio(md, &md->au);
 	if (md->menu.active)
 		return (update_menu(md, &md->menu));
-	update_time(md, &md->timer);
 	update_input(md);
 	update_mouse(md);
 	if (md->inv.active)

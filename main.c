@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:23:11 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/03 20:39:47 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/26 15:50:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char *argv[])
 		scrn_size.x = ft_atoi(argv[3]);
 	if (argc >= 5)
 		scrn_size.y = ft_atoi(argv[4]);
-	init_wrapper(&md, get_v2(scrn_size.x, scrn_size.y), "Cube3d", res);
+	init_wrapper(&md, scrn_size, "Cube3d", res);
 	if (argc <= 1)
 		init_cube(&md, md.base_map_path, argc > 2);
 	else

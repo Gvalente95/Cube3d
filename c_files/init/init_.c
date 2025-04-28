@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 13:11:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 10:27:41 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 	prm->ray_depth = md->t_len * RAY_DEPTH;
 	prm->resolution = RESOLUTION;
 	prm->fly_cam = 0;
-	prm->zoom = md->t_len / 2;
 	prm->ent_mode = 0;
 	prm->use_thrd = 1;
 	prm->use_grass = 0;
@@ -72,23 +71,29 @@ static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
 
 static void	init_var(t_md *md)
 {
-	md->mouse.lock_rot = v2(0);
+	const int		alrt_scl = md->prm.txt_sc;
+	const t_vec2	alrt_p = (t_vec2){-1, md->win_sz.y * .7f};
+
+	md->alert.txt_d = (t_txtd){alrt_p.x, alrt_p.y, _RED, alrt_scl, md->screen};
+	md->alert.duration = -1;
 	md->plr.was_hit = 0;
 	md->plr.grounded = 0;
-	md->txd.size_2d = SCRN_H / 20;
+	md->plr_in_house = 1;
 	md->cam.is_moving = 0;
-	md->autocam.active = 1;
 	md->cam.bob_time = 0.0f;
 	md->cam.pointed = NULL;
+	md->cam.prv_pointed = NULL;
+	md->cam.prv_door = NULL;
+	md->cam.pointed_ent = NULL;
+	md->cam.prv_pointed_ent = NULL;
+	md->cam.last_pointed_ent_pos = v2(-1);
 	md->au.mus_pid = 0;
-	md->plr_in_house = 1;
-	md->prm.show_hud = 0;
-	md->switch_interior = 0;
-	md->plr_in_house = 1;
 	md->au.wind_pid = 0;
 	md->au.walk_index = 0;
+	md->txd.size_2d = SCRN_H / 20;
+	md->switch_interior = 0;
 	md->inv.active = 0;
-	md->cam.prv_door = NULL;
+	md->autocam.active = 1;
 }
 
 int	init_cube(t_md *md, char *file_arg, int start_debug)
@@ -97,7 +102,6 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_game_params(md, &md->prm, start_debug);
 	init_var(md);
 	init_portal_data(md);
-	init_fonts(md);
 	init_ents_data(md, &md->txd);
 	init_map(md, file_arg);
 	init_inventory(md, &md->inv);

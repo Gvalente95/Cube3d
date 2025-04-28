@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 13:37:53 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/28 16:06:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 # include <math.h>
 //# include <X11/X.h>
 
-# define IMG_PATH			"ressources/xpm/"
-# define RESOLUTION		10
+# define IMG_PATH		"ressources/xpm/"
+# define RESOLUTION		20
 //		SCREEN
-# define SCRN_W			900
-# define SCRN_H			900
+# define SCRN_W			1400
+# define SCRN_H			800
 //		RAYS
 # define RAY_DEPTH		50
 //		PLR
@@ -189,7 +189,6 @@ void	close_map(char *map, t_vec2 size, int len);
 
 //	tools/text.c
 char	*get_img_path(char c);
-int		rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...);
 
 //	tools/image_tools.c
 void	color_img(void *frame, t_vec2 size, int col, t_vec4 d);
@@ -206,7 +205,6 @@ int		update_player(t_md *md, t_ent *plr);
 void	update_input(t_md *md);
 
 //	update/update.c
-double	update_time(t_md *md, t_timer *timer);
 int		set_menu_mode(t_md *md, t_menu *menu, int mode);
 int		update_and_render(t_md *md);
 
@@ -218,7 +216,6 @@ void	update_mob_actions(t_md *md, t_ent *e);
 int		update_menu(t_md *md, t_menu *menu);
 
 //	update/update_ents.c
-void	reset_mapped_end(t_md *md, t_ent *e);
 void	update_ent_frame(t_ent *e);
 int		update_ents(t_md *md);
 
@@ -275,7 +272,7 @@ void	render_background(t_md *md);
 
 //	render/render_minimap_cmp.c
 void	show_cmps_mmap(t_md *md, t_vec2 center, int view_dist);
-void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha);
+void	draw_sprite_thread(t_md *md, t_ent *e, int had_door, float fogalpha);
 int		is_in_list(t_dblst *lst, t_ent *e);
 void	draw_found_ents(t_md *md, t_thrd_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
@@ -283,8 +280,7 @@ void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
 
 int		render_fe(t_md *md, t_fe *fe, int width);
 
-int		update_key_input(t_md *md, t_menu *menu, unsigned int c);
-void	init_fonts(t_md *md);
+int		update_key_input(t_md *md, t_menu *m, t_inventory *i, unsigned int c);
 
 int		draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray);
 int		ray_move_dda(t_md *md, t_ray *ray);
@@ -317,27 +313,41 @@ void	show_pointed_data(t_md *md, t_vec2 p, t_ent *e);
 //		INVENTORY
 void	collect_item(t_md *md, t_inventory *inv, t_ent *e);
 void	init_inventory(t_md *md, t_inventory *inv);
-int		use_item(t_md *md, t_inventory *inv, int item_index, int option);
+int		grab_item(t_md *md, t_inventory *inv, int item_index);
 void	refresh_inv_bgr(t_md *md, t_inventory *inv);
 void	set_inventory(t_md *md, t_inventory *inv, int active);
 void	render_inventory(t_md *md, t_inventory *inv);
 void	refresh_inv_opt_bgr(t_md *md, t_inventory *inv);
 void	update_inventory(t_md *md, t_inventory *inv);
+void	close_option_pannel(t_inventory *inv);
+int		update_inv_input(t_md *md, t_inventory *inv, unsigned int c);
+void	draw_pokemon_team(t_md *md, t_inventory *inv, t_txtd td, int brdsz);
+void	refresh_inv_map(t_md *md, t_inventory *inv, t_image *map_bg);
 
-int		rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...);
-void	render_pokeball(t_md *md, t_inventory *inv, double throw_dur);
 char	*get_out_map(char *map, int width, int len);
 void	render_world_map(t_md *md, t_floor_draw_d d, int y_size);
 void	apply_contrast(t_image *img, float contrast);
 void	show_debug(t_md *md, char *msg, int *value, char *attribute);
 int		ent_sort_cmp(void *a, void *b);
-void	update_door_sel(t_md *md, t_ray *ray, t_ent *e, t_vec2 draw_limits);
+void	update_wall_pointed(t_md *md, t_ent *e, t_vec2 draw_limits);
 void	capture_pokemon(t_md *md, t_inventory *inv, t_ent *e);
-int		throw_pokeball(t_md *md, t_inventory *inv, t_ent *pointed);
+int		use_held_item(t_md *md, t_inventory *inv, t_ent *pointed, int index);
 void	show_debug_time(t_md *md, t_txtd txt_data);
 void	render_color_wheels(t_md *md, t_menu *menu, \
 	t_image *screen, int touch_sz);
 void	update_color_wheels(t_md *md, t_menu *menu);
 void	draw_strip(t_image *from, t_image *to, t_vec2 x, int stop_y);
+int		remove_ent(t_md *md, t_ent *e);
+
+void	render_time_logs(t_md *md, t_timer *timer);
+void	add_log_to_queue(t_md *md, int clr, const char *format, ...);
+void	add_alert(t_md *md, double duration, int *out_cond, const char *alert);
+void	render_held_item(t_md *md, t_inventory *inv, int hand_index);
+int		contains_valid_character(char *line, const char *valid_characters);
+void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e);
+void	update_pointed_ent(t_md *md, t_ent *sel);
+void	inisld(t_md *md, char *label, t_vec4f data, float *value);
+void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz);
+int		update_inv_selection(t_md *md, t_inventory *inv);
 
 #endif

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   text_fast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 00:37:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 17:08:26 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:33:49 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../cube.h"
+#include "../../mlx_utils.h"
 
 int	display_quick_letter(t_md *md, char c, t_txtd data)
 {
@@ -31,7 +31,7 @@ int	display_quick_letter(t_md *md, char c, t_txtd data)
 		l = copy_image(md, font_c, v2(data.scale), data.color);
 		is_rescaled = 1;
 	}
-	if (data.color != -1)
+	if (data.color != -1 && !is_rescaled)
 		draw_clr_img(l, data.onto, get_v2(data.x, data.y), \
 		get_v3(data.color, 3, _BLACK));
 	else

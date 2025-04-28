@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ray_threads_tools.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
+/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 21:30:23 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/03 21:31:27 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/04/28 16:03:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../cube.h"
+#include "../../mlx_utils.h"
+
+void	cleanup_thread_pool(t_md *md)
+{
+	t_thrd_manager	*rm;
+	int				i;
+
+	rm = &md->thrd_manager;
+	i = -1;
+	while (++i < rm->threads_amount)
+	{
+		pthread_mutex_lock(&rm->thrdlp[i].mutex);
+		rm->thrdlp[i].should_exit = 1;
+		pthread_cond_signal(&rm->thrdlp[i].cond);
+		pthread_mutex_unlock(&rm->thrdlp[i].mutex);
+	}
+	i = -1;
+	while (++i < rm->threads_amount)
+		pthread_join(rm->thrdlp[i].thread, NULL);
+	soft_barrier_destroy(&rm->barrier);
+}
 
 void	soft_barrier_init(t_soft_barrier *b, int total)
 {

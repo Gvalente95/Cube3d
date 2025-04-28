@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:28:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 10:24:28 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 21:27:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_ent	*search_in_grid(t_md *md, t_ray *ray, float distance)
 	e = get_mapped_at_pos(md, get_v2f(ray->pos.x, ray->pos.y));
 	if (!e)
 		return (NULL);
+	e->cam_distance = ray->distance;
 	if (!e->revealed && ray->distance < md->t_len * REVEAL_DISTANCE)
 		show_minimap_entity(md, e, md->mmap.bg, 1);
 	if ((e->type == nt_wall || e->type == nt_ext_wall) && \

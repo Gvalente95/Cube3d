@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 00:38:03 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 00:55:22 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,6 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir, int flip_x)
 	fill_transparency(txd->wall_img[dir], _BLACK);
 	if (md->prm.debug_mode)
 		printf("%s texture[%d] correctly set\n", line + 3, dir);
-}
-
-int	contains_valid_character(char *line, const char *valid_characters)
-{
-	int	i;
-
-	i = -1;
-	while (line[++i])
-		if (line[i] != ' ' && char_in_str(line[i], valid_characters))
-			return (1);
-	return (0);
 }
 
 static int	parse_file_line(char *line, t_md *md)

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 16:07:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 16:25:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,6 @@ void	init_env_frames(t_md *md, t_texture_data *td)
 
 void	init_ents_data(t_md *md, t_texture_data *txd)
 {
-	txd->last_pointed = NULL;
-	txd->last_pointed_screen_p = v2(-1);
-	txd->opt_i = -1;
 	init_labels(txd);
 	init_au(md, &md->au);
 	store_entities_sizes(txd, md->t_len);

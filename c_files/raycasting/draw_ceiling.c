@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 17:56:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 11:37:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 00:56:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	calculate_door_y(t_md *md, t_floor_draw_d d)
 	if (!d.ray->had_door)
 		return (door_y);
 	exit_crd = get_tile_behind_door_from_angle(d.ray->door->coord, d.ray);
-	map_i = exit_crd.y * (md->map.size.x + 1) +exit_crd.x;
+	map_i = exit_crd.y * (md->map.size.x + 1) + exit_crd.x;
 	if (map_i > 0 && map_i < md->map.len && md->out_map[map_i] == 'I')
 		return (door_y);
 	fisheye = correct_fisheye(md, d.ray, d.ray->door, dist);

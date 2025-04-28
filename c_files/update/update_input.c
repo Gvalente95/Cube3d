@@ -6,28 +6,11 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 01:55:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 13:53:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
-
-static void	update_arrow_rotation(t_md *md)
-{
-	float	rot_speed;
-
-	rot_speed = ARROW_ROT_SPEED;
-	if (md->key_prs[SHIFT_KEY])
-		rot_speed *= 2;
-	if (md->key_prs[LEFT_KEY])
-		md->cam.rot.x -= rot_speed;
-	if (md->key_prs[RIGHT_KEY])
-		md->cam.rot.x += rot_speed;
-	if (md->key_prs[UP_KEY])
-		md->cam.rot.y -= rot_speed;
-	if (md->key_prs[DOWN_KEY])
-		md->cam.rot.y += rot_speed;
-}
 
 int	update_buttons_triggers(t_md *md, t_menu *menu, unsigned int c)
 {
@@ -49,7 +32,7 @@ int	update_buttons_triggers(t_md *md, t_menu *menu, unsigned int c)
 	return (0);
 }
 
-int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
+int	update_key_input(t_md *md, t_menu *menu, t_inventory *inv, unsigned int c)
 {
 	if (update_buttons_triggers(md, menu, c))
 		return (1);
@@ -57,7 +40,7 @@ int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
 		set_weapon_index(md);
 	else if (c == Q_KEY)
 		set_menu_mode(md, &md->menu, !menu->active);
-	else if (c == I_KEY && !md->inv.hold_pkbl)
+	else if (c == I_KEY)
 		set_inventory(md, &md->inv, !md->inv.active);
 	else if (c == ESC_KEY)
 		free_and_quit(md, NULL, NULL);
@@ -65,41 +48,70 @@ int	update_key_input(t_md *md, t_menu *menu, unsigned int c)
 		md->timer.tm_walk = md->timer.cur_tm - 1;
 	else if (c == C_KEY)
 		plr_shoot(md);
-	return (0);
+	if (inv->active)
+		return (update_inv_input(md, inv, c));
+	return (1);
 }
 
-static int	update_mouse_input(t_md *md, t_ent *pointed, t_ent *door)
+static int	try_open_door(t_md *md, t_ent *door)
 {
-	if (md->mouse.click == MOUSE_PRESS && md->inv.hold_pkbl)
-		return (throw_pokeball(md, &md->inv, pointed));
-	if (md->mouse.click != MOUSE_PRESS || !md->cam.pointed)
-		return (0);
-	if (door)
+	if (!md->cam.prv_pointed_ent && door->was_hit)
 	{
-		if (!md->inv.items[Keys] && door->hp)
-			return (play_sound(md, AU_MENU_OFF), 0);
 		door->hp = !door->hp;
 		if (!door->hp)
 			md->cam.prv_door = door;
 		if (!door->hp)
-			return (play_sound(md, AU_OPEN), md->inv.items[Keys]--, 1);
-		return (play_sound(md, AU_CLOSE), md->inv.items[Keys]++, 1);
+			return (play_sound(md, AU_OPEN), 1);
+		return (play_sound(md, AU_CLOSE), 1);
 	}
-	if (pointed->type != nt_mob)
+	else if (md->inv.items[Keys] > 0)
+	{
+		door->hp = 0;
+		door->was_hit = 1;
+		return (play_sound(md, AU_OPEN), md->inv.items[Keys]--, 1);
+	}
+	add_alert(md, .5f, NULL, "No key left in inventory");
+	return (0);
+}
+
+static int	update_mouse_input(t_md *md, t_ent *wall, t_ent *ent, t_ent *door)
+{
+	if (md->mouse.click == MOUSE_RELEASE && md->inv.held_index > -1)
+		return (use_held_item(md, &md->inv, ent, md->inv.held_index));
+	if (md->mouse.click != MOUSE_RELEASE || (!wall && !ent && !door))
 		return (0);
-	paint_ent(md, pointed, v2(0));
-	play_sound(md, AU_PORTAL_SHOOT);
-	pointed->hp--;
-	return (1);
+	if (wall && wall->type == nt_wall)
+		return (remove_ent(md, wall));
+	if (door)
+		try_open_door(md, door);
+	if (ent && ent->type == nt_mob)
+	{
+		paint_ent(md, ent, v2(0));
+		play_sound(md, AU_PORTAL_SHOOT);
+		ent->hp--;
+		return (1);
+	}
+	return (0);
 }
 
 void	update_input(t_md *md)
 {
+	float		r_spd;
+	t_cam		*c;
+	t_inventory	*inv;
+
+	inv = &md->inv;
 	if (md->key_click != -1)
-		update_key_input(md, &md->menu, (unsigned int)md->key_click);
+		update_key_input(md, &md->menu, inv, (unsigned int)md->key_click);
 	if (md->menu.active)
 		return ;
-	update_arrow_rotation(md);
+	c = &md->cam;
+	r_spd = ARROW_ROT_SPEED;
+	if (md->key_prs[SHIFT_KEY])
+		r_spd *= 2;
+	c->rot.x += ((md->key_prs[RIGHT_KEY] - md->key_prs[LEFT_KEY]) * r_spd);
+	c->rot.y += ((md->key_prs[DOWN_KEY] - md->key_prs[UP_KEY]) * r_spd);
 	if (!md->inv.active)
-		update_mouse_input(md, md->cam.pointed, md->cam.pointed_door);
+		update_mouse_input(md, c->pointed, c->pointed_ent, c->pointed_door);
+	return ;
 }

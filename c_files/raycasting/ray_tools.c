@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 22:12:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/24 20:20:15 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ int	validate_check_hit(t_md *md, t_ray *ray, t_ent *ent, t_ent_type tp)
 		return (0);
 	if (ray->check_hit && ray->check_hit != ent)
 		return (0);
-	if (tp == nt_pickup && !ent->is_active)
-		return (0);
 	if (is_wall)
 		return ((v3f_bounds(ray->pos, v3f(0), \
 			ent->pos, get_v3f(ent->frame->size.x + 1, ent->frame->size.y, 0))));
+	else if (!ent->is_active)
+		return (0);
 	if (is_in_list(md->thrd_manager.ents_to_draw, ent))
 		return (0);
 	if (!cmp_vec2f((t_vec2f){ray->pos.x, ray->pos.y}, \

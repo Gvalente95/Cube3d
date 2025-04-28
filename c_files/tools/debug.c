@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:37:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 23:55:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 04:48:59 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,17 @@ void	show_update_information(t_md *md)
 	show_float(md, "angle: ", md->plr.angle, get_v2(0, y++));
 	show_vec3(md, "crd", md->plr.coord, get_v2(0, y++));
 	show_vec3f(md, "mouse pos", md->mouse.pos, get_v2(0, y++));
-	show_vec2(md, "mouse delta", md->mouse.delta, get_v2(0, y++));
+	show_vec2(md, "mouse delta", md->mouse.delta_raw, get_v2(0, y++));
+	show_vec2(md, "mouse scroll", md->mouse.scroll_raw, get_v2(0, y++));
 	show_float(md, "cam z", md->cam.pos.z, get_v2(0, y++));
 	show_int(md, "key click", md->last_key, get_v2(0, y++));
 	show_int(md, "plr in house", md->plr_in_house, get_v2(0, y++));
+	if (md->cam.pointed)
+		rnd_txt_simple(md, get_v2(0, y * (md->prm.txt_sc * 1.5f)), \
+	"PTD_WALL: %s", md->txd.ents_types_names[md->cam.pointed->type]);
+	if (md->cam.pointed_ent)
+		rnd_txt_simple(md, get_v2(0, (y + 1) * (md->prm.txt_sc * 1.5f)), \
+	"PTD_ENT: %s", md->txd.ents_types_names[md->cam.pointed_ent->type]);
 }
 
 void	print_color(int color, const char *label)

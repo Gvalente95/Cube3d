@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 22:57:16 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 17:24:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ static int	get_scale_and_pos(t_md *md, t_ent *e, t_vec2 win_sz, t_vec2 *draw_p)
 	float	scale_factor;
 	float	dist;
 	int		scale;
+	int		e_size;
 
-	scale_factor = e->size.y / md->txd.e_scales[e->type];
+	e_size = max(md->t_len, e->size.y);
+	scale_factor = e_size / md->txd.e_scales[e->type];
 	dist = (maxf(0.1, e->hit_dist) / 2) * scale_factor;
 	scale = minmaxf(5, win_sz.y * 2, (win_sz.y * e->size.y) / dist);
 	draw_p->x = e->ray_hit_index - scale / 2;
@@ -32,48 +34,31 @@ static int	get_scale_and_pos(t_md *md, t_ent *e, t_vec2 win_sz, t_vec2 *draw_p)
 	return (scale);
 }
 
-void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e)
-{
-	const t_vec2	sz = get_v2(sz_scale.x, sz_scale.y);
-	const int		scale = sz_scale.z;
-	const t_vec2	pkpos = md->inv.pkbl_p;
-	int				is_pointed;
-
-	is_pointed = 0;
-	if (!md->inv.hold_pkbl)
-		is_pointed = v2_bounds(draw_p, sub_vec2(div_v2(md->win_sz, 2), sz), sz);
-	else if (e->type == nt_pokemon)
-		is_pointed = v2_touch(draw_p, div_v2(sz, 2), pkpos, md->inv.pkbl_sz);
-	if (is_pointed)
-	{
-		md->cam.pointed = e;
-		if (md->mouse.click)
-			md->txd.last_pointed = e;
-	}
-	if (md->txd.last_pointed == e)
-		md->txd.last_pointed_screen_p = sub_vec2(draw_p, v2(scale * .2));
-}
-
-void	draw_sprite_thread(t_md *md, t_ent *e, t_vec2 win_sz, float fogalpha)
+void	draw_sprite_thread(t_md *md, t_ent *e, int had_door, float fogalpha)
 {
 	t_image		*img;
 	t_vec2		sz;
 	t_vec2		draw_p;
-	const int	scale = get_scale_and_pos(md, e, win_sz, &draw_p);
+	const int	scale = get_scale_and_pos(md, e, md->win_sz, &draw_p);
 
 	img = copy_image(md, e->frame, v2(scale), -1);
 	sz = img->size;
-	update_pointed(md, draw_p, get_v3(sz.x, sz.y, scale), e);
+	if (!had_door)
+		update_pointed(md, draw_p, get_v3(sz.x, sz.y, scale), e);
 	if (e->caught)
 		flush_img(img, _WHITE, 10, 1);
 	else if (fogalpha < .95)
 		flush_img(img, md->hud.fog_color, fogalpha, 1);
 	draw_sphere(md->screen, get_v2(draw_p.x, draw_p.y + sz.y * .8), \
 		get_v2(sz.x, sz.y * .25), get_v3(_BLACK, 3, 1));
-	if (md->cam.pointed == e && !e->caught)
+	if (had_door)
+		draw_alpha_img(img, md->screen, draw_p, .3f);
+	else if (md->cam.pointed_ent == e && !e->caught)
 		draw_img_contour(md, img, draw_p, (t_vec2){_MAGENT, 8});
 	else
 		draw_img(img, md->screen, draw_p, -1);
+	e->screen_p = draw_p;
+	e->screen_sz = img->size;
 	free_image_data(md, img);
 	e->in_screen = 1;
 }
@@ -109,26 +94,24 @@ static void	sort_ent_list_by_distance(t_dblst **lst)
 
 void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 {
-	t_dblst					*node;
-	t_ent					*sel;
-	t_ent					*e;
-	float					fogalpha;
+	t_dblst	*node;
+	t_ent	*e;
+	float	fogalpha;
+	t_ent	*door;
+	int		has_door;
 
-	sel = md->txd.last_pointed;
 	sort_ent_list_by_distance(&mon->ents_to_draw);
 	node = dblst_first(mon->ents_to_draw);
-	if (md->mouse.click && sel)
-		md->txd.last_pointed = NULL;
-	if (!sel)
-		md->txd.opt_i = -1;
 	while (node)
 	{
 		e = (t_ent *)node->content;
 		fogalpha = 1 - minmaxf(0, .95, (e->hit_dist / 1000.0f) * md->fx.fog);
-		draw_sprite_thread(md, e, md->win_sz, fogalpha);
+		door = md->rays[e->ray_hit_index].door;
+		has_door = door && door->hp && door->cam_distance < e->cam_distance;
+		draw_sprite_thread(md, e, has_door, fogalpha);
 		node = node->next;
 	}
-	if (sel && sel->in_screen && !md->inv.hold_pkbl)
-		show_pointed_data(md, md->txd.last_pointed_screen_p, sel);
+	if (md->inv.held_index != Pokeball)
+		update_pointed_ent(md, md->cam.pointed_ent);
 	dblst_clear(&mon->ents_to_draw, NULL);
 }

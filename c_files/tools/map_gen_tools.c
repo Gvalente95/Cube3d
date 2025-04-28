@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 21:15:25 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/23 22:28:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/25 01:31:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,32 @@ void	close_map(char *map, t_vec2 size, int len)
 		else if (i + size.x < len && map[i + size.x] == ' ')
 			map[i] = '1';
 	}
+}
+
+int	replace_window(t_md *md, int new_w, int new_h)
+{
+	mlx_destroy_window(md->mlx, md->win);
+	md->win_sz = get_v2(new_w, new_h);
+	md->win = mlx_new_window(md->mlx, new_w, new_h, "Cube3D");
+	if (md->is_linux)
+	{
+		mlx_hook(md->win, KeyPress, KeyPressMask, handle_key_press, md);
+		mlx_hook(md->win, KeyRelease, KeyReleaseMask, handle_key_release, md);
+		mlx_hook(md->win, DestroyNotify, StructureNotifyMask, close_window, md);
+	}
+	else
+	{
+		mlx_hook(md->win, 2, 0, handle_key_press, md);
+		mlx_hook(md->win, 3, 0, handle_key_release, md);
+		mlx_hook(md->win, 17, 0, close_window, md);
+	}
+	mlx_mouse_hook(md->win, mouse_event_handler, md);
+	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
+	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
+	set_menu_pos(md, &md->menu, get_v3(-200, -200, 1), get_v3(300, -200, 5));
+	render(md);
+	md->menu.selected_slider = NULL;
+	md->mouse.click = MOUSE_NOPRESS;
+	md->mouse.pressed = MOUSE_NOPRESS;
+	return (md->menu.refresh_bg = 1, md->menu.refresh_ui = 1, -1);
 }
