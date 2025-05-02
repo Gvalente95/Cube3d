@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 01:57:35 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/31 15:57:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_vec2	v3_to_v2(t_vec3 vec)
 {
-	return (get_v2(vec.x, vec.y));
+	return (v2(vec.x, vec.y));
 }
 
 int	cmp_vec2(t_vec2 a, t_vec2 b)
@@ -22,7 +22,7 @@ int	cmp_vec2(t_vec2 a, t_vec2 b)
 	return (a.x == b.x && a.y == b.y);
 }
 
-t_vec2	get_v2(int x, int y)
+t_vec2	v2(int x, int y)
 {
 	t_vec2	ret;
 

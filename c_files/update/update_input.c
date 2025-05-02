@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 13:53:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 18:43:09 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ int	update_key_input(t_md *md, t_menu *menu, t_inventory *inv, unsigned int c)
 		free_and_quit(md, NULL, NULL);
 	else if (c == SHIFT_KEY)
 		md->timer.tm_walk = md->timer.cur_tm - 1;
-	else if (c == C_KEY)
-		plr_shoot(md);
 	if (inv->active)
 		return (update_inv_input(md, inv, c));
 	return (1);
@@ -55,7 +53,7 @@ int	update_key_input(t_md *md, t_menu *menu, t_inventory *inv, unsigned int c)
 
 static int	try_open_door(t_md *md, t_ent *door)
 {
-	if (!md->cam.prv_pointed_ent && door->was_hit)
+	if (door->was_hit)
 	{
 		door->hp = !door->hp;
 		if (!door->hp)
@@ -76,20 +74,26 @@ static int	try_open_door(t_md *md, t_ent *door)
 
 static int	update_mouse_input(t_md *md, t_ent *wall, t_ent *ent, t_ent *door)
 {
-	if (md->mouse.click == MOUSE_RELEASE && md->inv.held_index > -1)
-		return (use_held_item(md, &md->inv, ent, md->inv.held_index));
+	t_ent	*pk;
+	t_ent	*enm_pk;
+
+	if (md->mouse.click == MOUSE_RELEASE && md->inv.held_i > -1)
+		return (use_held_item(md, &md->inv, ent, md->inv.held_i));
 	if (md->mouse.click != MOUSE_RELEASE || (!wall && !ent && !door))
 		return (0);
-	if (wall && wall->type == nt_wall)
+	if (wall && wall->type == nt_wall && md->key_prs[SHIFT_KEY])
 		return (remove_ent(md, wall));
 	if (door)
 		try_open_door(md, door);
 	if (ent && ent->type == nt_mob)
 	{
-		paint_ent(md, ent, v2(0));
-		play_sound(md, AU_PORTAL_SHOOT);
-		ent->hp--;
-		return (1);
+		pk = get_valid_pkmn(md->inv.pokemon_team, md->inv.team_size);
+		if (!pk)
+			return (add_alert(md, .5f, NULL, "No Valid pokemon to fight"), 0);
+		enm_pk = get_valid_pkmn(ent->pk_team, ent->team_sz);
+		if (!enm_pk)
+			return (add_alert(md, .5f, NULL, "Trainer's pokemon are Ko.."), 0);
+		return (start_battle(md, &md->battle_d, ent, enm_pk), 1);
 	}
 	return (0);
 }

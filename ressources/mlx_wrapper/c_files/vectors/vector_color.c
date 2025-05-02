@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:10:30 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 12:10:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	v4_to_color(int r, int g, int b, int a)
 	t_vec4		rgba;
 
 	a = 255 - a;
-	rgba = get_v4(r, g, b, a);
+	rgba = v4(r, g, b, a);
 	return ((rgba.a << 24) | (rgba.r << 16) | (rgba.g << 8) | rgba.b);
 }
 

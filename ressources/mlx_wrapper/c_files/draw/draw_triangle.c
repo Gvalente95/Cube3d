@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:54:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 16:17:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	draw_tri(t_image *img, t_vec2 v[3], t_vec2f inv_slope, int clr)
 	x = v2f(v[1].x);
 	while (++y <= v[0].y)
 	{
-		draw_line(img, get_v2((int)x.x, y), \
-			get_v2((int)x.y, y), get_v2(clr, 1));
+		draw_line(img, v2((int)x.x, y), \
+			v2((int)x.y, y), v2(clr, 1));
 		x = add_vec2f(x, inv_slope);
 	}
 	if (v[2].y - v[0].y != 0)
@@ -33,8 +33,8 @@ void	draw_tri(t_image *img, t_vec2 v[3], t_vec2f inv_slope, int clr)
 	y = v[0].y - 1;
 	while (++y <= v[2].y)
 	{
-		draw_line(img, get_v2((int)x.x, y), \
-			get_v2((int)x.y, y), get_v2(clr, 1));
+		draw_line(img, v2((int)x.x, y), \
+			v2((int)x.y, y), v2(clr, 1));
 		x = add_vec2f(x, inv_slope);
 	}
 }
@@ -82,7 +82,7 @@ void	shrink_quad(t_vec2 p[4], float amount, t_vec2 center)
 
 void	draw_quad_contour(t_image *screen, t_vec2 p[4], int contour_clr)
 {
-	const t_vec2	ctr_d = get_v2(contour_clr, 2);
+	const t_vec2	ctr_d = v2(contour_clr, 2);
 
 	draw_line(screen, p[0], p[1], ctr_d);
 	draw_line(screen, p[1], p[2], ctr_d);
@@ -92,7 +92,7 @@ void	draw_quad_contour(t_image *screen, t_vec2 p[4], int contour_clr)
 
 void	draw_quad(t_image *screen, t_vec2 p[4], int color, int contour_clr)
 {
-	const t_vec2	center = get_v2((p[0].x + p[2].x) / 2, \
+	const t_vec2	center = v2((p[0].x + p[2].x) / 2, \
 	(p[0].y + p[2].y) / 2);
 	t_vec2			tri[3];
 	int				flat_diff;

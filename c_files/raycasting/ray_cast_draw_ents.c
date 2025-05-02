@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 17:24:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ static int	get_scale_and_pos(t_md *md, t_ent *e, t_vec2 win_sz, t_vec2 *draw_p)
 	draw_p->y = (win_sz.y / 2 - (scale * 0.2f) - \
 		(((md->plr.pos.z * .8) * scale_factor)) - (md->cam.rot.y * 8));
 	if (e->type == nt_pokemon)
-		draw_p->y -= ((float)(e->size.y - \
-			(float)md->txd.feet_offsets[e->type]) / e->size.y) * scale;
-	if (e->type == nt_pickup)
+	{
+		draw_p->y -= ((float)((e->size.y * .8) - \
+		(float)md->txd.feet_offsets[e->type]) / e->size.y) * scale;
+		scale *= 1.5;
+	}
+	if (e->type == nt_item)
 		draw_p->y += scale * (1.0f - (md->txd.e_scales[e->type] / md->t_len));
 	return (scale);
 }
@@ -41,16 +44,16 @@ void	draw_sprite_thread(t_md *md, t_ent *e, int had_door, float fogalpha)
 	t_vec2		draw_p;
 	const int	scale = get_scale_and_pos(md, e, md->win_sz, &draw_p);
 
-	img = copy_image(md, e->frame, v2(scale), -1);
+	img = copy_image(md, e->frame, _v2(scale), -1);
 	sz = img->size;
 	if (!had_door)
-		update_pointed(md, draw_p, get_v3(sz.x, sz.y, scale), e);
+		update_pointed(md, draw_p, v3(sz.x, sz.y, scale), e);
 	if (e->caught)
 		flush_img(img, _WHITE, 10, 1);
 	else if (fogalpha < .95)
 		flush_img(img, md->hud.fog_color, fogalpha, 1);
-	draw_sphere(md->screen, get_v2(draw_p.x, draw_p.y + sz.y * .8), \
-		get_v2(sz.x, sz.y * .25), get_v3(_BLACK, 3, 1));
+	draw_sphere(md->screen, v2(draw_p.x, draw_p.y + sz.y * .8), \
+		v2(sz.x, sz.y * .25), v3(_BLACK, 3, 1));
 	if (had_door)
 		draw_alpha_img(img, md->screen, draw_p, .3f);
 	else if (md->cam.pointed_ent == e && !e->caught)
@@ -111,7 +114,7 @@ void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 		draw_sprite_thread(md, e, has_door, fogalpha);
 		node = node->next;
 	}
-	if (md->inv.held_index != Pokeball)
-		update_pointed_ent(md, md->cam.pointed_ent);
+	if (md->inv.held_i != Pokeball)
+		update_pointed_ent(md);
 	dblst_clear(&mon->ents_to_draw, NULL);
 }

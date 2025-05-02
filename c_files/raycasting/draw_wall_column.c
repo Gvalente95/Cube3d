@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:01:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 01:08:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 15:51:51 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	pxl_draw(t_md *md, t_ray_draw_d *d, t_vec2 win_sz)
 		return (1);
 	if (d->ray->wall_strip_pos.x == md->hud.floor_start)
 		d->ray->wall_strip_pos.x = win_p.y;
-	if (!md->prm.show_walls)
+	if (md->prm.show_walls != 1)
 		return (1);
 	if (md->cam.pointed == d->ray->wall_hit)
 		d->pxl_clr = blend_color(d->pxl_clr, _WHITE, 0.11f);

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:02:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 22:26:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:47 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	str_to_color(const char *line)
 	const char	*values;
 	char		**splits;
 
-	rgba = v4(255);
+	rgba = _v4(255);
 	if (!line || ft_strlen(line) <= 3)
 		return (str_to_color("255,255,255"));
 	values = line;

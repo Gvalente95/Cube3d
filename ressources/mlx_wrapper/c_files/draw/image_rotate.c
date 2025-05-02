@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rotate.c                                           :+:      :+:    :+:   */
+/*   image_rotate.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 20:10:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/30 15:54:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	draw_img_yaw(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 			draw_p.x = pos.x + (int)((dpos.x - cp.x) * scale_x);
 			draw_p.y = pos.y + dpos.y - cp.y + (int)((dpos.x - cp.x) * \
 			sinf(deg_to_rad(pos.z)) * 0.5f);
-			draw_pixel(onto, get_v2(draw_p.x, draw_p.y), color, -1);
+			draw_pixel(onto, v2(draw_p.x, draw_p.y), color, -1);
 		}
 	}
 }
@@ -59,7 +59,7 @@ void	draw_img_pitch(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 			p.z = from->src[p.y * from->size.x + p.x];
 			draw_p.x = pos.x + p.x - cp.x;
 			draw_p.y = pos.y + skew.x + skew.y;
-			draw_pixel(onto, get_v2(draw_p.x, draw_p.y), p.z, -1);
+			draw_pixel(onto, v2(draw_p.x, draw_p.y), p.z, -1);
 		}
 	}
 }
@@ -83,7 +83,7 @@ void	draw_sprite_roll(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 				continue ;
 			rot.x = (int)(p.x - cp.x * cosin.x - p.y - cp.y * cosin.y);
 			rot.y = (int)(p.x - cp.x * cosin.y + p.y - cp.y * cosin.x);
-			draw_pixel(onto, get_v2(pos.x + rot.x, pos.y + rot.y), p.z, -1);
+			draw_pixel(onto, v2(pos.x + rot.x, pos.y + rot.y), p.z, -1);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 15:57:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 00:59:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ int	mouse_motion_handler(int x, int y, void *param)
 
 	md = (t_md *)param;
 	msd = &md->mouse;
-	msd->real = get_v2(x, y);
-	raw = get_v2(x - msd->prev.x, y - msd->prev.y);
+	msd->real = v2(x, y);
+	raw = v2(x - msd->prev.x, y - msd->prev.y);
 	msd->delta_raw = raw;
 	msd->delta.x = raw.x * (1.0f - MOUSE_SMTH) + raw.x * MOUSE_SMTH;
 	msd->delta.y = raw.y * (1.0f - MOUSE_SMTH) + raw.y * MOUSE_SMTH;
-	msd->prev = get_v2(x, y);
+	msd->prev = v2(x, y);
 	msd->pos.x += msd->delta.x * MOUSE_SENSITIVITY;
 	msd->pos.y += msd->delta.y * MOUSE_SENSITIVITY;
-	grid_pos = get_grid_pos(md, get_v3(msd->pos.x, msd->pos.y, 0));
-	msd->grid_pos = get_v2((grid_pos.x + md->cam.ofst.x) / md->t_len, \
+	grid_pos = get_grid_pos(md, v3(msd->pos.x, msd->pos.y, 0));
+	msd->grid_pos = v2((grid_pos.x + md->cam.ofst.x) / md->t_len, \
 		(grid_pos.y + md->cam.ofst.y) / md->t_len);
 	if (msd->locked && \
 		(x < 5 || x > md->win_sz.x - 5 || y < 5 || y > md->win_sz.y - 5))
@@ -71,7 +71,7 @@ int	update_mouse(t_md *md)
 	t_mouse	*msd;
 
 	msd = &md->mouse;
-	msd->world = get_v2(msd->pos.x + \
+	msd->world = v2(msd->pos.x + \
 		md->cam.ofst.x, msd->pos.y + md->cam.ofst.y);
-	return (cmp_vec2(msd->prev, get_v2((int)msd->pos.x, (int)msd->pos.y)));
+	return (cmp_vec2(msd->prev, v2((int)msd->pos.x, (int)msd->pos.y)));
 }

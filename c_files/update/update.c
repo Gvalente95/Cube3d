@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 21:45:36 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 15:53:13 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/29 18:33:53 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,15 @@ int	update_and_render(t_md *md)
 {
 	if (md->autocam.active)
 		return (update_autocam(md, &md->autocam));
+	if (md->battle_d.active)
+		return (update_battle_scene(md, &md->battle_d));
 	update_portals(md, md->portal.found, md->portal.out_pos);
 	update_audio(md, &md->au);
 	if (md->menu.active)
 		return (update_menu(md, &md->menu));
 	update_input(md);
+	if (md->battle_d.active)
+		return (0);
 	update_mouse(md);
 	if (md->inv.active)
 		update_inventory(md, &md->inv);

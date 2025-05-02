@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 22:45:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 10:55:50 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void	draw_sky(t_md *md, t_image *bufr, t_vec3 *sky_pos)
 	t_image	*to_draw;
 
 	win_sz = md->win_sz;
-	trimm = get_v3(md->win_sz.x, md->hud.floor_start, md->hud.bgr_color);
+	trimm = v3(md->win_sz.x, md->hud.floor_start, md->hud.bgr_color);
 	i = -1;
 	while (++i < 6)
 	{
-		pos = get_v2(sky_pos[i].x, sky_pos[i].y);
+		pos = v2(sky_pos[i].x, sky_pos[i].y);
 		if (pos.y < -win_sz.y || pos.y > md->hud.floor_start || \
 			pos.y < -win_sz.x || pos.x > win_sz.x)
 			continue ;
@@ -52,12 +52,12 @@ int	render_sky(t_md *md)
 	offst.y = win_sz.y * speed.y;
 	scrl.x = fmod((((md->cam.rot.x + 180.0)) / 360.0) * offst.x, win_sz.x);
 	scrl.y = fmod((((md->cam.rot.y + 90.0)) / 180.0) * offst.y, win_sz.y);
-	sky_pos[0] = get_v3(-scrl.x, -scrl.y, 0);
-	sky_pos[1] = get_v3(-scrl.x, win_sz.y - scrl.y, 1);
-	sky_pos[2] = get_v3(win_sz.x - scrl.x, -scrl.y, 0);
-	sky_pos[3] = get_v3(win_sz.x - scrl.x, -win_sz.y - scrl.y, 0);
-	sky_pos[4] = get_v3(-scrl.x, -scrl.y + win_sz.y, 1);
-	sky_pos[5] = get_v3(win_sz.x - scrl.x, -scrl.y + win_sz.y, 1);
+	sky_pos[0] = v3(-scrl.x, -scrl.y, 0);
+	sky_pos[1] = v3(-scrl.x, win_sz.y - scrl.y, 1);
+	sky_pos[2] = v3(win_sz.x - scrl.x, -scrl.y, 0);
+	sky_pos[3] = v3(win_sz.x - scrl.x, -win_sz.y - scrl.y, 0);
+	sky_pos[4] = v3(-scrl.x, -scrl.y + win_sz.y, 1);
+	sky_pos[5] = v3(win_sz.x - scrl.x, -scrl.y + win_sz.y, 1);
 	draw_sky(md, md->hud.sky_buffer, sky_pos);
 	return (1);
 }
@@ -70,24 +70,24 @@ void	render_2d_floor(t_md *md)
 	t_vec3f	cam;
 	int		i;
 
-	win_sz = get_v2(md->win_sz.x * .5, md->win_sz.y * .5);
+	win_sz = v2(md->win_sz.x * .5, md->win_sz.y * .5);
 	cam = get_v3f(md->cam.ofst.x / md->t_len, md->cam.ofst.y / md->t_len, 0);
 	centr.x = fmod(win_sz.x - md->txd.size_2d - (cam.x * md->txd.size_2d), \
 		md->win_sz.x);
 	centr.y = fmod(win_sz.y - md->txd.size_2d - (cam.y * md->txd.size_2d), \
 		md->win_sz.y);
-	pos[0] = get_v2(centr.x, centr.y + md->win_sz.y);
-	pos[1] = get_v2(centr.x, centr.y - md->win_sz.y);
-	pos[2] = get_v2(centr.x + md->win_sz.x, centr.y - md->win_sz.y);
-	pos[3] = get_v2(centr.x + md->win_sz.x, centr.y + md->win_sz.y);
-	pos[4] = get_v2(centr.x - md->win_sz.x, centr.y - md->win_sz.y);
-	pos[5] = get_v2(centr.x - md->win_sz.x, centr.y + md->win_sz.y);
-	pos[6] = get_v2(centr.x + md->win_sz.x, centr.y);
-	pos[7] = get_v2(centr.x - md->win_sz.x, centr.y);
+	pos[0] = v2(centr.x, centr.y + md->win_sz.y);
+	pos[1] = v2(centr.x, centr.y - md->win_sz.y);
+	pos[2] = v2(centr.x + md->win_sz.x, centr.y - md->win_sz.y);
+	pos[3] = v2(centr.x + md->win_sz.x, centr.y + md->win_sz.y);
+	pos[4] = v2(centr.x - md->win_sz.x, centr.y - md->win_sz.y);
+	pos[5] = v2(centr.x - md->win_sz.x, centr.y + md->win_sz.y);
+	pos[6] = v2(centr.x + md->win_sz.x, centr.y);
+	pos[7] = v2(centr.x - md->win_sz.x, centr.y);
 	pos[8] = centr;
 	i = -1;
 	while (++i < 9)
-		if (v2_touch(pos[i], md->win_sz, v2(0), md->win_sz))
+		if (v2_touch(pos[i], md->win_sz, _v2(0), md->win_sz))
 			draw_img(md->hud.floor, md->screen, pos[i], md->hud.bgr_color);
 }
 
@@ -104,9 +104,9 @@ void	render_background(t_md *md)
 			render_sky(md);
 		else
 			draw_pixels(md->screen, \
-	v2(0), get_v2(md->win_sz.x, hud->floor_start + 1), hud->sky_color);
+	_v2(0), v2(md->win_sz.x, hud->floor_start + 1), hud->sky_color);
 	}
 	if (!md->prm.use_floor)
 		draw_pixels(md->screen, \
-			get_v2(0, hud->floor_start), md->win_sz, hud->floor_color);
+			v2(0, hud->floor_start), md->win_sz, hud->floor_color);
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:33:59 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/26 16:17:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	reset_mlx_values(t_md *md)
 	md->mouse.scroll_delta = scale_vec2f(md->mouse.scroll_delta, .8f);
 	md->mouse.scroll_delta.x += md->mouse.scroll_raw.x;
 	md->mouse.scroll_delta.y += md->mouse.scroll_raw.y;
-	md->mouse.scroll_raw = v2(0);
+	md->mouse.scroll_raw = _v2(0);
 }
 
 int	close_window(t_md *md)

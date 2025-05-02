@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:27:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,22 @@
 static void	init_cursor(t_md *md)
 {
 	t_mouse			*msd;
-	const t_vec2	cursor_sz = v2(30);
+	const t_vec2	cursor_sz = _v2(30);
 
 	msd = &md->mouse;
 	msd->cursor = init_img(md, cursor_sz, "utils/cursor/default.xpm", -1);
 	msd->curs_dtc = init_img(md, cursor_sz, "utils/cursor/hand_open.xpm", -1);
 	msd->curs_grb = init_img(md, cursor_sz, "utils/cursor/hand_closed.xpm", -1);
 	msd->pos = v3f(0);
-	msd->world = v2(0);
-	msd->real = v2(0);
-	md->cam.input_offst = v2(0);
-	msd->prev = v2(0);
-	msd->grid_pos = v2(0);
+	msd->world = _v2(0);
+	msd->real = _v2(0);
+	md->cam.input_offst = _v2(0);
+	msd->prev = _v2(0);
+	msd->grid_pos = _v2(0);
 	msd->delta = v2f(0);
 	msd->focus = 0;
 	msd->pressed = 0;
 	msd->click = 0;
-	if (!LIN)
-		mlx_mouse_hide(md->mlx, md->win);
 	mlx_mouse_hook(md->win, mouse_event_handler, md);
 	mlx_hook(md->win, 5, ButtonReleaseMask, mouse_release_handler, md);
 	mlx_hook(md->win, 6, PointerMotionMask, mouse_motion_handler, md);
@@ -43,7 +41,7 @@ static int	init_screen(t_md *md, t_vec2 win_sz, int resolution, char *win_name)
 	void	*screen_image;
 
 	md->win = mlx_new_window(md->mlx, win_sz.x, win_sz.y, win_name);
-	md->win_sz = get_v2(win_sz.x, win_sz.y);
+	md->win_sz = v2(win_sz.x, win_sz.y);
 	md->t_len = win_sz.x / resolution;
 	md->prm.resolution = resolution;
 	return (1);
@@ -56,7 +54,7 @@ static int	init_md(t_md *md)
 	i = -1;
 	while (++i < 65536)
 		md->key_prs[i] = 0;
-	md->win_sz = v2(0);
+	md->win_sz = _v2(0);
 	md->cam.ofst = v3f(0);
 	md->cam.input_mov = v3f(0);
 	md->cam.wrd_mv_offst = v3f(0);

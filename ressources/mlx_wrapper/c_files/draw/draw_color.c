@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 10:42:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:12:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	draw_line(t_image *onto, t_vec2 start, t_vec2 end, t_vec2 color_d)
 			(onto->size_line / 4) + start.x]) == 0)
 			break ;
 		if (color_d.y > 1)
-			draw_pixels(onto, start, v2(color_d.y), color_d.x);
+			draw_pixels(onto, start, _v2(color_d.y), color_d.x);
 		else
 			draw_pixel(onto, start, color_d.x, get_alpha(color_d.x));
 		pos = add_vec2f(pos, step);
@@ -97,7 +97,7 @@ void	draw_alpha_img(t_image *src, t_image *dst, t_vec2 pos, float trnsp)
 		return ;
 	draw_d.src = src;
 	draw_d.dst = dst;
-	draw_pos = get_v2(-1, -1);
+	draw_pos = v2(-1, -1);
 	while (++draw_pos.y < src->size.y)
 	{
 		draw_d.src_pos.y = draw_pos.y;

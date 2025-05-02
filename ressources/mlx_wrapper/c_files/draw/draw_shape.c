@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 22:04:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:50:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	draw_trimmed(t_image *src, t_image *dst, t_vec2 pos, t_vec3 draw_end)
 		return ;
 	draw_d.src = src;
 	draw_d.dst = dst;
-	draw_d.pos = get_v2(-1, -1);
+	draw_d.pos = v2(-1, -1);
 	while (++draw_d.pos.y < src->size.y)
 	{
 		draw_d.src_pos.y = draw_d.pos.y;
@@ -50,7 +50,7 @@ void	draw_sphere(t_image *dst, t_vec2 pos, t_vec2 sz, t_vec3 data)
 
 	if (!dst || !dst->src || pos.x < 0 || pos.y < 0)
 		return ;
-	dd = (t_draw_d){NULL, dst, get_v2(0, 0)};
+	dd = (t_draw_d){NULL, dst, v2(0, 0)};
 	dd.pos.y = pos.y - 1;
 	while (++dd.pos.y <= end_crd.y)
 	{
@@ -77,7 +77,7 @@ void	draw_rotated_pixels(t_image *nw, t_image *sr, \
 	t_vec4		p;
 	t_vec2		final_pos;
 
-	cn = get_v4(sr->size.x / 2, sr->size.y / 2, nw->size.x / 2, nw->size.y / 2);
+	cn = v4(sr->size.x / 2, sr->size.y / 2, nw->size.x / 2, nw->size.y / 2);
 	d.dst = nw;
 	d.src = sr;
 	p.y = -1;
@@ -88,14 +88,14 @@ void	draw_rotated_pixels(t_image *nw, t_image *sr, \
 		{
 			p.z = (p.x - cn.b) * ctx.g - (p.y - cn.a) * ctx.b + cn.r;
 			p.w = (p.x - cn.b) * ctx.b + (p.y - cn.a) * ctx.g + cn.g;
-			d.dst_pos = get_v2(p.x, p.y);
-			d.src_pos = get_v2((int)p.z, (int)p.w);
+			d.dst_pos = v2(p.x, p.y);
+			d.src_pos = v2((int)p.z, (int)p.w);
 			if (p.z < 0 || p.z >= sr->size.x || p.w < 0 || p.w >= sr->size.y)
 				continue ;
 			put_pxl_if_vis(&d, -1, 0, 0);
 		}
 	}
-	final_pos = get_v2(nw->pos.x - (cn.b - cn.r), nw->pos.y - (cn.a - cn.g));
+	final_pos = v2(nw->pos.x - (cn.b - cn.r), nw->pos.y - (cn.a - cn.g));
 	draw_img(nw, onto, final_pos, -1);
 }
 
@@ -120,7 +120,7 @@ void	draw_rotated(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 		printf("rotated img alloc failed\n");
 		return ;
 	}
-	rotated->pos = get_v2(pos.x, pos.y);
+	rotated->pos = v2(pos.x, pos.y);
 	draw_rotated_pixels(rotated, from, onto, ctx);
 	free_image_data(md, rotated);
 }
@@ -135,15 +135,15 @@ void	draw_contour(t_image *img, int color, int thickness, float transparency)
 	half_thck = thickness / 2;
 	if (half_thck < 1)
 		half_thck = 1;
-	lines[0][0] = v2(0);
-	lines[0][1] = get_v2(img->size.x - half_thck, 0);
-	lines[1][0] = v2(0);
-	lines[1][1] = get_v2(0, img->size.y - half_thck);
-	lines[2][0] = get_v2(img->size.x - thickness, 0);
-	lines[2][1] = get_v2(img->size.x - thickness, img->size.y);
-	lines[3][0] = get_v2(0, img->size.y - thickness);
-	lines[3][1] = get_v2(img->size.x - half_thck, img->size.y - thickness);
+	lines[0][0] = _v2(0);
+	lines[0][1] = v2(img->size.x - half_thck, 0);
+	lines[1][0] = _v2(0);
+	lines[1][1] = v2(0, img->size.y - half_thck);
+	lines[2][0] = v2(img->size.x - thickness, 0);
+	lines[2][1] = v2(img->size.x - thickness, img->size.y);
+	lines[3][0] = v2(0, img->size.y - thickness);
+	lines[3][1] = v2(img->size.x - half_thck, img->size.y - thickness);
 	i = -1;
 	while (++i < 4)
-		draw_line(img, lines[i][0], lines[i][1], get_v2(color, thickness));
+		draw_line(img, lines[i][0], lines[i][1], v2(color, thickness));
 }

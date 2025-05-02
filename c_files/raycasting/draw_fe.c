@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:24:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 01:47:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,21 @@ void	render_world_map(t_md *md, t_floor_draw_d d, int y_size)
 	cord_transl = div_v2(d.txp, 8);
 	if (cord_transl.x == md->plr.coord.x && cord_transl.y == md->plr.coord.y)
 	{
-		draw_pixels(md->screen, get_v2(d.win.x, d.win.y - y_size * 3), \
-			get_v2(1, y_size * 2), _RED);
+		draw_pixels(md->screen, v2(d.win.x, d.win.y - y_size * 3), \
+			v2(1, y_size * 2), _RED);
 		clr = _GOLD;
-		draw_pixels(md->screen, draw_p, get_v2(1, y_size), clr);
+		draw_pixels(md->screen, draw_p, v2(1, y_size), clr);
 		return ;
 	}
 	map_i = cord_transl.y * (md->map.size.x + 1) + cord_transl.x;
 	if (map_i < 0 || map_i > md->map.len)
 		return ;
-	draw_pixel(md->screen, get_v2(draw_p.x, draw_p.y + 10), _BLACK, .5f);
+	draw_pixel(md->screen, v2(draw_p.x, draw_p.y + 10), _BLACK, .5f);
 	c = md->map.buffer[map_i];
 	if (c == '0' || c == ' ')
 		return ;
 	clr = md->rgb[get_char_index(md->txd.ents_tp_map[0], c)];
-	draw_pixels(md->screen, get_v2(draw_p.x, draw_p.y), get_v2(1, y_size), clr);
+	draw_pixels(md->screen, v2(draw_p.x, draw_p.y), v2(1, y_size), clr);
 }
 
 int	update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe)

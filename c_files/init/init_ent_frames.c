@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 21:42:52 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 11:47:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_image	**copy_action_frames(t_md *md, t_image **base_images)
 		return (NULL);
 	j = -1;
 	while (++j < frame_count)
-		action_images[j] = copy_image(md, base_images[j], get_v2(-1, -1), -1);
+		action_images[j] = copy_image(md, base_images[j], v2(-1, -1), -1);
 	action_images[j] = NULL;
 	return (action_images);
 }
@@ -61,13 +61,13 @@ static int	copy_anim_frames(t_md *md, t_ent *e)
 	return (1);
 }
 
-void	set_pickup_frame(t_md *md, t_texture_data *txd, t_ent *e)
+void	set_item_frame(t_md *md, t_texture_data *txd, t_ent *e)
 {
 	e->pckp_type = r_range_seed(&md->r_seed, 0, PCKP_TYPE_LEN - 1);
 	e->wpn_type = r_range(0, 3);
-	e->frame = txd->pickup_txtr[e->pckp_type][0];
+	e->frame = txd->item_txtr[e->pckp_type][0];
 	if (e->pckp_type == Weapon)
-		e->frame = txd->pickup_txtr[4][e->wpn_type];
+		e->frame = txd->item_txtr[4][e->wpn_type];
 }
 
 void	set_ent_label(t_texture_data *txd, t_ent *e, t_ent_type type)
@@ -79,8 +79,8 @@ void	set_ent_label(t_texture_data *txd, t_ent *e, t_ent_type type)
 		e->label = "DOOR";
 	else if (type == nt_pokemon)
 		e->label = txd->pkmn_names[e->mob_type];
-	else if (type == nt_pickup)
-		e->label = txd->pickup_names[e->pckp_type];
+	else if (type == nt_item)
+		e->label = txd->item_names[e->pckp_type];
 }
 
 void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
@@ -96,8 +96,8 @@ void	init_ent_frames(t_md *md, t_texture_data *txd, t_ent *e)
 		copy_anim_frames(md, e);
 	else if (e->type == nt_door)
 		e->frame = txd->door_txtr;
-	else if (e->type == nt_pickup)
-		set_pickup_frame(md, txd, e);
+	else if (e->type == nt_item)
+		set_item_frame(md, txd, e);
 	else if (e->type == nt_ext_wall)
 		e->frame = txd->ext_wall;
 	else if (e->type == nt_grass)

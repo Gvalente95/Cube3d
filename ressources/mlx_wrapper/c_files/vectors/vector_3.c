@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:54:50 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/29 12:39:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ t_vec3	get_grid_pos(t_md *md, t_vec3 pos)
 
 t_vec3	v2_to_v3(t_vec2 vec)
 {
-	return (get_v3(vec.x, vec.y, 0));
+	return (v3(vec.x, vec.y, 0));
 }
 
-t_vec3	get_v3(int x, int y, int z)
+t_vec3	v3(int x, int y, int z)
 {
 	t_vec3	ret;
 

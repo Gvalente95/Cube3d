@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/24 11:55:39 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:43:10 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	draw_floor(t_md *md, t_floor_draw_d d)
 
 	pitch_scale = 8.0f / fmaxf(1.0f, -md->cam.pos.z / md->t_len);
 	md->env.stored_blades = NULL;
-	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.y};
+	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.y - 1 + md->prm.height};
 	prv_fe = NULL;
 	while (d.win.y++ < winsz.y + md->t_len)
 	{
@@ -99,7 +99,7 @@ void	init_floor_data(t_md *md, t_ray *ray, t_floor_draw_d *d)
 	d->stp = v2f(0);
 	d->flr.x = (md->plr.pos.x / md->t_len);
 	d->flr.y = (md->plr.pos.y / md->t_len);
-	d->txp = v2(0);
+	d->txp = _v2(0);
 	d->clr = -1;
 	d->has_grass = 0;
 	d->p = 0;
@@ -117,7 +117,7 @@ void	draw_raycast_background(t_md *md, t_ray *ray)
 		bgr_v4.r = minmax(0, 255, bgr_v4.r - ray->distance * .2);
 		bgr_v4.g = minmax(0, 255, bgr_v4.g - ray->distance * .2);
 		bgr_v4.b = minmax(0, 255, bgr_v4.b - ray->distance * .2);
-		draw_pixels(md->screen, get_v2(ray->index, 0), get_v2(1, md->win_sz.y), \
+		draw_pixels(md->screen, v2(ray->index, 0), v2(1, md->win_sz.y), \
 			v4_to_color(bgr_v4.r, bgr_v4.g, bgr_v4.b, 255));
 	}
 	if (md->prm.use_ceiling || md->prm.use_floor || md->prm.show_sky)
@@ -125,11 +125,11 @@ void	draw_raycast_background(t_md *md, t_ray *ray)
 	if (md->prm.use_ceiling || md->prm.show_sky)
 		draw_ceiling(md, d);
 	else if (!md->prm.show_sky)
-		draw_pixels(md->screen, get_v2(ray->index, 0), \
-			get_v2(1, ray->wall_strip_pos.x), md->hud.sky_color);
+		draw_pixels(md->screen, v2(ray->index, 0), \
+			v2(1, ray->wall_strip_pos.x), md->hud.sky_color);
 	if (md->prm.use_floor && ray->wall_strip_pos.y < md->win_sz.y)
 		draw_floor(md, d);
 	else
-		draw_pixels(md->screen, get_v2(ray->index, ray->wall_strip_pos.y), \
-			get_v2(1, md->win_sz.y), md->hud.floor_color);
+		draw_pixels(md->screen, v2(ray->index, ray->wall_strip_pos.y), \
+			v2(1, md->win_sz.y), md->hud.floor_color);
 }

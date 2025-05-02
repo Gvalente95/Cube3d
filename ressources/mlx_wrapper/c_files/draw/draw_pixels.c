@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/24 11:02:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	draw_safe_pxls(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 	alpha = 1.0f - ((float)((color >> 24) & 0xFF) / 255.0f);
 	if (alpha < 0.2f)
 		alpha = 0.2f;
-	end_coord = get_v2(pos.x + draw_size.x, pos.y + draw_size.y);
+	end_coord = v2(pos.x + draw_size.x, pos.y + draw_size.y);
 	draw_count = 0;
 	draw_pos = pos;
 	while (draw_pos.y < end_coord.y)
@@ -131,7 +131,7 @@ int	draw_safe_pxls(t_image *txtr, t_vec2 pos, t_vec2 draw_size, int color)
 		draw_pos.x = pos.x - 1;
 		while (++draw_pos.x < end_coord.x)
 			draw_count += draw_safe_pxl(txtr, draw_pos, \
-				get_v2(color, v4_to_color(0, 0, 0, 0)), alpha);
+				v2(color, v4_to_color(0, 0, 0, 0)), alpha);
 		draw_pos.y++;
 	}
 	return (draw_count);

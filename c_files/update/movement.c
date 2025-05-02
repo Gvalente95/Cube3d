@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/08 01:12:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	move_ent_to_target(t_md *md, t_ent *e, t_vec3f target_p)
 	if (cmp_vec3f(e->pos, target_p, 1))
 	{
 		e->pos = get_v3f((int)target_p.x, (int)target_p.y, (int)target_p.z);
-		new_cord = get_v2(e->pos.x / md->t_len, \
+		new_cord = v2(e->pos.x / md->t_len, \
 			e->pos.y / md->t_len);
 		e->target_pos.x = -999;
 		add_ent_at_cord(md, e, new_cord);

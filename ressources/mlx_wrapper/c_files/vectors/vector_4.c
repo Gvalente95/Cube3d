@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 00:07:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/29 12:39:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../mlx_utils.h"
 
-t_vec4	get_v4(int r, int g, int b, int a)
+t_vec4	v4(int r, int g, int b, int a)
 {
 	t_vec4	res;
 
@@ -23,7 +23,7 @@ t_vec4	get_v4(int r, int g, int b, int a)
 	return (res);
 }
 
-t_vec4	v4(int scale)
+t_vec4	_v4(int scale)
 {
 	return ((t_vec4){scale, scale, scale, scale});
 }

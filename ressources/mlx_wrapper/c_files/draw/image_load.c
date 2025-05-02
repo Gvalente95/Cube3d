@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:00:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 20:27:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*ld_txtr(t_md *md, t_vec2 *final_size, char *path, t_vec2 data)
 	if (!texture)
 		return (printf("\"%s\" can't make txtr\n", path), NULL);
 	if (final_size->x <= 0 || final_size->y <= 0)
-		*final_size = get_v2(txt_size.x, txt_size.y);
+		*final_size = v2(txt_size.x, txt_size.y);
 	else if (data.x)
 		texture = scale_img_keep_ratio(md, texture, &txt_size, *final_size);
 	else
@@ -104,7 +104,7 @@ void	copy_image_src(t_md *md, t_image *new_img, t_image *src_img)
 	int		dst_index;
 	t_vec2	pos;
 
-	pos = get_v2(-1, -1);
+	pos = v2(-1, -1);
 	while (++ pos.y < src_img->size.y)
 	{
 		pos.x = -1;

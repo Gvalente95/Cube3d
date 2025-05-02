@@ -6,25 +6,28 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:57:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 16:38:30 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 14:31:16 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	update_pokemon_frame(t_inventory *inv, t_ent *e)
+void	update_pk_frames(t_inventory *inv, t_ent *e)
 {
 	int	i;
 
-	i = -1;
-	while (inv->pokemon_team[++i])
+	if (inv->active)
 	{
-		if (inv->pokemon_team[i] != e)
-			continue ;
-		if (inv->hov_indexes[1] == i)
-			inv->update_img = 1;
-		else
-			return ;
+		i = -1;
+		while (inv->pokemon_team[++i])
+		{
+			if (inv->pokemon_team[i] != e)
+				continue ;
+			if (inv->hov_indexes[1] == i)
+				inv->update_img = 1;
+			else
+				return ;
+		}
 	}
 	e->frame_index++;
 	if (!e->frames[e->frame_index])
@@ -101,7 +104,7 @@ static int	update_ent(t_md *md, t_ent *e)
 	if (md->timer.trig_anim)
 	{
 		if (e->type == nt_pokemon)
-			update_pokemon_frame(&md->inv, e);
+			update_pk_frames(&md->inv, e);
 		else if (e->type == nt_mob)
 			update_ent_frame(e);
 	}

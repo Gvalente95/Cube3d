@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/24 11:57:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	draw_clr_img(t_image *src, t_image *dst, t_vec2 pos, t_vec3 data)
 	t_vec2	dst_pos;
 	t_vec2	pxl_i;
 
-	draw_pos = v2(-1);
+	draw_pos = _v2(-1);
 	while (++draw_pos.y < src->size.y)
 	{
 		dst_pos.y = pos.y + draw_pos.y;
@@ -118,13 +118,13 @@ void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
 
 void	draw_img_contour(t_md *md, t_image *src, t_vec2 pos, t_vec2 clr_thk)
 {
-	const t_vec2	new_size = add_vec2(src->size, v2(clr_thk.y * 2));
+	const t_vec2	new_size = add_vec2(src->size, _v2(clr_thk.y * 2));
 	t_image			*outline;
 	t_vec2			offset;
 
 	outline = copy_image(md, src, new_size, -1);
 	flush_img(outline, clr_thk.x, 10, 1);
-	offset = sub_vec2(pos, v2(clr_thk.y));
+	offset = sub_vec2(pos, _v2(clr_thk.y));
 	draw_img(outline, md->screen, offset, -1);
 	free_image_data(md, outline);
 	draw_img(src, md->screen, pos, -1);

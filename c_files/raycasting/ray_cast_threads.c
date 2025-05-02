@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 01:27:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	update_ray_data(t_md *md, t_ray *ray, t_vec3f dir_val)
 	ray->hit_data[0].hit = NULL;
 	ray->hits_len = 0;
 	init_base_ray(ray, ray->index, md->cam.pos, 0);
-	ray->wall_strip_pos = v2(md->hud.floor_start);
+	ray->wall_strip_pos = _v2(md->hud.floor_start);
 	ray->dir = get_v3f(dir_val.x, dir_val.y, 0);
 	ray->angle = dir_val.z;
 	ray->check_hit = NULL;
@@ -58,11 +58,11 @@ void	draw_strip(t_image *from, t_image *to, t_vec2 x, int stop_y)
 
 	if (x.x < 0)
 		x.x = x.y - 1;
-	pos = get_v2(x.x, 0);
+	pos = v2(x.x, 0);
 	while (++pos.y < stop_y)
 	{
 		clr = from->src[pos.y * from->size_line / 4 + x.x];
-		draw_pixel(to, get_v2(x.y, pos.y), clr, 1);
+		draw_pixel(to, v2(x.y, pos.y), clr, 1);
 	}
 }
 
@@ -77,7 +77,7 @@ int	cast_thread_ray(t_md *md, int x, int *last_valid)
 		return (0);
 	scrn = md->screen;
 	if (md->prm.ray_mod >= 2.0f && x % (int)floorf(md->prm.ray_mod) != 0)
-		return (draw_strip(scrn, scrn, get_v2(x - 1, x), md->win_sz.y), 0);
+		return (draw_strip(scrn, scrn, v2(x - 1, x), md->win_sz.y), 0);
 	ray->active = 1;
 	ray->index = x;
 	update_ray_data(md, ray, md->thrd_manager.dir_vals[ray->index]);

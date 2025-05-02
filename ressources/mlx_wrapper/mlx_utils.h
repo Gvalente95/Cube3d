@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/28 10:27:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 17:11:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,8 @@ typedef struct s_md
 {
 	void			*mlx;
 	void			*win;
+	char			plr_name[15];
+	int				plr_name_indx;
 	t_log			alert;
 	t_image			*screen;
 	t_vec2			win_sz;
@@ -254,12 +256,14 @@ typedef struct s_md
 	t_portal		portal;
 	t_mmap			mmap;
 	t_autocam		autocam;
+	t_battle_d		battle_d;
 	t_timer			timer;
 	t_fx_data		fx;
 	t_cube_drawd	cube_d;
 	t_mouse			mouse;
 	t_ray			rays[MAX_RAYS];
 	t_texture_data	txd;
+	t_vec2			input_to_char[34];
 	t_cam			cam;
 	t_parameters	prm;
 	t_thrd_manager	thrd_manager;
@@ -401,5 +405,6 @@ int		get_feet_offset(t_image *img);
 int		rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...);
 int		rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...);
 void	init_fonts(t_md *md);
+void	flush_gradient(t_image *src, int color_a, int color_b, float transp);
 
 #endif

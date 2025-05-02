@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:36:33 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:27:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	init_portal_data(t_md *md)
 	md->portal.ends[1].e = NULL;
 	md->portal.found = NULL;
 	md->portal.last_shot_index = 0;
-	md->portal.out_pos = v2(90);
+	md->portal.out_pos = _v2(90);
 }
 
 static void	init_game_params(t_md *md, t_parameters *prm, int start_debug)
@@ -86,7 +86,7 @@ static void	init_var(t_md *md)
 	md->cam.prv_door = NULL;
 	md->cam.pointed_ent = NULL;
 	md->cam.prv_pointed_ent = NULL;
-	md->cam.last_pointed_ent_pos = v2(-1);
+	md->cam.last_pointed_ent_pos = _v2(-1);
 	md->au.mus_pid = 0;
 	md->au.wind_pid = 0;
 	md->au.walk_index = 0;
@@ -105,9 +105,10 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	init_ents_data(md, &md->txd);
 	init_map(md, file_arg);
 	init_inventory(md, &md->inv);
+	init_battle_data(md, &md->battle_d);
 	md->init_steps++;
 	init_hud(md, &md->hud);
-	init_entities(md, get_v2(0, 0));
+	init_entities(md, v2(0, 0));
 	init_minimap(md, &md->mmap);
 	init_menu(md, &md->menu);
 	init_fes(md, &md->env, md->t_len);
@@ -116,6 +117,8 @@ int	init_cube(t_md *md, char *file_arg, int start_debug)
 	md->timer.game_start = get_time_in_seconds();
 	md->timer.elapsed_pause = md->timer.game_start;
 	md->init_steps++;
+	ft_strlcpy(md->plr_name, "Evaluator", 15);
+	md->plr_name_indx = 9;
 	show_init_information(md);
 	return (0);
 }

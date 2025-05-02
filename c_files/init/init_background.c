@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 02:19:07 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/24 11:21:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:56 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	init_clouds(t_image *sky, t_vec2 win_sz)
 	i = -1;
 	while (++i < 50)
 	{
-		r_pos = get_v2(r_range(30, win_sz.x * .7), r_range(30, win_sz.y * .6));
+		r_pos = v2(r_range(30, win_sz.x * .7), r_range(30, win_sz.y * .6));
 		draw_sphere(sky, r_pos, \
-get_v2(win_sz.x / 3, win_sz.y / 6), get_v3(base_color, 2, 1));
+v2(win_sz.x / 3, win_sz.y / 6), v3(base_color, 2, 1));
 	}
 }
 
@@ -38,12 +38,12 @@ static void	init_nebulas(t_image *sky, t_vec2 win_sz)
 	i = -1;
 	while (++i < 50)
 	{
-		r_pos = get_v2(r_range(0, win_sz.x * .7), r_range(0, win_sz.y * .6));
-		rgb = get_v4(r_range(120, 120), r_range(0, 100), \
+		r_pos = v2(r_range(0, win_sz.x * .7), r_range(0, win_sz.y * .6));
+		rgb = v4(r_range(120, 120), r_range(0, 100), \
 			r_range(150, 255), 255);
 		base_color = v4_to_color(rgb.r, rgb.g, rgb.b, rgb.a);
 		draw_sphere(sky, r_pos, \
-v2(r_range(win_sz.x * .2, win_sz.x * .3)), get_v3(base_color, 2, 1));
+_v2(r_range(win_sz.x * .2, win_sz.x * .3)), v3(base_color, 2, 1));
 	}
 }
 
@@ -93,23 +93,23 @@ static void	init_sky(t_md *md, t_hud *hud, t_vec2 win_sz)
 		base_color = v4_to_color(r_range(150, 254), \
 			r_range(50, 120), r_range(150, 254), 20);
 		rad = r_range(3, 10);
-		r_pos = get_v2(r_range(10, win_sz.x - 10), r_range(0, win_sz.y));
-		draw_sphere(md->hud.sky, r_pos, v2(rad), \
-			get_v3(base_color, r_range(0, 2), 1));
-		draw_pixel(md->hud.sky, get_v2(r_pos.x + rad / 2, r_pos.y + rad / 2), \
+		r_pos = v2(r_range(10, win_sz.x - 10), r_range(0, win_sz.y));
+		draw_sphere(md->hud.sky, r_pos, _v2(rad), \
+			v3(base_color, r_range(0, 2), 1));
+		draw_pixel(md->hud.sky, v2(r_pos.x + rad / 2, r_pos.y + rad / 2), \
 			_WHITE, f_range(0.3, 1));
 	}
-	hud->sky_flipy = copy_image(md, hud->sky, v2(-1), -1);
-	hud->sky_buffer = copy_image(md, hud->sky, v2(-1), -1);
+	hud->sky_flipy = copy_image(md, hud->sky, _v2(-1), -1);
+	hud->sky_buffer = copy_image(md, hud->sky, _v2(-1), -1);
 	flipy_image_data(hud->sky_flipy);
 }
 
 void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz)
 {
-	hud->ceiling = init_img(md, v2(md->t_len), "utils/ceiling.xpm", -1);
-	hud->floor = init_img(md, v2(md->t_len), "utils/floor.xpm", -1);
-	hud->wall = init_img(md, v2(md->t_len), "utils/wall.xpm", -1);
-	hud->floor2d = copy_image(md, hud->wall, v2(md->txd.size_2d), -1);
+	hud->ceiling = init_img(md, _v2(md->t_len), "utils/ceiling.xpm", -1);
+	hud->floor = init_img(md, _v2(md->t_len), "utils/floor.xpm", -1);
+	hud->wall = init_img(md, _v2(md->t_len), "utils/wall.xpm", -1);
+	hud->floor2d = copy_image(md, hud->wall, _v2(md->txd.size_2d), -1);
 	flush_img(hud->floor, hud->floor_color, 0.5, 0);
 	init_sky(md, hud, win_sz);
 	md->hud.fog_color = md->hud.sky_color;

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:50:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 14:06:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	draw_locks_icons(t_md *md, t_hud *hud, t_vec2 winsz)
 {
 	t_vec2	lock_pos;
 
-	lock_pos = get_v2(winsz.x - hud->lock_x_icon->size.x, \
+	lock_pos = v2(winsz.x - hud->lock_x_icon->size.x, \
 		winsz.y - hud->lock_y_icon->size.y);
 	if (md->mouse.lock_rot.x)
 		draw_img(hud->lock_x_icon, md->screen, lock_pos, -1);
@@ -48,15 +48,15 @@ void	draw_game_info(t_md *md, t_hud *hud, t_vec2 winsz)
 	if (md->mouse.lock_rot.x || md->mouse.lock_rot.y)
 		draw_locks_icons(md, hud, winsz);
 	txt_space = md->prm.txt_sc * 1.5;
-	start_pos = get_v2(winsz.x - txt_space * 5, winsz.y - txt_space);
+	start_pos = v2(winsz.x - txt_space * 5, winsz.y - txt_space);
 	i = 0;
 	while (i < hud->ammo && md->hud.ammo > md->hud.wpn_index)
 	{
 		draw_img(md->hud.amm2_icon, md->screen, \
-			get_v2(start_pos.x, start_pos.y - i * 2), -1);
+			v2(start_pos.x, start_pos.y - i * 2), -1);
 		i += 5;
 	}
-	start_pos = get_v2(winsz.x - txt_space * 10, winsz.y - txt_space);
+	start_pos = v2(winsz.x - txt_space * 10, winsz.y - txt_space);
 	draw_info(md, &start_pos, md->hud.key_icon, md->hud.keys);
 	draw_info(md, &start_pos, md->hud.key_icon, md->hud.hp);
 	if (md->hud.ammo < md->hud.wpn_index)
@@ -83,7 +83,7 @@ void	draw_hud_weapon(t_md *md, t_hud *hud, t_vec2 winsz)
 	if (!td->wpn_txtr[hud->wpn_index][hud->weapon_frame])
 		hud->weapon_frame = 0;
 	gun_image = td->wpn_txtr[hud->wpn_index][hud->weapon_frame];
-	center_gun = get_v2(winsz.x / 2 - gun_image->size.x / 2 + 30, \
+	center_gun = v2(winsz.x / 2 - gun_image->size.x / 2 + 30, \
 		winsz.y - gun_image->size.y);
 	draw_img(gun_image, md->screen, center_gun, -1);
 }
@@ -93,7 +93,7 @@ void	render_hud_elements(t_md *md, t_hud *hud)
 	t_image	*img;
 	t_vec2	cross_pos;
 
-	if (!md->inv.active && md->inv.held_index == -1)
+	if (!md->inv.active && md->inv.held_i == -1)
 	{
 		img = hud->center;
 		if (md->cam.prv_pointed_ent || md->cam.pointed_door)

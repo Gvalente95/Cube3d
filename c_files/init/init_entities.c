@@ -6,32 +6,52 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 17:24:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
+static void	init_ent_pkteam(t_md *md, t_ent *e, int team_size)
+{
+	int	i;
+
+	e->pk_team = md_malloc(md, sizeof(t_ent *) * (team_size + 1));
+	i = -1;
+	while (++i < team_size)
+	{
+		e->pk_team[i] = init_ent(md, 'K', _v2(-1), -1);
+		printf("%s > %s[%d]\n", e->label, e->pk_team[i]->label, i);
+	}
+	e->pk_team[i] = NULL;
+	e->team_sz = team_size;
+}
+
 static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type)
 {
 	if (type == nt_wall)
 	{
-		e->crp_pxl = get_v2(\
+		e->crp_pxl = v2(\
 			r_range(0, md->win_sz.x), \
 			r_range(0, md->win_sz.y));
 		e->frames = malloc(sizeof(t_image) * 5);
-		e->frames[0] = copy_image(md, md->txd.wall_img[0], get_v2(-1, -1), -1);
-		e->frames[1] = copy_image(md, md->txd.wall_img[1], get_v2(-1, -1), -1);
-		e->frames[2] = copy_image(md, md->txd.wall_img[2], get_v2(-1, -1), -1);
-		e->frames[3] = copy_image(md, md->txd.wall_img[3], get_v2(-1, -1), -1);
+		e->frames[0] = copy_image(md, md->txd.wall_img[0], v2(-1, -1), -1);
+		e->frames[1] = copy_image(md, md->txd.wall_img[1], v2(-1, -1), -1);
+		e->frames[2] = copy_image(md, md->txd.wall_img[2], v2(-1, -1), -1);
+		e->frames[3] = copy_image(md, md->txd.wall_img[3], v2(-1, -1), -1);
 		e->frames[4] = NULL;
 	}
 	else
 		e->dir = get_v3f(r_range(-1, 1), r_range(-1, 1), r_range(-1, 1));
 	if (e->type == nt_mob)
-		e->hp = ((int)(e->mob_type + 1) * 2);
-	if (e->type == nt_pickup)
+		init_ent_pkteam(md, e, r_range(1, 5));
+	if (e->type == nt_item)
 		e->pos.z += md->t_len;
+	if (e->type == nt_pokemon)
+	{
+		e->max_hp = r_range(70, 140);
+		e->hp = e->max_hp;
+	}
 	e->caught = 0;
 }
 
@@ -50,13 +70,12 @@ static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 	e->pos.z = 0;
 	e->target_pos = e->pos;
 	e->start_pos = e->pos;
-	e->coord = get_v3(e->pos.x / md->t_len, e->pos.y / md->t_len, 0);
+	e->coord = v3(e->pos.x / md->t_len, e->pos.y / md->t_len, 0);
 	e->mov = get_v3f(0, 0, 0);
 	e->dir = get_v3f(0, 0, 0);
 	e->shot = 0;
 	e->was_hit = 0;
 	e->shot_timer = 0;
-	e->can_shoot = 1;
 	e->hp = 5;
 	e->is_active = 1;
 	e->in_screen = 0;
@@ -82,7 +101,7 @@ static void	init_player(t_md *md, char c, t_vec2 pos, int map_index)
 		md->cam.rot.x = 180;
 	md->cam.x_dir_start = md->cam.rot.x;
 	e->angle = md->cam.rot.x * (M_PI / 180.0f);
-	e->size = get_v2(md->t_len / 2, md->t_len / 2);
+	e->size = v2(md->t_len / 2, md->t_len / 2);
 	e->pos.z = 0;
 	e->pos.x += md->t_len / 2;
 	e->start_pos.x = e->pos.x;
@@ -94,15 +113,15 @@ t_ent	*init_ent(t_md *md, char c, t_vec2 pos, int map_index)
 {
 	t_ent	*e;
 
-	(void)map_index;
 	e = malloc(sizeof(t_ent));
 	set_ent_values(md, e, c, pos);
 	e->cam_distance = 99999;
 	e->map_index = map_index;
-	e->screen_p = v2(-1);
-	e->screen_sz = v2(-1);
+	e->screen_p = _v2(-1);
+	e->screen_sz = _v2(-1);
 	set_type_specifics(md, e, e->type);
-	add_ent_at_cord(md, e, pos);
+	if (pos.x > -1 && pos.y > -1)
+		add_ent_at_cord(md, e, pos);
 	return (e);
 }
 
@@ -114,7 +133,7 @@ void	init_entities(t_md *md, t_vec2 pos)
 
 	init_mapped_ent(md);
 	ents = NULL;
-	pos = get_v2(0, 0);
+	pos = v2(0, 0);
 	i = -1;
 	while (md->map.buffer[++i])
 	{

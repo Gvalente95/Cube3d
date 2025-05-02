@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/26 16:49:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	inisld(t_md *md, char *label, t_vec4f data, float *value)
 	t_vec3f		slider_limits;
 
 	sld = &md->menu.sliders[md->menu.slider_index];
-	sld->size = get_v2(md->win_sz.x / 6, 20);
+	sld->size = v2(md->win_sz.x / 6, 20);
 	sld->index = md->menu.slider_index;
 	sld->steps = (int)data.a;
 	slider_limits = get_v3f(data.r, data.g, data.b);

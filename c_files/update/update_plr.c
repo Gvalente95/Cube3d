@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:43:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 12:23:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	update_player_action(t_md *md, t_ent *plr)
 	is_moving = !cmp_vec3f(md->plr.mov, v3f(0), EPSILON);
 	if (is_moving)
 	{
-		set_collisions(md, plr, get_v2(plr->size.x, plr->size.y));
+		set_collisions(md, plr, v2(plr->size.x, plr->size.y));
 		md->plr.action = m_walk;
 		if (!plr->mov.x)
 			md->cam.plr_wrd_mv.x = 0;
@@ -69,15 +69,6 @@ static void	update_player_action(t_md *md, t_ent *plr)
 		md->plr.frame_index = 0;
 }
 
-static void	update_player_weapon(t_md *md, t_ent *plr)
-{
-	if (md->prm.ent_mode && md->timer.trig_anim && md->hud.weapon_frame >= 1)
-		md->hud.weapon_frame++;
-	if (!plr->can_shoot && \
-		md->timer.cur_tm > plr->shot_timer && !plr->shot)
-		plr->can_shoot = 1;
-}
-
 int	update_player(t_md *md, t_ent *plr)
 {
 	t_vec2	plr_map;
@@ -91,7 +82,6 @@ int	update_player(t_md *md, t_ent *plr)
 	else if (md->out_map[map_i] != 'D')
 		md->plr_in_house = char_in_str(md->out_map[map_i], "I");
 	md->cam.plr_map_i = map_i;
-	update_player_weapon(md, plr);
 	if (!md->inv.active)
 		update_player_rot(md);
 	update_player_mov(md, plr);

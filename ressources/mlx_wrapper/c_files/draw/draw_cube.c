@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 00:03:18 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 14:02:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	init_cube_draw_data(t_cube_drawd *d, t_vec3 pos, \
 	{
 		d->cube_pts[ij.x] = tmp_pts[ij.x];
 		d->projected[ij.x] = project(rotate_vec3f(d->cube_pts[ij.x], d->angle), \
-		get_v2(pos.x, pos.y));
+		v2(pos.x, pos.y));
 	}
 	d->color = pos.z;
 	d->cnt = c;

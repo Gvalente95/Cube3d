@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:31:53 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/21 17:06:21 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ t_image	*init_abs_img(t_md *md, t_vec2 img_size, char *path)
 	img_data = malloc(sizeof(t_image));
 	if (!img_data)
 		return (printf("ERR: alloc for img_data\n"), NULL);
-	img_data->img = ld_txtr(md, &img_size, path, get_v2(0, 0));
+	img_data->img = ld_txtr(md, &img_size, path, v2(0, 0));
 	if (!img_data->img)
 		return (printf("ERR: Failed to set image\n"), img_data);
-	img_data->size = get_v2(img_size.x, img_size.y);
+	img_data->size = v2(img_size.x, img_size.y);
 	img_data->addr = mlx_get_data_addr(img_data->img, &img_data->bpp, \
 		&img_data->size_line, &img_data->endian);
 	if (!img_data->addr)
@@ -32,7 +32,7 @@ t_image	*init_abs_img(t_md *md, t_vec2 img_size, char *path)
 	img_data->src = (int *)img_data->addr;
 	if (!img_data->src)
 		return (printf("ERR: Failed to get src data\n"), img_data);
-	img_data->pos = get_v2(0, 0);
+	img_data->pos = v2(0, 0);
 	ft_strlcpy(img_data->path, path, 20);
 	return (img_data);
 }
@@ -43,12 +43,12 @@ t_image	*init_img(t_md *md, t_vec2 img_size, char *path, int color)
 
 	img_data = md_malloc(md, sizeof(t_image));
 	if (path)
-		img_data->img = ld_txtr(md, &img_size, path, get_v2(0, 1));
+		img_data->img = ld_txtr(md, &img_size, path, v2(0, 1));
 	else
 		img_data->img = mlx_new_image(md->mlx, img_size.x, img_size.y);
 	if (!img_data->img)
 		return (printf("ERR: Failed to set image\n"), img_data);
-	img_data->size = get_v2(img_size.x, img_size.y);
+	img_data->size = v2(img_size.x, img_size.y);
 	img_data->addr = mlx_get_data_addr(img_data->img, &img_data->bpp, \
 		&img_data->size_line, &img_data->endian);
 	if (!img_data->addr)
@@ -62,7 +62,7 @@ t_image	*init_img(t_md *md, t_vec2 img_size, char *path, int color)
 		ft_strlcpy(img_data->path, path, 20);
 	else
 		ft_strlcpy(img_data->path, "mlx_image", 20);
-	return (img_data->pos = get_v2(0, 0), img_data);
+	return (img_data->pos = v2(0, 0), img_data);
 }
 
 t_image	**init_images(t_md *md, t_vec2 size, char *path)
@@ -122,7 +122,7 @@ void	render_cursor(t_md *md, t_image *screen, int has_hov)
 	t_vec2	pos;
 	t_image	*img;
 
-	pos = get_v2(md->mouse.real.x, md->mouse.real.y);
+	pos = v2(md->mouse.real.x, md->mouse.real.y);
 	if (md->mouse.pressed == MOUSE_PRESS && has_hov)
 		img = md->mouse.curs_grb;
 	else if (has_hov)

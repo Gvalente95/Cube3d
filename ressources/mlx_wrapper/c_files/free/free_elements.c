@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 04:32:24 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 17:29:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/29 19:27:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	free_txd(t_md *md, t_texture_data *txd)
 	fa += free_image_data(md, txd->door_txtr_mini);
 	fa += free_images_data(md, txd->wall_img, "wall_img");
 	fa += free_images_data(md, txd->wall_img2d, "wall_img2d");
-	fa += free_images_array(md, txd->pickup_txtr, "pickup tex");
-	fa += free_images_array(md, txd->pickup_txtr_mini, "minipick tex");
+	fa += free_images_array(md, txd->item_txtr, "item tex");
+	fa += free_images_array(md, txd->item_txtr_mini, "minipick tex");
 	fa += free_images_array(md, txd->wpn_txtr, "wpn tex");
 	fa += free_images_array(md, txd->wpn_txtr_2d, "wpn2d tex");
 	fa += free_images_array(md, txd->pkmn, "pokemon tex");

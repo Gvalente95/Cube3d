@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 23:44:12 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/24 13:57:05 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 
 	if (!a || !b)
 		return (0);
-	if (btp == nt_pickup)
+	if (btp == nt_item)
 		return (0);
 	if (btp == nt_empty)
 		return (0);
@@ -72,7 +72,7 @@ static int	validate_collision(t_md *md, t_ent *a, t_ent *b, t_vec2 a_size)
 		return (0);
 	if (!md->prm.ent_mode && !is_w)
 		return (0);
-	if (btp == nt_pickup && is_collision(a, b, v2(md->t_len * 2)))
+	if (btp == nt_item && is_collision(a, b, _v2(md->t_len * 2)))
 		handle_soft_collisions(md, b);
 	if (!is_w)
 		return (0);
@@ -100,7 +100,7 @@ int	set_collisions(t_md *md, t_ent *e, t_vec2 e_size)
 	i = -1;
 	while (++i < 9)
 	{
-		cord = get_v2(e->coord.x + neighbors[i].x, e->coord.y + neighbors[i].y);
+		cord = v2(e->coord.x + neighbors[i].x, e->coord.y + neighbors[i].y);
 		col = get_mapped_at_cord(md, cord);
 		if (col && validate_collision(md, e, col, e_size))
 			col_amount += solve_collision(e, col, e_size);

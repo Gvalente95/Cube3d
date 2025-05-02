@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 16:52:38 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/04 10:24:37 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	draw_rot_z(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 			draw_d.y = pos.y + sc_pos.y - (src_sz.y / 2);
 			draw_d.y += (int)((d_pos.x - src_sz.x / 2) * \
 				cosf(pos.x * (M_PI / 180.0f)) * 0.5f);
-			draw_pixel(onto, get_v2(draw_d.x, draw_d.y), draw_d.z, -1);
+			draw_pixel(onto, v2(draw_d.x, draw_d.y), draw_d.z, -1);
 		}
 	}
 }
@@ -63,7 +63,7 @@ void	draw_rot_y(t_md *md, t_image *from, t_image *onto, t_vec3f pos)
 			sc_pos.x = d_pos.x;
 			draw_d.x = pos.x + sc_pos.x - (src_sz.x / 2);
 			draw_d.y = pos.y + sc_pos.y - (src_sz.y * scale.y / 2);
-			draw_pixel(onto, get_v2(draw_d.x, draw_d.y), draw_d.z, -1);
+			draw_pixel(onto, v2(draw_d.x, draw_d.y), draw_d.z, -1);
 		}
 	}
 }
@@ -91,7 +91,35 @@ void	draw_rot_yz(t_md *md, t_image *from, t_image *onto, t_vec4f pos)
 			sc_pos.x = (int)((float)d_pos.x * scale.x);
 			draw_d.x = pos.r + sc_pos.x - (src_sz.x * scale.x / 2);
 			draw_d.y = pos.g + sc_pos.y - (src_sz.y * scale.y / 2);
-			draw_pixel(onto, get_v2(draw_d.x, draw_d.y), draw_d.z, -1);
+			draw_pixel(onto, v2(draw_d.x, draw_d.y), draw_d.z, -1);
+		}
+	}
+}
+
+void	flush_gradient(t_image *src, int color_a, int color_b, float transp)
+{
+	const t_vec2	sz = src->size;
+	int				grad_color;
+	int				*p_src;
+	t_vec2			p;
+	float			t;
+
+	p_src = src->src;
+	if (transp > 0)
+		transp = 1 - transp;
+	p.y = -1;
+	while (++p.y < sz.y)
+	{
+		p.x = -1;
+		while (++p.x < sz.x)
+		{
+			t = (float)p.x / (float)(sz.x - 1);
+			grad_color = blend_color(color_a, color_b, t);
+			if (transp >= 0 && grad_color != _NULL)
+				*p_src = blend_color(*p_src, grad_color, transp);
+			else
+				*p_src = grad_color;
+			p_src++;
 		}
 	}
 }

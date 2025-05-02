@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 06:30:21 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:33:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	display_letter(t_md *md, char c, t_txtd data)
 	path = get_img_path(c);
 	if (!path)
 		return (printf("font not found: %c\n", c), 0);
-	l = init_img(md, v2(data.scale), path, -1);
+	l = init_img(md, _v2(data.scale), path, -1);
 	if (!l || !l->img)
 		return (printf("Error\nImg letter not found %s", path), data.scale);
 	if (data.color != -1)
@@ -51,7 +51,7 @@ int	display_letter(t_md *md, char c, t_txtd data)
 	free(path);
 	if (l->img)
 	{
-		draw_img(l, data.onto, get_v2(data.x, data.y), -1);
+		draw_img(l, data.onto, v2(data.x, data.y), -1);
 		free_image_data(md, l);
 	}
 	return (data.scale);
@@ -110,6 +110,8 @@ int	rnd_txt_simple(t_md *md, t_vec2 pos, const char *format, ...)
 	int		txt_width;
 	t_txtd	data;
 
+	if (!format[0])
+		return (0);
 	va_start(args, format);
 	vsnprintf(buff, sizeof(buff), format, args);
 	va_end(args);

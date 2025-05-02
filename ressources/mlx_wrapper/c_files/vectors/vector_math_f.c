@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:55:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/11 12:10:46 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ t_vec2	project(t_vec3f p, t_vec2 origin)
 	if (p.z > -1.0f)
 		p.z = -1.0f;
 	scale = fov / (fov - p.z);
-	return (get_v2(origin.x + p.x * scale, origin.y + p.y * scale));
+	return (v2(origin.x + p.x * scale, origin.y + p.y * scale));
 }

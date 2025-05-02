@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:52:06 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 23:11:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	apply_bloom(t_image *img, float intensity)
 	unsigned int	blrx[2];
 	unsigned char	rgba[4];
 
-	pos = get_v3(0, -1, 150 - (int)(intensity * 100.0f));
+	pos = v3(0, -1, 150 - (int)(intensity * 100.0f));
 	while (++pos.y < img->size.y - 1)
 	{
 		pos.x = -1;
@@ -108,7 +108,7 @@ void	apply_vignette(t_image *img, float intensity, int color)
 
 	max_distance = sqrt(pow(img->size.x / 2.0f, 2) + \
 		pow(img->size.y / 2.0f, 2));
-	pos = get_v2(-1, -1);
+	pos = v2(-1, -1);
 	while (++pos.y < img->size.y)
 	{
 		pos.x = -1;

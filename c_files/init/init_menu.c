@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:18:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,21 @@ void	init_menu_overlay(t_md *md, t_menu *menu)
 
 void	set_clr_pck(t_md *md, t_clrp *clrP, int *value, const char *lbl)
 {
-	const t_vec2	size = v2(md->var);
+	const t_vec2	size = _v2(md->var);
 
 	clrP->label = lbl;
 	clrP->color = value;
 	clrP->img = init_img(md, size, "utils/clr_w_full.xpm", -1);
 	clrP->size = size;
-	clrP->pos = v2(0);
-	clrP->mouse_touch = v2(-1);
+	clrP->pos = _v2(0);
+	clrP->mouse_touch = _v2(-1);
 	clrP->base_color = *value;
 	clrP->picker_value = color_to_v4(*value);
 }
 
 void	set_color_pickers(t_md *md, t_menu *menu)
 {
-	const t_vec2	size = v2(75);
+	const t_vec2	size = _v2(75);
 	const t_vec2	winsz = md->win_sz;
 	const t_vec2	base_p = (t_vec2){winsz.x - size.x * 4, winsz.y * .05};
 	const int		spc = 10;
@@ -85,7 +85,7 @@ void	init_menu(t_md *md, t_menu *menu)
 	init_menu_overlay(md, menu);
 	init_menu_elements(md, menu);
 	set_menu_pos(md, menu, \
-			get_v3(50, 50, 1), get_v3(100, 50, 10));
+			v3(50, 50, 1), v3(100, 50, 10));
 	set_color_pickers(md, menu);
 	menu->refresh_ui = 0;
 	menu->refresh_bg = 0;

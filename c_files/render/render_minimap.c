@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:59:55 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 01:26:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ void	render_minimap_ray(t_md *md)
 		ray_start.y = (ray->start.y / md->t_len) * mp->ic_scl;
 		ray_end.x = (ray->pos.x / md->t_len) * mp->ic_scl;
 		ray_end.y = (ray->pos.y / md->t_len) * mp->ic_scl;
-		draw_line(mp->img, ray_start, ray_end, get_v2(_GREEN, 1));
+		draw_line(mp->img, ray_start, ray_end, v2(_GREEN, 1));
 	}
 	ray = &md->rays[md->win_sz.x / 2];
 	ray_start.x = (ray->start.x / md->t_len) * mp->ic_scl;
 	ray_start.y = (ray->start.y / md->t_len) * mp->ic_scl;
 	ray_end.x = (ray->pos.x / md->t_len) * mp->ic_scl;
 	ray_end.y = (ray->pos.y / md->t_len) * mp->ic_scl;
-	draw_line(mp->img, ray_start, ray_end, get_v2(_BLUE, 1));
+	draw_line(mp->img, ray_start, ray_end, v2(_BLUE, 1));
 }
 
 void	show_if_interior(t_md *md, t_ent *e, t_vec2 draw_p, int scale)
@@ -91,9 +91,9 @@ void	show_minimap_entity(t_md *md, t_ent *e, t_image *screen, int no_redraw)
 		draw_clr = md->rgb[RGB_BLUE + md->plr_in_house];
 	}
 	if (e->type == nt_empty)
-		pos = sub_vec2(pos, v2(1));
-	draw_pixels(screen, sub_vec2(pos, v2(1)), v2(icsz + 1), _BLACK);
-	draw_pixels(screen, pos, v2(icsz - 1), draw_clr);
+		pos = sub_vec2(pos, _v2(1));
+	draw_pixels(screen, sub_vec2(pos, _v2(1)), _v2(icsz + 1), _BLACK);
+	draw_pixels(screen, pos, _v2(icsz - 1), draw_clr);
 	if (!e->revealed && e->type != nt_plr)
 		md->mmap.revealed_cur++;
 	e->revealed = 1;
@@ -115,17 +115,17 @@ void	render_minimap(t_md *md, t_mmap *mp)
 	if (mp->cmps)
 	{
 		width = mp->comps_scl * (8 + 6);
-		cntr = get_v2(md->win_sz.x - width, md->win_sz.y - width);
+		cntr = v2(md->win_sz.x - width, md->win_sz.y - width);
 		show_cmps_mmap(md, cntr, 8);
 		return ;
 	}
 	flush_img(mp->img, _RED, 1, 0);
 	remove_img_color(mp->img, _RED);
-	draw_alpha_img(mp->bg, mp->img, v2(0), 1);
+	draw_alpha_img(mp->bg, mp->img, _v2(0), 1);
 	render_minimap_ray(md);
 	show_minimap_entity(md, &md->plr, mp->img, 0);
-	cntr = get_v2(md->win_sz.x - mp->img->size.x, \
+	cntr = v2(md->win_sz.x - mp->img->size.x, \
 		0);
 	draw_alpha_img(mp->img, md->screen, cntr, 0.5);
-	show_revl_done(md, get_v2(cntr.x, mp->img->size.y - md->prm.txt_sc));
+	show_revl_done(md, v2(cntr.x, mp->img->size.y - md->prm.txt_sc));
 }

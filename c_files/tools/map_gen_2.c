@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 05:17:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 15:52:34 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/04/29 19:27:08 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	set_doors(char *map, int doors_amount)
 void	set_characters(char *map, int difficulty)
 {
 	int	mobs_amount;
-	int	pickup_amount;
+	int	item_amount;
 	int	door_amount;
 	int	space;
 	int	len;
@@ -74,8 +74,8 @@ void	set_characters(char *map, int difficulty)
 	space = get_char_amount(map, '0');
 	mobs_amount = minmax(1, 30, space / 10);
 	space = get_char_amount(map, '0');
-	pickup_amount = minmax(1, 30, space / 10);
-	set_character('P', pickup_amount, map, len);
+	item_amount = minmax(1, 30, space / 10);
+	set_character('P', item_amount, map, len);
 	set_character('K', mobs_amount / 3, map, len);
 	set_character('M', mobs_amount / 3, map, len);
 	door_amount = len / 20;

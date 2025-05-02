@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:30:54 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 16:51:56 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 10:48:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,11 @@ typedef struct s_inventory
 	int		sel_i;
 	int		opt_i;
 	int		line_height;
-	int		held_index;
+	int		held_i;
 	int		held_used;
 	int		held_set;
 	int		page;
-	double	pokeball_timer;
+	double	held_used_start;
 	int		team_size;
 	t_ent	*pokemon_team[6];
 	t_image	*held_screen_img;
@@ -152,6 +152,35 @@ typedef struct s_menu
 	int				button_hov;
 	int				active;
 }	t_menu;
+
+typedef struct s_battle_d
+{
+	t_image			*overlay;
+	t_ent			*pk[2];
+	t_vec2			pk_p[2];
+	t_vec2			pk_basep[2];
+	t_vec2			pk_sz;
+	t_vec2			but_sz;
+	t_vec2			hp_pos[2];
+	char			log_message[60];
+	t_ent			*trainer;
+	int				trans_lvl;
+	t_image			*buttons[4];
+	t_vec2			pk_slotsz;
+	t_vec2			but_ps[4];
+	int				but_i;
+	int				sub_i;
+	int				opt_i;
+	int				in_sub;
+	double			action_end;
+	double			action_dur;
+	double			trans_dur;
+	double			trans_start;
+	int				my_turn;
+	int				active;
+	int				quitting;
+	int				stored_dealt[2];
+}	t_battle_d;
 
 typedef struct s_auto_screen_data
 {

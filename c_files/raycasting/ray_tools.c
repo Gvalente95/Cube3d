@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 02:01:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/24 20:20:15 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	draw_blood(t_md *md, t_image *img, t_vec2 pos, int color)
 
 	(void)md;
 	radius = (img->size.x / 6);
-	sphere_data = get_v3(color, 10, 0);
-	draw_sphere(img, pos, v2(radius), sphere_data);
+	sphere_data = v3(color, 10, 0);
+	draw_sphere(img, pos, _v2(radius), sphere_data);
 }
 
 t_vec2	get_2d_ray_pos(t_md *md)
@@ -33,7 +33,7 @@ t_vec2	get_2d_ray_pos(t_md *md)
 	cam_2d_ofs.y = md->win_sz.y / 2 - md->txd.size_2d * 2;
 	center_ofs.x = (md->cam.ofst.x / md->t_len * md->txd.size_2d);
 	center_ofs.y = ((md->cam.ofst.y / md->t_len) * md->txd.size_2d);
-	centr = get_v2(cam_2d_ofs.x - center_ofs.x, cam_2d_ofs.y - center_ofs.y);
+	centr = v2(cam_2d_ofs.x - center_ofs.x, cam_2d_ofs.y - center_ofs.y);
 	return (centr);
 }
 
@@ -45,7 +45,7 @@ int	render_ray(t_md *md, t_ray *ray, t_vec2 visu_offset)
 		return (0);
 	_2d_pos.x = visu_offset.x + (ray->pos.x / md->t_len) * md->txd.size_2d;
 	_2d_pos.y = visu_offset.y + (ray->pos.y / md->t_len) * md->txd.size_2d;
-	if (!is_in_screen(md, v2_to_v3(_2d_pos), get_v2(1, 1)))
+	if (!is_in_screen(md, v2_to_v3(_2d_pos), v2(1, 1)))
 		return (0);
 	draw_pixel(md->screen, _2d_pos, ray->color, .3);
 	return (1);
@@ -64,11 +64,11 @@ void	init_base_ray(t_ray *ray, int index, t_vec3f start_pos, float distance)
 	ray->delta = v2f(0);
 	ray->side_dist = v2f(0);
 	ray->pos = start_pos;
-	ray->step = v2(0);
+	ray->step = _v2(0);
 	ray->dda_dist = 0;
 	ray->distance = distance;
 	ray->vertical_hit = 0;
-	ray->wall_strip_pos = v2(-1);
+	ray->wall_strip_pos = _v2(-1);
 	ray->teleported_once = 0;
 }
 

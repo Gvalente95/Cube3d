@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 16:06:59 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:26:01 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 //# include <X11/X.h>
 
 # define IMG_PATH		"ressources/xpm/"
-# define RESOLUTION		20
+# define RESOLUTION		10
 //		SCREEN
 # define SCRN_W			1400
 # define SCRN_H			800
@@ -32,7 +32,7 @@
 # define HEIGHT			0
 # define BOB_AMOUNT		.2
 # define BOB_SPD		7
-# define GRAVITY		.04
+# define GRAVITY		.02
 # define ARROW_ROT_SPEED 2
 # define MOUSESPD		.5
 # define START_HP		10
@@ -91,7 +91,7 @@ void	init_labels(t_texture_data *txd);
 
 //	init/init_frames.c
 void	init_weapon_frames(t_md *md, t_texture_data *td);
-void	init_pickup_frames(t_md *md, t_texture_data *td);
+void	init_item_frames(t_md *md, t_texture_data *td);
 void	store_entities_sizes(t_texture_data *td, int base);
 void	init_ents_data(t_md *md, t_texture_data *txd);
 
@@ -224,7 +224,6 @@ int		is_collision(t_ent *a, t_ent *b, t_vec2 a_size);
 int		set_collisions(t_md *md, t_ent *e, t_vec2 e_size);
 
 //	update/update_projectile.c
-void	plr_shoot(t_md *md);
 
 //	update/update_plr_movement.c
 int		move_player(t_md *md, t_ent *e);
@@ -307,7 +306,7 @@ void	update_menu_element_end(t_menu *menu, int *hov, int cur_hov);
 void	center_menu_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name);
 int		render_sky(t_md *md);
 void	cap_fps(t_timer *tm, double frame_duration);
-void	init_pokemon_frames(t_md *md, t_texture_data *txd);
+void	init_pk_framess(t_md *md, t_texture_data *txd);
 void	show_pointed_data(t_md *md, t_vec2 p, t_ent *e);
 
 //		INVENTORY
@@ -345,9 +344,36 @@ void	add_alert(t_md *md, double duration, int *out_cond, const char *alert);
 void	render_held_item(t_md *md, t_inventory *inv, int hand_index);
 int		contains_valid_character(char *line, const char *valid_characters);
 void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e);
-void	update_pointed_ent(t_md *md, t_ent *sel);
+void	update_pointed_ent(t_md *md);
 void	inisld(t_md *md, char *label, t_vec4f data, float *value);
-void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz);
+void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz, double elapsed, double dur);
 int		update_inv_selection(t_md *md, t_inventory *inv);
+
+//		battle_data
+void	init_battle_data(t_md *md, t_battle_d *bd);
+void	start_battle(t_md *md, t_battle_d *bd, t_ent *foe, t_ent *foe_pk);
+int		update_battle_scene(t_md *md, t_battle_d *bd);
+void	get_bt_butn(t_md *md, t_vec2 sz, t_vec2 pos, const char *label);
+void	draw_hp_bar(t_md *md, t_ent *e, t_vec2 pos, t_vec2 size);
+void	update_battle_text(t_battle_d *bd, const char *format, ...);
+void	refresh_battle_screen(t_md *md, t_battle_d *bd);
+void	exit_battle(t_md *md, t_battle_d *bd);
+void	render_trans_screen(t_md *md, t_battle_d *bd, double elapsed);
+void	wait_action(t_md *md, int incr_hp, const char *msg, int change_turn);
+int		set_battle_option(t_md *md, t_battle_d *bd);
+void	update_action(t_md *md, t_battle_d *bd);
+t_ent	*get_valid_pkmn(t_ent **team, int team_size);
+int		change_pokemon(t_md *md, t_ent *new, int side, int change_turn);
+int		battle_use_attack(t_md *md, int dmg, const char *atk_name);
+char	get_input_char(t_md *md, int key);
+void	update_pk_frames(t_inventory *inv, t_ent *e);
+void	render_battle_buttons(t_md *md, t_battle_d *bd);
+void	render_team_logos(t_md *md, t_battle_d *bd, int side, int team_size);
+void	render_batt_pkmn_1(t_md *md, t_battle_d *bd, t_ent *pok, t_vec2 base_p);
+void	render_batt_pkmn_0(t_md *md, t_battle_d *bd, t_ent *pok, t_vec2 base_p);
+void	refresh_battleground(t_md *md, t_battle_d *bd);
+int		move_cam_to_start(t_md *md);
+void	update_trans_lvl(t_battle_d *bd, double elapsed);
+void	handle_pkmn_ko(t_md *md, t_battle_d *bd, t_ent *pk, int i);
 
 #endif

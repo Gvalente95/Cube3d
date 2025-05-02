@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:17:46 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 21:16:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	*scale_img_keep_ratio(t_md *md, void *img, \
 		}
 	}
 	mlx_destroy_image(md->mlx, img);
-	return (img = m.img, *old_size = get_v2(new_size.x, new_size.y), m.img);
+	return (img = m.img, *old_size = v2(new_size.x, new_size.y), m.img);
 }
 
 void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
@@ -82,7 +82,7 @@ void	*resize_img(t_md *md, void *img, t_vec2 *old_size, t_vec2 new_size)
 		}
 	}
 	mlx_destroy_image(md->mlx, img);
-	*old_size = get_v2(new_size.x, new_size.y);
+	*old_size = v2(new_size.x, new_size.y);
 	return (q.img);
 }
 
@@ -107,7 +107,7 @@ int	get_feet_offset(t_image *img)
 	t_vec2		pos;
 	uint32_t	pixel;
 
-	pos = v2(-1);
+	pos = _v2(-1);
 	while (++pos.y < img->size.y - 1)
 	{
 		pos.x = -1;

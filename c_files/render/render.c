@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 23:46:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 16:32:25 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	render_2d_ent(t_md *md, t_ent *e, t_vec2 centr)
 	img = td->wall_img2d[0];
 	if (e->type == nt_mob)
 		img = td->mobs_txtrs_mini[e->mob_type][e->action][e->frame_index];
-	else if (e->type == nt_pickup)
-		img = td->pickup_txtr_mini[e->pckp_type][0];
+	else if (e->type == nt_item)
+		img = td->item_txtr_mini[e->pckp_type][0];
 	else if (e->type == nt_door)
 		img = td->door_txtr_mini;
 	else if (e->type == nt_pokemon)
@@ -75,7 +75,7 @@ void	render_2d_entities(t_md *md)
 	t_ent	*e;
 	t_vec2	centr;
 
-	centr = get_v2((md->win_sz.x * .5 - md->txd.size_2d * 2 - \
+	centr = v2((md->win_sz.x * .5 - md->txd.size_2d * 2 - \
 		(md->cam.ofst.x / md->t_len * md->txd.size_2d)), \
 		md->win_sz.y * .5 - md->txd.size_2d * 2 - \
 		((md->cam.ofst.y / md->t_len) * md->txd.size_2d));
@@ -112,7 +112,7 @@ void	apply_fx(t_md *md, t_image *screen, t_fx_data *fx)
 
 void	render(t_md *md)
 {
-	if (md->prm.show_sky && !cmp_vec2(md->mouse.delta_raw, v2(0)))
+	if (md->prm.show_sky && !cmp_vec2(md->mouse.delta_raw, _v2(0)))
 		render_sky(md);
 	if (md->prm.use_thrd)
 		cast_ray_threads_lp(md);
@@ -122,8 +122,8 @@ void	render(t_md *md)
 		render_2d_entities(md);
 	if (md->prm.show_hud)
 		render_hud_elements(md, &md->hud);
-	if (md->inv.held_index > -1)
-		render_held_item(md, &md->inv, md->inv.held_index);
+	if (md->inv.held_i > -1)
+		render_held_item(md, &md->inv, md->inv.held_i);
 	if (md->inv.active)
 		render_inventory(md, &md->inv);
 	else
@@ -134,7 +134,7 @@ void	render(t_md *md)
 	if (md->prm.debug_mode)
 		show_update_information(md);
 	if (md->prm.show_fps)
-		show_fps(md, get_v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
+		show_fps(md, v2(0, md->win_sz.y - (md->prm.txt_sc * 1.5)));
 	apply_fx(md, md->screen, &md->fx);
 	mlx_put_image_to_window(md->mlx, md->win, md->screen->img, 0, 0);
 }

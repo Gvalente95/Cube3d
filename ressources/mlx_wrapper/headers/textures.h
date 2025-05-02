@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:50:35 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 11:50:33 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ typedef struct s_texture_data
 	t_vec2			e_sizes2d[ENT_TYPE_LEN];
 	t_image			****mobs_txtrs;
 	t_image			****mobs_txtrs_mini;
-	t_image			***pickup_txtr;
+	t_image			***item_txtr;
 	t_image			***wpn_txtr;
-	t_image			***pickup_txtr_mini;
+	t_image			***item_txtr_mini;
 	t_image			***pkmn;
 	t_image			**pkmns_mini;
 	t_image			***wpn_txtr_2d;
@@ -72,7 +72,7 @@ typedef struct s_texture_data
 	const char		*ents_types_names[ENT_TYPE_LEN];
 	const char		*weapons_names[WEAPON_TYPE_LEN];
 	const char		*mob_names[MOB_TYPE_LEN];
-	const char		*pickup_names[PCKP_TYPE_LEN];
+	const char		*item_names[PCKP_TYPE_LEN];
 	const char		*ents_act_names[ENT_ACTION_LEN];
 	const char		*pkmn_names[PKMN_TYPE_LEN];
 	const char		*plr_act_names[PLR_ACTION_LEN];
@@ -113,6 +113,7 @@ typedef struct s_env_manager
 }	t_env_manager;
 
 //		draw/draw_img.c
+//				data: x = color | y = intensity | z = overlap_color
 void			draw_clr_img(t_image *src, t_image *dst, t_vec2 pos, t_vec3 d);
 int				draw_img(t_image *src, t_image *dst, t_vec2 pos, int over);
 void			flipx_image_data(t_image *img);
@@ -120,6 +121,7 @@ void			flipy_image_data(t_image *img);
 void			flush_img(t_image *src, int clr, float alpha, int ignore_alpha);
 
 //		draw/draw_img_2.c
+//				end.x = dst_end.x | end.y = dst_end.y | end.z = color over
 void			draw_trimmed(t_image *src, t_image *dst, t_vec2 p, t_vec3 end);
 void			draw_sphere(t_image *dst, t_vec2 pos, t_vec2 sz, t_vec3 data);
 void			draw_rotated(t_md *md, t_image *src, t_image *dst, t_vec3f p);

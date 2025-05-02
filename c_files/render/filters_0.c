@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filters.c                                          :+:      :+:    :+:   */
+/*   filters_0.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:51:08 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/03/29 18:25:23 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	apply_d2(t_image *img, t_vec2 pos, t_vec3 *ij, t_vec4f *rgb)
 	t_vec2			p;
 	unsigned int	pixel;
 
-	p = get_v2(pos.x + ij->x, pos.y + ij->y);
+	p = v2(pos.x + ij->x, pos.y + ij->y);
 	if (p.x < 0 || p.x >= img->size.x || p.y < 0 || p.y >= img->size.y)
 		return ;
 	pixel = img->src[p.y * img->size.x + p.x];
@@ -65,7 +65,7 @@ void	apply_antialiasing(t_image *img)
 	new_data = malloc(size.x * size.y * sizeof(unsigned int));
 	if (!new_data)
 		return ;
-	pos = get_v2(-1, -1);
+	pos = v2(-1, -1);
 	while (++pos.y < size.y)
 	{
 		pos.x = -1;

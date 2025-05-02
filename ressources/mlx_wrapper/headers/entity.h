@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 21:29:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 17:23:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 08:58:40 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef enum e_entity_types
 	nt_plr,
 	nt_mob,
 	nt_door,
-	nt_pickup,
+	nt_item,
 	nt_bush,
 	nt_tree,
 	nt_pokemon,
@@ -141,6 +141,7 @@ typedef struct s_entity
 	t_pckp_types	pckp_type;
 	t_weapon_types	wpn_type;
 	t_ent_action	action;
+	t_ent			**pk_team;
 	t_vec3f			dir;
 	t_vec3f			mov;
 	t_vec3f			pos;
@@ -161,16 +162,16 @@ typedef struct s_entity
 	char			character;
 	float			hit_dist;
 	t_vec2			crp_pxl;
+	int				team_sz;
 	int				ray_hit_index;
 	int				caught;
 	int				was_hit;
 	int				shot;
-	int				can_shoot;
 	int				grounded;
 	int				map_index;
 	int				is_active;
-	float			tex_accumulator;
 	int				hp;
+	int				max_hp;
 	int				frame_index;
 	int				in_screen;
 	int				revealed;

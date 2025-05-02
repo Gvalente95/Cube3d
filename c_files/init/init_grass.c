@@ -55,14 +55,14 @@ void	init_fe(t_md *md, t_fe *fe)
 	fe->cut_len = 0;
 	fe->base_color = get_grass_color();
 	fe->growth_factor = f_range(0.95, 1.05);
-	fe->size = get_v2(r_range(14, 15), 1);
+	fe->size = v2(r_range(14, 15), 1);
 	fe->height_max = md->win_sz.y * .25;
 	if (fe->type != fe_grass)
 	{
 		fe->base_color = _TURQ;
 		fe->height_max = md->win_sz.y * .1;
 		fe->growth_factor = f_range(.3, .6);
-		fe->size = get_v2(10, 5);
+		fe->size = v2(10, 5);
 	}
 	fe->age = 0;
 	fe->height = fe->size.y;

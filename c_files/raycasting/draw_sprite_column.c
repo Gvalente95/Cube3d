@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 04:30:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/20 10:16:24 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	paint_ent(t_md *md, t_ent *e, t_vec2 txtr_coord)
 	if (e->type != nt_mob)
 		return ;
 	dmg = md->hud.wpn_index + 1 * (1 + (txtr_coord.y < e->frame->size.y / 2));
-	txtr_coord = get_v2(\
+	txtr_coord = v2(\
 		e->frame->size.x / 2 + r_range(-5, 5), \
 		r_range(20, e->frame->size.y - 20));
 	action = -1;

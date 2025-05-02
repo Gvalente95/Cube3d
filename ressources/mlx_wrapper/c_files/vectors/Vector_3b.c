@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 23:18:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/17 14:48:07 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_vec3	v3_center(t_vec3 a, t_vec3 b)
 {
-	return (get_v3(a.x / 2 - b.x / 2, a.y / 2 - b.y / 2, a.z / 2 - b.z / 2));
+	return (v3(a.x / 2 - b.x / 2, a.y / 2 - b.y / 2, a.z / 2 - b.z / 2));
 }
 
 int	v3_bounds(t_vec3 a, t_vec3 pos, t_vec3 size)
@@ -25,9 +25,9 @@ int	v3_bounds(t_vec3 a, t_vec3 pos, t_vec3 size)
 		a.y <= pos.y + size.y);
 }
 
-t_vec3	v3(int scale)
+t_vec3	_v3(int scale)
 {
-	return (get_v3(scale, scale, scale));
+	return (v3(scale, scale, scale));
 }
 
 int	is_in_screen(t_md *md, t_vec3 pos, t_vec2 size)

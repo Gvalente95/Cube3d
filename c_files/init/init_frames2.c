@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:57:39 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/22 21:23:31 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	init_pokemon_frames(t_md *md, t_texture_data *td)
+void	init_pk_framess(t_md *md, t_texture_data *td)
 {
 	char			*path;
 	int				i;
@@ -23,9 +23,9 @@ void	init_pokemon_frames(t_md *md, t_texture_data *td)
 	i = -1;
 	while (++i < PKMN_TYPE_LEN)
 	{
-		size = v2(-1);
+		size = _v2(-1);
 		if (i == Dugtrio || i == Taurus)
-			size = v2(64);
+			size = _v2(64);
 		path = ft_megajoin("pokemons/", td->pkmn_names[i], "/", NULL);
 		td->pkmn[i] = init_images(md, size, path);
 		td->pkmns_mini[i] = copy_image(md, \
@@ -55,7 +55,7 @@ void	handle_mobs_frames(t_md *md, t_image ****frames, \
 	while (++action < ENT_ACTION_LEN)
 	{
 		path = ft_megajoin(base_path, td->ents_act_names[action], "/", NULL);
-		(*frames)[action] = init_images(md, v2(-1), path);
+		(*frames)[action] = init_images(md, _v2(-1), path);
 		(*mini)[action] = init_images(md, md->txd.e_sizes2d[nt_mob], path);
 		free(path);
 	}
@@ -83,14 +83,14 @@ void	init_mobs_frames(t_md *md)
 t_image	**init_mini(t_md *md, t_image ***mini, char *path)
 {
 	*mini = init_images(md, md->txd.e_sizes2d[0], path);
-	return (init_images(md, v2(md->t_len), path));
+	return (init_images(md, _v2(md->t_len), path));
 }
 
 t_image	**init_weapon(t_md *md, t_image ***mini, char *path)
 {
 	t_vec2	hud_weap_size;
 
-	hud_weap_size = get_v2(md->win_sz.x / 2, md->win_sz.y / 2);
+	hud_weap_size = v2(md->win_sz.x / 2, md->win_sz.y / 2);
 	*mini = init_images(md, md->txd.e_sizes2d[0], path);
 	return (init_images(md, hud_weap_size, path));
 }

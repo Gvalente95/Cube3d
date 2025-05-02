@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 13:51:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 17:18:45 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	init_inv_pages(t_inventory *inv)
 
 void	init_inventory(t_md *md, t_inventory *inv)
 {
-	const t_vec2	sz = v2(md->prm.txt_sc * 20);
+	const t_vec2	sz = _v2(md->prm.txt_sc * 20);
 	const int		tx_sc = md->prm.txt_sc;
 	const int		line_h = md->prm.txt_sc * 1.75f;
 	const t_vec2	pannel_sz = (t_vec2){(tx_sc * 1.2f) * 5, line_h * 3};
@@ -50,9 +50,9 @@ void	init_inventory(t_md *md, t_inventory *inv)
 	inv->held_used = 0;
 	inv->opt_img = init_img(md, pannel_sz, NULL, _BLACK);
 	inv->opt_sz = inv->opt_img->size;
-	inv->held_sz = v2(md->win_sz.x * .2);
+	inv->held_sz = _v2(md->win_sz.x * .2);
 	inv->held_screen_img = NULL;
-	inv->held_index = -1;
+	inv->held_i = -1;
 	inv->line_height = line_h;
 	md->inv.inv_map = NULL;
 }

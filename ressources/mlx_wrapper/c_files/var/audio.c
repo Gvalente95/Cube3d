@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 04:54:44 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 03:44:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 08:12:12 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	play_loop(t_md *md, pid_t *pid, char *filename, int depend)
 
 void	init_au(t_md *md, t_au_manager *au)
 {
-	const char	path[] = "ressources/audio/pokemon/";
+	const char	path[] = "ressources/audio/pokemon/cries/";
 	char		*full_path;
 	int			i;
 

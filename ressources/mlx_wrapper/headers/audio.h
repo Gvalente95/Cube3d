@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:38:37 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 03:54:44 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/01 09:18:26 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@
 # define AU_PORTAL_SHOOT	"ressources/audio/portal_shoot.mp3"
 # define AU_WIND			"ressources/audio/wind.mp3"
 # define AU_MUS				"ressources/audio/music.mp3"
+# define AU_PKB_MUS			"ressources/audio/pokemon/battle/mus.mp3"
+# define AU_PKB_HIT			"ressources/audio/pokemon/battle/hit.mp3"
+# define AU_PKB_CRIT_HIT	"ressources/audio/pokemon/battle/hit2.mp3"
+# define AU_PKB_LVLUP		"ressources/audio/pokemon/battle/lvlup.mp3"
+# define AU_PKB_CATCH		"ressources/audio/pokemon/battle/bl_catch.mp3"
+# define AU_PKB_FAIL		"ressources/audio/pokemon/battle/bl_fail.mp3"
+# define AU_PKB_MV			"ressources/audio/pokemon/battle/bl_mv.mp3"
+# define AU_PKB_SUCCESS		"ressources/audio/pokemon/battle/bl_success.mp3"
+# define AU_PKB_FAIL		"ressources/audio/pokemon/battle/bl_fail.mp3"
+# define AU_PKB_ESCAPE		"ressources/audio/pokemon/battle/escape.mp3"
+
 # define AU_MOUSE_CLICK		"ressources/audio/ui/mouse_click.mp3"
 # define AU_MOUSE_RELEASE	"ressources/audio/ui/mouse_release.mp3"
 # define AU_HOV				"ressources/audio/ui/hov.mp3"
@@ -33,9 +44,11 @@
 # define AU_LOW_CLICK		"ressources/audio/ui/subby_clock.mp3"
 # define AU_BOP				"ressources/audio/ui/bop_3.mp3"
 # define AU_TUK				"ressources/audio/ui/tuk.mp3"
+# define AU_HIT				"ressources/audio/ui/hit.mp3"
 
 typedef struct s_au_manager
 {
+	pid_t		battle_pid;
 	pid_t		wind_pid;
 	pid_t		amb_pid;
 	pid_t		mus_pid;

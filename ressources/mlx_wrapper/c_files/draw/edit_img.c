@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 10:12:41 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/07 13:47:51 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	flipx_image_data(t_image *img)
 	int		cur_index;
 	int		end_index;
 
-	pos = get_v2(-1, -1);
+	pos = v2(-1, -1);
 	while (++pos.y < img->size.y)
 	{
 		pos.x = -1;

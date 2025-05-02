@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 00:37:32 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 10:33:49 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ int	display_quick_letter(t_md *md, char c, t_txtd data)
 		data.scale = md->prm.txt_sc;
 	else if (data.scale != md->prm.txt_sc)
 	{
-		l = copy_image(md, font_c, v2(data.scale), data.color);
+		l = copy_image(md, font_c, _v2(data.scale), data.color);
 		is_rescaled = 1;
 	}
 	if (data.color != -1 && !is_rescaled)
-		draw_clr_img(l, data.onto, get_v2(data.x, data.y), \
-		get_v3(data.color, 3, _BLACK));
+		draw_clr_img(l, data.onto, v2(data.x, data.y), \
+		v3(data.color, 3, _BLACK));
 	else
-		draw_img(l, data.onto, get_v2(data.x, data.y), -1);
+		draw_img(l, data.onto, v2(data.x, data.y), -1);
 	if (is_rescaled)
 		free_image_data(md, l);
 	return (data.scale);
@@ -85,47 +85,4 @@ int	rnd_fast_txt(t_md *md, t_txtd data, const char *format, ...)
 		data.onto = md->screen;
 	txt_width = display_line(md, buff, data);
 	return (txt_width);
-}
-
-static char	*get_font_path(t_md *md, const char *base_path, char c)
-{
-	char	*path;
-	char	*letter;
-
-	if (c == '.')
-		letter = md_strdup(md, "dot");
-	else if (c == ':')
-		letter = md_strdup(md, "db_dot");
-	else if (c == '/')
-		letter = md_strdup(md, "bar");
-	else
-	{
-		letter = md_malloc(md, 2);
-		letter[0] = ft_toupper(c);
-		letter[1] = '\0';
-	}
-	path = ft_megajoin(base_path, letter, ".xpm", NULL);
-	free(letter);
-	return (path);
-}
-
-void	init_fonts(t_md *md)
-{
-	const char	*base_path = "utils/font/";
-	char		*path;
-	t_image		*img;
-	int			c;
-
-	c = 31;
-	while (++c < 126)
-	{
-		if (char_in_str((char)c, "$&*;=\\^`{|}"))
-			path = get_font_path(md, base_path, '?');
-		else
-			path = get_font_path(md, base_path, (char)c);
-		img = init_img(md, v2(md->prm.txt_sc), path, -1);
-		clean_img(img);
-		md->txd.font[(unsigned char)c] = img;
-		free(path);
-	}
 }
