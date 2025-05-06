@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_time_events.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:08:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/28 16:04:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 17:59:45 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	node_expired(t_timer *tm, t_dblst *node, t_log *m)
 
 	(void)fade_tresh;
 	next = node->next;
-	has_expired = m->duration > 0 && elapsed_time > m->duration;
+	has_expired = (m->duration > 0 && elapsed_time > m->duration);
 	if ((m->out_cond && *m->out_cond) || has_expired)
 	{
 		if (node == tm->logs)

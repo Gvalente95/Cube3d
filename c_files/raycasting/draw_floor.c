@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_floor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/05 14:15:17 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:28:48 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	init_floor_data(t_md *md, t_ray *ray, t_floor_draw_d *d)
 	t_vec2f			pn;
 	const float		cam_scale = md->win_sz.x / (float)md->win_sz.y;
 
-	pn.x = -md->plr.dir.y * cam_scale * md->prm.floor_fov;
+	pn.x = -(md->plr.dir.y * .8) * cam_scale * md->prm.floor_fov;
 	pn.y = md->plr.dir.x * cam_scale * md->prm.floor_fov;
 	d->ray = ray;
 	d->plr = md->plr.pos;

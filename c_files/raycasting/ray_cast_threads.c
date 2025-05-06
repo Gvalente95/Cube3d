@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_threads.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:31:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/05 11:07:43 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:15:40 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	cast_thread_ray(t_md *md, int x, int *last_valid)
 
 	ray = &md->rays[x];
 	ray->active = 0;
-	if (md->prm.alternate_draw && !((x % 2 == 0) == md->timer.time % 2 == 0))
+	if (md->prm.alternate_draw && !((x % 2 == 0) == (md->timer.time % 2 == 0)))
 		return (0);
 	scrn = md->screen;
 	if (md->prm.ray_mod >= 2.0f && x % (int)floorf(md->prm.ray_mod) != 0)

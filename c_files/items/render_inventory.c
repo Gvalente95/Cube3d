@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_inventory.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 23:30:56 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/05 11:16:00 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:15:00 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ void	refresh_inv_bgr(t_md *md, t_inventory *inv)
 	t_txtd		td;
 
 	img = inv->img;
+	td = (t_txtd){brd2, brd2, _MAGENT, md->prm.txt_sc, img};
 	flush_img(img, _WHITE, 10, 0);
 	draw_pixels(img, _v2(brdsz), sub_vec2(inv->sz, _v2(brd2)), _BLACK);
 	if (inv->page == 0)
 		draw_pixels(img, v2(inv->sz.x * .75f, td.y + 25), \
 			v2(brdsz, inv->sz.y - (td.y + 25)), _WHITE);
 	draw_pixels(img, v2(0, td.y + 25), v2(inv->sz.x, brdsz), _WHITE);
-	td = (t_txtd){brd2, brd2, _MAGENT, md->prm.txt_sc, img};
 	td.x = inv->sz.x / 2 - (ft_strlen(title[inv->page]) * td.scale) / 2;
 	rnd_fast_txt(md, td, title[inv->page]);
 	td.x = brd2;

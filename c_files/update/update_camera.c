@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_camera.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:49:48 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/25 16:12:42 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:34:41 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,14 @@ int	get_center_valid_column(t_md *md, int center)
 	int			left;
 	int			right;
 
+	if (ray_mod == 0)
+		return (center);
 	offset = -1;
 	while (++offset < md->win_sz.x / 2)
 	{
 		left = center - offset;
 		right = center + offset;
-		if (left >= 0 && \
-			left % ray_mod == 0 && \
+		if (left >= 0 && left % ray_mod == 0 && \
 			((left % 2 == 0) == is_even_frame))
 			return (left);
 		if (right < md->win_sz.x && \

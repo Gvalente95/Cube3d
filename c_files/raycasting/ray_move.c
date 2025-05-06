@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_move.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:28:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 14:07:40 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 18:01:08 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	ray_move(t_md *md, t_ray *ray, t_vec2 visu_offset)
 		render_ray(md, ray, visu_offset);
 		if (ray_can_stop(md, ray, hit))
 			return (-1);
-		hit_wall = hit && (hit->type == nt_wall || hit->type == nt_ext_wall);
+		hit_wall = (hit && (hit->type == nt_wall || hit->type == nt_ext_wall));
 		if (hit_wall && !ray->check_hit)
 			return (ray->wall_hit = hit, ray->steps);
 	}

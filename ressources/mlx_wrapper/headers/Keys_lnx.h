@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Keys_lnx.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 20:49:05 by gvalente          #+#    #+#             */
-/*   Updated: 2025/04/24 23:51:55 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:12:50 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@
 # define DOT_KEY	47
 # define TIRET_KEY	44
 # define DEL_KEY	51
-# define ENTER_KEY	36
-# define CTRL_KEY	256
-# define SHIFT_KEY	257
+// # define ENTER_KEY	36
+// # define CTRL_KEY	256
+// # define SHIFT_KEY	257
 # define LFTCMD_KEY	259
 # define RGTCMD_KEY	260
 # define LFTOPT_KEY	261

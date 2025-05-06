@@ -74,7 +74,7 @@ normall:
 	norminette cube.h c_files ressources/mlx_wrapper/c_files ressources/mlx_wrapper/headers ressources/mlx_wrapper/mlx_utils.h
 
 leaks: all
-	leaks --atExit -- ./cube square.cub 1 15
+	leaks --atExit -- ./cube
 
 all: $(GAME_NAME)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_pointed.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 19:49:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 18:00:09 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static int	display_options(t_md *md, t_ent *e, const char *lbl, t_txtd txtd)
 		grab_item(md, &md->inv, Pokeball);
 	if (e->type != nt_item)
 		return (0);
-	if (e->pckp_type != nt_pokemon && e->pckp_type != Keys)
+	if (e->pckp_type != (t_pckp_types)nt_pokemon && \
+	e->pckp_type != (t_pckp_types)Keys)
 		return (0);
 	grab_item(md, &md->inv, e->pckp_type);
 	return (1);

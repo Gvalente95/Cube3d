@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_triangle_tools.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:58:14 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/21 15:10:29 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 18:00:32 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	is_in_shape(t_vec2 z, t_vec2 tri[][3], int amount)
 		a[1] = tri[i][1];
 		a[2] = tri[i][2];
 		d.x = (z.x - a[1].x) * (a[0].y - a[1].y) - \
-			(a[0].x - a[1].x) * (z.y - a[1].y);
+	(a[0].x - a[1].x) * (z.y - a[1].y);
 		d.y = (z.x - a[2].x) * (a[1].y - a[2].y) - \
-			(a[1].x - a[2].x) * (z.y - a[2].y);
+	(a[1].x - a[2].x) * (z.y - a[2].y);
 		d.z = (z.x - a[0].x) * (a[2].y - a[0].y) - \
-			(a[2].x - a[0].x) * (z.y - a[0].y);
-		has_neg = (d.x < 0) || (d.y < 0) || (d.z < 0);
-		has_pos = (d.x > 0) || (d.y > 0) || (d.z > 0);
+	(a[2].x - a[0].x) * (z.y - a[0].y);
+		has_neg = ((d.x < 0) || (d.y < 0) || (d.z < 0));
+		has_pos = ((d.x > 0) || (d.y > 0) || (d.z > 0));
 		if (!(has_neg && has_pos))
 			return (1);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_cast_draw_ents.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 19:44:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/03 12:47:41 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 17:59:58 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	draw_found_ents(t_md *md, t_thrd_manager *mon)
 		e = (t_ent *)node->content;
 		fogalpha = 1 - minmaxf(0, .95, (e->hit_dist / 1000.0f) * md->fx.fog);
 		door = md->rays[e->ray_hit_index].door;
-		has_door = door && door->hp && door->cam_distance < e->cam_distance;
+		has_door = (door && door->hp && door->cam_distance < e->cam_distance);
 		draw_sprite_thread(md, e, has_door, fogalpha);
 		node = node->next;
 	}

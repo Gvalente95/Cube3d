@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_wrapper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
+/*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 20:39:27 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/06 14:25:18 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	init_wrapper(t_md *md, t_vec2 win_sz, char *win_name, int resolution)
 	init_fonts(md);
 	start_timer(&md->timer.game_start);
 	init_screen(md, win_sz, resolution, win_name);
+	md->prm.txt_sc = 20;
 	init_cursor(md);
 	init_timer(md, &md->timer);
 	if (md->is_linux)
