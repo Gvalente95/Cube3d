@@ -6,53 +6,36 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 00:11:00 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:11:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static void	init_ent_pkteam(t_md *md, t_ent *e, int team_size)
+static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type)
 {
 	int	i;
 
-	e->pk_team = md_malloc(md, sizeof(t_ent *) * (team_size + 1));
-	i = -1;
-	while (++i < team_size)
-	{
-		e->pk_team[i] = init_ent(md, 'K', _v2(-1), -1);
-		printf("%s > %s[%d]\n", e->label, e->pk_team[i]->label, i);
-	}
-	e->pk_team[i] = NULL;
-	e->team_sz = team_size;
-}
-
-static void	set_type_specifics(t_md *md, t_ent *e, t_ent_type type)
-{
 	if (type == nt_wall)
 	{
 		e->crp_pxl = v2(\
 			r_range(0, md->win_sz.x), \
 			r_range(0, md->win_sz.y));
 		e->frames = malloc(sizeof(t_image) * 5);
-		e->frames[0] = copy_image(md, md->txd.wall_img[0], v2(-1, -1), -1);
-		e->frames[1] = copy_image(md, md->txd.wall_img[1], v2(-1, -1), -1);
-		e->frames[2] = copy_image(md, md->txd.wall_img[2], v2(-1, -1), -1);
-		e->frames[3] = copy_image(md, md->txd.wall_img[3], v2(-1, -1), -1);
+		i = -1;
+		while (++i < 4)
+			e->frames[i] = copy_image(md, md->txd.wall_img[i], v2(-1, -1), -1);
 		e->frames[4] = NULL;
 	}
 	else
 		e->dir = get_v3f(r_range(-1, 1), r_range(-1, 1), r_range(-1, 1));
 	if (e->type == nt_mob)
 		init_ent_pkteam(md, e, r_range(1, 5));
-	if (e->type == nt_item)
-		e->pos.z += md->t_len;
 	if (e->type == nt_pokemon)
 	{
 		e->max_hp = r_range(70, 140);
 		e->hp = e->max_hp;
 	}
-	e->caught = 0;
 }
 
 static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
@@ -62,6 +45,7 @@ static void	set_ent_values(t_md *md, t_ent *e, char c, t_vec2 pos)
 	e->overlay = NULL;
 	e->overlay_dir = -1;
 	e->character = c;
+	e->caught = 0;
 	e->type = get_char_index(md->txd.ents_tp_map[0], c);
 	init_ent_frames(md, &md->txd, e);
 	e->size = e->frame->size;

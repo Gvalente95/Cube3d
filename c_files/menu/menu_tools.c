@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 14:50:28 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/03 11:50:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	render_logo_cube(t_md *md, t_menu *menu)
 {
-	const t_vec2	pos = (t_vec2){400, 100};
-	const t_vec2	size = (t_vec2){50, 50};
+	const t_vec2	pos = v2(400, 100);
+	const t_vec2	size = v2(50, 50);
 	int				color;
 
 	color = _NULL;
@@ -25,9 +25,9 @@ void	render_logo_cube(t_md *md, t_menu *menu)
 
 void	update_logo_cube(t_md *md, t_mouse mouse, t_menu *menu)
 {
-	const t_vec2	size = (t_vec2){100, 100};
-	const t_vec2	mouse_p = (t_vec2){mouse.real.x, mouse.real.y};
-	const t_vec2	pos = (t_vec2){350, 50};
+	const t_vec2	size = v2(100, 100);
+	const t_vec2	mouse_p = v2(mouse.real.x, mouse.real.y);
+	const t_vec2	pos = v2(350, 50);
 
 	(void)md;
 	if (v2_bounds(mouse_p, pos, size))
@@ -57,7 +57,7 @@ void	update_menu_element_end(t_menu *menu, int *hov, int cur_hov)
 
 void	center_menu_txt(t_md *md, t_vec2 pos_ofst, int scale, char *name)
 {
-	const t_vec2	win_cntr = (t_vec2){md->win_sz.x / 2, md->win_sz.y / 2};
+	const t_vec2	win_cntr = v2(md->win_sz.x / 2, md->win_sz.y / 2);
 	t_vec2			pos;
 	const int		title_color = -1;
 	t_txtd			txt_data;

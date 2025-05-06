@@ -6,19 +6,17 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 12:48:34 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:43:10 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:15:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-static int	draw_floor_px(t_md *md, t_floor_draw_d *d, \
-	t_fe **prv_fe, int has_flr)
+static int	draw_flr_px(t_md *md, t_floor_draw_d *d, t_vec2 t_crd, int has_flr)
 {
 	const int		fog_clr = md->hud.fog_color;
 	const t_vec2	clr_d = (t_vec2){d->clr, md->hud.bgr_color};
 
-	(void)prv_fe;
 	d->fogalpha = -1;
 	if (md->fx.fog > 0)
 		d->fogalpha = minmaxf(0, 1, (d->rwd / 10.0f) * md->fx.fog);
@@ -28,12 +26,14 @@ static int	draw_floor_px(t_md *md, t_floor_draw_d *d, \
 		draw_pixel(md->screen, d->win, clr_d.x, 1);
 	if (md->prm.use_grass && d->has_grass)
 		render_world_map(md, *d, 15);
+	if (md->prm.use_grass)
+		update_and_render_fe(md, d, t_crd);
 	if (d->fogalpha > 0)
 		draw_pixel(md->screen, d->win, fog_clr, d->fogalpha);
 	return (1);
 }
 
-int	set_floor_pxl(t_md *md, t_floor_draw_d *d, t_fe **prv_fe)
+int	set_floor_pxl(t_md *md, t_floor_draw_d *d)
 {
 	const t_image	*img = md->hud.floor;
 	const t_vec2	sz = img->size;
@@ -41,8 +41,7 @@ int	set_floor_pxl(t_md *md, t_floor_draw_d *d, t_fe **prv_fe)
 	t_vec2f			plr_crd;
 	t_vec2			t_crd;
 
-	if (d->win.x < 0 || d->win.x >= md->win_sz.x)
-		return (0);
+	t_crd = _v2(-1);
 	if (md->prm.use_grass)
 	{
 		plr_crd = div_v2f((t_vec2f){md->plr.pos.x, md->plr.pos.y}, md->t_len);
@@ -52,26 +51,28 @@ int	set_floor_pxl(t_md *md, t_floor_draw_d *d, t_fe **prv_fe)
 		d->has_grass = (map_e && map_e->type == nt_grass);
 	}
 	if (d->win.y > md->win_sz.y && md->prm.use_grass && d->has_grass)
-		return (draw_floor_px(md, d, prv_fe, 0), 1);
+		return (draw_flr_px(md, d, t_crd, 0), 1);
 	d->flr_t.x = d->flr.x + d->rwd * d->dirl.x + d->stp.x * d->win.x;
 	d->flr_t.y = d->flr.y + d->rwd * d->dirl.y + d->stp.y * d->win.x;
 	d->txp.x = ((int)(d->flr_t.x * sz.x) % sz.x + sz.x) % sz.x;
 	d->txp.y = ((int)(d->flr_t.y * sz.y) % sz.y + sz.y) % sz.y;
 	d->clr = img->src[d->txp.y * (img->size_line / 4) + d->txp.x];
-	return (draw_floor_px(md, d, prv_fe, 1), 1);
+	return (draw_flr_px(md, d, t_crd, 1), 1);
 }
 
 void	draw_floor(t_md *md, t_floor_draw_d d)
 {
 	const t_vec2	winsz = md->win_sz;
-	t_fe			*prv_fe;
 	float			pitch_scale;
+	int				y_end;
 
+	d.win.y = d.ray->wall_strip_pos.y + md->prm.height - 1;
 	pitch_scale = 8.0f / fmaxf(1.0f, -md->cam.pos.z / md->t_len);
-	md->env.stored_blades = NULL;
-	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.y - 1 + md->prm.height};
-	prv_fe = NULL;
-	while (d.win.y++ < winsz.y + md->t_len)
+	d.win.y--;
+	y_end = winsz.y;
+	if (md->prm.use_grass)
+		y_end += md->prm.grass_sz.y * 2;
+	while (d.win.y++ < y_end)
 	{
 		d.p = d.win.y - (winsz.y / 2 - (md->cam.rot.y * pitch_scale));
 		if (d.p <= 0)
@@ -79,7 +80,7 @@ void	draw_floor(t_md *md, t_floor_draw_d d)
 		d.rwd = ((0.5 - (md->cam.pos.z / md->t_len)) * winsz.y) / d.p;
 		d.stp.x = d.rwd * (d.dirr.x - d.dirl.x) / winsz.x;
 		d.stp.y = d.rwd * (d.dirr.y - d.dirl.y) / winsz.x;
-		if (!set_floor_pxl(md, &d, &prv_fe))
+		if (!set_floor_pxl(md, &d))
 			break ;
 	}
 }
@@ -102,6 +103,7 @@ void	init_floor_data(t_md *md, t_ray *ray, t_floor_draw_d *d)
 	d->txp = _v2(0);
 	d->clr = -1;
 	d->has_grass = 0;
+	d->win.x = ray->index;
 	d->p = 0;
 	d->fogalpha = 0;
 }

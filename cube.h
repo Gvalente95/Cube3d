@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:53:43 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:26:01 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:11:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,15 @@
 # define THREADS_BATCH	16
 # define FLOOR_WORKERS	4
 
-# define FE_PER_TILE	35
+# define FE_PER_TILE	50
 # define REVEAL_DISTANCE 5
 # define TARGET_FPS		100
 
 //		init/init_menu.c
-void	set_menu_pos(t_md *md, t_menu *menu, \
-	t_vec3 sldr_offst, t_vec3 but_ofst);
-void	init_menu_overlay(t_md *md, t_menu *menu);
 void	init_menu(t_md *md, t_menu *menu);
 int		replace_window(t_md *md, int new_w, int new_h);
-
+void	set_menu_pos(t_md *md, t_menu *menu, \
+	t_vec3 sldr_offst, t_vec3 but_ofst);
 //	init/init_frames2.c
 void	handle_mobs_frames(t_md *md, t_image ****frames, \
 	t_image ****mini, t_mob_types type);
@@ -76,17 +74,12 @@ void	init_hud(t_md *md, t_hud *hud);
 void	init_fes(t_md *md, t_env_manager *env, int tlen);
 
 //	init/init_map.c
-char	*get_resized_line(char *buffer, int width, char replace_end_with);
-char	*redimension_map(char *map_buffer, t_vec2 size);
 int		init_map(t_md *md, char *file_name);
 
 //	init/init_minimap.c
 void	init_minimap(t_md *md, t_mmap *mmap);
 
 //	init/init_labels.c
-void	init_action_labels(t_texture_data *td);
-void	init_weapon_labels(t_texture_data *td);
-void	init_ents_labels(t_texture_data *td);
 void	init_labels(t_texture_data *txd);
 
 //	init/init_frames.c
@@ -108,8 +101,6 @@ void	init_map_data(t_md *md);
 void	init_background(t_md *md, t_hud *hud, t_vec2 win_sz);
 
 //	init/init_map_validator.c
-int		flood_fill(t_map *map, char *str, int index, int depth);
-void	print_unvalid_flood(char *flooded_map);
 int		find_breach(t_md *md, t_map *map, int plr_index);
 int		validate_map(t_md *md, char *map);
 
@@ -277,13 +268,11 @@ void	draw_found_ents(t_md *md, t_thrd_manager *mon);
 void	render_menu(t_md *md, t_menu *menu);
 void	render_slider(t_md *md, t_slider *sldr, t_image *screen, float alpha);
 
-int		render_fe(t_md *md, t_fe *fe, int width);
-
 int		update_key_input(t_md *md, t_menu *m, t_inventory *i, unsigned int c);
 
 int		draw_wall_line_dda(t_md *md, float dist, t_ent *hit, t_ray *ray);
 int		ray_move_dda(t_md *md, t_ray *ray);
-int		update_and_render_fe(t_md *md, t_floor_draw_d d, t_fe **prv_fe);
+int		update_and_render_fe(t_md *md, t_floor_draw_d *d, t_vec2 t_crd);
 void	draw_raycast_background(t_md *md, t_ray *ray);
 void	draw_ceiling(t_md *md, t_floor_draw_d d);
 int		draw_stored_sprite_hits(t_md *md, t_ray *ray);
@@ -346,7 +335,7 @@ int		contains_valid_character(char *line, const char *valid_characters);
 void	update_pointed(t_md *md, t_vec2 draw_p, t_vec3 sz_scale, t_ent *e);
 void	update_pointed_ent(t_md *md);
 void	inisld(t_md *md, char *label, t_vec4f data, float *value);
-void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz, double elapsed, double dur);
+void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz, double dur);
 int		update_inv_selection(t_md *md, t_inventory *inv);
 
 //		battle_data
@@ -375,5 +364,8 @@ void	refresh_battleground(t_md *md, t_battle_d *bd);
 int		move_cam_to_start(t_md *md);
 void	update_trans_lvl(t_battle_d *bd, double elapsed);
 void	handle_pkmn_ko(t_md *md, t_battle_d *bd, t_ent *pk, int i);
+void	draw_grad_pxls(t_image *dst, t_vec2 pos, t_vec2 sz, t_vec3 clr);
+void	draw_from_pos(t_image *src, t_image *dst, t_vec2 pos, t_vec2 draw_strt);
+void	init_ent_pkteam(t_md *md, t_ent *e, int team_size);
 
 #endif

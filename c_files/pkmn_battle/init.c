@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:37:26 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 10:10:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/04 16:39:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	init_battle_data(t_md *md, t_battle_d *bd)
 	t_vec2			ps;
 
 	bd->pk_sz = _v2(win_sz.x * .23);
-	bd->pk_p[0] = v2(win_sz.x * .9 - bd->pk_sz.x, win_sz.y * .15);
+	bd->pk_p[0] = v2(win_sz.x * .8 - bd->pk_sz.x, win_sz.y * .2);
 	bd->pk_p[1] = v2(bd->pk_sz.x / 2, win_sz.y * .8 - bd->pk_sz.y);
 	bd->trans_dur = 1;
 	bd->overlay = init_img(md, win_sz, NULL, _WHITE);

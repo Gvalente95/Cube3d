@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 19:55:24 by gvalente          #+#    #+#             */
-/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 11:04:50 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,9 @@ int	draw_img(t_image *src, t_image *dst, t_vec2 pos, int overlap_color)
 	return (1);
 }
 
-void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
+void	flush_img(t_image *src, int color, float transp, int ign_alpha_pxls)
 {
 	const int	total_pixels = src->size.x * src->size.y;
-	const int	ignore_alpha_enabled = (ignore_alpha > 0);
 	int			*p;
 	int			*end;
 
@@ -103,7 +102,7 @@ void	flush_img(t_image *src, int color, float transp, int ignore_alpha)
 		transp = 1 - transp;
 	while (p < end)
 	{
-		if (ignore_alpha_enabled && (*p & 0xFF000000) != 0x00000000)
+		if (ign_alpha_pxls && (*p & 0xFF000000) != 0x00000000)
 		{
 			p++;
 			continue ;

@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:41:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/29 19:27:08 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:52:03 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	init_action_labels(t_texture_data *td)
+static void	init_action_labels(t_texture_data *td)
 {
 	td->ents_act_names[m_idle] = "IDLE";
 	td->ents_act_names[m_walk] = "WALK";
@@ -25,7 +25,7 @@ void	init_action_labels(t_texture_data *td)
 	td->plr_act_names[plr_idle] = "idle";
 }
 
-void	init_weapon_labels(t_texture_data *td)
+static void	init_weapon_labels(t_texture_data *td)
 {
 	td->weapons_names[Knife] = "Knife";
 	td->weapons_names[Pistol] = "Pistol";
@@ -35,7 +35,7 @@ void	init_weapon_labels(t_texture_data *td)
 	td->weapons_names[Rocket] = "Rocket";
 }
 
-void	init_ents_labels(t_texture_data *td)
+static void	init_ents_labels(t_texture_data *td)
 {
 	td->ents_types_names[nt_wall] = "Wall";
 	td->ents_types_names[nt_ext_wall] = "ext_wall";
@@ -62,7 +62,7 @@ void	init_ents_labels(t_texture_data *td)
 	td->mob_names[Mecha_Meister] = "Mecha Meister";
 }
 
-void	init_pkmn_labels(t_texture_data *td)
+static void	init_pkmn_labels(t_texture_data *td)
 {
 	td->pkmn_names[Arbok] = "Arbok";
 	td->pkmn_names[Blastoise] = "Blastoise";

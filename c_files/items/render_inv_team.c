@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 14:28:17 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:19:11 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:10:20 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 static void	draw_team_slot(t_md *md, t_txtd td, t_vec2 spacing, t_vec2 base)
 {
-	const t_inventory	*inv = &md->inv;
-	const t_vec2		slot_size = _v2(inv->sz.x / 4);
+	const t_vec2		slot_size = _v2(md->inv.sz.x / 4);
 	t_ent				*pk;
 	t_vec2				pos;
 	t_vec2				sc;
-	t_vec2				img_pos;
+	t_image				*img;
 
 	sc = slot_size;
-	if (md->var == inv->hov_indexes[1])
+	if (md->var == md->inv.hov_indexes[1])
 		sc = _v2(slot_size.x * 1.4);
 	pos.x = base.x + (md->var % 2) * (slot_size.x + spacing.x);
 	pos.y = base.y + (md->var / 2) * spacing.y;
-	pk = inv->pokemon_team[md->var];
-	draw_sphere(inv->img, pos, sc, \
-		v3(md->rgb[RGB_WHITE - (md->var == inv->hov_indexes[1])], 2, 1));
+	draw_sphere(md->inv.img, pos, sc, v3(md->rgb[RGB_WHITE], 2, 1));
+	pk = md->inv.pokemon_team[md->var];
 	if (!pk)
 		return ;
-	img_pos = add_vec2(_v2(slot_size.x / 2), sub_vec2(pos, _v2(sc.x / 2)));
-	draw_img(copy_image(md, pk->frame, _v2(sc.x), -1), inv->img, img_pos, -1);
-	draw_hp_bar(md, pk, (t_vec2){pos.x, pos.y + sc.y}, (t_vec2){100, 20});
-	if (inv->hov_indexes[1] != md->var)
+	img = copy_image(md, pk->frame, _v2(sc.x), -1);
+	img->pos = add_vec2(_v2(slot_size.x / 2), sub_vec2(pos, _v2(sc.x / 2)));
+	draw_img(img, md->inv.img, img->pos, -1);
+	free_image_data(md, img);
+	draw_hp_bar(md, pk, v2(pos.x, pos.y + sc.y), v2(100, 20));
+	if (md->inv.hov_indexes[1] != md->var)
 		return ;
 	td.x = pos.x + slot_size.x / 2 - ft_strlen(pk->label) * td.scale / 2;
 	td.y = pos.y + sc.y - md->prm.txt_sc * 1.3;
@@ -43,12 +43,11 @@ static void	draw_team_slot(t_md *md, t_txtd td, t_vec2 spacing, t_vec2 base)
 
 void	draw_pokemon_team(t_md *md, t_inventory *inv, t_txtd td, int brdsz)
 {
-	const t_vec2	slot_size = _v2(inv->sz.x / 4);
-	const t_vec2	spacing = (t_vec2){slot_size.x - 10, slot_size.y + 10};
-	const t_vec2	layout = \
-		(t_vec2){2 * slot_size.x + spacing.x, 3 * slot_size.y + 2 * 10};
-	const t_vec2	base = (t_vec2){((inv->sz.x - layout.x) / 2 + brdsz / 2), \
-		(inv->sz.y - layout.y) / 2};
+	const t_vec2	slt_sz = _v2(inv->sz.x / 4);
+	const t_vec2	spacing = v2(slt_sz.x - 10, slt_sz.y + 10);
+	const t_vec2	lay = v2(2 * slt_sz.x + spacing.x, 3 * slt_sz.y + 2 * 10);
+	const t_vec2	base = v2(((inv->sz.x - lay.x) / 2 + brdsz / 2), \
+		(inv->sz.y - lay.y) / 2);
 
 	md->var = -1;
 	while (++md->var < 6)
@@ -56,10 +55,11 @@ void	draw_pokemon_team(t_md *md, t_inventory *inv, t_txtd td, int brdsz)
 	md->var = 0;
 }
 
-void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz, double elapsed, double dur)
+void	render_used_shadow(t_md *md, t_vec2 usd_p, t_vec2 u_sz, double dur)
 {
-	t_vec2	p;
-	t_vec2	sz;
+	t_vec2			p;
+	t_vec2			sz;
+	const double	elapsed = md->timer.cur_tm - md->inv.held_used_start;
 
 	sz = v2(u_sz.x, u_sz.y / 2);
 	p.x = usd_p.x;

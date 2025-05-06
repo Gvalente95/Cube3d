@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 00:26:01 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:16:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:48:48 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	render_used(t_md *md, t_inventory *inv, double dur, int item_index)
 	inv->pkbl_p = pos;
 	draw_rotated(md, inv->held_screen_img, md->screen, \
 		(t_vec3f){(float)pos.x, pos.y, inv->pkbl_rot_z});
-	render_used_shadow(md, pos, sz, elapsed, dur);
+	render_used_shadow(md, pos, sz, dur);
 	if (inv->held_used && sel && sel->type == nt_pokemon && elapsed > dur)
 		sel->caught = 1;
 	if (inv->held_used && (item_index == Keys || elapsed >= dur * 1.5))

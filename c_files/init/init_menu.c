@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:31 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:32 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/03 11:47:44 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void	set_menu_pos(t_md *md, t_menu *menu, \
 	}
 }
 
-void	init_menu_overlay(t_md *md, t_menu *menu)
+static void	init_menu_overlay(t_md *md, t_menu *menu)
 {
 	menu->bgr_color = _BLACK;
 	menu->overlay = init_img(md, md->win_sz, NULL, menu->bgr_color);
 }
 
-void	set_clr_pck(t_md *md, t_clrp *clrP, int *value, const char *lbl)
+static void	set_clr_pck(t_md *md, t_clrp *clrP, int *value, const char *lbl)
 {
 	const t_vec2	size = _v2(md->var);
 
@@ -66,16 +66,16 @@ void	set_color_pickers(t_md *md, t_menu *menu)
 {
 	const t_vec2	size = _v2(75);
 	const t_vec2	winsz = md->win_sz;
-	const t_vec2	base_p = (t_vec2){winsz.x - size.x * 4, winsz.y * .05};
+	const t_vec2	base_p = v2(winsz.x - size.x * 4, winsz.y * .05);
 	const int		spc = 10;
 
 	md->var = size.x;
 	set_clr_pck(md, &menu->clrp[0], &md->hud.floor_color, "Floor");
 	set_clr_pck(md, &menu->clrp[1], &md->hud.sky_color, "Sky");
 	set_clr_pck(md, &menu->clrp[2], &md->hud.fog_color, "Fog");
-	menu->clrp[0].pos = (t_vec2){base_p.x, base_p.y};
-	menu->clrp[1].pos = (t_vec2){base_p.x + md->var + spc, base_p.y};
-	menu->clrp[2].pos = (t_vec2){base_p.x + md->var * 2 + spc * 2, base_p.y};
+	menu->clrp[0].pos = v2(base_p.x, base_p.y);
+	menu->clrp[1].pos = v2(base_p.x + md->var + spc, base_p.y);
+	menu->clrp[2].pos = v2(base_p.x + md->var * 2 + spc * 2, base_p.y);
 	md->var = 0;
 }
 
@@ -84,8 +84,7 @@ void	init_menu(t_md *md, t_menu *menu)
 	md->fx.hue = get_v4f(1, 1, 1, 0);
 	init_menu_overlay(md, menu);
 	init_menu_elements(md, menu);
-	set_menu_pos(md, menu, \
-			v3(50, 50, 1), v3(100, 50, 10));
+	set_menu_pos(md, menu, v3(50, 50, 1), v3(100, 50, 10));
 	set_color_pickers(md, menu);
 	menu->refresh_ui = 0;
 	menu->refresh_bg = 0;

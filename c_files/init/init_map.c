@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:10:05 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:53:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*get_map(char *file_name)
 	return (content);
 }
 
-char	*get_resized_line(char *buffer, int width, char replace_end_with)
+static char	*get_resized_line(char *buffer, int width, char replace_end_with)
 {
 	char	*resized_line;
 	int		i;
@@ -62,7 +62,7 @@ char	*get_resized_line(char *buffer, int width, char replace_end_with)
 	return (resized_line);
 }
 
-char	*redimension_map(char *map_buffer, t_vec2 size)
+static char	*redimension_map(char *map_buffer, t_vec2 size)
 {
 	char	*tmp;
 	char	*new_map;

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:31:03 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:54:20 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 10:54:39 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	move_cam_to_start(t_md *md)
 {
 	const float		acspd = md->autocam.acc_spd;
 	const float		mv_spd = .05f + acspd;
-	const t_vec2f	rot_spd = (t_vec2f){0.05f + acspd, 0.01f + acspd * .5f};
+	const t_vec2f	rot_spd = (t_vec2f){0.01f + acspd, 0.01f + acspd * .5f};
 	const t_vec3f	diff = sub_vec3f(md->plr.pos, md->plr.start_pos);
 
 	md->prm.alternate_draw = 0;

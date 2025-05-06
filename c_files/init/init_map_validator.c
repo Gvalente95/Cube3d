@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 02:32:22 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/04/23 10:31:54 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:52:57 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	find_unvalid_char(char *str, char *must_contain)
 	return ('\0');
 }
 
-int	flood_fill(t_map *map, char *str, int index, int depth)
+static int	flood_fill(t_map *map, char *str, int index, int depth)
 {
 	if (depth > 500)
 		return (1);
@@ -47,7 +47,7 @@ int	flood_fill(t_map *map, char *str, int index, int depth)
 	return (1);
 }
 
-void	print_unvalid_flood(char *flooded_map)
+static void	print_unvalid_flood(char *flooded_map)
 {
 	int	i;
 

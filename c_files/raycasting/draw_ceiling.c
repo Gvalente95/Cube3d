@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 17:56:10 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:43:18 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/03 11:36:13 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,11 @@ void	draw_ceiling(t_md *md, t_floor_draw_d d)
 	const int		sky_clr = md->hud.sky_color;
 
 	d.door_y_start = calculate_door_y(md, d);
-	d.win = (t_vec2){d.ray->index, d.ray->wall_strip_pos.x + 1 + md->prm.height};
+	d.win.y = d.ray->wall_strip_pos.x + md->prm.height + 1;
 	if (md->prm.show_sky)
 		draw_strip(md->hud.sky_buffer, md->screen, _v2(d.win.x), d.win.y);
 	else
-		draw_pixels(md->screen, \
-			v2(d.win.x, 0), v2(1, d.win.y), sky_clr);
+		draw_pixels(md->screen, v2(d.win.x, 0), v2(1, d.win.y), sky_clr);
 	while (d.win.y-- > 0)
 	{
 		if (d.win.y > d.door_y_start)

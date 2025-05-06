@@ -19,10 +19,11 @@ c_files/vectors/vector_3float.c c_files/vectors/vector_color.c c_files/vectors/v
 c_files/vectors/Vector_3b.c c_files/vectors/vector4float.c c_files/vectors/vector_math_sub.c c_files/vectors/vector_math_add.c \
 c_files/vectors/vector_math_f.c c_files/vectors/vector_2f.c c_files/vectors/vector_2b.c c_files/vectors/vector_3.c \
 c_files/math/math_tools.c c_files/time/time2.c c_files/time/time.c c_files/init_wrapper.c c_files/string/string_3.c \
-c_files/string/string.c c_files/string/string_2.c c_files/draw/image_init.c c_files/draw/draw_image.c \
-c_files/draw/edit_img.c c_files/draw/draw_tools.c c_files/draw/draw_triangle.c c_files/draw/draw_rot.c \
-c_files/draw/image_load.c c_files/draw/image_resize.c c_files/draw/draw_color.c c_files/draw/draw_shape.c \
-c_files/draw/draw_pixels.c c_files/draw/image_rotate.c c_files/draw/draw_triangle_tools.c c_files/draw/draw_cube.c \
+c_files/string/string.c c_files/string/string_2.c c_files/draw/image_init.c c_files/draw/draw_pixels_2.c \
+c_files/draw/draw_image.c c_files/draw/edit_img.c c_files/draw/draw_tools.c c_files/draw/draw_triangle.c \
+c_files/draw/draw_rot.c c_files/draw/image_load.c c_files/draw/image_resize.c c_files/draw/draw_color.c \
+c_files/draw/draw_shape.c c_files/draw/draw_pixels.c c_files/draw/image_rotate.c c_files/draw/draw_triangle_tools.c \
+c_files/draw/draw_cube.c
 
 OBJ = $(SOURCES:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:32:42 by gvalente          #+#    #+#             */
-/*   Updated: 2025/05/01 17:11:26 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/03 13:39:30 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ typedef struct s_parameters
 	float			bob_amount;
 	float			sun_x;
 	float			sun_y;
-	float			grass_w;
+	t_vec2f			grass_sz;
 	float			fe_speed;
 	float			ray_depth;
 	float			height;
@@ -375,8 +375,7 @@ void	show_vec3(t_md *md, char *label, t_vec3 vec, t_vec2 pos);
 void	show_vec2(t_md *md, char *label, t_vec2 vec, t_vec2 pos);
 int		is_in_screen(t_md *md, t_vec3 pos, t_vec2 size);
 void	upd_timer(double *tmr, double cur_tm, double incr, int *event);
-void	update_fe(t_md *md, t_vec2 start, \
-	t_fe *fe, t_floor_draw_d d);
+void	update_fe(t_md *md, t_fe *fe, t_floor_draw_d *d);
 
 //				camera.c
 void	update_cam(t_md *md, t_cam *cam);

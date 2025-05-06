@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:55:04 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:50:34 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ static void	add_texture_img(t_md *md, char *line, t_wrd_dir dir, int flip_x)
 	close(fd);
 	while (*line == ' ')
 		line++;
-	txd->wall_img[dir] = init_abs_img(md, _v2(txd->e_scales[nt_wall]), line + 3);
+	txd->wall_img[dir] = \
+		init_abs_img(md, _v2(txd->e_scales[nt_wall]), line + 3);
 	if (flip_x)
 		flipx_image_data(txd->wall_img[dir]);
 	fill_transparency(txd->wall_img[dir], _BLACK);

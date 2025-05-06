@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 22:58:02 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:27:58 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 10:52:45 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,9 @@ static int	exit_autocam(t_md *md, t_autocam *autocam)
 	md->timer.time = 1;
 	md->key_click = -1;
 	md->hud.fog_color = _BLACK;
-	md->prm.fe_speed = 1;
 	md->prm.ent_mode = 1;
 	md->prm.alternate_draw = 1;
 	md->prm.fly_cam = 0;
-	md->prm.ray_depth = md->t_len * RAY_DEPTH;
 	md->prm.super_view = 0;
 	md->prm.use_ceiling = 1;
 	md->hud.fog_color = v4_to_color(10, 10, 10, 255);
@@ -57,10 +55,10 @@ static void	init_autocam(t_md *md, t_autocam *autocam)
 	autocam->acc_spd = 0.0f;
 	autocam->base_y = 80 - md->map.size.y * .5f;
 	md->plr.angle = M_PI_2;
-	md->plr.pos.z = -md->t_len * minf(10, (md->map.size.y * .5f));
+	md->plr.pos.z = -md->t_len * minf(8, (md->map.size.y * .5f));
 	md->prm.fly_cam = 1;
 	md->prm.use_ceiling = 0;
-	md->prm.ray_depth = md->t_len * md->map.size.y * 2;
+	md->prm.use_grass = 1;
 	md->fx.fog = .01f;
 	md->prm.super_view = 1;
 	md->prm.alternate_draw = 0;

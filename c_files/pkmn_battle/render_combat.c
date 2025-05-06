@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:29:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:24:54 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:50:18 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ void	render_sub_text(t_md *md, t_vec2 sub_p, int i, int j)
 {
 	t_txtd				txt;
 	const t_battle_d	bd = md->battle_d;
-	const char			atk_names[4][10] = {"Bite", "Charge", "Griffe", "Stuff"};
+	const char			atk_names[4][10] = \
+		{"Bite", "Charge", "Griffe", "Stuff"};
 
 	txt = (t_txtd){sub_p.x + 20, sub_p.y, -1, -1, md->screen};
 	txt.y += bd.but_sz.y / 2 - md->prm.txt_sc / 2;
@@ -81,7 +82,8 @@ void	render_sub_text(t_md *md, t_vec2 sub_p, int i, int j)
 	if (i == 0)
 		rnd_fast_txt(md, txt, "%-9.9s %d", atk_names[j], 30);
 	else if (i == 1)
-		rnd_fast_txt(md, txt, "%-9.9s x%d", md->txd.item_names[j], md->inv.items[j]);
+		rnd_fast_txt(md, txt, \
+			"%-9.9s x%d", md->txd.item_names[j], md->inv.items[j]);
 	else if (i == 2 && !md->inv.pokemon_team[j])
 		rnd_fast_txt(md, txt, "NULL");
 	else if (i == 2)

@@ -54,13 +54,14 @@ void	init_fe(t_md *md, t_fe *fe)
 	fe->type = get_random_fe_type();
 	fe->cut_len = 0;
 	fe->base_color = get_grass_color();
-	fe->growth_factor = f_range(0.95, 1.05);
+	fe->growth_factor = f_range(0.99, 1.01);
 	fe->size = v2(r_range(14, 15), 1);
-	fe->height_max = md->win_sz.y * .25;
+	fe->height_max = r_range(5, 7);
+	fe->was_drawn = 0;
 	if (fe->type != fe_grass)
 	{
+		fe->height_max = md->prm.grass_sz.y * 2;
 		fe->base_color = _TURQ;
-		fe->height_max = md->win_sz.y * .1;
 		fe->growth_factor = f_range(.3, .6);
 		fe->size = v2(10, 5);
 	}
@@ -74,7 +75,7 @@ void	init_fes(t_md *md, t_env_manager *env, int tlen)
 	t_vec2			map;
 	t_vec2			cord;
 
-	env->stored_blades = NULL;
+	env->grass_overlay = init_img(md, md->win_sz, NULL, _NULL);
 	env->grass = md_malloc(md, sizeof(t_fe ***) * mapsz.y);
 	map.y = -1;
 	while (++map.y < mapsz.y)
@@ -95,4 +96,16 @@ void	init_fes(t_md *md, t_env_manager *env, int tlen)
 			}
 		}
 	}
+}
+
+void	init_ent_pkteam(t_md *md, t_ent *e, int team_size)
+{
+	int	i;
+
+	e->pk_team = md_malloc(md, sizeof(t_ent *) * (team_size + 1));
+	i = -1;
+	while (++i < team_size)
+		e->pk_team[i] = init_ent(md, 'K', _v2(-1), -1);
+	e->pk_team[i] = NULL;
+	e->team_sz = team_size;
 }

@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 13:13:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/01 11:50:33 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 13:56:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct s_floor_element
 	int				cur_height;
 	t_vec2			size;
 	t_vec2			pos;
+	int				was_drawn;
 	int				set;
 	int				height_max;
 	int				end_y;
@@ -109,7 +110,9 @@ typedef struct s_floor_element
 typedef struct s_env_manager
 {
 	t_fe			****grass;
-	t_dblst			*stored_blades;
+	t_image			*grass_overlay;
+	int				overlay_y_start;
+	int				last_y_start;
 }	t_env_manager;
 
 //		draw/draw_img.c
@@ -118,7 +121,7 @@ void			draw_clr_img(t_image *src, t_image *dst, t_vec2 pos, t_vec3 d);
 int				draw_img(t_image *src, t_image *dst, t_vec2 pos, int over);
 void			flipx_image_data(t_image *img);
 void			flipy_image_data(t_image *img);
-void			flush_img(t_image *src, int clr, float alpha, int ignore_alpha);
+void			flush_img(t_image *src, int clr, float alpha, int ign_alph_px);
 
 //		draw/draw_img_2.c
 //				end.x = dst_end.x | end.y = dst_end.y | end.z = color over

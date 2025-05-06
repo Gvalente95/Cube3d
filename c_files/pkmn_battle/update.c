@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 15:34:45 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 13:25:09 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:02:17 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	update_battle_input(t_md *md, t_battle_d *bd, int k)
 	const int	rows[4] = {4, PCKP_TYPE_LEN - 1, md->inv.team_size, 1};
 	const int	cur_sub = min(0, bd->but_i);
 
-	if (k == -1)
-		return (0);
 	if (k == Q_KEY)
 		return (exit_battle(md, bd), 1);
 	incr.x = (k == RIGHT_KEY || k == D_KEY) - (k == LEFT_KEY || k == A_KEY);
@@ -38,11 +36,7 @@ int	update_battle_input(t_md *md, t_battle_d *bd, int k)
 	if (!incr.x && !incr.y)
 		return (0);
 	if (incr.x)
-	{
-		bd->in_sub = (incr.x > 0);
-		bd->sub_i = 0;
-		return (1);
-	}
+		return (bd->in_sub = (incr.x > 0), bd->sub_i = 0, 1);
 	if (!bd->in_sub)
 	{
 		cur_but_row = bd->opt_i + incr.y;
@@ -53,8 +47,7 @@ int	update_battle_input(t_md *md, t_battle_d *bd, int k)
 	cur_sub_row = bd->sub_i + incr.y;
 	if (cur_sub_row < 0 || cur_sub_row >= rows[cur_sub])
 		return (0);
-	bd->sub_i = cur_sub_row;
-	return (1);
+	return (bd->sub_i = cur_sub_row, 1);
 }
 
 void	update_animations(t_md *md, t_battle_d *bd, double cur_time)

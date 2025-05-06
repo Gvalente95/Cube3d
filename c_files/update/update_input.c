@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 01:55:29 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/01 18:43:09 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 11:15:11 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	update_mouse_input(t_md *md, t_ent *wall, t_ent *ent, t_ent *door)
 		return (use_held_item(md, &md->inv, ent, md->inv.held_i));
 	if (md->mouse.click != MOUSE_RELEASE || (!wall && !ent && !door))
 		return (0);
-	if (wall && wall->type == nt_wall && md->key_prs[SHIFT_KEY])
+	if (wall && wall->type == nt_wall && md->key_prs[X_KEY])
 		return (remove_ent(md, wall));
 	if (door)
 		try_open_door(md, door);

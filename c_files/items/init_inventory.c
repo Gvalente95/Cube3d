@@ -6,13 +6,13 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 13:51:20 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:50:52 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 11:01:19 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../cube.h"
 
-void	init_inv_pages(t_inventory *inv)
+static void	init_inv_pages(t_inventory *inv)
 {
 	int	i;
 	int	x;
@@ -39,14 +39,14 @@ void	init_inventory(t_md *md, t_inventory *inv)
 	const t_vec2	sz = _v2(md->prm.txt_sc * 20);
 	const int		tx_sc = md->prm.txt_sc;
 	const int		line_h = md->prm.txt_sc * 1.75f;
-	const t_vec2	pannel_sz = (t_vec2){(tx_sc * 1.2f) * 5, line_h * 3};
+	const t_vec2	pannel_sz = v2((tx_sc * 1.2f) * 5, line_h * 3);
 
 	init_inv_pages(inv);
 	inv->active = 0;
 	inv->sel_i = -1;
 	inv->img = init_img(md, sz, NULL, -1);
 	inv->sz = inv->img->size;
-	inv->p = (t_vec2){md->win_sz.x / 2 - sz.x / 2, md->win_sz.y / 2 - sz.y / 2};
+	inv->p = v2(md->win_sz.x / 2 - sz.x / 2, md->win_sz.y / 2 - sz.y / 2);
 	inv->held_used = 0;
 	inv->opt_img = init_img(md, pannel_sz, NULL, _BLACK);
 	inv->opt_sz = inv->opt_img->size;

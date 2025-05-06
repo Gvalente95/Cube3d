@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 14:48:25 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/02 13:59:14 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	set_base_mmap_bg(t_md *md, t_mmap *mmap, int ic_len)
 	}
 }
 
-t_image	*init_full_map(t_md *md, t_vec2 win_sz, t_vec2 map_sz)
+static t_image	*init_full_map(t_md *md, t_vec2 win_sz, t_vec2 map_sz)
 {
 	t_image			*img;
 	const t_vec2	t_sz = v2(win_sz.x / map_sz.x, win_sz.y / map_sz.y);

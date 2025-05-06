@@ -3,23 +3,23 @@ c_files/init/init_out_map.c c_files/init/init_menu.c c_files/init/init_frames2.c
 c_files/init/init_map.c c_files/init/init_minimap.c c_files/init/init_grass.c c_files/init/init_labels.c \
 c_files/init/init_frames.c c_files/init/init_ent_frames.c c_files/init/init_menu_elements.c c_files/init/init_map_data.c \
 c_files/init/init_threads.c c_files/init/init_.c c_files/init/init_background.c c_files/init/init_map_validator.c \
-c_files/init/init_entities.c c_files/init/init_inventory.c c_files/raycasting/ray_tools_2.c c_files/raycasting/ray_cast.c \
-c_files/raycasting/draw_floor.c c_files/raycasting/ray_cast_pointed.c c_files/raycasting/draw_sprite_column.c \
-c_files/raycasting/portal_raycast.c c_files/raycasting/draw_ceiling.c c_files/raycasting/portal_draw.c \
-c_files/raycasting/ray_move_dda.c c_files/raycasting/ray_move.c c_files/raycasting/ray_cast_draw_ents.c \
-c_files/raycasting/draw_wall_column.c c_files/raycasting/ray_cast_threads_Loop.c c_files/raycasting/ray_tools.c \
-c_files/raycasting/ray_cast_threads.c c_files/raycasting/draw_fe.c c_files/tools/map_gen.c c_files/tools/parse_tools.c \
-c_files/tools/map_gen_2.c c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/image_tools.c \
-c_files/tools/ftoa.c c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update_autocam.c \
-c_files/update/update_autocam_2.c c_files/update/update.c c_files/update/update_time_events.c c_files/update/update_var.c \
-c_files/update/movement.c c_files/update/update_ents.c c_files/update/collisions.c c_files/update/update_camera.c \
-c_files/update/update_plr_movement.c c_files/update/mapped_ents.c c_files/update/collisions_portal.c \
-c_files/render/filters_1.c c_files/render/render_minimap.c c_files/render/render_hud.c c_files/render/render.c \
-c_files/render/filters_2.c c_files/render/render_background.c c_files/render/filters_0.c c_files/render/render_minimap_cmp.c \
-c_files/pkmn_battle/render_combat.c c_files/pkmn_battle/init.c c_files/pkmn_battle/update.c c_files/pkmn_battle/render.c \
-c_files/pkmn_battle/utils.c c_files/pkmn_battle/actions.c c_files/menu/menu_update.c c_files/menu/menu_render.c \
-c_files/menu/menu_tools.c c_files/items/held_item.c c_files/items/inventory.c c_files/items/update_inventory.c \
-c_files/items/render_held_item.c c_files/items/render_inventory.c c_files/items/render_inv_team.c 
+c_files/init/init_entities.c c_files/raycasting/ray_tools_2.c c_files/raycasting/ray_cast.c c_files/raycasting/draw_floor.c \
+c_files/raycasting/ray_cast_pointed.c c_files/raycasting/draw_sprite_column.c c_files/raycasting/portal_raycast.c \
+c_files/raycasting/draw_ceiling.c c_files/raycasting/portal_draw.c c_files/raycasting/ray_move_dda.c \
+c_files/raycasting/ray_move.c c_files/raycasting/ray_cast_draw_ents.c c_files/raycasting/draw_wall_column.c \
+c_files/raycasting/ray_cast_threads_Loop.c c_files/raycasting/ray_tools.c c_files/raycasting/ray_cast_threads.c \
+c_files/raycasting/draw_fe.c c_files/tools/map_gen.c c_files/tools/parse_tools.c c_files/tools/map_gen_2.c \
+c_files/tools/debug.c c_files/tools/map_gen_tools.c c_files/tools/image_tools.c c_files/tools/ftoa.c \
+c_files/update/update_plr.c c_files/update/update_input.c c_files/update/update_autocam.c c_files/update/update_autocam_2.c \
+c_files/update/update.c c_files/update/update_time_events.c c_files/update/update_var.c c_files/update/movement.c \
+c_files/update/update_ents.c c_files/update/collisions.c c_files/update/update_camera.c c_files/update/update_plr_movement.c \
+c_files/update/mapped_ents.c c_files/update/collisions_portal.c c_files/render/filters_1.c c_files/render/render_minimap.c \
+c_files/render/render_hud.c c_files/render/render.c c_files/render/filters_2.c c_files/render/render_background.c \
+c_files/render/filters_0.c c_files/render/render_minimap_cmp.c c_files/pkmn_battle/render_combat.c c_files/pkmn_battle/init.c \
+c_files/pkmn_battle/update.c c_files/pkmn_battle/render.c c_files/pkmn_battle/utils.c c_files/pkmn_battle/actions.c \
+c_files/menu/menu_update.c c_files/menu/menu_render.c c_files/menu/menu_tools.c c_files/items/held_item.c \
+c_files/items/inventory.c c_files/items/update_inventory.c c_files/items/render_held_item.c c_files/items/render_inventory.c \
+c_files/items/render_inv_team.c c_files/items/init_inventory.c 
 
 RMAP_SRC	= rmap.c
 SRC			= main.c

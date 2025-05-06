@@ -6,7 +6,7 @@
 /*   By: giuliovalente <giuliovalente@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 21:25:49 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/02 09:51:04 by giuliovalen      ###   ########.fr       */
+/*   Updated: 2025/05/05 10:49:36 by giuliovalen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ static void	init_sliders(t_md *md, \
 	inisld(md, "fov", get_v4f(1, 60, 600, 599), &pm->fov);
 	inisld(md, "fov floor", get_v4f(.1, .5, 1.5, 100), &pm->floor_fov);
 	inisld(md, "floor glide", get_v4f(0, 3, 3, 100), &pm->floor_glide);
-	inisld(md, "Grass width", get_v4f(.1, .3, 2, 100), &pm->grass_w);
-	inisld(md, "Grass speed", get_v4f(0, 0, 3, 100), &pm->fe_speed);
+	inisld(md, "Grass width", get_v4f(2, 2, 50, 49), &pm->grass_sz.x);
+	inisld(md, "Grass height", get_v4f(1, 100, 400, 399), &pm->grass_sz.y);
+	inisld(md, "Grass speed", get_v4f(0, .02, 3, 100), &pm->fe_speed);
 	inisld(md, "text size", get_v4f(10, pm->txt_sc, 30, 20), &pm->txt_sc);
-	inisld(md, "ray DPT", get_v4f(0, pm->ray_depth, 9999, 100), &pm->ray_depth);
+	inisld(md, "ray len", get_v4f(0, 9999, 9999, 100), &pm->ray_depth);
 	inisld(md, "Fog", get_v4f(0, .4, 3, 100), &md->fx.fog);
 	inisld(md, "noise", get_v4f(0, 0, 1, 100), &fx->noise);
 	inisld(md, "scanlines fx", get_v4f(0, 0, 1, 100), &fx->scanlines);
