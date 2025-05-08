@@ -6,7 +6,7 @@
 /*   By: gvalente <gvalente@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:29:58 by giuliovalen       #+#    #+#             */
-/*   Updated: 2025/05/06 18:00:21 by gvalente         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:01:38 by gvalente         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	draw_sub_options(t_md *md, t_battle_d *bd, int i, int elem_len)
 			bd->in_sub = 1;
 			bd->sub_i = j;
 		}
-		is_sub_sel = (bd->in_sub && bd->sub_i == )j;
+		is_sub_sel = (bd->in_sub && bd->sub_i == j);
 		draw_alpha_img(but, md->screen, sub_p, .2 + (is_sub_sel * .4));
 		render_sub_text(md, sub_p, i, j);
 		sub_p = add_vec2(sub_p, (t_vec2){5, but->size.y * 1.1});
